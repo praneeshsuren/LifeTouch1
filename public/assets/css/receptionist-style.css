@@ -683,7 +683,8 @@ main .table-container .trainer-table thead{
 }
 
 main .table-container .trainer-table th, main .trainer-table td{
-    padding: 12px 15px;
+    padding: 15px 12px;
+    min-width: 150px;
     font-size: 1rem;
     font-weight: bold;
     color: var(--hover-btn);
@@ -738,23 +739,23 @@ main .add-trainer{
     justify-content: center;
 }
 
-main .add-trainer button{
-    padding: 10px 20px;
-    border-radius: 20px;
-    background-color: var(--primary-color);
+main .add-trainer a button{
+    padding: 12px 60px;
+    background-color: #695CFE;
+    color: var(--sidebar-color);
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
     cursor: pointer;
     transition: var(--tran-03);
-    border: none;
-    width: 25%;
     margin-bottom: 1rem;
 }
 
-main .add-trainer button a{
-    text-decoration: none;
-    color: var(--hover-btn);
+main .add-trainer a button:hover{
+    transform: scale(1.05);
 }
+
 
 /* Trainer Registration Form */
 main .trainer-form{
