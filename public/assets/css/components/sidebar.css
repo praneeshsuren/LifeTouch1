@@ -1,0 +1,336 @@
+.sidebar{ 
+    position: fixed;
+    width: 250px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--sidebar-color);
+    padding: 24px;
+    z-index: 100;
+}
+
+.sidebar .head{
+    display: flex;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--separator-color);
+}
+
+.user-img{
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.user-img img{
+    width: 100%;
+    object-fit: cover;
+}
+
+.user-details .title,
+.menu .title{
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-color);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.user-details .name{
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.user-details .post{
+    color: var(--text-color);
+}
+
+.nav{
+    flex: 1;
+}
+
+.menu ul li{
+    position: relative;
+    list-style: none;
+    margin-bottom: 5px;
+}
+
+.menu ul li a{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: var(--tran-03);
+}
+
+.menu ul li > a:hover{
+    color: var(--sidebar-color);
+    background: var(--primary-color);
+    z-index: 100;
+}
+
+.menu ul li.active > a{
+    color: var(--text-color);
+    background: var(--primary-color-light);
+}
+
+.menu ul li .icon{
+    font-size: 20 px;
+}
+
+.menu ul li .text{
+    flex: 1;
+}
+
+.menu ul li .arrow{
+    font-size: 14px; 
+    transition: var(--tran-03);
+}
+
+.menu ul li .arrow.active{
+    transform: rotate(180deg);
+}
+
+.menu .sub-menu{ 
+    display: none;
+    margin-top: 10px;
+    margin-left: 20px;
+    padding-left: 20px;
+    padding-top: 5px;
+    border-left: 1px solid var(--separator-color);
+    transition: var(--tran-03);
+}
+
+.menu .sub-menu li a{
+    padding: 10px 8px;
+    font-size: 12px;
+    transition: var(--tran-03);
+}
+
+
+.menu:not(:last-child){
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--separator-color);
+}
+
+.menu-btn {
+    position: absolute;
+    right: -15px;
+    top: 3.5%;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    border: 2px solid var(--separator-color);
+    background-color: var(--sidebar-color);
+    cursor: pointer;
+    z-index: 101;
+}
+
+.menu-btn:hover {
+    background-color: var(--primary-color);
+    color: var(--sidebar-color);
+    border-color: var(--primary-color);
+    transition: var(--tran-03);
+}
+
+.menu-btn:hover i {
+    color: var(--sidebar-color);
+}
+
+.sidebar.active{
+    width: 92px;
+}
+
+.sidebar.active .menu-btn{
+    transform: rotate(180deg);
+}
+
+.sidebar.active .user-details{
+    display: none;
+}
+
+.sidebar.active .menu .title{
+    text-align: center;
+}
+
+.sidebar.active .menu ul li .arrow{
+    display: none;
+}
+
+.sidebar.active .menu > ul > li > a{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar.active .menu > ul > li > a .text{
+    position: absolute;
+    left: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 10px;
+    border-radius: 4px;
+    color: var(--sidebar-color);
+    background-color: var(--hover-btn);
+    opacity: 0;
+    visibility: hidden;
+}
+
+.sidebar.active .menu > ul > li > a .text::after{
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 25%;
+    width: 20px;
+    height: 20px; 
+    border-radius: 2px;
+    background-color: var(--primary-color);
+    transform: rotate(45deg);
+    z-index: -1;
+}
+
+.sidebar.active .menu > ul > li > a:hover .text{
+    left: 50px;
+    opacity: 1;
+    color: var(--sidebar-color);
+    background-color: var(--primary-color);
+    visibility: visible;
+}
+
+.sidebar.active .menu .sub-menu{
+    position: absolute;
+    top: 0;
+    left: 20px;
+    width: 200px;
+    border-radius: 20px;
+    padding: 10px 20px;
+    border: 1px solid var(--separator-color);
+    background-color: var(--sidebar-color);
+    box-shadow: var(--box-shadow-color);
+    z-index: 100;
+}
+.menu .mode {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px;
+}
+
+.menu .mode .moon-sun {
+    height: 45px;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0px;
+}
+
+.sidebar.active .menu .mode .sun {
+    display: none;
+}
+
+.sidebar.active .menu .mode .moon {
+    display: none;
+}
+
+.menu .mode i.sun{
+    opacity: 0;
+}
+
+body.dark .menu .mode i.sun{
+    opacity: 1;
+}
+
+body.dark .menu .mode i.moon{
+    opacity: 0;
+}
+
+.menu .mode i {
+    position: absolute;
+    transition: var(--tran-03);
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.menu .mode-text{
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.menu .mode i.sun {
+    opacity: 0;
+}
+
+.menu .mode .toggle-switch {
+    position: absolute;
+    right: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+.toggle-switch .switch {
+    position: relative;
+    height: 22px;
+    width: 44px;
+    right: 10px;
+    border-radius: 25px;
+    margin-left: 20px;
+    background: var(--toggle-color);
+}
+
+.toggle-switch .switch:hover {
+    background: var(--primary-color);
+}
+
+.switch::before {
+    content: "";
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    background: var(--sidebar-color);
+    transition: var(--tran-03);
+}
+
+
+body.dark .switch::before{
+    left: 24px;
+}
+
+.sidebar.active .menu .mode-text {
+    display: none;
+}
+
+.sidebar.active .menu .mode .toggle-switch{
+    right: -10px;
+}
+
+.sidebar.active ~ main{
+    width: calc(100% - 92px);
+    left: 92px;
+}
