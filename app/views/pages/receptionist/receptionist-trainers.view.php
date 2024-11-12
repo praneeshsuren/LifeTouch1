@@ -30,6 +30,7 @@
         </div>
 
       </div>
+
       <div class="table-container">
         <table class='trainer-table'>
           <thead>
@@ -72,9 +73,9 @@
       </div>
 
       <div class="add-trainer">
-        <button class="add-trainer-btn">
-          <a href="<?php echo URLROOT; ?>/receptionist/trainers/createTrainer">+ Add Trainer</a>
-        </button>
+        <a href="<?php echo URLROOT; ?>/receptionist/trainers/createTrainer">
+          <button class="add-trainer-btn">+ Add Trainer</button>
+        </a>
       </div>
       </main>
 
