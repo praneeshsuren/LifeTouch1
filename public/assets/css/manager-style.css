@@ -2098,3 +2098,12 @@ body.dark .close:hover,
 body.dark .close:focus {
     color: white;
 }
+
+.alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    color: #d9534f;
+    background-color: #f2dede;
+    border: 1px solid #d9534f;
+    border-radius: 5px;
+}

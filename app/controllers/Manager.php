@@ -10,11 +10,27 @@ class Manager extends Controller
 
     public function announcement()
     {
-        $this->view('manager/announcement');
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $announcement = new M_Announcement;
+            if ($announcement->validate($_POST)) {
+
+                $announcement->insert($_POST);
+                redirect('manager/announcement_main');
+            }
+            $data['errors'] = $announcement->errors;
+        }
+
+
+        $this->view('manager/announcement', $data);
     }
+
     public function announcement_main()
     {
-        $this->view('manager/announcement_main');
+        $announcement = new M_Announcement();
+
+        // Fetch all announcements
+        $data = $announcement->findAll();
+        $this->view('manager/announcement_main', ['data' => $data]);
     }
     public function report()
     {
