@@ -82,55 +82,32 @@
                                             <td><?php echo htmlspecialchars($announcement->subject); ?></td>
                                             <td><?php echo htmlspecialchars($announcement->date); ?></td>
                                             <td>
-                                                <i class="ph ph-eye" onclick="openModal('Announcement details for Gym renovation')"></i>
-                                                <i class="ph ph-pen"></i>
+
+                                                <!-- Pass the subject, date, and time as parameters to the openModal() function -->
+                                                <a href="announcement_read/<?php echo $announcement->announcement_id; ?>"><i class="ph ph-eye"></i></a>
+
+
+                                                <a href="announcement_update"><i class="ph ph-pen"></i></a>
                                                 <i class="ph ph-trash"></i>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="3">No announcements found.</td>
+                                        <td colspan="4">No announcements found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
                         </table>
-
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!--The Model -->
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2 id="modalTitle">Announcement Details</h2>
-                <p id="modalContent">Content goes here...</p>
             </div>
         </div>
 
     </main>
 
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
-    <script>
-        function openModal(content) {
-            document.getElementById('modalContent').innerText = content;
-            document.getElementById('myModal').style.display = "block";
-        }
 
-        function closeModal() {
-            document.getElementById('myModal').style.display = "none";
-        }
-
-        // Close the modal when the user clicks anywhere outside of it
-        window.onclick = function(event) {
-            var modal = document.getElementById('myModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-    </script>
 </body>
 
 </html>

@@ -32,6 +32,36 @@ class Manager extends Controller
         $data = $announcement->findAll();
         $this->view('manager/announcement_main', ['data' => $data]);
     }
+
+    public function announcement_update()
+    {
+        $this->view('manager/announcement_update');
+    }
+    public function announcement_read($id)
+    {
+        // Create an instance of M_Announcement model
+        $announcement = new M_Announcement();
+
+        // Prepare the where clause to get the specific announcement
+        $arr['announcement_id'] = $id;
+
+        // Fetch the result from the model
+        $result = $announcement->where($arr);
+
+        // Check if result is not empty
+        if (!empty($result)) {
+            // Pass the result to the view (announcement details)
+            $data['announcement'] = $result[0];  // Assuming the result is an array and we're fetching the first record
+        } else {
+            // If no announcement is found, show a message or handle error
+            $data['announcement'] = null;
+        }
+
+        // Display the view with the relevant announcement
+        $this->view('manager/announcement_read', $data);
+    }
+
+
     public function report()
     {
         $this->view('manager/report');
