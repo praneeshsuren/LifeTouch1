@@ -57,6 +57,7 @@
                             <a href="announcement" class="btn">New Announcement</a>
                         </div>
                         <br>
+
                         <table class="list">
                             <thead>
                                 <tr>
@@ -88,7 +89,11 @@
 
 
                                                 <a href="announcement_update"><i class="ph ph-pen"></i></a>
-                                                <i class="ph ph-trash"></i>
+                                                <a href="<?php echo URLROOT; ?>/manager/delete_announcement/<?php echo $announcement->announcement_id; ?>"
+                                                    onclick="return confirm('Are you sure you want to delete this announcement?');">
+                                                    <i class="ph ph-trash"></i>
+                                                </a>
+
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

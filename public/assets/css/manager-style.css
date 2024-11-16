@@ -2152,3 +2152,37 @@ p strong {
     color: #7f8c8d;
     margin-top: 10px;
 }
+
+/* Success message */
+.alert-success {
+    background-color: #28a745;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+    transition: opacity 0.5s ease;
+}
+
+/* Error message */
+.alert-error {
+    background-color: #dc3545;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+    transition: opacity 0.5s ease;
+}
+
+/* Style for closing the message */
+.alert-close {
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}

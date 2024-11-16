@@ -60,6 +60,20 @@ class Manager extends Controller
         // Display the view with the relevant announcement
         $this->view('manager/announcement_read', $data);
     }
+    public function delete_announcement($id)
+    {
+        // Load the Announcement model
+        $announcement = new M_Announcement();
+
+        // Call the model's delete method with the correct column name
+        if ($announcement->delete($id, 'announcement_id')) {
+            // Redirect to the announcements page with a success message
+            redirect('manager/announcement_main');
+        } else {
+            // Redirect to the announcements page with an error message
+            redirect('manager/announcement_main?error=delete_failed');
+        }
+    }
 
 
     public function report()
