@@ -10,14 +10,17 @@
             'trainer_id',
             'first_name',
             'last_name',
-            'full_name',
             'date_of_birth',
-            'age',
-            'address',
+            'home_address',
             'contact_number',
             'gender',
-            'email'
+            'email_address'
         ];
+
+        public function findByTrainerId($trainerId) {
+            $data = ['trainer_id' => $trainerId];
+            return $this->first($data);  // Use the `first` method to get the first matching record
+        }
 
         public function validate($data) {
             $this->errors = [];
@@ -34,19 +37,19 @@
                 $this->errors['date_of_birth'] = 'Date of birth is required';
             }
         
-            if (empty($data['address'])) {
-                $this->errors['address'] = 'Address is required';
+            if (empty($data['home_address'])) {
+                $this->errors['home_address'] = 'Home address is required';
             }
         
             if (empty($data['contact_number'])) {
                 $this->errors['contact_number'] = 'Contact number is required';
             }
         
-            if (empty($data['email'])) {
-                $this->errors['email'] = 'Email address is required';
+            if (empty($data['email_address'])) {
+                $this->errors['email_address'] = 'Email address is required';
             } else {
-                if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                    $this->errors['email'] = 'Invalid email address';
+                if (!filter_var($data['email_address'], FILTER_VALIDATE_EMAIL)) {
+                    $this->errors['email_address'] = 'Invalid email address';
                 }
             }
         
@@ -57,6 +60,8 @@
             // If there are no errors, return true; otherwise, return false.
             return empty($this->errors);
         }
+
+        
         
 
     }

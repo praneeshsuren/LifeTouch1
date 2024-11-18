@@ -768,21 +768,25 @@ main .trainer-form{
     color: var(--hover-btn);
 }
 
-main .trainer-form form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+main .trainer-form h2{ 
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 40px;
 }
 
-main .trainer-form .input-container{
+main .trainer-form .form-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* Two columns */
+    gap: 4rem;
+}
+
+main .trainer-form .form-container .left-column, .right-column {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    width: 50%;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    flex-direction: column;
+}
+
+main .trainer-form .form-container .input-container{
+    margin-bottom: 10px;
 }
 
 
@@ -794,7 +798,7 @@ main .trainer-form .input-container .input-box {
 
 main .trainer-form .input-container .input-box input {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -831,8 +835,52 @@ main .trainer-form .input-container .input-box #gender option {
     color: #333;
 }
 
-main .trainer-form .trainer-submit-btn {
-    width: 25%;
+main .trainer-form .form-container .right-column .input-image-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main .trainer-form .form-container .right-column .input-image-box label {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+/* Styling for the circular image component */
+main .trainer-form .form-container .right-column .image-container {
+    width: 150px; /* Adjust the size as needed */
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ccc; /* Optional: Adds a border around the circular image */
+    margin-bottom: 20px; /* Optional: Adds space below the image */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main .trainer-form .form-container .right-column .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
+}
+
+main .trainer-form .form-container .right-column input[type="file"] {
+    margin-bottom: 20px;
+}
+
+
+main .trainer-form .btn-container {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+main .trainer-form .btn-container .trainer-submit-btn {
+    width: 50%;
     padding: 12px;
     background-color: #2693FF;
     border: none;
@@ -842,19 +890,18 @@ main .trainer-form .trainer-submit-btn {
     font-weight: 700;
     cursor: pointer;
     transition: transform 0.3s ease, background-color 0.3s ease;
+    align-self: center; /* Center the button */
 }
 
-main .trainer-form .trainer-submit-btn:hover {
+main .trainer-form .btn-container .trainer-submit-btn:hover {
     background-color: #1c7bd9;
     transform: scale(1.05);
 }
 
 /* Error Message Styles */
-main .trainer-form .input-container .invalid-feedback {
+main .trainer-form .form-container .input-container .invalid-feedback {
     color: #FF0000; /* Red color for error */
     font-size: 14px;
-    margin-top: -10px; /* Adjust to reduce spacing */
-    margin-bottom: 15px; /* Space after error message */
 }
 
 /* Responsive styling */
