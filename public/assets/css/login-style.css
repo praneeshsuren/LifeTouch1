@@ -213,3 +213,13 @@ header{
     transform: translateX(-50%) translateY(-3px); /* Slight upward movement */
     text-decoration: underline;
 }
+
+.error-message {
+    background-color: #ffcccc;
+    color: #e60000;
+    padding: 10px;
+    border: 1px solid #e60000;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}

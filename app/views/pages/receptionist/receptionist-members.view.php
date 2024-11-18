@@ -20,6 +20,13 @@
         <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
     </section>
 
+    <?php if (isset($_SESSION['success'])): ?>
+      <script>
+          alert("<?php echo $_SESSION['success']; ?>");
+      </script>
+      <?php unset($_SESSION['success']); // Clear success message after showing it ?>
+    <?php endif; ?>
+
     <main>
       <div class="title">
         
@@ -29,6 +36,53 @@
           <h2>Hi, John!</h2>
         </div>
 
+      </div>
+
+      <div class="table-container">
+        <table class='trainer-table'>
+          <thead>
+              <tr>
+                  <th>Member Id</th>
+                  <th>Profile Picture</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Gender</th>
+                  <th>Date of Birth</th>
+                  <th>Age</th>
+                  <th>Home Address</th>
+                  <th>Email Address</th>
+                  <th>Contact Number</th>
+              </tr>
+          </thead>
+          <tbody>
+            <?php if (!empty($data['trainers'])): ?>
+              <?php foreach ($data['trainers'] as $trainer) : ?>
+                <tr>
+                    <td><?php echo $trainer->trainer_id; ?></td>
+                    <td><img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="Picture"></td>
+                    <td><?php echo $trainer->first_name; ?></td>
+                    <td><?php echo $trainer->last_name; ?></td>
+                    <td><?php echo $trainer->gender; ?></td>
+                    <td><?php echo $trainer->date_of_birth; ?></td>
+                    <td><?php echo calculateAge($trainer->date_of_birth); ?></td>
+                    <td><?php echo $trainer->home_address; ?></td>
+                    <td><?php echo $trainer->email_address; ?></td>
+                    <td><?php echo $trainer->contact_number; ?></td>
+                </tr>
+              <?php endforeach; ?>
+              <?php else: ?>
+                <tr>
+                    <td colspan="10" style="text-align: center;">No trainers available</td>
+                </tr>
+              <?php endif; ?>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="add-trainer">
+        <a href="<?php echo URLROOT; ?>/receptionist/trainers/createTrainer">
+          <button class="add-trainer-btn">+ Add Member</button>
+        </a>
       </div>
 
       </main>

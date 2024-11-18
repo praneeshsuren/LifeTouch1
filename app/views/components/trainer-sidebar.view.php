@@ -6,8 +6,8 @@
         <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
     </div>
     <div class="user-details">
-        <p class="name">Trainer</p>
-        <p class="post">John Doe</p>
+        <p class="post">Trainer</p>
+        <p class="name"><?php echo isset($_SESSION['first_name']) ? $_SESSION['first_name'] : 'User'; ?></p>
     </div>
 </div>
 <div class="nav">

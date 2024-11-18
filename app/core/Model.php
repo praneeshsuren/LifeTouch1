@@ -8,13 +8,12 @@
         protected $limit = 10;
         protected $offset = 0;
         protected $order_type = "desc";
-        protected $order_column = "user_id";
+        protected $order_column = "created_at";
         public $errors = [];
 
         public function findAll(){
 
-            // $query = " select * from $this->table order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
-            $query = " select * from $this->table ";
+            $query = " select * from $this->table order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
 
             return $this->query($query);
         }
@@ -65,6 +64,22 @@
 
             return false;
         }
+
+        public function last($order_column = 'id'){
+            // Build the SQL query to retrieve the last row
+            $query = "SELECT * FROM $this->table ORDER BY $order_column DESC LIMIT 1";
+
+            // Execute the query
+            $result = $this->query($query);
+
+            // Return the first (and only) result if it exists, or false otherwise
+            if ($result) {
+                return $result[0];
+            }
+
+            return false;
+        }
+
 
         public function insert($data){
 
