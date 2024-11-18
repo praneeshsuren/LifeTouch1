@@ -30,7 +30,7 @@
                         }
         
                         // Generate a 4-digit trainer ID offset
-                        $offset = str_pad($user->countAll() + 1, 4, '0', STR_PAD_LEFT);
+                        $offset = str_pad($trainer->countAll() + 1, 4, '0', STR_PAD_LEFT);
                         $temp['trainer_id'] .= $offset;
                         $temp['user_id'] = $temp['trainer_id']; // Assuming trainer_id maps to user_id in this case
         
@@ -76,7 +76,38 @@
                     $member = new M_Member;
                     $user = new M_User;
         
-                    
+                    if ($member->validate($_POST) && $user->validate($_POST)) {
+                        $temp = $_POST;
+        
+                        // Set trainer_id based on gender
+                        if ($temp['gender'] == 'Male') {
+                            $temp['member_id'] = 'MB/M/';
+                        } elseif ($temp['gender'] == 'Female') {
+                            $temp['member_id'] = 'MB/F/';
+                        } else {
+                            $temp['member_id'] = 'MB/O/';
+                        }
+        
+                        // Generate a 4-digit trainer ID offset
+                        $offset = str_pad($member->countAll() + 1, 4, '0', STR_PAD_LEFT);
+                        $temp['member_id'] .= $offset;
+                        $temp['user_id'] = $temp['member_id'];
+        
+                        $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
+                        // Insert into User and Member models
+                        $user->insert($temp);
+                        $member->insert($temp);
+        
+                        // Set a session message or flag for success
+                        $_SESSION['success'] = "Member has been successfully registered!";
+        
+                        // Redirect to trainers list with success message
+                        redirect('receptionist/members');
+                    } else {
+                        // Merge validation errors and pass to the view
+                        $data['errors'] = array_merge($user->errors, $member->errors);
+                        $this->view('receptionist/receptionist-createMember', $data);
+                    }
         
                     break;
                 
