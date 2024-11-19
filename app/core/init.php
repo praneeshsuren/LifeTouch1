@@ -6,6 +6,7 @@
     });
 
     require 'config.php';
+    require 'config_session.php';
     require 'functions.php';
     require 'Database.php';
     require 'Model.php'; 
