@@ -30,21 +30,13 @@
 
                     <a href="<?php echo URLROOT; ?>/manager/announcement_main" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
 
+                    <h2 class="announcement-title"><i class="ph ph-megaphone"></i>&nbsp;Gym Renovation</h2>
+                    <div class="para">
+                        <p>Date : Apr 01 , 2024</p>
+                        <p>Time : 03.00 AM </p>
+                        <p>Description : </p>
 
-                    <?php if ($announcement): ?>
-                        <?php
-                        // Format the time to a 12-hour format with AM/PM
-                        $formatted_time = date("h:i:s A", strtotime($announcement->time));
-                        ?>
-
-                        <h2 class="announcement-title"><?php echo htmlspecialchars($announcement->subject); ?></h2>
-                        <p><?php echo nl2br(htmlspecialchars($announcement->announcement)); ?></p>
-                        <p>Date: <?php echo htmlspecialchars($announcement->date); ?></p>
-                        <p>Time: <?php echo $formatted_time; ?></p>
-
-                    <?php endif; ?>
-
-
+                    </div>
 
                 </section>
             </div>

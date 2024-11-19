@@ -65,7 +65,7 @@
         <div class="member-view-trainer">
             <?php foreach ($trianers as $trainer): ?>
                 <div class="trainer">
-                    <img src="<?php echo URLROOT; ?>/public/images/<?php echo $trainer['image']; ?>" alt="" class="trainer-image" />
+                    <img src="<?php echo URLROOT; ?>/assets/images/<?php echo $trainer['image']; ?>" alt="" class="trainer-image" />
                     <h3><?php echo $trainer['name']; ?></h3>
                     <a href="member_view">
                         <button class="member-view-trainer-btn">View</button>

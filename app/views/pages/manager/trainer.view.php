@@ -46,7 +46,7 @@
                     </svg>
                 </button>
             </form>
-            <a href="#" class="newMember-btn">Add Trainer</a>
+            <a href="trainer_create" class="newMember-btn">Add Trainer</a>
         </div>
 
         <!-- View-member-section-->
@@ -65,9 +65,9 @@
         <div class="member-view-trainer">
             <?php foreach ($trianers as $trainer): ?>
                 <div class="trainer">
-                    <img src="<?php echo URLROOT; ?>/public/images/<?php echo $trainer['image']; ?>" alt="" class="trainer-image" />
+                    <img src="<?php echo URLROOT; ?>/assets/images/<?php echo $trainer['image']; ?>" alt="" class="trainer-image" />
                     <h3><?php echo $trainer['name']; ?></h3>
-                    <a href="#">
+                    <a href="trainer_view">
                         <button class="member-view-trainer-btn">View</button>
                     </a>
                 </div>

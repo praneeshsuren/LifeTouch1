@@ -35,7 +35,7 @@
         </div>
 
         <div class="box">
-            <a href="member" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
+            <a href="trainer" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
             <div class="member-card">
                 <div>
                     <div class="profile-img-container"><img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/image.png" alt=""></div>
@@ -50,6 +50,7 @@
                             <p><i class="ph ph-user-square"></i>&nbsp;Last Name : Doe </p>
                             <p><i class="ph ph-hourglass-medium"></i>&nbsp;Age : 25</p>
                             <p><i class="ph ph-gender-intersex"></i>&nbsp;Gender : Male</p>
+                            <p><i class="ph ph-certificate"></i>&nbsp;Qualifications : Level 2 certificate in Gym Instructing</p>
                             <p><i class="ph ph-envelope"></i>&nbsp;Email : johndoe@gmail.com</p>
                             <p><i class="ph ph-phone"></i>&nbsp;Contact : 0701455332</p>
                             <p><i class="ph ph-house-line"></i>&nbsp;Address : John Smith, 5480 7th Ave, San Francisco</p>
@@ -57,51 +58,13 @@
                     </div>
                 </div>
             </div>
-            <h2>Memberships</h2>
-            <div class="memberships">
-                <img class="membership-img" src="<?php echo URLROOT; ?>/assets/images/membership.jpg" alt="">
-                <p>All access</p>
-            </div>
-            <div class="memberships">
-                <img class="membership-img" src="<?php echo URLROOT; ?>/assets/images/membership.jpg" alt="">
-                <p>Personal Training</p>
-            </div>
-            <br />
-            <div class="payment-table">
-                <section class="payment-header">
-                    <h1>Payment Details</h1>
-                </section>
-                <section class="payment-body">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Payment Type</td>
-                                <td>Due Date</td>
-                                <td>Amount</td>
-                                <td>Status</td>
-                            </tr>
-
-                        <tbody>
-                            <tr>
-                                <td> Monthly Package</td>
-                                <td>2024.11.11</td>
-                                <td>Rs 5000</td>
-                                <td>
-                                    <p class="status paid">Paid</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td> Monthly Package</td>
-                                <td>2024.11.11</td>
-                                <td>Rs 5000</td>
-                                <td>
-                                    <p class="status notpaid">Not Paid</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                        </thead>
-                    </table>
-                </section>
+            <div class="attendance-container">
+                <h2 class="attendance-title">Trainer Attendance</h2>
+                <br>
+                <div class="attendance-calendar">
+                    <!-- Embed Google Calendar -->
+                    <iframe src="https://calendar.google.com/calendar/embed?src=322c1c2e9fe22db104ab36f410275304c389485ee584435c623ad930fa93a2b5%40group.calendar.google.com&ctz=UTC" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                </div>
             </div>
         </div>
     </main>

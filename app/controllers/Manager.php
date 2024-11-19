@@ -39,26 +39,7 @@ class Manager extends Controller
     }
     public function announcement_read($id)
     {
-        // Create an instance of M_Announcement model
-        $announcement = new M_Announcement();
-
-        // Prepare the where clause to get the specific announcement
-        $arr['announcement_id'] = $id;
-
-        // Fetch the result from the model
-        $result = $announcement->where($arr);
-
-        // Check if result is not empty
-        if (!empty($result)) {
-            // Pass the result to the view (announcement details)
-            $data['announcement'] = $result[0];  // Assuming the result is an array and we're fetching the first record
-        } else {
-            // If no announcement is found, show a message or handle error
-            $data['announcement'] = null;
-        }
-
-        // Display the view with the relevant announcement
-        $this->view('manager/announcement_read', $data);
+        $this->view('manager/announcement_read');
     }
     public function delete_announcement($id)
     {
@@ -104,12 +85,165 @@ class Manager extends Controller
     {
         $this->view('manager/trainer');
     }
+    public function trainer_create()
+    {
+        $this->view('manager/trainer_create');
+    }
+    public function trainer_view()
+    {
+        $this->view('manager/trainer_view');
+    }
     public function admin()
     {
         $this->view('manager/admin');
     }
+    public function admin_create()
+    {
+        $this->view('manager/admin_create');
+    }
+    public function admin_view()
+    {
+        $this->view('manager/admin_view');
+    }
     public function equipment()
     {
-        $this->view('manager/equipment');
+        $equipmentModel = new M_Equipment(); // Assume this is your equipment model
+        $data['equipment'] = $equipmentModel->findAll(); // Fetch all equipment data
+        $this->view('manager/equipment', $data);
+    }
+    public function equipment_create()
+    {
+        $errors = []; // Initialize errors array
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $equipment = new M_Equipment;
+
+            // Combine POST data with uploaded file details
+            $data = $_POST;
+
+            // Handle file upload
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $targetDir = "assets/images/Equipment/";
+                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                $targetFile = $targetDir . $fileName;
+
+                // Validate the file and move it to the target directory
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                    $data['file'] = $fileName; // Save the filename for the database
+                } else {
+                    $errors['file'] = "Failed to upload the file. Please try again.";
+                }
+            } else {
+                $errors['file'] = "Image file is required.";
+            }
+
+            // Validate the rest of the data
+            if ($equipment->validate($data) && empty($errors)) {
+                // Save the data to the database
+                $equipment->insert($data);
+
+                // Redirect to the equipment list page
+                redirect('manager/equipment');
+            } else {
+                // Merge validation errors with file upload errors
+                $errors = array_merge($errors, $equipment->getErrors());
+            }
+        }
+
+        // Load the form view with errors (if any)
+        $this->view('manager/equipment_create', ['errors' => $errors]);
+    }
+
+    public function equipment_view($id)
+    {
+        $equipmentModel = new M_Equipment(); // Create an instance of the M_Equipment model
+
+        // Fetch the equipment record by ID, limit the result to 1
+        $equipment = $equipmentModel->where(['equipment_id' => $id], [], 1);
+
+        // Check if the equipment exists
+        if (!$equipment) {
+            // Redirect to the equipment list if no record found
+            redirect('manager/equipment');
+            return;
+        }
+
+        // Pass the first item of the equipment result to the view
+        $this->view('manager/equipment_view', ['equipment' => $equipment[0]]);
+    }
+
+    public function equipment_delete($id)
+    {
+        $equipmentModel = new M_Equipment();  // Create an instance of the M_Equipment model
+
+        // Call the delete method from the model
+        $result = $equipmentModel->delete($id, 'equipment_id');  // 'equipment_id' is the column to identify the equipment
+
+        if ($result === false) {
+            // Handle failure (e.g., redirect to the equipment list with a failure message)
+            $_SESSION['message'] = 'Failed to delete equipment.';
+        } else {
+            // Handle success (e.g., redirect to the equipment list with a success message)
+            $_SESSION['message'] = 'Equipment deleted successfully.';
+        }
+
+        // Redirect back to the equipment list
+        redirect('manager/equipment');
+    }
+    public function equipment_edit($id)
+    {
+        $equipmentModel = new M_Equipment();
+
+        // Fetch the existing equipment details by ID
+        $data = ['equipment_id' => $id];
+        $equipment = $equipmentModel->where(['equipment_id' => $id], [], 1);
+
+        if (!$equipment) {
+            // If no equipment found, redirect to the equipment list
+            redirect('manager/equipment');
+        }
+
+        // Process form submission when the request is POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Collect the form data
+            $updatedData = [
+                'name' => $_POST['name'],
+                'description' => $_POST['description'],
+                'price' => $_POST['price'],
+                'date' => $_POST['date'],
+            ];
+
+            // Check if the user has uploaded a new file
+            if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
+                // Handle the file upload
+                $targetDir = "assets/images/Equipment/";
+                $targetFile = $targetDir . basename($_FILES["file"]["name"]);
+
+                // Move the uploaded file to the target directory
+                if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
+                    // Update the file path in the database
+                    $updatedData['file'] = $targetFile;
+                } else {
+                    // Handle error if file upload fails
+                    $_SESSION['message'] = "Failed to upload image.";
+                    redirect('manager/equipment_edit/' . $id);
+                }
+            }
+
+            // Update the equipment in the database
+            $updateResult = $equipmentModel->update($id, $updatedData, 'equipment_id');
+
+            if ($updateResult === false) {
+                $_SESSION['message'] = "Failed to update equipment.";
+            } else {
+                $_SESSION['message'] = "Equipment updated successfully.";
+            }
+
+            // Redirect to the equipment list page after updating
+            redirect('manager/equipment');
+        }
+
+        // Pass the equipment data to the view for editing
+        $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
     }
 }

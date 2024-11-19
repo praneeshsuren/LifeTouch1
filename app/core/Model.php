@@ -9,7 +9,7 @@ trait Model
     protected $limit = 10;
     protected $offset = 0;
     protected $order_type = "desc";
-    protected $order_column = "user_id";
+    protected $order_column = "null";
     public $errors = [];
 
     public function findAll()
@@ -21,33 +21,23 @@ trait Model
         return $this->query($query);
     }
 
-    public function where($data, $data_not = [])
+    public function where($data, $data_not = [], $order_column)
     {
         $keys = array_keys($data);
         $keys_not = array_keys($data_not);
-        $query = "SELECT * FROM $this->table WHERE ";
+        $query = "select * from $this->table where ";
 
         foreach ($keys as $key) {
-            $query .= $key . " = :" . $key . " AND ";
+            $query .= $key . " = :" . $key . "  && ";
         }
 
         foreach ($keys_not as $key) {
-            $query .= $key . " != :" . $key . " AND ";
+            $query .= $key . " != :" . $key . "  && ";
         }
 
-        // Trim the last "AND"
-        $query = rtrim($query, " AND ");
-
-        // Check if order_column is set and valid before using it in the query
-        if (!empty($this->order_column) && in_array($this->order_column, $this->allowedColumns)) {
-            $query .= " ORDER BY $this->order_column $this->order_type ";
-        } else {
-            // Default to ordering by the 'announcement_id' if no valid column is found
-            $query .= " ORDER BY announcement_id DESC ";
-        }
-
-        $query .= " LIMIT $this->limit OFFSET $this->offset";
-
+        $query = trim($query, " && ");
+        echo $order_column;
+        $query .= " order by $order_column $this->order_type limit $this->limit offset $this->offset";
         $data = array_merge($data, $data_not);
 
         return $this->query($query, $data);
