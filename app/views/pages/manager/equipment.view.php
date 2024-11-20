@@ -46,7 +46,9 @@
                     </svg>
                 </button>
             </form>
-            <a href="equipment_create" class="newMember-btn">Add Equipment</a>
+            <div class="heading">
+                <a href="equipment_create" class="newMember-btn"><i class="ph ph-plus"></i> Add Equipment</a>
+            </div>
         </div>
 
         <!-- View-equipment-section-->

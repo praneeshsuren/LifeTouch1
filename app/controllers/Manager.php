@@ -21,7 +21,7 @@ class Manager extends Controller
         }
 
 
-        $this->view('manager/announcement', $data);
+        $this->view('manager/announcement');
     }
 
     public function announcement_main()

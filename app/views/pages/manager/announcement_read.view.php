@@ -34,7 +34,7 @@
                     <div class="para">
                         <p>Date : Apr 01 , 2024</p>
                         <p>Time : 03.00 AM </p>
-                        <p>Description : </p>
+                        <p>We will be undergoing a full renovation of our gym facilities. Please note that the gym will be closed during this period. We apologize for any inconvenience and look forward to unveiling the upgraded space soon!</p>
 
                     </div>
 

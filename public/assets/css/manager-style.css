@@ -752,6 +752,24 @@ body.dark form button:hover {
     margin: 0 auto;
 }
 
+.heading .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 1px;
+}
+
+.heading .btn i {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 5px;
+
+}
+
+
 /* Dark Mode for .last-announcement */
 body.dark .last-announcement {
     background-color: #3C3C3C;
@@ -1249,6 +1267,43 @@ body.dark .bars span {
 body.dark .bars .bar::before {
     color: #CCC;
     content: attr(data-percentage)'%';
+}
+
+.heading h3 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c3e50;
+    font-size: 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #2693FF, #2a669f);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-align: center;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.heading h3:hover {
+    transform: translateY(-5px);
+}
+
+.heading h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0%;
+    height: 3px;
+    background-color: #2693FF;
+    transition: width 0.3s ease;
+}
+
+.heading h3:hover::after {
+    width: 100%;
 }
 
 /*end of the report*/
@@ -2115,29 +2170,86 @@ a {
     outline: none;
 }
 
-/* Heading Styles */
+/* General Section Styling */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Title Styling */
 .announcement-title {
+    font-family: 'Poppins', sans-serif;
+    color: #8b8d8f;
     font-size: 32px;
-    font-weight: 700;
-    color: #406183;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 2px solid #16a085;
-    padding-bottom: 10px;
-}
-
-/* Paragraph Styles */
-.para p {
-    font-size: 18px;
-    color: #8b8b8b;
-    line-height: 1.7;
-    margin-bottom: 20px;
-}
-
-.para p strong {
     font-weight: 600;
-    color: #16a085;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.announcement-title i {
+    margin-right: 10px;
+    font-size: 36px;
+    color: #2693FF;
+}
+
+/* Paragraph Styling */
+.para {
+    font-family: 'Poppins', sans-serif;
+    color: #7f8c8d;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 10px;
+}
+
+.para p {
+    margin: 8px 0;
+}
+
+.para p:first-child {
+    font-weight: 600;
+}
+
+/* Date, Time, and Description Styling */
+.para p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.para p span {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.para p:last-child {
+    font-style: italic;
+    color: #7f8c8d;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .announcement-title {
+        font-size: 28px;
+    }
+
+    .para p {
+        font-size: 14px;
+    }
+
+    .btn {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
 }
 
 /* Announcement Card */
@@ -2224,4 +2336,11 @@ a {
 .input-container input[type="date"]:focus~.underline,
 .input-container input[type="date"]:valid~.underline {
     transform: scaleX(1);
+}
+
+/*equipment*/
+
+.heading .newMember-btn i {
+    font-size: 18px;
+    vertical-align: middle;
 }
