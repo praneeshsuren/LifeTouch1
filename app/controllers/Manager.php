@@ -209,15 +209,14 @@ class Manager extends Controller
             $updatedData = [
                 'name' => $_POST['name'],
                 'description' => $_POST['description'],
-                'price' => $_POST['price'],
-                'date' => $_POST['date'],
+
             ];
 
             // Check if the user has uploaded a new file
             if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
                 // Handle the file upload
-                $targetDir = "assets/images/Equipment/";
-                $targetFile = $targetDir . basename($_FILES["file"]["name"]);
+                //$targetDir = "assets/images/Equipment/";
+                $targetFile = basename($_FILES["file"]["name"]);
 
                 // Move the uploaded file to the target directory
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {

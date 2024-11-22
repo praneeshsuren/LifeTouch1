@@ -63,19 +63,6 @@
                     <div class="underline"></div>
                 </div>
 
-                <!-- Edit Date -->
-                <div class="input-container">
-                    <input type="date" id="date" name="date" value="<?php echo $equipment->date; ?>" required>
-                    <label for="date" class="label"><i class="ph ph-calendar"></i>Date</label>
-                    <div class="underline"></div>
-                </div>
-
-                <!-- Edit Price -->
-                <div class="input-container">
-                    <input type="text" id="price" name="price" value="<?php echo $equipment->price; ?>" required>
-                    <label for="price" class="label"><i class="ph ph-money"></i>Price</label>
-                    <div class="underline"></div>
-                </div>
 
                 <!-- Submit Button -->
                 <div class="member-buttons">

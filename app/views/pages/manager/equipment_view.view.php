@@ -54,11 +54,54 @@
                 <div>
                     <h2 class="announcement-title"><?php echo htmlspecialchars($equipment->name); ?></h2>
                     <div class="para">
-                        <p>Date: <?php echo htmlspecialchars($equipment->date); ?></p>
-                        <p>Price: <?php echo htmlspecialchars($equipment->price); ?></p>
+
                         <p>Description: <?php echo htmlspecialchars($equipment->description); ?></p>
                     </div>
                 </div>
+
+
+            </div>
+            <!-- Table Section -->
+            <div class="purchase-table-container">
+                <h3>Purchase Details</h3>
+                <table class="purchase-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Price</th>
+                            <th>Buyer Name</th>
+                            <th>Buyer Shop Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2023-11-15</td>
+                            <td>Rs.20000</td>
+                            <td>John Doe</td>
+                            <td>ABC Supplies</td>
+                            <td>
+                                <a href="#"><i class="ph ph-eye"></i></a>
+                                <a href="#"><i class="ph ph-pen"></i></a>
+                                <a href="#"><i class="ph ph-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>2023-11-18</td>
+                            <td>Rs.20000</td>
+                            <td>Jane Smith</td>
+                            <td>XYZ Traders</td>
+                            <td>
+                                <a href="#"><i class="ph ph-eye"></i></a>
+                                <a href="#"><i class="ph ph-pen"></i></a>
+                                <a href="#"><i class="ph ph-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>

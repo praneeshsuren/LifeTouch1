@@ -47,7 +47,7 @@
                 </button>
             </form>
             <div class="heading">
-                <a href="equipment_create" class="newMember-btn"><i class="ph ph-plus"></i> Add Trainer</a>
+                <a href="trainer_create" class="newMember-btn"><i class="ph ph-plus"></i> Add Trainer</a>
             </div>
         </div>
 

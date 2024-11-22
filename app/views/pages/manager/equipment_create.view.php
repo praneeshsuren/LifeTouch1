@@ -58,17 +58,6 @@
                     <div class="underline"></div>
                 </div>
 
-                <div class="input-container">
-                    <input type="date" id="date" name="date" required>
-                    <label for="date" class="label"><i class="ph ph-calendar"></i>Date</label>
-                    <div class="underline"></div>
-                </div>
-
-                <div class="input-container">
-                    <input type="text" id="price" name="price" required>
-                    <label for="price" class="label"><i class="ph ph-money"></i>Price</label>
-                    <div class="underline"></div>
-                </div>
 
                 <div class="member-buttons">
                     <button type="submit" class="edit-button">Save</button>

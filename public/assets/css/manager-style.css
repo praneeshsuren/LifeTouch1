@@ -2218,17 +2218,12 @@ a {
 /* Date, Time, and Description Styling */
 .para p {
     display: flex;
-    justify-content: space-between;
+
     align-items: center;
 }
 
 .para p span {
     font-size: 14px;
-    color: #7f8c8d;
-}
-
-.para p:last-child {
-    font-style: italic;
     color: #7f8c8d;
 }
 
@@ -2343,4 +2338,46 @@ a {
 .heading .newMember-btn i {
     font-size: 18px;
     vertical-align: middle;
+}
+
+/* Table Container */
+.purchase-table-container {
+    margin-top: 20px;
+}
+
+.purchase-table-container h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Table Styles */
+.purchase-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.purchase-table th,
+.purchase-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.purchase-table th {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.purchase-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.purchase-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.purchase-table th {
+    font-weight: 600;
 }

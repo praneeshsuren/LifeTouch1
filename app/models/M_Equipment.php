@@ -13,8 +13,7 @@ class M_Equipment
         'name',
         'description',
         'file',
-        'date',
-        'price'
+
     ];
 
 
@@ -50,17 +49,6 @@ class M_Equipment
             }
         }
 
-        // Date validation
-        if (empty($data['date'])) {
-            $this->errors['date'] = "Date is required.";
-        }
-
-        // Price validation
-        if (empty($data['price'])) {
-            $this->errors['price'] = "Price is required.";
-        } elseif (!is_numeric($data['price']) || $data['price'] <= 0) { // Ensure price is numeric and positive
-            $this->errors['price'] = "Price must be a positive number.";
-        }
 
         // Return true if no errors; otherwise, false
         return empty($this->errors);
