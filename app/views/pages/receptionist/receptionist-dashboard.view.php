@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/receptionist-style.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- CHART.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <title><?php echo APP_NAME; ?></title>
   </head>
   <body>
@@ -136,16 +138,18 @@
 
       <!-- CHARTS -->
 
-      <div class="chart-header">
-        <h2>Busy Hours</h2>
-        <i class="ph ph-dots-three-circle-vertical"></i>
+      <div class="chart">
+        <div class="chart-header">
+          <h2>Busy Hours</h2>
+          <i class="ph ph-dots-three-circle-vertical"></i>
+        </div>
+        <div class="chart-container">
+          <canvas id="LineChart"></canvas>
+        </div>
       </div>
-      <div id="areaChart"></div>
+      
 
     </main>
-
-    <!-- APEX CHARTS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.53.0/apexcharts.min.js"></script>
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>

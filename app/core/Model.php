@@ -65,22 +65,6 @@
             return false;
         }
 
-        public function last($order_column = 'id'){
-            // Build the SQL query to retrieve the last row
-            $query = "SELECT * FROM $this->table ORDER BY $order_column DESC LIMIT 1";
-
-            // Execute the query
-            $result = $this->query($query);
-
-            // Return the first (and only) result if it exists, or false otherwise
-            if ($result) {
-                return $result[0];
-            }
-
-            return false;
-        }
-
-
         public function insert($data){
 
             //remove columns that are not part of the allowed columns

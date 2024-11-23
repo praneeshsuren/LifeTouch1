@@ -177,9 +177,6 @@
 
       </div>
 
-        <!-- APEX CHARTS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.53.0/apexcharts.min.js"></script>
-
         <!-- SCRIPT -->
         <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
 
