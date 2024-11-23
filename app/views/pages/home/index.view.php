@@ -17,7 +17,7 @@
         <div class='bx bx-menu' id="menu-icon"></div>
 
         <ul class="navbar">
-            <li><a href="#home">Home</a></li>
+            <li><a href="<?php echo URLROOT; ?>">Home</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#about">About Us</a></li>
             <li><a href="#plans">Events</a></li>
@@ -25,7 +25,7 @@
             <li><a href="#contact">Contact Us</a></li>
         </ul>
         <div class="top-btn">
-            <a href="#" class="nav-btn">Join Us</a>
+            <a href="<?php echo URLROOT; ?>/login" class="nav-btn">Sign in</a>
         </div>
     </header>
 

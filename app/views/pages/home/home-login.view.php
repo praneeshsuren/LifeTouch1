@@ -22,25 +22,20 @@
     <?php endif; ?>
 
     <header>
-        <a href="#" class="logo">LifeTouch</a>
+        <a href="#" class="logo">Life <span>Touch</span></a>
 
-        <nav class="navbar">
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Events</a>
-            <a href="#">Contact Us</a>
-        </nav>
+        <div class='bx bx-menu' id="menu-icon"></div>
 
-        <div class="sign-up">
-            <a href="login.html" class="user">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6 relative top-1">
-                    <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
-                </svg>
-                Sign In
-            </a>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" id="menu-icon">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
+        <ul class="navbar">
+            <li><a href="<?php echo URLROOT; ?>">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#plans">Events</a></li>
+            <li><a href="#review">Trainers</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+        <div class="top-btn">
+            <a href="<?php echo URLROOT; ?>/login" class="nav-btn">Sign in</a>
         </div>
     </header>
     
