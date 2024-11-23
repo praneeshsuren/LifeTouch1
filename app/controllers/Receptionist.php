@@ -33,10 +33,10 @@
                             // Generate a 4-digit trainer ID offset
                             $offset = str_pad($trainer->countAll() + 1, 4, '0', STR_PAD_LEFT);
                             $temp['trainer_id'] .= $offset;
-                            $temp['user_id'] = $temp['trainer_id']; // Assuming trainer_id maps to user_id in this case
+                            $temp['user_id'] = $temp['trainer_id'];
             
                             $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
-                            // Insert into User and Trainer models
+                            // Insert into User and Member models
                             $user->insert($temp);
                             $trainer->insert($temp);
             
@@ -68,50 +68,50 @@
                     $this->view('receptionist/receptionist-viewTrainer', $data);
                     break;
 
-                    case 'updateTrainer':
-                        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                            // Initialize the Trainer model
-                            $trainer = new M_Trainer;
-                    
-                            // Validate the incoming data
-                            if ($trainer->validate($_POST)) {
-                                // Prepare the data to update the trainer
-                                $trainer_id = $_POST['trainer_id']; // Trainer ID
-                                $data = [
-                                    'first_name'    => $_POST['first_name'],
-                                    'last_name'     => $_POST['last_name'],
-                                    'date_of_birth' => $_POST['date_of_birth'],
-                                    'home_address'  => $_POST['home_address'],
-                                    'contact_number'=> $_POST['contact_number'],
-                                    'gender'        => $_POST['gender'],
-                                    'email_address' => $_POST['email_address']
-                                ];
-                    
-                                // Call the update function
-                                if ($trainer->update($trainer_id, $data, 'trainer_id')) {
-                                    // Set a success session message
-                                    $_SESSION['success'] = "Trainer has been successfully updated!";
-                                    // Redirect to the trainer view page
-                                    redirect('receptionist/trainers/viewTrainer?id=' . $trainer_id);
-                                } else {
-                                    // Handle update failure (optional)
-                                    $_SESSION['error'] = "There was an issue updating the trainer. Please try again.";
-                                    redirect('receptionist/trainers/viewTrainer?id=' . $trainer_id);
-                                }
+                case 'updateTrainer':
+                    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                        // Initialize the Trainer model
+                        $trainer = new M_Trainer;
+                
+                        // Validate the incoming data
+                        if ($trainer->validate($_POST)) {
+                            // Prepare the data to update the trainer
+                            $trainer_id = $_POST['trainer_id']; // Trainer ID
+                            $data = [
+                                'first_name'    => $_POST['first_name'],
+                                'last_name'     => $_POST['last_name'],
+                                'date_of_birth' => $_POST['date_of_birth'],
+                                'home_address'  => $_POST['home_address'],
+                                'contact_number'=> $_POST['contact_number'],
+                                'gender'        => $_POST['gender'],
+                                'email_address' => $_POST['email_address']
+                            ];
+                
+                            // Call the update function
+                            if ($trainer->update($trainer_id, $data, 'trainer_id')) {
+                                // Set a success session message
+                                $_SESSION['success'] = "Trainer has been successfully updated!";
+                                // Redirect to the trainer view page
+                                redirect('receptionist/trainers/viewTrainer?id=' . $trainer_id);
                             } else {
-                                // If validation fails, pass errors to the view
-                                $data = [
-                                    'errors' => $trainer->errors,
-                                    'trainer' => $_POST // Preserve form data for user correction
-                                ];
-                                // Render the view with errors and form data
-                                $this->view('receptionist/receptionist-viewTrainer', $data);
+                                // Handle update failure (optional)
+                                $_SESSION['error'] = "There was an issue updating the trainer. Please try again.";
+                                redirect('receptionist/trainers/viewTrainer?id=' . $trainer_id);
                             }
                         } else {
-                            // Redirect if the request is not a POST request
-                            redirect('receptionist/trainers');
+                            // If validation fails, pass errors to the view
+                            $data = [
+                                'errors' => $trainer->errors,
+                                'trainer' => $_POST // Preserve form data for user correction
+                            ];
+                            // Render the view with errors and form data
+                            $this->view('receptionist/receptionist-viewTrainer', $data);
                         }
-                        break;
+                    } else {
+                        // Redirect if the request is not a POST request
+                        redirect('receptionist/trainers');
+                    }
+                    break;
                                        
         
                 default:
@@ -176,7 +176,7 @@
                     else{
                         redirect('receptionist/members');
                     }
-        
+    
                     break;
                 
                 default:
