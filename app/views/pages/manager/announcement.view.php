@@ -27,19 +27,25 @@
     <div class="announcement">
       <div class="ann">
         <section class="container">
-          <form action="#" class="form">
+          <form method="post" class="form">
 
+            <?php if (!empty($errors)): ?>
+              <div class="alert">
+                <?= implode("<br>", $errors);
+                ?>
+              </div>
+            <?php endif; ?>
 
             <a href="announcement_main" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
 
             <div class="input-box">
               <label>Subject</label>
-              <input type="text" placeholder="Announcement Subject" required />
+              <input type="text" name="subject" placeholder="Announcement Subject" />
             </div>
 
             <div class="input-box">
               <label>Announcement</label>
-              <textarea placeholder="Write your announcement here..." required></textarea>
+              <textarea placeholder="Write your announcement here..." name="announcement"></textarea>
             </div>
 
 
@@ -47,12 +53,12 @@
 
               <div class="input-box">
                 <label>Date</label>
-                <input type="date" placeholder="MM/DD/YY" required />
+                <input type="date" placeholder="MM/DD/YY" name="date" />
               </div>
 
               <div class="input-box">
                 <label>Time</label>
-                <input type="time" placeholder="12.00 PM" required />
+                <input type="time" placeholder="12.00 PM" name="time" />
               </div>
 
             </div>
@@ -62,14 +68,14 @@
 
                 <div class="send">
                   <div class="radio-container">
-                    <input type="radio" id="check" name="send" checked />
+                    <input type="radio" id="sendNow" name="send" checked />
                     <label for="now">Send now</label>
                   </div>
                 </div>
 
                 <div class="send">
                   <div class="radio-container">
-                    <input type="radio" id="check" name="send" checked />
+                    <input type="radio" id="scheduleLater" name="send" checked />
                     <label for="later">schedule later</label>
                   </div>
                 </div>
@@ -77,7 +83,7 @@
               </div>
             </div>
 
-            <button>Publish Now</button>
+            <button type="submit">Publish</button>
 
           </form>
         </section>

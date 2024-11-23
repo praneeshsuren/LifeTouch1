@@ -26,7 +26,7 @@
 
     <main>
         <div class="top">
-            <h1 class="title">Add Member</h1>
+            <h1 class="title">Add Trainer</h1>
             <div class="bell">
                 <i class="ph ph-bell"></i>
                 <p>Hi, John!</p>
@@ -35,7 +35,7 @@
 
         <div class="box">
             <div>
-                <a href="member" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
+                <a href="trainer" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
                 <div class="profile-img-container">
                     <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/no_img.jpg">
                 </div>
@@ -78,6 +78,11 @@
                         <span>Other</span>
                     </label>
                 </form>
+            </div>
+            <div class="input-container">
+                <input type="text" id="input" required="">
+                <label for="input" class="label"><i class="ph ph-certificate"></i>Qualifications</label>
+                <div class="underline"></div>
             </div>
             <div class="input-container">
                 <input type="text" id="input" required="">

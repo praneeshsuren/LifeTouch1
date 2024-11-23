@@ -23,39 +23,21 @@
     </section>
 
     <main>
-        <div class="top">
-            <h1 class="title">New Report</h1>
-            <div class="bell">
-                <i class="ph ph-bell"></i>
-                <p>Hi, John!</p>
-            </div>
-        </div>
+        <h1 class="title">Announcement Details</h1>
         <div class="announcement">
             <div class="ann">
                 <section class="container">
-                    <form action="#" class="form">
 
-                        <div class="input-box">
-                            <label>Report Name</label>
-                            <input type="text" placeholder="Enter a report name" required />
-                        </div>
+                    <a href="<?php echo URLROOT; ?>/manager/announcement_main" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
 
-                        <div class="input-box">
-                            <label>Event collection</label>
-                            <input type="text" placeholder="Enter a event collection" required />
-                        </div>
+                    <h2 class="announcement-title"><i class="ph ph-megaphone"></i>&nbsp;Gym Renovation</h2>
+                    <div class="para">
+                        <p>Date : Apr 01 , 2024</p>
+                        <p>Time : 03.00 AM </p>
+                        <p>We will be undergoing a full renovation of our gym facilities. Please note that the gym will be closed during this period. We apologize for any inconvenience and look forward to unveiling the upgraded space soon!</p>
 
-                        <div class="input-box">
-                            <label>Query</label>
-                            <textarea placeholder="Write a query" required></textarea>
-                        </div>
+                    </div>
 
-
-
-
-                        <button>Send</button>
-
-                    </form>
                 </section>
             </div>
         </div>

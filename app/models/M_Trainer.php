@@ -52,16 +52,13 @@
                     $this->errors['email_address'] = 'Invalid email address';
                 }
             }
-        
+
             if (empty($data['gender'])) {
                 $this->errors['gender'] = 'Gender is required';
             }
-        
+
             // If there are no errors, return true; otherwise, return false.
             return empty($this->errors);
         }
-
-        
-        
-
+      
     }
