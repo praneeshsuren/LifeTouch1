@@ -15,18 +15,23 @@
                 case 'createTrainer':
                     $this->view('receptionist/receptionist-createTrainer'); // Adjust the view path as needed
                     break;
+                    
                 case 'registerTrainer':
                     $user = new M_Trainer;
                     if($user->validate($_POST)){
                         $user->insert($_POST);
-                        redirect('receptionist/trainers');
+                        redirect('receptionist/trainers/trainerCredentials');
                     }
 
                     $data['errors'] = $user->errors;
                     $this->view('receptionist/receptionist-createTrainer', $data);
                     break;
 
-                    default:
+                case 'trainerCredentials':
+                    $this->view('receptionist/receptionist-trainerCredentials');
+                    break;
+
+                default:
                     $trainerModel = new M_Trainer;
                     $trainers = $trainerModel->findAll();
 
