@@ -9,7 +9,7 @@ trait Model
     protected $limit = 10;
     protected $offset = 0;
     protected $order_type = "desc";
-    protected $order_column = "null";
+    protected $order_column = "created_at";
     public $errors = [];
 
 
@@ -90,8 +90,7 @@ trait Model
 
     public function update($id, $data, $id_column = 'id')
     {
-
-        //remove columns that are not part of the allowed columns
+        // Remove columns that are not part of the allowed columns
         if (!empty($this->allowedColumns)) {
             foreach ($data as $key => $value) {
                 if (!in_array($key, $this->allowedColumns)) {
@@ -100,22 +99,29 @@ trait Model
             }
         }
 
-        $keys = array_keys($data);
-        $query = "update $this->table set  ";
-
-        foreach ($keys as $key) {
-            $query .= $key . " = :" . $key . ", ";
+        // Ensure there is data to update
+        if (empty($data)) {
+            return false;
         }
-
-        $query = trim($query, ", ");
-
-        $query .= " where $id_column = :$id_column ";
-
+    
+        // Prepare the update query
+        $keys = array_keys($data);
+        $query = "UPDATE $this->table SET ";
+    
+        foreach ($keys as $key) {
+            $query .= "$key = :$key, ";
+        }
+    
+        $query = rtrim($query, ", "); // Remove trailing comma
+        $query .= " WHERE $id_column = :$id_column";
+    
+        // Add the ID to the data array for the WHERE clause
         $data[$id_column] = $id;
-        $this->query($query, $data);
-
-        return false;
+    
+        // Execute the query and return the result
+        return $this->query($query, $data);
     }
+    
 
     public function delete($id, $id_column = 'id')
     {

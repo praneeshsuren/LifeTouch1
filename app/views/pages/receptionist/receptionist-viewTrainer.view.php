@@ -48,7 +48,7 @@
         <div class="profile-picture">
           <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="Trainer Picture">
         </div>
-        <form id="trainerForm" method="POST" action="<?php echo URLROOT; ?>/trainer/updateTrainer">
+        <form id="trainerForm" method="POST" action="<?php echo URLROOT; ?>/receptionist/trainers/updateTrainer">
           <div class="details">
             <div class="left-column">
               <p>
