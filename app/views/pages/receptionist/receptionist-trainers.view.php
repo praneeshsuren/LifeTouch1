@@ -57,7 +57,7 @@
           <tbody>
             <?php if (!empty($data['trainers'])): ?>
               <?php foreach ($data['trainers'] as $trainer) : ?>
-                <tr>
+                <tr onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/trainers/viewTrainer?id=<?php echo $trainer->trainer_id; ?>';" style="cursor: pointer;">
                     <td><?php echo $trainer->trainer_id; ?></td>
                     <td><img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="Picture"></td>
                     <td><?php echo $trainer->first_name; ?></td>
@@ -85,10 +85,6 @@
         </a>
       </div>
       </main>
-      
-
-    <!-- APEX CHARTS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.53.0/apexcharts.min.js"></script>
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>

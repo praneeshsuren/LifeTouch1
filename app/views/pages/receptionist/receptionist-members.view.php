@@ -59,7 +59,7 @@
           <tbody>
             <?php if (!empty($data['members'])): ?>
               <?php foreach ($data['members'] as $member) : ?>
-                <tr>
+                <tr onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/members/viewMember?id=<?php echo $member->member_id; ?>';" style="cursor: pointer;">
                     <td><?php echo $member->member_id; ?></td>
                     <td><img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="Picture"></td>
                     <td><?php echo $member->first_name; ?></td>

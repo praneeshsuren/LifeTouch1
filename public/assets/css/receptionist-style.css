@@ -24,6 +24,10 @@
     --tran-05: all 0.5s ease; 
 }
 
+html{
+    overflow-y: auto;
+}
+
 body{
     height: 100vh;
     background: var(--body-color);
@@ -572,7 +576,7 @@ main .insights .progress .number {
 
 main .recent-announcements{
     grid-column: 2;
-    grid-row: 2 / span 2;
+    grid-row: 2 / -1;
 }
 
 main .recent-announcements h2{
@@ -628,7 +632,14 @@ margin-left: 1rem;
 
 /* CHARTS */
 
-main .chart-header {
+main .chart{
+    grid-row: 3;
+    grid-column: 1;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+main .chart .chart-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -636,7 +647,7 @@ main .chart-header {
     grid-column: 1;
 }
 
-main .chart-header i{
+main .chart .chart-header i{
     font-size: 1.6rem;
     color: var(--text-color);
     border-radius: 50%;
@@ -644,21 +655,22 @@ main .chart-header i{
     cursor: pointer;
 }
 
-main .chart-header i:hover {
+main .chart .chart-header i:hover {
     color: var(--hover-btn);
 }
 
-main .chart-header h2 {
+main .chart .chart-header h2 {
     font-size: 1.5rem;
     color: var(--text-color);
 }
 
-main #areaChart{
-    margin-bottom: 6rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+main .chart .chart-container{
+    width: 100%;
+    margin: 0 auto;
+    height: 90%;
+
 }
+
 
 /* Trainers */
 
@@ -692,6 +704,10 @@ main .table-container .trainer-table th, main .trainer-table td{
 
 main .table-container .trainer-table tbody{
     overflow: auto;
+}
+
+main .table-container .trainer-table tbody tr:hover{
+    background-color: var(--primary-color-light);
 }
 
 main .table-container .trainer-table td{
@@ -909,4 +925,191 @@ main .trainer-form .form-container .input-container .invalid-feedback {
     main .trainer-form .input-container {
         flex-direction: column;
     }
+}
+
+/* View Trainer Page */
+main .navbar-container{
+    grid-column: 1 / -1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main .navbar-container .navbar{
+    width: 75%;
+    background-color: var(--sidebar-color);
+    box-shadow: var(--box-shadow-color);
+    border-radius: 50px;
+    margin: 0;
+    padding: 0;
+}
+
+main .navbar .nav-links {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    list-style: none;
+    display: flex; /* Use flexbox for horizontal alignment */
+    justify-content: space-around;
+    align-items: center; /* Aligns items vertically in the center */
+}
+
+main .navbar .nav-links .separator{
+    width: 1px;
+    height: 25px;
+    padding: 0;
+    background-color: #ddd;
+    display: inline-block; /* Makes the separator inline */
+    align-self: center; /* Ensures the separator aligns with the text */
+    margin: 0; /* Adds spacing around the separator */
+    opacity: 1;
+}
+  
+main .navbar .nav-links li {
+    margin: 0 0rem;
+    padding: 0px;
+    border-radius: 50px;
+    transition: background-color 0.3s ease;
+    overflow: hidden;
+    z-index: 1;
+}
+  
+main .navbar .nav-links a {
+    text-wrap: nowrap;
+    text-decoration: none;
+    font-size: 1rem;
+    color: var(--hover-btn);
+    transition: all 0.3s ease;
+    padding: 1rem 3.5rem; /* Adjust padding for a balanced appearance */
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main .navbar .nav-links li:hover {
+    background-color: rgb(238, 238, 238); /* Highlight on hover */
+}
+
+main .navbar .nav-links li.active {
+    background-color: rgb(238, 238, 238); /* Highlight on hover */
+}
+
+main .user-details {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: var(--hover-btn);
+}
+
+main .user-details .profile-picture img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+main .user-details .details {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    font-size: 1rem;
+}
+
+main .user-details .details .left-column,
+main .user-details .details .right-column {
+    padding: 10px; /* Adds padding inside each column */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+main .user-details .details .left-column {
+    grid-column: 1; /* First column */
+    text-align: left; /* Align text to the left */
+}
+
+main .user-details .details .right-column {
+    grid-column: 2; /* Second column */
+    text-align: left; /* Keep text aligned left for consistency */
+}
+
+
+main .user-details .details p{
+    margin: 8px 0;
+}
+
+main .user-details .details input, select{
+    font-size: 1rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+main .user-details .details input{
+    width: 100%;
+}
+
+main .user-details .action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+  
+.edit-btn, .delete-btn, .save-btn, .cancel-btn{
+    font-size: 1rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+  }
+  
+.edit-btn {
+    padding: 10px 5rem;
+    background-color: #4CAF50;
+    color: white;
+}
+  
+.delete-btn {
+    padding: 10px 4.5rem;
+    background-color: #F44336;
+    color: white;
+}
+
+.save-btn{
+    padding: 10px 5rem;
+    background-color: #2693FF;
+    color: white;
+}
+
+.cancel-btn{
+    padding: 10px 4.5rem;
+    background-color: #FF0000;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #45a049;
+}
+  
+.delete-btn:hover {
+    background-color: #e53935;
+}
+
+.save-btn:hover {
+    background-color: #1c7bd9;
+}
+
+.cancel-btn:hover {
+    background-color: #e61e1e;
 }

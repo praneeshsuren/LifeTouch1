@@ -55,6 +55,57 @@
                         redirect('receptionist/trainers');
                     }
                     break;
+
+                case 'viewTrainer':
+                    // Load the view to view a trainer
+                    $trainerModel = new M_Trainer;
+                    $trainer = $trainerModel->findByTrainerId($_GET['id']);
+        
+                    $data = [
+                        'trainer' => $trainer
+                    ];
+        
+                    $this->view('receptionist/receptionist-viewTrainer', $data);
+                    break;
+
+                case 'updateTrainer':
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                
+                        // Initialize the trainer model
+                        $trainerModel = new M_Trainer;
+                
+                        // Extract trainer ID and other data
+                        $trainer_id = $_POST['trainer_id']; // Assuming this is a hidden field in the form
+                        $data = [
+                            'first_name' => $_POST['first_name'],
+                            'last_name' => $_POST['last_name'],
+                            'gender' => $_POST['gender'],
+                            'date_of_birth' => $_POST['date_of_birth'],
+                            'home_address' => $_POST['home_address'],
+                            'email_address' => $_POST['email_address'],
+                            'contact_number' => $_POST['contact_number']
+                        ];
+                
+                        // Attempt to update the trainer
+                        if ($trainerModel->update($trainer_id, $data, 'trainer_id')) {
+                            // Set a success message in the session
+                            $_SESSION['success'] = "Trainer details updated successfully!";
+                            
+                            // Redirect to the trainer view page with the updated trainer ID as a query parameter
+                            redirect("receptionist/trainers/viewTrainer?id={$trainer_id}");
+                        } else {
+                            // Set an error message in the session
+                            $_SESSION['error'] = "Failed to update trainer details.";
+                            
+                            // Redirect back to the trainers list
+                            redirect('receptionist/trainers/viewTrainer?id={$trainer_id}');
+                        }
+                        
+                    } else {
+                        // Redirect to trainers list if accessed without POST request
+                        redirect('/receptionist/trainers');
+                    }
+                    break;
         
                 default:
                     // Fetch all trainers and pass to the view
