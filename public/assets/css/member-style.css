@@ -16,7 +16,6 @@
     --alert-color: red;
     --hover-btn: #000;
     --box-shadow-color: 0px 10px 8px rgba(0, 0, 0, 0.1);
-    --table-head-color: #c977fb;
 
     --tran-02: all 0.2s ease;
     --tran-03: all 0.3s ease;
@@ -41,8 +40,7 @@ body.dark{
     --hover-btn: #FFF;
     --box-shadow-color: 0px 10px 8px rgba(255, 255, 255, 0.1);
 }
-
-/* Sidebar */
+/* sidebar */
 .sidebar{ 
     position: fixed;
     width: 250px;
@@ -51,6 +49,7 @@ body.dark{
     flex-direction: column;
     gap: 20px;
     background: var(--sidebar-color);
+    transition: var(--tran-05);
     padding: 24px;
     z-index: 100;
 }
@@ -181,6 +180,7 @@ body.dark{
     border: 2px solid var(--separator-color);
     background-color: var(--sidebar-color);
     cursor: pointer;
+    transition: var(--tran-03);
     z-index: 101;
 }
 
@@ -188,7 +188,6 @@ body.dark{
     background-color: var(--primary-color);
     color: var(--sidebar-color);
     border-color: var(--primary-color);
-    transition: var(--tran-03);
 }
 
 .menu-btn:hover i {
@@ -389,16 +388,13 @@ main{
     height: 100vh;
     width: calc(100% - 250px);
     background: var(--body-color);
+    transition: var(--tran-05);
     z-index: 1;
     padding: 1.5rem 2rem;
     display: grid;
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 3rem 1fr 2fr;
     gap: 1.6rem;
-}
-
-main.active{
-    transition: var(--tran-03);
 }
 
 main > .title{
@@ -480,11 +476,11 @@ main .insights > div{
     padding: 2rem;
     border-radius: 40px;
     box-shadow: var(--box-shadow-color);
+    transition: var(--tran-03);
 }
 
 main .insights > div:hover{
     background: var(--separator-color);
-    transition: var(--tran-05);
 }
 
 main .insights > div i{
@@ -602,11 +598,11 @@ main .recent-announcements .announcement{
     padding-bottom: 15px;
     cursor: pointer;
     margin-bottom: 1rem;
+    transition: var(--tran-03);
 }
 
 main .recent-announcements .announcement:hover{
     transform: translateY(-10px);
-    transition: var(--tran-03);
 }
 
 main .recent-announcements .announcement .profile-img{
@@ -633,7 +629,6 @@ main .chart-header {
     align-items: center;
     justify-content: space-between;
     height: 2.5rem;
-    grid-column: 1;
 }
 
 main .chart-header i{
@@ -660,253 +655,411 @@ main #areaChart{
     justify-content: center;
 }
 
-/* Trainers */
-
-main .table-container{
+/* Announcements Page */
+main .announcementsContainer{
     grid-column: 1 / -1;
-    grid-row: 2 / span 2;
-    overflow-y: auto;  /* Enable vertical scrolling */
-    overflow-x: auto;  /* Enable horizontal scrolling */
-    margin: 25px 0;
-    box-shadow: var(--box-shadow-color);
-    border-radius: 10px 10px 0 0;
-}
-
-main .table-container .trainer-table{
-    border-collapse: collapse;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
     width: 100%;
 }
 
-main .table-container .trainer-table thead{
-    background-color: var(--table-head-color);
+main .announcementsContainer .announcementHeader{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+
+main .announcementsContainer .announcementHeader .aHeading{
+    display: flex;
+    align-items: center;
+}
+
+main .announcementsContainer .announcementHeader .aHeading h2{
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+main .announcementsContainer .announcementHeader .aHeading #num-of-announcements{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--alert-color);
+    border: 2px solid var(--alert-color);
+    border-radius: 20px;
+    padding: 0.2rem 0.5rem;
+    margin-left: 10px;
+}
+
+main .announcementsContainer .announcementHeader #mark-as-read{
+    color: var(--text-color);
+    cursor: pointer;
+    transition: var(--tran-05);
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+    border: 1px solid var(--text-color);
+}
+
+main .announcementsContainer .announcementHeader #mark-as-read:hover{
+    color: var(--hover-btn);
+    border: 1px solid var(--hover-btn);
+    box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.1);
+}
+
+main .announcementsContainer .announcement-card{
+    background-color: var(--sidebar-color);
+    width: 90%;
+    padding: 2rem 2rem;
+    border-radius: 1.5rem;
+    display: block;
+}
+
+main .announcementsContainer .announcement-card .announcementCard-Header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+main .announcementsContainer .announcement-card .announcementCard-Header .details{
+    display: flex;
+    align-items: center;
+    width: 92%;
+}
+
+main .announcementsContainer .announcement-card .announcementCard-Header .details .profile-img{
+    display: flex;
+    margin-left: 0.5rem;
+    width: 4.5rem;
+}
+
+main .announcementsContainer .announcement-card .announcementCard-Header .details .profile-img img{
+    border-radius: 50%;
+    width: 100%;
+    object-fit: cover;
+}
+
+main .announcementsContainer .announcement-card .announcementCard-Header .details .name-and-title{
+    margin-left: 1rem;
+    display: block;
+    color: var(--hover-btn);
     text-align: left;
 }
 
-main .table-container .trainer-table th, main .trainer-table td{
-    padding: 15px 12px;
-    min-width: 150px;
-    font-size: 1rem;
-    font-weight: bold;
+main .announcementsContainer .announcement-card .announcementCard-Header .details .name-and-title h3{
+    margin-bottom: 5px
+}
+
+main .announcementsContainer .announcement-card .announcementCard-Header .unread-marker{
+    display: none;
+    border-radius: 20px;
+    border: 1px solid var(--alert-color);
+    padding: 0.2rem 0.5rem;
+    color: var(--alert-color);
+}
+
+main .announcementsContainer .announcement-card .announcementCard-Header .unread-marker.unread{
+    display: block;
+}
+
+main .announcementsContainer .announcement-card .description{
+    margin-top: 1.5rem;
+    margin-left: 1rem;
+    color: var(--hover-btn);
+    text-align: left;
+}
+
+main .announcementsContainer .announcement-card .announcementCard-Footer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    margin-left: 0.5rem;
     color: var(--hover-btn);
 }
 
-main .table-container .trainer-table tbody{
-    overflow: auto;
+main .announcementsContainer .announcement-card .announcementCard-Footer .announcement-time{
+    display: flex;
+    align-items: center;
 }
 
-main .table-container .trainer-table td{
-    font-weight: normal;
+main .announcementsContainer .announcement-card .announcementCard-Footer .announcement-date{
+    display: flex;
+    align-items: center;
 }
 
-main .table-container .trainer-table td img{
-    width: 3.5rem;
+main .announcementsContainer .announcement-card .announcementCard-Footer i{
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    main .recent-announcements {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    main {
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    main .insights {
+        grid-template-columns: 1fr;
+    }
+
+    main .member-view-trainer{
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    main .trainer-image{
+        width: 100px;
+        height: 100px;
+    }
+
+    main.member-view-trainer .member-view-trainer-btn{
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }
+
+    main .member-supplements{
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    main .supplement-image{
+        width: 100px;
+        height: 100px;
+    }
+
+    main.member-supplements .member-supplements-btn{
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }    
+
+    
+}
+
+/*member-view trainer-section*/
+
+.member-view-trainer-grid-container{
+    grid-column: 1 / 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.member-view-trainer{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    width: 100%;
+}
+.trainer{
+    color: var(--hover-btn);
+    background: var(--sidebar-color);
+    padding: 2rem;
+    border-radius: 40px;
+    box-shadow: var(--box-shadow-color);
+    transition: var(--tran-03);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.trainer:hover{
+    background: var(--separator-color);
+}
+  
+.trainer-image {
     border-radius: 50%;
+    width: 120px; /* Increased width */
+    height: 120px; /* Increased height */
     object-fit: cover;
-    vertical-align: middle;
+    margin-bottom: 1rem; /* Adds space between the image and the button */
+}
+  
+.member-view-trainer .member-view-trainer-btn {
+    background-color: var(--primary-color);
+    color:white;
+    padding: 12px 20px; /* Increased padding for a larger button */
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-size: 1rem; 
+    transition: background-color 0.3s ease;
+}
+  
+.member-view-trainer .member-view-trainer-btn:hover {
+    color:var(--text-color);
+    background: var(--primary-color-light);
 }
 
-main .table-container .trainer-table tbody tr{
-    border-bottom: 1px solid #dddddd;
+/*member-supplements-section*/
+
+.member-supplements-grid-container{
+    grid-column: 1 / 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.member-supplements{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    width: 100%;
+}
+.supplement{
+    color: var(--hover-btn);
+    background: var(--sidebar-color);
+    padding: 2rem;
+    border-radius: 40px;
+    box-shadow: var(--box-shadow-color);
+    transition: var(--tran-03);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
-main .table-container .trainer-table tbody tr:nth-of-type(even){
-    background-color: var(--sidebar-color);
+.supplement:hover{
+    background: var(--separator-color);
+}
+  
+.supplement-image {
+    border-radius: 50%;
+    width: 120px; /* Increased width */
+    height: 120px; /* Increased height */
+    object-fit: cover;
+    margin-bottom: 1rem; /* Adds space between the image and the button */
+}
+  
+.member-supplements .member-supplements-btn {
+    background-color: var(--primary-color);
+    color:white;
+    padding: 12px 20px; /* Increased padding for a larger button */
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-size: 1rem; 
+    transition: background-color 0.3s ease;
+}
+  
+.member-supplements .member-supplements-btn:hover {
+    color:var(--text-color);
+    background: var(--primary-color-light);
+}
+/* search bar */
+main > .searchbar {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    /* Space out child elements */
+    align-items: center;
+    /* Align items vertically center */
+}
+.search button {
+    border: none;
+    background: none;
+    color: #8b8ba7;
+}
+.search {
+    --timing: 0.3s;
+    --width-of-input: 200px;
+    --height-of-input: 40px;
+    --border-height: 2px;
+    --border-weight: 175px;
+    --input-bg: #fff;
+    --border-color: #2f2ee9;
+    --border-radius: 30px;
+    --after-border-radius: 30px;
+    position: relative;
+    width: var(--width-of-input);
+    height: var(--height-of-input);
+    display: flex;
+    align-items: center;
+    padding-inline: 0.8em;
+    border-radius: var(--border-radius);
+    transition: border-radius 0.5s ease;
+    background: var(--input-bg, #fff);
 }
 
-main .table-container .trainer-table tbody tr:last-of-type{
-    border-bottom: 2px solid var(--table-head-color);
+/* styling of Input */
+.search-input .input {
+    font-size: 0.9rem;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    padding-inline: 0.5em;
+    padding-block: 0.7em;
+    border: none;
 }
 
-main .table-container .trainer-table::-webkit-scrollbar{
-    width: 0.5rem;
-    height: 0.5rem;
+/* styling of animated border */
+.search:before {
+    content: "";
+    position: absolute;
+    background: var(--border-color);
+    transform: scaleX(0);
+    transform-origin: left;
+    width: var(--border-weight);
+    height: var(--border-height);
+    left: 0.8;
+    bottom: 0;
+    border-bottom-left-radius: 1px;
+    border-bottom-right-radius: 1px;
+    transition: transform var(--timing) ease;
 }
 
-main .table-container .trainer-table::-webkit-scrollbar-thumb{
-    border-radius: .5rem;
-    background-color: #0004;
+/* Hover on Input */
+.search:focus-within {
+    border-radius: var(--after-border-radius);
+}
+
+.search-input input:focus {
+    outline: none;
+}
+
+/* here is code of animated border */
+.search:focus-within:before {
+    transform: scale(1);
+}
+
+/* styling of close button */
+/* == you can click the close button to remove text == */
+.reset {
+    border: none;
+    background: none;
+    opacity: 0;
     visibility: hidden;
 }
 
-main .table-container .trainer-table:hover::-webkit-scrollbar-thumb{ 
+/* close button shown when typing */
+.search-input input:not(:placeholder-shown)~.reset {
+    opacity: 1;
     visibility: visible;
 }
 
-main .add-trainer{
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-main .add-trainer a button{
-    padding: 12px 60px;
-    background-color: #695CFE;
-    color: var(--sidebar-color);
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: var(--tran-03);
-    margin-bottom: 1rem;
-}
-
-main .add-trainer a button:hover{
-    transform: scale(1.05);
-}
-
-
-/* Trainer Registration Form */
-main .trainer-form{
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: var(--hover-btn);
-}
-
-main .trainer-form h2{ 
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 40px;
-}
-
-main .trainer-form .form-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;  /* Two columns */
-    gap: 4rem;
-}
-
-main .trainer-form .form-container .left-column, .right-column {
-    display: flex;
-    flex-direction: column;
-}
-
-main .trainer-form .form-container .input-container{
-    margin-bottom: 10px;
-}
-
-
-main .trainer-form .input-container .input-box {
-    position: relative;
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-main .trainer-form .input-container .input-box input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #333;
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-main .trainer-form .input-container .input-box input:focus {
-    border-color: #2693FF;
-}
-
-main .trainer-form .input-container .input-box #gender {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    color: #333;
-}
-
-main .trainer-form .input-container .input-box #gender:focus {
-    border-color: #4a90e2;
-    outline: none;
-    background-color: #fff;
-}
-
-main .trainer-form .input-container .input-box #gender select:invalid {
-    color: #999;
-}
-
-main .trainer-form .input-container .input-box #gender option {
-    color: #333;
-}
-
-main .trainer-form .form-container .right-column .input-image-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-main .trainer-form .form-container .right-column .input-image-box label {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 10px;
-}
-
-/* Styling for the circular image component */
-main .trainer-form .form-container .right-column .image-container {
-    width: 150px; /* Adjust the size as needed */
-    height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #ccc; /* Optional: Adds a border around the circular image */
-    margin-bottom: 20px; /* Optional: Adds space below the image */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-main .trainer-form .form-container .right-column .image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
-}
-
-main .trainer-form .form-container .right-column input[type="file"] {
-    margin-bottom: 20px;
-}
-
-
-main .trainer-form .btn-container {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-
-main .trainer-form .btn-container .trainer-submit-btn {
-    width: 50%;
-    padding: 12px;
-    background-color: #2693FF;
-    border: none;
-    border-radius: 5px;
-    font-size: 18px;
-    color: white;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    align-self: center; /* Center the button */
-}
-
-main .trainer-form .btn-container .trainer-submit-btn:hover {
-    background-color: #1c7bd9;
-    transform: scale(1.05);
-}
-
-/* Error Message Styles */
-main .trainer-form .form-container .input-container .invalid-feedback {
-    color: #FF0000; /* Red color for error */
-    font-size: 14px;
-}
-
-/* Responsive styling */
-@media (max-width: 768px) {
-    main .trainer-form .input-container {
-        flex-direction: column;
-    }
-}
+/* sizing svg icons */
+.search svg {
+    width: 17px;
+    margin-top: 3px;
+}     
