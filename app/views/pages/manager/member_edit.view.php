@@ -40,7 +40,7 @@ $gender = ['Male', 'Female', 'Other'];
             <div class="member-card">
                 <div>
                     <div class="profile-img-container">
-                        <img class="profile-img" src="<?php echo URLROOT; ?>/public/images/image.png" alt="Profile Image">
+                        <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/image.png" alt="Profile Image">
                     </div>
                     <p class="file-upload-text">Click below to select an image</p>
                     <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="image">
