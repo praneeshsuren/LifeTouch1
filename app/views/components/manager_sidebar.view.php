@@ -91,7 +91,7 @@
             </div>
         </li>
         <li>
-            <a href="#">
+            <a href="<?php echo URLROOT; ?>/login/logout">
                 <i class='icon ph-bold ph-sign-out'></i>
                 <span class="text">Logout</span>
             </a>
