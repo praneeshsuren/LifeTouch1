@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/home-style.css?v=<?php echo time(); ?>" />
-    <title>Life Touch</title>
+    <title><?php echo APP_NAME; ?></title>
 </head>
 
 <body>
     <!--Header section code-->
     <header>
-        <a href="#" class="logo">Life <span>Touch</span></a>
+        <a href="#" class="logo">Life<span>Touch</span></a>
 
         <div class='bx bx-menu' id="menu-icon"></div>
 

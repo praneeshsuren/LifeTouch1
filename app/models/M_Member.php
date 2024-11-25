@@ -11,6 +11,7 @@
             'first_name',
             'last_name',
             'date_of_birth',
+            'NIC_no',
             'home_address',
             'height',
             'weight',

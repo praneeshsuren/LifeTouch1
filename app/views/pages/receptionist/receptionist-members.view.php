@@ -16,16 +16,22 @@
   </head>
   <body>
 
+    <!-- PHP Alerts for Success/Error Messages -->
+    <?php
+      if (isset($_SESSION['success'])) {
+          echo "<script>alert('" . $_SESSION['success'] . "');</script>";
+          unset($_SESSION['success']); // Clear the message after showing it
+      }
+
+      if (isset($_SESSION['error'])) {
+          echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+          unset($_SESSION['error']); // Clear the message after showing it
+      }
+    ?>
+
     <section class="sidebar">
         <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
     </section>
-
-    <?php if (isset($_SESSION['success'])): ?>
-      <script>
-          alert("<?php echo $_SESSION['success']; ?>");
-      </script>
-      <?php unset($_SESSION['success']); // Clear success message after showing it ?>
-    <?php endif; ?>
 
     <main>
       <div class="title">
@@ -39,13 +45,14 @@
       </div>
 
       <div class="table-container">
-        <table class='trainer-table'>
+        <table class='user-table'>
           <thead>
               <tr>
                   <th>Member Id</th>
                   <th>Profile Picture</th>
                   <th>First Name</th>
                   <th>Last Name</th>
+                  <th>NIC Number</th>
                   <th>Gender</th>
                   <th>Date of Birth</th>
                   <th>Age</th>
@@ -61,9 +68,12 @@
               <?php foreach ($data['members'] as $member) : ?>
                 <tr onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/members/viewMember?id=<?php echo $member->member_id; ?>';" style="cursor: pointer;">
                     <td><?php echo $member->member_id; ?></td>
-                    <td><img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="Picture"></td>
+                    <td>
+                      <img src="<?php echo URLROOT; ?>/assets/images/Member/<?php echo !empty($member->image) ? $member->image : 'default-placeholder.jpg'; ?>" alt="Member Picture" class="user-image">
+                    </td>
                     <td><?php echo $member->first_name; ?></td>
                     <td><?php echo $member->last_name; ?></td>
+                    <td><?php echo $member->NIC_no; ?></td>
                     <td><?php echo $member->gender; ?></td>
                     <td><?php echo $member->date_of_birth; ?></td>
                     <td><?php echo calculateAge($member->date_of_birth); ?></td>
@@ -85,7 +95,7 @@
 
       <div class="add-trainer">
         <a href="<?php echo URLROOT; ?>/receptionist/members/createMember">
-          <button class="add-trainer-btn">+ Add Member</button>
+          <button class="add-user-btn">+ Add Member</button>
         </a>
       </div>
 
