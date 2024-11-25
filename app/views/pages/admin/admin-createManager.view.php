@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/receptionist-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
@@ -17,23 +17,23 @@
   <body>
 
     <section class="sidebar">
-        <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
+        <?php require APPROOT.'/views/components/admin-sidebar.view.php' ?>
     </section>
 
     <main>
 
       <div class="title">
         
-        <h1>Trainers</h1>
+        <h1>Managers</h1>
         <div class="greeting">
-            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
+          <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
 
       </div>
 
       <div class="user-form">
-        <h2>Trainer Registration</h2>
-        <form action="<?php echo URLROOT; ?>/receptionist/trainers/registerTrainer" method="post">
+        <h2>Manager Registration</h2>
+        <form action="<?php echo URLROOT; ?>/admin/managers/registerManager" method="post">
             <div class="form-container">
 
                 <!-- Left Column -->
@@ -120,9 +120,9 @@
                 <div class="right-column">
 
                     <div class="input-image-box">
-                        <label for="user-image">Upload Trainer Image</label>
+                        <label for="user-image">Upload Manager Image</label>
                         <div class="image-container">
-                            <img id="profile-image" src="<?php echo URLROOT; ?>/assets/images/no_img.jpg" alt="Trainer Image">
+                            <img id="profile-image" src="<?php echo URLROOT; ?>/assets/images/no_img.jpg" alt="Manager Image">
                         </div>
                         <input
                             type="file"
@@ -162,7 +162,7 @@
                 </div>
             </div>
             <div class="btn-container">
-                <button type="submit" class="user-create-btn">Create Trainer</button>
+                <button type="submit" class="user-create-btn">Create Manager</button>
             </div>
         </form>
     </div>
@@ -186,7 +186,7 @@
             });
         </script>
         <!-- SCRIPT -->
-        <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
+        <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
 
     </main>
 

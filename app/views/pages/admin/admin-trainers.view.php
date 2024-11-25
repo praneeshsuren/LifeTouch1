@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/receptionist-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
@@ -30,7 +30,7 @@
     ?>
 
     <section class="sidebar">
-        <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
+        <?php require APPROOT.'/views/components/admin-sidebar.view.php' ?>
     </section>
 
     <main>
@@ -38,7 +38,7 @@
         
         <h1>Trainers</h1>
         <div class="greeting">
-            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
+          <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
 
       </div>
@@ -63,7 +63,7 @@
           <tbody>
             <?php if (!empty($data['trainers'])): ?>
               <?php foreach ($data['trainers'] as $trainer) : ?>
-                <tr onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/trainers/viewTrainer?id=<?php echo $trainer->trainer_id; ?>';" style="cursor: pointer;">
+                <tr onclick="window.location.href='<?php echo URLROOT; ?>/admin/trainers/viewTrainer?id=<?php echo $trainer->trainer_id; ?>';" style="cursor: pointer;">
                     <td><?php echo $trainer->trainer_id; ?></td>
                     <td>
                       <img src="<?php echo URLROOT; ?>/assets/images/Trainer/<?php echo !empty($trainer->image) ? $trainer->image : 'default-placeholder.jpg'; ?>" alt="Trainer Picture" class="user-image">
@@ -81,15 +81,15 @@
               <?php endforeach; ?>
               <?php else: ?>
                 <tr>
-                    <td colspan="10" style="text-align: center;">No trainers available</td>
+                    <td colspan="11" style="text-align: center;">No trainers available</td>
                 </tr>
               <?php endif; ?>
           </tbody>
         </table>
       </div>
 
-        <div class="add-trainer">
-          <a href="<?php echo URLROOT; ?>/receptionist/trainers/createTrainer">
+        <div class="add-user">
+          <a href="<?php echo URLROOT; ?>/admin/trainers/createTrainer">
             <button class="add-user-btn">+ Add Trainer</button>
           </a>
         </div>
@@ -97,7 +97,7 @@
       </main>
 
     <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
 
   </body>
 </html>

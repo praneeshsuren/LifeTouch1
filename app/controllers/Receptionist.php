@@ -327,7 +327,10 @@
             }
         }
         
-        
+        public function announcements(){
+            $this->view('receptionist/receptionist-announcements');
+
+        }
         
 
     }
