@@ -1,6 +1,11 @@
 <?php
     class Admin extends Controller{
 
+        public function __construct() {
+            // Check if the user is logged in as a admin
+            $this->checkAuth('admin');
+        }
+
         public function index(){
             $this->view('admin/admin-dashboard');
         }
