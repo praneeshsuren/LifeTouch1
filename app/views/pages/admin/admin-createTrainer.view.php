@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/receptionist-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
@@ -17,7 +17,7 @@
   <body>
 
     <section class="sidebar">
-        <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
+        <?php require APPROOT.'/views/components/admin-sidebar.view.php' ?>
     </section>
 
     <main>
@@ -26,14 +26,14 @@
         
         <h1>Trainers</h1>
         <div class="greeting">
-            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
+          <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
 
       </div>
 
       <div class="user-form">
         <h2>Trainer Registration</h2>
-        <form action="<?php echo URLROOT; ?>/receptionist/trainers/registerTrainer" method="post">
+        <form action="<?php echo URLROOT; ?>/admin/trainers/registerTrainer" method="post">
             <div class="form-container">
 
                 <!-- Left Column -->
@@ -186,7 +186,7 @@
             });
         </script>
         <!-- SCRIPT -->
-        <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
+        <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
 
     </main>
 

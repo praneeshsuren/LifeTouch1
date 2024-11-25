@@ -34,25 +34,7 @@ class Login extends Controller {
                     // Check if the user is a trainer or member based on the user_id prefix
                     $rolePrefix = substr($userDetails->user_id, 0, 2); // 'TN' for trainer, 'MB' for member
 
-                    if ($rolePrefix === 'TN') {
-                        // Fetch additional trainer details
-                        $trainer = new M_Trainer;
-                        $trainerDetails = $trainer->findByTrainerId($userDetails->user_id);
-
-                        if ($trainerDetails) {
-                            // Store the trainer details in session
-                            $_SESSION['role'] = 'trainer';
-                            $_SESSION['first_name'] = $trainerDetails->first_name;
-                            $_SESSION['last_name'] = $trainerDetails->last_name;
-
-                            // Redirect to trainer dashboard
-                            redirect('trainer');
-                        } else {
-                            // Handle the case where trainer details are not found
-                            $data['error'] = 'Trainer details not found.';
-                            $this->view('home/home-login', $data);
-                        }
-                    } elseif ($rolePrefix === 'MB') {
+                    if ($rolePrefix === 'MB') {
                         // Fetch additional member details
                         $member = new M_Member;
                         $memberDetails = $member->findByMemberId($userDetails->user_id);
@@ -70,12 +52,94 @@ class Login extends Controller {
                             $data['error'] = 'Member details not found.';
                             $this->view('home/home-login', $data);
                         }
-                    } else {
+                    }
+
+                    elseif ($rolePrefix === 'TN') {
+                        // Fetch additional trainer details
+                        $trainer = new M_Trainer;
+                        $trainerDetails = $trainer->findByTrainerId($userDetails->user_id);
+
+                        if ($trainerDetails) {
+                            // Store the trainer details in session
+                            $_SESSION['role'] = 'trainer';
+                            $_SESSION['first_name'] = $trainerDetails->first_name;
+                            $_SESSION['last_name'] = $trainerDetails->last_name;
+
+                            // Redirect to trainer dashboard
+                            redirect('trainer');
+                        } else {
+                            // Handle the case where trainer details are not found
+                            $data['error'] = 'Trainer details not found.';
+                            $this->view('home/home-login', $data);
+                        }
+                    } 
+                     
+                    elseif ($rolePrefix === 'MR') {
+                        // Fetch additional member details
+                        $manager = new M_Manager;
+                        $managerDetails = $manager->findByManagerId($userDetails->user_id);
+
+                        if ($managerDetails) {
+                            // Store the member details in session
+                            $_SESSION['role'] = 'manager';
+                            $_SESSION['first_name'] = $managerDetails->first_name;
+                            $_SESSION['last_name'] = $managerDetails->last_name;
+
+                            // Redirect to member dashboard
+                            redirect('manager');
+                        } else {
+                            // Handle the case where member details are not found
+                            $data['error'] = 'Manager details not found.';
+                            $this->view('home/home-login', $data);
+                        }
+                    }
+
+                    elseif ($rolePrefix === 'RT') {
+                        // Fetch additional member details
+                        $receptionist = new M_Receptionist;
+                        $receptionistDetails = $receptionist->findByReceptionistId($userDetails->user_id);
+
+                        if ($receptionistDetails) {
+                            // Store the member details in session
+                            $_SESSION['role'] = 'receptionist';
+                            $_SESSION['first_name'] = $receptionistDetails->first_name;
+                            $_SESSION['last_name'] = $receptionistDetails->last_name;
+
+                            // Redirect to member dashboard
+                            redirect('receptionist');
+                        } else {
+                            // Handle the case where member details are not found
+                            $data['error'] = 'Receptionist details not found.';
+                            $this->view('home/home-login', $data);
+                        }
+                    }
+
+                    elseif ($rolePrefix === 'AD') {
+                        // Fetch additional member details
+                        $admin = new M_Admin;
+                        $adminDetails = $admin->findByAdminId($userDetails->user_id);
+
+                        if ($adminDetails) {
+                            // Store the member details in session
+                            $_SESSION['role'] = 'admin';
+                            $_SESSION['first_name'] = $adminDetails->first_name;
+                            $_SESSION['last_name'] = $adminDetails->last_name;
+
+                            // Redirect to member dashboard
+                            redirect('admin');
+                        } else {
+                            // Handle the case where member details are not found
+                            $data['error'] = 'Admin details not found.';
+                            $this->view('home/home-login', $data);
+                        }
+                    }
+                    else {
                         // Handle invalid user role prefix
                         $data['error'] = 'Invalid user role.';
                         $this->view('home/home-login', $data);
                     }
-                } else {
+                } 
+                else {
                     // Handle invalid password
                     $data['error'] = 'Invalid username or password.';
                     $this->view('home/home-login', $data);
@@ -85,7 +149,8 @@ class Login extends Controller {
                 $data['error'] = 'Invalid username or password.';
                 $this->view('home/home-login', $data);
             }
-        } else {
+        } 
+        else {
             // Redirect to the login page if the request is not POST
             redirect('login');
         }

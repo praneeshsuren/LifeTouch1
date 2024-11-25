@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/receptionist-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- CHART.JS -->
@@ -19,14 +19,14 @@
   <body>
 
     <section class="sidebar">
-      <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
+      <?php require APPROOT.'/views/components/admin-sidebar.view.php' ?>
     </section>
 
     <main>
       <div class="title">
         <h1>Trainer Details</h1>
         <div class="greeting">
-            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
+          <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
       </div>
 
@@ -44,7 +44,7 @@
         </div>
       </div>
       <div class="user-details">
-      <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/receptionist/trainers/updateTrainer">
+      <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/admin/trainers/updateTrainer">
           <div class="details">
             <div class="profile-picture">
               <img src="<?php echo URLROOT; ?>/assets/images/Trainer/<?php echo !empty($data['trainer']->image) ? $data['trainer']->image : 'default-placeholder.jpg'; ?>" 
@@ -101,7 +101,7 @@
           </div>
           <div class="action-buttons">
             <button type="button" id="editBtn" class="edit-btn">Edit</button>
-            <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/trainers/deleteTrainer?id=<?php echo $data['trainer']->trainer_id; ?>';">Delete</button>
+            <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/trainers/deleteTrainer?id=<?php echo $data['trainer']->trainer_id; ?>';">Delete</button>
             <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
             <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;">Cancel</button>
           </div>
@@ -139,7 +139,7 @@
     </script>
 
     <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
 
   </body>
 </html>

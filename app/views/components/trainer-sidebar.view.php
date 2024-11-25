@@ -21,23 +21,11 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/trainer/members">
                     <i class='icon ph-bold ph-user'></i>
-                    <span class="text">Users</span>
+                    <span class="text">View Member</span>
                     <i class='arrow ph-bold ph-caret-down'></i>
                 </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a href="#">
-                            <span class="text">Members</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="text">Trainers</span>
-                        </a>
-                    </li> 
-                </ul> 
             </li>
             <li>
                 <a href="#">

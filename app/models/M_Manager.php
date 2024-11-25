@@ -1,13 +1,13 @@
 <?php
 
-    //Admin class
-    class M_Admin{
+    //Trainer class
+    class M_Manager{
 
         use Model;
 
-        protected $table = 'admin';
+        protected $table = 'manager';
         protected $allowedColumns = [
-            'admin_id',
+            'manager_id',
             'first_name',
             'last_name',
             'NIC_no',
@@ -20,8 +20,8 @@
             'status'
         ];
 
-        public function findByAdminId($adminId){
-            $data = ['admin_id' => $adminId];
+        public function findByManagerId($managerId) {
+            $data = ['manager_id' => $managerId];
             return $this->first($data);  // Use the `first` method to get the first matching record
         }
 
