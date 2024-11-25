@@ -62,12 +62,6 @@
 <div class="menu">
     <p class="title">Account</p>
     <ul>
-        <li>
-            <a href="#">
-                <i class='icon ph-bold ph-info'></i>
-                <span class="text">Help</span>
-            </a>
-        </li>
         <li class="mode active">
             <div class="moon-sun">
                 <i class='icon ph-bold ph-sun sun'></i>

@@ -36,6 +36,29 @@
                             $temp['user_id'] = $temp['trainer_id'];
             
                             $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
+
+                            $temp['status'] = 'Active';
+
+                            //Handle image input
+                            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                                $targetDir = APPROOT. "/assets/images/Trainer/";
+                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $targetFile = $targetDir . $fileName;
+                            
+                                // Validate and move the file to the target directory
+                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                    $data['image'] = $fileName; // Save the filename for the database
+                                } else {
+                                    $errors['image'] = "Failed to upload the file. Please try again.";
+                                }
+                            } elseif (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                                // Handle other file upload errors
+                                $errors['image'] = "An error occurred during file upload. Please try again.";
+                            } else {
+                                // No file uploaded, set a default value or leave it empty
+                                $data['image'] = null; // Or set a default placeholder if necessary
+                            }
+
                             // Insert into User and Member models
                             $user->insert($temp);
                             $trainer->insert($temp);
@@ -71,24 +94,27 @@
                 case 'updateTrainer':
                     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Initialize the Trainer model
-                        $trainer = new M_Trainer;
+                        $trainerModel = new M_Trainer;
                 
                         // Validate the incoming data
-                        if ($trainer->validate($_POST)) {
+                        if ($trainerModel->validate($_POST)) {
                             // Prepare the data to update the trainer
-                            $trainer_id = $_POST['trainer_id']; // Trainer ID
+
                             $data = [
                                 'first_name'    => $_POST['first_name'],
                                 'last_name'     => $_POST['last_name'],
+                                'NIC_no'        => $_POST['NIC_no'],
                                 'date_of_birth' => $_POST['date_of_birth'],
                                 'home_address'  => $_POST['home_address'],
                                 'contact_number'=> $_POST['contact_number'],
                                 'gender'        => $_POST['gender'],
                                 'email_address' => $_POST['email_address']
                             ];
+
+                            $trainer_id = $_POST['trainer_id'];
                 
                             // Call the update function
-                            if ($trainer->update($trainer_id, $data, 'trainer_id')) {
+                            if (!$trainerModel->update($trainer_id, $data, 'trainer_id')) {
                                 // Set a success session message
                                 $_SESSION['success'] = "Trainer has been successfully updated!";
                                 // Redirect to the trainer view page
@@ -101,7 +127,7 @@
                         } else {
                             // If validation fails, pass errors to the view
                             $data = [
-                                'errors' => $trainer->errors,
+                                'errors' => $trainerModel->errors,
                                 'trainer' => $_POST // Preserve form data for user correction
                             ];
                             // Render the view with errors and form data
@@ -112,6 +138,28 @@
                         redirect('receptionist/trainers');
                     }
                     break;
+
+                case 'deleteTrainer':
+
+                        $userModel = new M_User;
+                
+                        // Get the user ID from the GET parameters
+                        $userId = $_GET['id'];
+                
+                        // Begin the deletion process
+                        if (!$userModel->delete($userId, 'user_id')) {
+                
+                            $_SESSION['success'] = "Trainer has been deleted successfully";
+            
+                            redirect('receptionist/trainers');
+                        } 
+                        else {
+                            // Handle deletion failure
+                            $_SESSION['error'] = "There was an issue deleting the trainer. Please try again.";
+                            redirect('receptionist/trainers/viewTrainer?id=' . $userId);
+                        }
+
+                    break;                    
                                        
         
                 default:
@@ -158,6 +206,8 @@
                             $temp['user_id'] = $temp['member_id'];
             
                             $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
+
+                            $temp['status'] = 'Active';
                             // Insert into User and Member models
                             $user->insert($temp);
                             $member->insert($temp);
@@ -177,6 +227,90 @@
                         redirect('receptionist/members');
                     }
     
+                    break;
+
+                case 'viewMember':
+                    // Load the view to view a trainer
+                    $memberModel = new M_Member;
+                    $member = $memberModel->findByMemberId($_GET['id']);
+        
+                    $data = [
+                        'member' => $member
+                    ];
+        
+                    $this->view('receptionist/receptionist-viewMember', $data);
+                    break;
+
+                case 'updateMember':
+                    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                        // Initialize the Trainer model
+                        $memberModel = new M_Member;
+                
+                        // Validate the incoming data
+                        if ($memberModel->validate($_POST)) {
+                            // Prepare the data to update the trainer
+
+                            $data = [
+                                'first_name'    => $_POST['first_name'],
+                                'last_name'     => $_POST['last_name'],
+                                'NIC_no'        => $_POST['NIC_no'],
+                                'date_of_birth' => $_POST['date_of_birth'],
+                                'home_address'  => $_POST['home_address'],
+                                'height'        => $_POST['height'],
+                                'weight'        => $_POST['weight'],
+                                'contact_number'=> $_POST['contact_number'],
+                                'gender'        => $_POST['gender'],
+                                'email_address' => $_POST['email_address']
+                            ];
+
+                            $member_id = $_POST['member_id'];
+                
+                            // Call the update function
+                            if (!$memberModel->update($member_id, $data, 'member_id')) {
+                                // Set a success session message
+                                $_SESSION['success'] = "Member has been successfully updated!";
+                                // Redirect to the trainer view page
+                                redirect('receptionist/members/viewMember?id=' . $member_id);
+                            } else {
+                                // Handle update failure (optional)
+                                $_SESSION['error'] = "There was an issue updating the member. Please try again.";
+                                redirect('receptionist/members/viewMember?id=' . $member_id);
+                            }
+                        } else {
+                            // If validation fails, pass errors to the view
+                            $data = [
+                                'errors' => $memberModel->errors,
+                                'member' => $_POST // Preserve form data for user correction
+                            ];
+                            // Render the view with errors and form data
+                            $this->view('receptionist/receptionist-viewMember', $data);
+                        }
+                    } else {
+                        // Redirect if the request is not a POST request
+                        redirect('receptionist/members');
+                    }
+                    break;
+                
+                case 'deleteMember':
+
+                    $userModel = new M_User;
+                
+                    // Get the user ID from the GET parameters
+                    $userId = $_GET['id'];
+            
+                    // Begin the deletion process
+                    if (!$userModel->delete($userId, 'user_id')) {
+            
+                        $_SESSION['success'] = "Member has been deleted successfully";
+        
+                        redirect('receptionist/members');
+                    } 
+                    else {
+                        // Handle deletion failure
+                        $_SESSION['error'] = "There was an issue deleting the member. Please try again.";
+                        redirect('receptionist/members/viewMember?id=' . $userId);
+                    }
+
                     break;
                 
                 default:

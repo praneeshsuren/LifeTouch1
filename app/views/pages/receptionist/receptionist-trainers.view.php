@@ -7,7 +7,7 @@
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/receptionist-style.css?v=<?php echo time();?>" />
     <!-- ICONS -->
@@ -16,16 +16,22 @@
   </head>
   <body>
 
+    <!-- PHP Alerts for Success/Error Messages -->
+    <?php
+      if (isset($_SESSION['success'])) {
+          echo "<script>alert('" . $_SESSION['success'] . "');</script>";
+          unset($_SESSION['success']); // Clear the message after showing it
+      }
+
+      if (isset($_SESSION['error'])) {
+          echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+          unset($_SESSION['error']); // Clear the message after showing it
+      }
+    ?>
+
     <section class="sidebar">
         <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
     </section>
-
-    <?php if (isset($_SESSION['success'])): ?>
-      <script>
-          alert("<?php echo $_SESSION['success']; ?>");
-      </script>
-      <?php unset($_SESSION['success']); // Clear success message after showing it ?>
-    <?php endif; ?>
 
     <main>
       <div class="title">
@@ -39,13 +45,14 @@
       </div>
 
       <div class="table-container">
-        <table class='trainer-table'>
+        <table class='user-table'>
           <thead>
               <tr>
                   <th>Trainer Id</th>
                   <th>Profile Picture</th>
                   <th>First Name</th>
                   <th>Last Name</th>
+                  <th>NIC Number</th>
                   <th>Gender</th>
                   <th>Date of Birth</th>
                   <th>Age</th>
@@ -59,9 +66,12 @@
               <?php foreach ($data['trainers'] as $trainer) : ?>
                 <tr onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/trainers/viewTrainer?id=<?php echo $trainer->trainer_id; ?>';" style="cursor: pointer;">
                     <td><?php echo $trainer->trainer_id; ?></td>
-                    <td><img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="Picture"></td>
+                    <td>
+                      <img src="<?php echo URLROOT; ?>/assets/images/Trainer/<?php echo !empty($trainer->image) ? $trainer->image : 'default-placeholder.jpg'; ?>" alt="Trainer Picture" class="user-image">
+                    </td>
                     <td><?php echo $trainer->first_name; ?></td>
                     <td><?php echo $trainer->last_name; ?></td>
+                    <td><?php echo $trainer->NIC_no; ?></td>
                     <td><?php echo $trainer->gender; ?></td>
                     <td><?php echo $trainer->date_of_birth; ?></td>
                     <td><?php echo calculateAge($trainer->date_of_birth); ?></td>
@@ -79,11 +89,12 @@
         </table>
       </div>
 
-      <div class="add-trainer">
-        <a href="<?php echo URLROOT; ?>/receptionist/trainers/createTrainer">
-          <button class="add-trainer-btn">+ Add Trainer</button>
-        </a>
-      </div>
+        <div class="add-trainer">
+          <a href="<?php echo URLROOT; ?>/receptionist/trainers/createTrainer">
+            <button class="add-user-btn">+ Add Trainer</button>
+          </a>
+        </div>
+      
       </main>
 
     <!-- SCRIPT -->
