@@ -25,20 +25,25 @@
     <main>
         <h1 class="title">Announcement Details</h1>
         <div class="announcement">
-            <div class="ann">
-                <section class="container">
+            <div class="announcement-header">
+                <br>
+                <a href="<?php echo URLROOT; ?>/manager/announcement_main" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px:margin-left:-3px">Back</a>
 
-                    <a href="<?php echo URLROOT; ?>/manager/announcement_main" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
-
-                    <h2 class="announcement-title"><i class="ph ph-megaphone"></i>&nbsp;Gym Renovation</h2>
-                    <div class="para">
-                        <p>Date : Apr 01 , 2024</p>
-                        <p>Time : 03.00 AM </p>
-                        <p>We will be undergoing a full renovation of our gym facilities. Please note that the gym will be closed during this period. We apologize for any inconvenience and look forward to unveiling the upgraded space soon!</p>
-
-                    </div>
-
-                </section>
+                <div class="title-overlay">
+                    <h2 class="announcement-title"> <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                        &nbsp;Gym Renovation</h2>
+                    <p class="subtitle">
+                    <div class="person-info">
+                        <small class="email">john@gmail.com</small>
+                    </div>Wednesday, 11 September 2024, 3:07 PM</p>
+                </div>
+            </div>
+            <div class="announcement-content">
+                <p>Dear customers,</p>
+                <p>We will be undergoing a full renovation of our gym facilities. Please note that the gym will be closed during this period. We apologize for any inconvenience and look forward to unveiling the upgraded space soon!</p>
+                <p>John Doe</p>
+                <p>Manager</p>
+                <p>2024.09.11</p>
             </div>
         </div>
 

@@ -49,6 +49,8 @@
                             <p><i class="ph ph-user-circle"></i>&nbsp;First Name : John</p>
                             <p><i class="ph ph-user-square"></i>&nbsp;Last Name : Doe </p>
                             <p><i class="ph ph-hourglass-medium"></i>&nbsp;Age : 25</p>
+                            <p><i class="ph ph-person"></i>&nbsp;Height : 200cm</p>
+                            <p><i class="ph ph-person"></i>&nbsp;Weight : 60Kg</p>
                             <p><i class="ph ph-gender-intersex"></i>&nbsp;Gender : Male</p>
                             <p><i class="ph ph-envelope"></i>&nbsp;Email : johndoe@gmail.com</p>
                             <p><i class="ph ph-phone"></i>&nbsp;Contact : 0701455332</p>
