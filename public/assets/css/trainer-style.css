@@ -670,6 +670,7 @@ main .chart .chart-container{
 
 /* Announcements Page */
 main .announcementsContainer{
+    padding-top: 1rem;
     grid-column: 1 / -1;
     height: 100vh;
     display: flex;
@@ -969,4 +970,146 @@ main .retrieve-users .user-table .user-image {
         padding: 0.75rem;
         font-size: 0.9rem;
     }
+}
+
+/*View Users Page*/
+main .navbar-container{
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    grid-column: 1 / -1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main .navbar-container .navbar{
+    width: 75%;
+    background-color: var(--sidebar-color);
+    box-shadow: var(--box-shadow-color);
+    border-radius: 50px;
+    margin: 0;
+    padding: 0;
+}
+
+main .navbar .nav-links {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    list-style: none;
+    display: flex; /* Use flexbox for horizontal alignment */
+    justify-content: space-around;
+    align-items: center; /* Aligns items vertically in the center */
+}
+
+main .navbar .nav-links .separator{
+    width: 1px;
+    height: 25px;
+    padding: 0;
+    background-color: #ddd;
+    display: inline-block; /* Makes the separator inline */
+    align-self: center; /* Ensures the separator aligns with the text */
+    margin: 0; /* Adds spacing around the separator */
+    opacity: 1;
+}
+  
+main .navbar .nav-links li {
+    margin: 0 0rem;
+    padding: 0px;
+    border-radius: 50px;
+    transition: background-color 0.3s ease;
+    overflow: hidden;
+    z-index: 1;
+}
+  
+main .navbar .nav-links a {
+    text-wrap: nowrap;
+    text-decoration: none;
+    font-size: 1rem;
+    color: var(--hover-btn);
+    transition: all 0.3s ease;
+    padding: 1rem 3.5rem; /* Adjust padding for a balanced appearance */
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main .navbar .nav-links li:hover {
+    background-color: rgb(238, 238, 238); /* Highlight on hover */
+}
+
+main .navbar .nav-links li.active {
+    background-color: rgb(238, 238, 238); /* Highlight on hover */
+}
+
+main .user-details {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: var(--hover-btn);
+}
+
+main .user-details .details {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    font-size: 1rem;
+}
+
+main .user-details .details .profile-picture{
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+main .user-details .details .profile-picture img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+main .user-details .details .left-column,
+main .user-details .details .right-column {
+    padding: 10px; /* Adds padding inside each column */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+main .user-details .details .left-column {
+    grid-column: 1; /* First column */
+    text-align: left; /* Align text to the left */
+}
+
+main .user-details .details .right-column {
+    grid-column: 2; /* Second column */
+    text-align: left; /* Keep text aligned left for consistency */
+}
+
+
+main .user-details .details p{
+    margin: 8px 0;
+}
+
+main .user-details .details input, select{
+    font-size: 1rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+main .user-details .details input{
+    width: 100%;
 }
