@@ -83,11 +83,11 @@
                     <td><?php echo $member->contact_number; ?></td>
                 </tr>
               <?php endforeach; ?>
-              <?php else: ?>
+            <?php else: ?>
                 <tr>
                     <td colspan="13" style="text-align: center;">No members available</td>
                 </tr>
-              <?php endif; ?>
+            <?php endif; ?>
           </tbody>
         </table>
       </div>

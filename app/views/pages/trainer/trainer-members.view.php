@@ -44,6 +44,7 @@
       </div>
 
       <div class="retrieve-users">
+
         <div class="searchBar">
           <input 
             type="text" 
@@ -51,8 +52,8 @@
             placeholder="Search by Name, Member ID, or NIC..." 
             onkeyup="filterTable()" 
           />
-          <div id="searchResults" class="search-results"></div>
         </div>
+
         <div class="table-container">
           <table class='user-table'>
             <thead>
@@ -113,7 +114,7 @@
         </div>
       </div>
 
-      </main>
+    </main>
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>

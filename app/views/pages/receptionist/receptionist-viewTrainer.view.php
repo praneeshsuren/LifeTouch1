@@ -47,12 +47,18 @@
       <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/receptionist/trainers/updateTrainer">
           <div class="details">
             <div class="profile-picture">
-              <img src="<?php echo URLROOT; ?>/assets/images/Trainer/<?php echo !empty($data['trainer']->image) ? $data['trainer']->image : 'default-placeholder.jpg'; ?>" 
-                  alt="Trainer Picture" 
-                  id="userImage">
-              <input type="file" name="profile_picture" id="profilePictureInput" accept="image/*" style="display: none;">
+              <img 
+                src="<?php echo URLROOT; ?>/assets/images/Trainer/<?php echo !empty($data['trainer']->image) ? $data['trainer']->image : 'default-placeholder.jpg'; ?>" 
+                alt="Trainer Picture" 
+                id="userImage" >
+              
+              <!-- File input for image upload -->
+              <input type="file" name="profile_picture" id="profilePictureInput" style="display: none;" accept="image/*">
+              
+              <!-- Change picture button -->
               <button type="button" id="changePictureBtn" class="change-picture-btn">Change Picture</button>
             </div>
+
             <div class="left-column">
               <p>
                 <strong>Trainer ID:</strong>
@@ -121,25 +127,28 @@
       }
     ?>
 
+    <!-- SCRIPT -->
+    <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
+
     <script>
       document.getElementById('changePictureBtn').addEventListener('click', () => {
-        document.getElementById('profilePictureInput').click();
+        document.getElementById('profilePictureInput').click(); // Trigger file input click
       });
 
-      document.getElementById('profilePictureInput').addEventListener('change', function () {
-        const file = this.files[0];
+      document.getElementById('profilePictureInput').addEventListener('change', (event) => {
+        const file = event.target.files[0]; // Get the selected file
         if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            document.getElementById('trainerImage').src = e.target.result;
+          const reader = new FileReader(); // Create a FileReader object
+          
+          // Update the image source once the file is read
+          reader.onload = function(e) {
+            document.getElementById('userImage').src = e.target.result;
           };
-          reader.readAsDataURL(file);
+
+          reader.readAsDataURL(file); // Read the file as a Data URL
         }
       });
     </script>
-
-    <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
 
   </body>
 </html>

@@ -675,23 +675,73 @@ main .chart .chart-container{
 
 
 /* Users */
-main .table-container {
+main .retrieve-users{
     grid-column: 1 / -1;
-    grid-row: 2 / span 2;
-    overflow: auto;
-    margin: 2rem 0;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin-top: 1rem;
-    margin-bottom: 0;
+    grid-row: 2 / -1;
 }
 
-main .table-container table{
+main .retrieve-users .searchBar {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    z-index: 1000;
+}
+
+main .retrieve-users .searchBar input[type="text"] {
+    width: 100%;
+    max-width: 600px; /* Limit maximum width for better layout on large screens */
+    padding: 0.75rem 1rem; /* Padding for a comfortable input size */
+    border: 1px solid #ddd; /* Light border for input */
+    border-radius: 2rem; /* Rounded edges for the input box */
+    font-size: 1rem; /* Comfortable font size */
+    color: #495057; /* Dark gray text */
+    background-color: #ffffff; /* White background for contrast */
+    outline: none; /* Remove outline on focus */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+    transition: all 0.3s ease; /* Smooth transition for hover/focus */
+}
+
+main .retrieve-users .searchBar input[type="text"]:focus {
+    border-color: var(--primary-color); /* Primary purple-blue border on focus */
+    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4); /* Glow effect */
+}
+
+/* Add User Button */
+
+main .retrieve-users .searchBar .add-user a button {
+    padding: 12px 45px;
+    background-color: var(--primary-color); /* Purple-blue button background */
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 3rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+main .retrieve-users .searchBar .add-user a button:hover {
+    transform: scale(1.05);
+}
+
+main .retrieve-users .table-container {
+    overflow: auto;
+    height: 100%;
+    margin: 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+main .retrieve-users .table-container table{
     margin: 0;
 }
 
 /* Base Table Styles */
-main .user-table {
+main .retrieve-users .user-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95rem;
@@ -699,13 +749,13 @@ main .user-table {
 }
 
 /* Header Styles */
-main .user-table thead {
+main .retrieve-users .user-table thead {
     background-color: #695CFE; /* Primary purple-blue background */
     color: #ffffff; /* White text for contrast */
     border-bottom: 2px solid #09090a; /* Slightly darker border */
 }
 
-main .user-table th {
+main .retrieve-users .user-table th {
     padding: 1rem;
     font-weight: 600;
     text-align: left;
@@ -713,31 +763,31 @@ main .user-table th {
 }
 
 /* Home Address Column Specific Width */
-main .user-table th:nth-child(9),
-main .user-table td:nth-child(9) {
+main .retrieve-users .user-table th:nth-child(9),
+main .retrieve-users .user-table td:nth-child(9) {
     width: 250px; /* Increase the width for the Home Address column */
 }
 
 /* Body Styles */
-main .user-table td {
+main .retrieve-users .user-table td {
     padding: 1rem;
     color: #495057; /* Muted dark gray text */
     border-bottom: 1px solid #f1f1f1; /* Light border for rows */
 }
 
 /* Row Hover Effect */
-main .user-table tbody tr:hover {
+main .retrieve-users .user-table tbody tr:hover {
     background-color: #f2f1fe; /* Light purple-blue on hover */
     transition: background-color 0.3s ease;
 }
 
 /* Zebra Striping */
-main .user-table tbody tr:nth-child(even) {
+main .retrieve-users .user-table tbody tr:nth-child(even) {
     background-color: #f8f9fa; /* Light gray for even rows */
 }
 
 /* Image in Table */
-main .user-table .user-image {
+main .retrieve-users .user-table .user-image {
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
@@ -776,31 +826,6 @@ main .user-table .user-image {
         padding: 0.75rem;
         font-size: 0.9rem;
     }
-}
-
-/* Add Trainer Button */
-main .add-trainer {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1rem;
-}
-
-main .add-trainer a button {
-    padding: 12px 60px;
-    background-color: #695CFE; /* Purple-blue button background */
-    color: #ffffff; /* White text for contrast */
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-main .add-trainer a button:hover {
-    transform: scale(1.05);
 }
 
 

@@ -105,7 +105,6 @@
                         // Validate the incoming data
                         if ($trainerModel->validate($_POST)) {
                             // Prepare the data to update the trainer
-
                             $data = [
                                 'first_name'    => $_POST['first_name'],
                                 'last_name'     => $_POST['last_name'],
@@ -116,11 +115,36 @@
                                 'gender'        => $_POST['gender'],
                                 'email_address' => $_POST['email_address']
                             ];
-
+                
                             $trainer_id = $_POST['trainer_id'];
                 
+                            // Handle image upload if a new file is provided
+                            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                                $targetDir = APPROOT . "/assets/images/Trainer/";
+                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $targetFile = $targetDir . $fileName;
+                
+                                // Attempt to move the uploaded file to the target directory
+                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                    // Save the new image filename to the data array
+                                    $data['image'] = $fileName;
+                
+                                    // Optionally, delete the old image file if one exists
+                                    $existingTrainer = $trainerModel->findByTrainerId($trainer_id);
+                                    if (!empty($existingTrainer['image'])) {
+                                        $oldImage = $targetDir . $existingTrainer['image'];
+                                        if (file_exists($oldImage)) {
+                                            unlink($oldImage);
+                                        }
+                                    }
+                                } else {
+                                    $_SESSION['error'] = "Failed to upload the new image. Please try again.";
+                                    redirect('receptionist/trainers/viewTrainer?id=' . $trainer_id);
+                                }
+                            }
+                
                             // Call the update function
-                            if (!$trainerModel->update($trainer_id, $data, 'trainer_id')) {
+                            if ($trainerModel->update($trainer_id, $data, 'trainer_id')) {
                                 // Set a success session message
                                 $_SESSION['success'] = "Trainer has been successfully updated!";
                                 // Redirect to the trainer view page
@@ -144,6 +168,7 @@
                         redirect('receptionist/trainers');
                     }
                     break;
+                    
 
                 case 'deleteTrainer':
 
