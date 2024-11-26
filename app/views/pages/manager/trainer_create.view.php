@@ -101,7 +101,6 @@
             </div>
             <div class="member-buttons">
                 <a href="#"><button class="edit-button">Save</button></a>
-                <a href="member"><button class="delete-button">Back</button></a>
             </div>
         </div>
     </main>

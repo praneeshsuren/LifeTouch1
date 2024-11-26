@@ -85,7 +85,7 @@ trait Model
 
         $this->query($query, $data);
 
-        return false;
+        return true;
     }
 
     public function update($id, $data, $id_column = 'id')

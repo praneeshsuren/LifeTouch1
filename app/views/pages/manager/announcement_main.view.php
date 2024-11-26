@@ -47,7 +47,7 @@
             </button>
         </form>
 
-        <div class="ann">
+        <div class="dropdown-container">
 
             <div class="tables">
                 <div class="last-announcement">
