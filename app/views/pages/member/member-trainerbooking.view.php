@@ -25,11 +25,9 @@
     <title><?php echo APP_NAME; ?></title>
   </head>
   <body>
-
     <section class="sidebar">
     <?php require APPROOT.'/views/components/member-sidebar.view.php' ?>
     </section>
-    
     <main>
         <div class="title">
             <h1>Book Reservations</h1>
@@ -71,8 +69,20 @@
             </div>
         </div>  
     </main>
+    <div id="bookingForm"></div>
+    <div id="addBooking">
+        <h2>Add Booking</h2>
+        <input type="text" id="bookingtitle" placeholder="Booking title"/>
+        <button id="btnBook">Book</button>
+        <button class="btnClose">Cancel</button>
+    </div>
+    <div id="viewBooking">
+        <p id="bookingText">sample</p>
+        <button id="btnDelete">Delete</button>
+        <button class="btnClose">Close</button>
+    </div>
     <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/member-script.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/member/calendar.js?v=<?php echo time();?>"></script>
   </body>
 </html>
 
