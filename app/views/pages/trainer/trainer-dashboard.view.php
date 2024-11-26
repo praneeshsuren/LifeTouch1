@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/trainer-style.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- CHART.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title><?php echo APP_NAME; ?></title>
   </head>
   <body>
@@ -135,20 +137,115 @@
 
       <!-- CHARTS -->
 
-      <div class="chart-header">
-        <h2>Busy Hours</h2>
-        <i class="ph ph-dots-three-circle-vertical"></i>
+      <div class="chart">
+        <div class="chart-header">
+          <h2>Busy Hours</h2>
+          <i class="ph ph-dots-three-circle-vertical"></i>
+        </div>
+        <div class="chart-container">
+          <canvas id="LineChart"></canvas>
+        </div>
       </div>
-      <div id="areaChart"></div>
 
     </main>
 
-    <!-- APEX CHARTS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.53.0/apexcharts.min.js"></script>
-
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
-    
+
+    <!--CHART SCRIPT-->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+      const ctx = document.getElementById('LineChart').getContext('2d');
+      
+      // Generate current time and past 6 hours
+      const getCurrentTimeLabel = (hoursAgo) => {
+          const date = new Date();
+          date.setHours(date.getHours() - hoursAgo);
+          return date.toLocaleTimeString('en-US', { 
+              hour: 'numeric', 
+              minute: '2-digit', 
+              hour12: true 
+          });
+      };
+
+      // Sample data - you can replace these with data from your PHP controller
+      const data = {
+          labels: [
+              getCurrentTimeLabel(5),
+              getCurrentTimeLabel(4),
+              getCurrentTimeLabel(3),
+              getCurrentTimeLabel(2),
+              getCurrentTimeLabel(1),
+              getCurrentTimeLabel(0)
+          ],
+          datasets: [{
+              label: 'Number of Members',
+              data: [15, 25, 35, 45, 30, 20], // Replace with your actual data
+              fill: true,
+              borderColor: '#7380ec',
+              backgroundColor: 'rgba(115, 128, 236, 0.1)',
+              tension: 0.4,
+              pointBackgroundColor: '#7380ec',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+          }]
+      };
+
+      // Chart configuration
+      const config = {
+          type: 'line',
+          data: data,
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      grid: {
+                          drawBorder: false,
+                          color: 'rgba(0, 0, 0, 0.1)'
+                      },
+                      ticks: {
+                          stepSize: 10
+                      }
+                  },
+                  x: {
+                      grid: {
+                          drawBorder: false,
+                          display: false
+                      }
+                  }
+              },
+              plugins: {
+                  legend: {
+                      position: 'top',
+                      labels: {
+                          boxWidth: 20,
+                          font: {
+                              family: "'Poppins', sans-serif"
+                          }
+                      }
+                  },
+                  tooltip: {
+                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                      padding: 10,
+                      titleFont: {
+                          family: "'Poppins', sans-serif"
+                      },
+                      bodyFont: {
+                          family: "'Poppins', sans-serif"
+                      }
+                  }
+              }
+          }
+      };
+
+      // Create the chart
+      new Chart(ctx, config);
+    });
+  </script>
   </body>
 </html>
 

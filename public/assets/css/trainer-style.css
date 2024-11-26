@@ -393,7 +393,6 @@ main{
     display: grid;
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 3rem 1fr 2fr;
-    gap: 1.6rem;
 }
 
 main.active{
@@ -471,6 +470,8 @@ main .insights{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.6rem;
+    padding: 1rem;
+    padding-left: 0rem;
 }
 
 main .insights > div{
@@ -570,6 +571,8 @@ main .insights .progress .number {
 /* Announcements Section */
 
 main .recent-announcements{
+    padding-left: 0.6rem;
+    padding-top: 1rem;
     grid-column: 2;
     grid-row: 2 / span 2;
 }
@@ -627,14 +630,22 @@ margin-left: 1rem;
 
 /* CHARTS */
 
-main .chart-header {
+main .chart{
+    grid-row: 3;
+    grid-column: 1;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+main .chart .chart-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 2.5rem;
+    grid-column: 1;
 }
 
-main .chart-header i{
+main .chart .chart-header i{
     font-size: 1.6rem;
     color: var(--text-color);
     border-radius: 50%;
@@ -642,20 +653,19 @@ main .chart-header i{
     cursor: pointer;
 }
 
-main .chart-header i:hover {
+main .chart .chart-header i:hover {
     color: var(--hover-btn);
 }
 
-main .chart-header h2 {
+main .chart .chart-header h2 {
     font-size: 1.5rem;
     color: var(--text-color);
 }
 
-main #areaChart{
-    margin-bottom: 6rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+main .chart .chart-container{
+    width: 100%;
+    margin: 0 auto;
+    height: 90%;
 }
 
 /* Announcements Page */
@@ -822,5 +832,141 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
 
     main .insights {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Users */
+main .retrieve-users{
+    grid-column: 1 / -1;
+    grid-row: 2 / -1;
+}
+
+main .retrieve-users .searchBar {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    z-index: 1000;
+}
+
+main .retrieve-users .searchBar input[type="text"] {
+    width: 100%;
+    max-width: 500px; /* Limit maximum width for better layout on large screens */
+    padding: 0.75rem 1rem; /* Padding for a comfortable input size */
+    border: 1px solid #ddd; /* Light border for input */
+    border-radius: 2rem; /* Rounded edges for the input box */
+    font-size: 1rem; /* Comfortable font size */
+    color: #495057; /* Dark gray text */
+    background-color: #ffffff; /* White background for contrast */
+    outline: none; /* Remove outline on focus */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+    transition: all 0.3s ease; /* Smooth transition for hover/focus */
+}
+
+main .retrieve-users .searchBar input[type="text"]:focus {
+    border-color: var(--primary-color); /* Primary purple-blue border on focus */
+    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4); /* Glow effect */
+}
+
+main .retrieve-users .table-container {
+    overflow: auto;
+    height: 100%;
+    margin: 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+main .retrieve-users .table-container table{
+    margin: 0;
+}
+
+/* Base Table Styles */
+main .retrieve-users .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    background-color: #ffffff;
+}
+
+/* Header Styles */
+main .retrieve-users .user-table thead {
+    background-color: #695CFE; /* Primary purple-blue background */
+    color: #ffffff; /* White text for contrast */
+    border-bottom: 2px solid #09090a; /* Slightly darker border */
+}
+
+main .retrieve-users .user-table th {
+    padding: 1rem;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* Home Address Column Specific Width */
+main .retrieve-users .user-table th:nth-child(9),
+main .retrieve-users .user-table td:nth-child(9) {
+    width: 250px; /* Increase the width for the Home Address column */
+}
+
+/* Body Styles */
+main .retrieve-users .user-table td {
+    padding: 1rem;
+    color: #495057; /* Muted dark gray text */
+    border-bottom: 1px solid #f1f1f1; /* Light border for rows */
+}
+
+/* Row Hover Effect */
+main .retrieve-users .user-table tbody tr:hover {
+    background-color: #f2f1fe; /* Light purple-blue on hover */
+    transition: background-color 0.3s ease;
+}
+
+/* Zebra Striping */
+main .retrieve-users .user-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa; /* Light gray for even rows */
+}
+
+/* Image in Table */
+main .retrieve-users .user-table .user-image {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+}
+
+/* Scrollbar Styling */
+.table-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #695CFE; /* Matches the header color */
+    border-radius: 3px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #5e4fda; /* Darker purple-blue on hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .table-container {
+        margin: 1rem 0;
+    }
+
+    .user-table th,
+    .user-table td {
+        padding: 0.75rem;
+        font-size: 0.9rem;
     }
 }

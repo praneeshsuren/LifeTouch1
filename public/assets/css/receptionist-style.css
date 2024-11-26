@@ -671,7 +671,6 @@ main .chart .chart-container{
     width: 100%;
     margin: 0 auto;
     height: 90%;
-
 }
 
 
@@ -961,7 +960,7 @@ main .user-form .form-container .input-container .invalid-feedback {
     }
 }
 
-/* View Trainer Page */
+/* View Users Page */
 main .navbar-container{
     margin-top: 1.5rem;
     margin-bottom: 1rem;
