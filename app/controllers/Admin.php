@@ -10,8 +10,25 @@
             $this->view('admin/admin-dashboard');
         }
 
-        public function announcements(){
-            $this->view('admin/admin-announcement');
+        public function announcements($action = null){
+            switch ($action){
+                case 'createAnnouncement':
+
+                    $this->view('admin/admin-createAnnouncement');
+                    break;
+                
+                default:
+
+                    $announcementModel = new M_Announcement;
+                    $announcements = $announcementModel->findAll('announcement_id');
+
+                    $data = [
+                        'announcements' => $announcements
+                    ];
+
+                    $this->view('admin/admin-announcements', $data);
+                    break;
+            }
         }
 
         public function members($action = null) {

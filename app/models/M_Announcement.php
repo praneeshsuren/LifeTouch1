@@ -10,34 +10,26 @@ class M_Announcement
     protected $allowedColumns = [
         'announcement_id',
         'subject',
-        'announcement',
-        'date',
-        'time'
+        'description',
+        'created_by',
+        'created_date',
+        'created_time'
     ];
 
     public function validate($data)
     {
+
         $this->errors = [];
 
         if (empty($data['subject'])) {
             $this->errors['subject'] = "Subject is required";
         }
 
-        if (empty($data['announcement'])) {
-            $this->errors['announcement'] = "Announcement content is required";
+        if (empty($data['description'])) {
+            $this->errors['description'] = "Announcement description is required";
         }
 
-        if (empty($data['date'])) {
-            $this->errors['date'] = "Date is required";
-        }
+        return empty($this->errors);
 
-        if (empty($data['time'])) {
-            $this->errors['time'] = "Time is required";
-        }
-
-        if (empty($this->errors)) {
-            return true;
-        }
-        return false;
     }
 }

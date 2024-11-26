@@ -4,7 +4,7 @@
     ini_set('session.cookie_strict_mode', 1);
 
     session_set_cookie_params([
-        'lifetime' => 60*60*24,
+        'lifetime' => 1800,
         'path' => '/',
         'domain' => $_SERVER['HTTP_HOST'],
         'secure' => true,
