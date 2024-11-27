@@ -1,6 +1,11 @@
 <?php
-    class Home extends Controller{
-        public function index(){
-            $this->view('home/home-login');
-        }
+
+class Home extends Controller
+{
+    public function index()
+    {
+        $this->view('home/home-landingPage');
     }
+    
+}
+

@@ -35,47 +35,37 @@
         </div>
 
         <div class="box">
+            <a href="member" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
             <div class="member-card">
                 <div>
-                    <div class="profile-img-container"><img class="profile-img" src="<?php echo URLROOT; ?>/public/images/image.png" alt=""></div>
+                    <div class="profile-img-container"><img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/image.png" alt=""></div>
                     <a href="member_edit"><button class="edit-button">Edit</button></a>
                     <button class="delete-button">Delete</button>
                 </div>
                 <div>
-                    <table class="profile-table">
-                        <tr>
-                            <th colspan="2">User Details : </th>
-                        </tr>
-                        <tr>
-                            <th><i class="ph ph-user-circle"></i>First Name</th>
-                            <td>John</td>
-                        </tr>
-                        <tr>
-                            <th><i class="ph ph-user-square"></i>Last Name</th>
-                            <td>Doe</td>
-                        </tr>
-                        <tr>
-                            <th><i class="ph ph-gender-intersex"></i>Gender</th>
-                            <td>Mail</td>
-                        </tr>
-                        <tr>
-                            <th><i class="ph ph-envelope"></i>Email</th>
-                            <td>john@gmail.com</td>
-                        </tr>
-                        <tr>
-                            <th><i class="ph ph-phone"></i>Contact</th>
-                            <td>0774399256</td>
-                        </tr>
-                    </table>
+                    <div>
+                        <h2 class="announcement-title">John's Details</h2>
+                        <div class="para">
+                            <p><i class="ph ph-user-circle"></i>&nbsp;First Name : John</p>
+                            <p><i class="ph ph-user-square"></i>&nbsp;Last Name : Doe </p>
+                            <p><i class="ph ph-hourglass-medium"></i>&nbsp;Age : 25</p>
+                            <p><i class="ph ph-person"></i>&nbsp;Height : 200cm</p>
+                            <p><i class="ph ph-person"></i>&nbsp;Weight : 60Kg</p>
+                            <p><i class="ph ph-gender-intersex"></i>&nbsp;Gender : Male</p>
+                            <p><i class="ph ph-envelope"></i>&nbsp;Email : johndoe@gmail.com</p>
+                            <p><i class="ph ph-phone"></i>&nbsp;Contact : 0701455332</p>
+                            <p><i class="ph ph-house-line"></i>&nbsp;Address : John Smith, 5480 7th Ave, San Francisco</p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <h2>Memberships</h2>
             <div class="memberships">
-                <img class="membership-img" src="<?php echo URLROOT; ?>/public/images/membership.jpg" alt="">
+                <img class="membership-img" src="<?php echo URLROOT; ?>/assets/images/membership.jpg" alt="">
                 <p>All access</p>
             </div>
             <div class="memberships">
-                <img class="membership-img" src="<?php echo URLROOT; ?>/public/images/membership.jpg" alt="">
+                <img class="membership-img" src="<?php echo URLROOT; ?>/assets/images/membership.jpg" alt="">
                 <p>Personal Training</p>
             </div>
             <br />

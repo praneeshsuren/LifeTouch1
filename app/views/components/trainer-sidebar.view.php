@@ -6,8 +6,8 @@
         <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
     </div>
     <div class="user-details">
-        <p class="name">Trainer</p>
-        <p class="post">John Doe</p>
+        <p class="post">Trainer</p>
+        <p class="name"><?php echo isset($_SESSION['first_name']) ? $_SESSION['first_name'] : 'User'; ?></p>
     </div>
 </div>
 <div class="nav">
@@ -21,23 +21,10 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/trainer/members">
                     <i class='icon ph-bold ph-user'></i>
-                    <span class="text">Users</span>
-                    <i class='arrow ph-bold ph-caret-down'></i>
+                    <span class="text">View Member</span>
                 </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a href="#">
-                            <span class="text">Members</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="text">Trainers</span>
-                        </a>
-                    </li> 
-                </ul> 
             </li>
             <li>
                 <a href="#">
@@ -74,12 +61,6 @@
 <div class="menu">
     <p class="title">Account</p>
     <ul>
-        <li>
-            <a href="#">
-                <i class='icon ph-bold ph-info'></i>
-                <span class="text">Help</span>
-            </a>
-        </li>
         <li class="mode active">
             <div class="moon-sun">
                 <i class='icon ph-bold ph-sun sun'></i>
@@ -92,7 +73,7 @@
             </div>
         </li>
         <li>
-            <a href="#">
+            <a href="<?php echo URLROOT; ?>/login/logout">
                 <i class='icon ph-bold ph-sign-out'></i>
                 <span class="text">Logout</span>
             </a>

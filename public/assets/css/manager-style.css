@@ -41,7 +41,7 @@ body.dark {
 }
 
 .sidebar {
-    position: relative;
+    position: fixed;
     width: 250px;
     height: 100vh;
     display: flex;
@@ -50,6 +50,7 @@ body.dark {
     background: var(--sidebar-color);
     transition: var(--tran-05);
     padding: 24px;
+    z-index: 100;
 }
 
 .sidebar .head {
@@ -521,7 +522,7 @@ main .recent-announcements .announcement .message {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    padding-left: 100px;
+    padding-left: 8px;
 }
 
 .container {
@@ -583,6 +584,21 @@ body.dark textarea {
 .form .column {
     display: flex;
     column-gap: 15px;
+}
+
+@media screen and (max-width: 768px) {
+    .form .column {
+        flex-direction: column;
+        row-gap: 15px;
+        column-gap: 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .form .column {
+        row-gap: 10px;
+        padding: 0 10px;
+    }
 }
 
 .form :where(.schedule-option, .send) {
@@ -747,9 +763,26 @@ body.dark form button:hover {
     width: 800px;
     background-color: #fff;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin: 0 auto;
 }
+
+.heading .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 1px;
+}
+
+.heading .btn i {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 5px;
+
+}
+
 
 /* Dark Mode for .last-announcement */
 body.dark .last-announcement {
@@ -803,6 +836,7 @@ body.dark .btn {
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
+
 }
 
 
@@ -845,7 +879,6 @@ td i {
 
 .list tbody tr:hover {
     background: #f1f1f1;
-
 }
 
 body.dark .list tbody tr:hover {
@@ -960,6 +993,65 @@ body.dark .person-info h4 {
 }
 
 /*end of the announcement_main*/
+/*announcemt_view*/
+.announcement {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    font-family: 'Poppins', sans-serif;
+    color: #777676;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.announcement-header {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.announcement-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.title-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #7a7a7a;
+}
+
+.announcement-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.announcement-content {
+    padding: 20px;
+}
+
+.announcement-content p {
+    margin: 5px 0;
+    line-height: 1.6;
+}
+
+body.dark .announcement {
+    background-color: #333;
+    color: #fff;
+}
+
 /*report*/
 .select {
     width: fit-content;
@@ -1248,6 +1340,43 @@ body.dark .bars span {
 body.dark .bars .bar::before {
     color: #CCC;
     content: attr(data-percentage)'%';
+}
+
+.heading h3 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c3e50;
+    font-size: 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #2693FF, #2a669f);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-align: center;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.heading h3:hover {
+    transform: translateY(-5px);
+}
+
+.heading h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0%;
+    height: 3px;
+    background-color: #2693FF;
+    transition: width 0.3s ease;
+}
+
+.heading h3:hover::after {
+    width: 100%;
 }
 
 /*end of the report*/
@@ -1667,6 +1796,44 @@ tbody tr:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Base styles for the payment table */
+.payment-table {
+    width: 60%;
+    margin-right: auto;
+    margin-left: auto;
+    /* Ensure it's centered */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 768px) {
+    .payment-table {
+        width: 90%;
+        margin: 20px auto;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .payment-table th,
+    .payment-table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .payment-table {
+        width: 100%;
+    }
+
+    .payment-table th,
+    .payment-table td {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+
 .payment-header {
     background-color: #cbcbcb;
     padding: 0.8rem 1rem;
@@ -1903,6 +2070,71 @@ body.dark .gender-radio label {
     padding-left: 200px;
 }
 
+/* General styles for responsive input container */
+@media screen and (max-width: 768px) {
+    .input-container {
+        width: 90%;
+        margin: 20px auto;
+    }
+
+    .input-container input[type="text"] {
+        font-size: 14px;
+        padding: 4px 0;
+    }
+
+    .input-container .label {
+        font-size: 14px;
+    }
+}
+
+/* Responsive adjustments for radio buttons */
+@media screen and (max-width: 768px) {
+    .radio-buttons form {
+        padding-left: 0;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .radio-buttons label {
+        font-size: 14px;
+        margin-bottom: 0.25em;
+    }
+
+    .radio-buttons label span {
+        padding: 0.25em 0.5em;
+        font-size: 14px;
+    }
+
+    .radio-buttons label span:before {
+        width: 1.2em;
+        height: 1.2em;
+        margin-right: 0.25em;
+    }
+}
+
+/* Responsive adjustments for gender-radio container */
+@media screen and (max-width: 768px) {
+    .gender-radio {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .gender-radio label {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+}
+
+/* Responsive adjustments for member-buttons */
+@media screen and (max-width: 768px) {
+    .member-buttons {
+        padding-left: 0;
+        text-align: center;
+    }
+}
+
+
 /*end of the member_create*/
 /*member_edit*/
 .file-upload-text {
@@ -2097,4 +2329,381 @@ body.dark .close {
 body.dark .close:hover,
 body.dark .close:focus {
     color: white;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    color: #d9534f;
+    background-color: #f2dede;
+    border: 1px solid #d9534f;
+    border-radius: 5px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    outline: none;
+}
+
+/* General Section Styling */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Title Styling */
+.announcement-title {
+    font-family: 'Poppins', sans-serif;
+    color: #8b8d8f;
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.announcement-title i {
+    margin-right: 10px;
+    font-size: 36px;
+    color: #2693FF;
+}
+
+/* Paragraph Styling */
+.para {
+    font-family: 'Poppins', sans-serif;
+    color: #7f8c8d;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 10px;
+}
+
+.para p {
+    margin: 8px 0;
+}
+
+.para p:first-child {
+    font-weight: 600;
+}
+
+/* Date, Time, and Description Styling */
+.para p {
+    display: flex;
+
+    align-items: center;
+}
+
+.para p span {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .announcement-title {
+        font-size: 28px;
+    }
+
+    .para p {
+        font-size: 14px;
+    }
+
+
+}
+
+/* Announcement Card */
+
+.announcement:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Date and Time Styles */
+.announcement .date-time {
+    font-size: 16px;
+    color: #7f8c8d;
+    margin-top: 10px;
+}
+
+/* Success message */
+.alert-success {
+    background-color: #28a745;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+    transition: opacity 0.5s ease;
+}
+
+/* Error message */
+.alert-error {
+    background-color: #dc3545;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+    transition: opacity 0.5s ease;
+}
+
+/* Style for closing the message */
+.alert-close {
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+
+/* General input styling */
+.input-container input[type="date"] {
+    font-size: 15px;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background-color: transparent;
+    color: transparent;
+    caret-color: transparent;
+    outline: none;
+    transition: color 0.3s ease, caret-color 0.3s ease;
+}
+
+.input-container input[type="date"]:focus,
+.input-container input[type="date"]:valid {
+    color: inherit;
+    caret-color: auto;
+}
+
+.input-container input[type="date"]::placeholder {
+    color: transparent;
+}
+
+
+.input-container input[type="date"]:focus~.label,
+.input-container input[type="date"]:valid~.label {
+    top: -20px;
+    font-size: 16px;
+    color: #7e7e7e;
+}
+
+
+
+.input-container input[type="date"]:focus~.underline,
+.input-container input[type="date"]:valid~.underline {
+    transform: scaleX(1);
+}
+
+/*equipment*/
+
+.heading .newMember-btn i {
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+/* Table Container */
+.purchase-table-container {
+    margin-top: 20px;
+}
+
+.purchase-table-container h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Table Styles */
+.purchase-table {
+    width: 50%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.purchase-table th,
+.purchase-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.purchase-table th {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.purchase-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.purchase-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.purchase-table th {
+    font-weight: 600;
+}
+
+.service-form {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.button-container {
+    text-align: right;
+}
+
+/* Error Messages Container */
+.error-messages {
+    padding: 15px;
+    border: 1px solid #f5c6cb;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.error-messages p {
+    margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+    .box {
+        width: 90%;
+    }
+
+    .error-messages {
+        font-size: 13px;
+    }
+}
+
+/* Inventory Section */
+.inventory-container {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+
+.inventory-container .heading h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Inventory Grid Layout */
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* Inventory Item Card */
+.inventory-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.inventory-item .item-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #3f3f3f;
+}
+
+.inventory-item .item-details h4 {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.inventory-item .item-details p {
+    font-size: 1rem;
+    color: #555;
+}
+
+@media (max-width: 768px) {
+
+    .inventory-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .inventory-container {
+        padding: 15px;
+    }
+
+    .inventory-container .heading h3 {
+        font-size: 1.25rem;
+    }
+
+    .inventory-item {
+        padding: 15px;
+        text-align: left;
+    }
+
+    .inventory-item .item-icon {
+        font-size: 2.5rem;
+    }
+
+    .inventory-item .item-details h4 {
+        font-size: 1rem;
+    }
+
+    .inventory-item .item-details p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .inventory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+body.dark .inventory-container {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+}
+
+body.dark .inventory-container .heading h3 {
+    color: #e0e0e0;
+}
+
+body.dark .inventory-item {
+    background-color: #444;
+    color: #e0e0e0;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+body.dark .inventory-item .item-icon {
+    color: #fff;
+}
+
+body.dark .inventory-item .item-details h4 {
+    color: #fff;
+}
+
+body.dark .inventory-item .item-details p {
+    color: #ccc;
 }

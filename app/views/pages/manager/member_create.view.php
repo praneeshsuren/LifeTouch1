@@ -35,8 +35,9 @@
 
         <div class="box">
             <div>
+                <a href="member" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
                 <div class="profile-img-container">
-                    <img class="profile-img" src="<?php echo URLROOT; ?>/public/images/no_img.jpg" alt="Profile Image">
+                    <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/no_img.jpg">
                 </div>
                 <p class="file-upload-text">Click below to select an image</p>
                 <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="image">
@@ -50,6 +51,11 @@
             <div class="input-container">
                 <input type="text" id="input" required="">
                 <label for="input" class="label"><i class="ph ph-user-square"></i>Last Name</label>
+                <div class="underline"></div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="input" required="">
+                <label for="input" class="label"><i class="ph ph-hourglass-medium"></i></i>Age</label>
                 <div class="underline"></div>
             </div>
             <div class="input-container">
@@ -75,6 +81,16 @@
             </div>
             <div class="input-container">
                 <input type="text" id="input" required="">
+                <label for="input" class="label"><i class="ph ph-person"></i>Height</label>
+                <div class="underline"></div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="input" required="">
+                <label for="input" class="label"><i class="ph ph-person"></i>Weight</label>
+                <div class="underline"></div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="input" required="">
                 <label for="input" class="label"><i class="ph ph-envelope"></i>Email</label>
                 <div class="underline"></div>
             </div>
@@ -83,9 +99,14 @@
                 <label for="input" class="label"><i class="ph ph-phone"></i>Contact</label>
                 <div class="underline"></div>
             </div>
+            <div class="input-container">
+                <input type="text" id="input" required="">
+                <label for="input" class="label"><i class="ph ph-house-line"></i>Address</label>
+                <div class="underline"></div>
+            </div>
             <div class="member-buttons">
                 <a href="#"><button class="edit-button">Save</button></a>
-                <a href="member"><button class="delete-button">Back</button></a>
+
             </div>
         </div>
     </main>

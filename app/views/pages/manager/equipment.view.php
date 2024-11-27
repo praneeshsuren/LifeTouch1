@@ -23,7 +23,7 @@
     <main>
 
         <div class="top">
-            <h1 class="title">View Euipment</h1>
+            <h1 class="title">View Equipment</h1>
             <div class="bell">
                 <i class="ph ph-bell"></i>
                 <p>Hi, John!</p>
@@ -46,33 +46,31 @@
                     </svg>
                 </button>
             </form>
-            <a href="#" class="newMember-btn">Add Equipment</a>
+            <div class="heading">
+                <a href="equipment_create" class="newMember-btn"><i class="ph ph-plus"></i> Add Equipment</a>
+            </div>
         </div>
 
-        <!-- View-member-section-->
-        <?php
-        $trianers = [
-            ['name' => 'Dumbell', 'image' => 'dumbell.jpg'],
-            ['name' => 'Dumbell', 'image' => 'dumbell.jpg'],
-            ['name' => 'Dumbell', 'image' => 'dumbell.jpg'],
-            ['name' => 'Dumbell', 'image' => 'dumbell.jpg'],
-            ['name' => 'Dumbell', 'image' => 'dumbell.jpg'],
-            ['name' => 'Dumbell', 'image' => 'dumbell.jpg'],
-            ['name' => 'Dumbell', 'image' => 'dumbell.jpg'],
+        <!-- View-equipment-section-->
 
-        ];
-        ?>
         <div class="member-view-trainer">
-            <?php foreach ($trianers as $trainer): ?>
-                <div class="trainer">
-                    <img src="<?php echo URLROOT; ?>/public/images/<?php echo $trainer['image']; ?>" alt="" class="trainer-image" />
-                    <h3><?php echo $trainer['name']; ?></h3>
-                    <a href="#">
-                        <button class="member-view-trainer-btn">View</button>
-                    </a>
-                </div>
-            <?php endforeach; ?>
+
+            <?php if (!empty($equipment)): ?>
+                <?php foreach ($equipment as $item): ?>
+                    <div class="trainer">
+                        <img src="<?php echo URLROOT; ?>/assets/images/Equipment/<?php echo htmlspecialchars($item->file); ?>" alt="Equipment Image" class="trainer-image" />
+                        <h3><?php echo htmlspecialchars($item->name); ?></h3>
+                        <a href="equipment_view/<?php echo $item->equipment_id; ?>">
+                            <button class="member-view-trainer-btn">View</button>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No equipment available. <a href="equipment_create">Add some equipment</a>.</p>
+            <?php endif; ?>
         </div>
+
+
 
     </main>
 

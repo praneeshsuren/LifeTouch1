@@ -23,37 +23,49 @@
     </section>
 
     <main>
-        <div class="top">
-            <h1 class="title">New Report</h1>
-            <div class="bell">
-                <i class="ph ph-bell"></i>
-                <p>Hi, John!</p>
-            </div>
-        </div>
+        <h1 class="title">Update annoucement</h1>
         <div class="announcement">
             <div class="ann">
                 <section class="container">
-                    <form action="#" class="form">
+                    <form method="post" class="form">
+
+                        <?php if (!empty($errors)): ?>
+                            <div class="alert">
+                                <?= implode("<br>", $errors);
+                                ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <a href="announcement_main" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
 
                         <div class="input-box">
-                            <label>Report Name</label>
-                            <input type="text" placeholder="Enter a report name" required />
+                            <label>Subject</label>
+                            <input type="text" name="subject" placeholder="Announcement Subject" />
                         </div>
 
                         <div class="input-box">
-                            <label>Event collection</label>
-                            <input type="text" placeholder="Enter a event collection" required />
-                        </div>
-
-                        <div class="input-box">
-                            <label>Query</label>
-                            <textarea placeholder="Write a query" required></textarea>
+                            <label>Announcement</label>
+                            <textarea placeholder="Write your announcement here..." name="announcement"></textarea>
                         </div>
 
 
+                        <div class="column">
+
+                            <div class="input-box">
+                                <label>Date</label>
+                                <input type="date" placeholder="MM/DD/YY" name="date" />
+                            </div>
+
+                            <div class="input-box">
+                                <label>Time</label>
+                                <input type="time" placeholder="12.00 PM" name="time" />
+                            </div>
+
+                        </div>
 
 
-                        <button>Send</button>
+
+                        <button type="submit">Save changes</button>
 
                     </form>
                 </section>

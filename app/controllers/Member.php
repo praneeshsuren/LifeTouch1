@@ -2,7 +2,10 @@
 
     class Member extends Controller{
 
-
+        public function __construct() {
+            // Check if the user is logged in as a member
+            $this->checkAuth('member');
+        }
         
         public function index(){
             $this->view(('member/member-dashboard'));

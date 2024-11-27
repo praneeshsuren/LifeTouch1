@@ -25,7 +25,7 @@
     <main>
 
         <div class="top">
-            <h1 class="title">Create new announcement</h1>
+            <h1 class="title">Announcement Summary</h1>
             <div class="bell">
                 <i class="ph ph-bell"></i>
                 <p>Hi, John!</p>
@@ -46,160 +46,72 @@
                 </svg>
             </button>
         </form>
-        <div class="announcement">
-            <div class="ann">
 
+        <div class="dropdown-container">
 
-                <div class="tables">
-                    <div class="last-announcement">
-                        <div class="heading">
-                            <h2>Announcements</h2>
-                            <a href="announcement" class="btn">New Announcement</a>
-                        </div>
-                        <br>
-                        <table class="list">
-                            <thead>
-                                <tr>
-                                    <td>Person</td>
-                                    <td>Title</td>
-                                    <td>Date</td>
-                                    <td>Actions</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="person">
-                                            <img class="preview-image" src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
-                                            <div class="person-info">
-                                                <h4>John Doe</h4>
-                                                <small class="email">john@gmail.com</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>Gym renovation</td>
-                                    <td>Apr 01 2024</td>
-                                    <td>
-                                        <i class="ph ph-eye"></i>
-                                        <i class="ph ph-pen"></i>
-                                        <i class="ph ph-trash"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <div class="person">
-                                            <img class="preview-image" src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
-                                            <div class="person-info">
-                                                <h4>John Doe</h4>
-                                                <small class="email">john@gmail.com</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>Gym renovation</td>
-                                    <td>Apr 01 2024</td>
-                                    <td>
-                                        <i class="ph ph-eye"></i>
-                                        <i class="ph ph-pen"></i>
-                                        <i class="ph ph-trash"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <div class="person">
-                                            <img class="preview-image" src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
-                                            <div class="person-info">
-                                                <h4>John Doe</h4>
-                                                <small class="email">john@gmail.com</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>Gym renovation</td>
-                                    <td>Apr 01 2024</td>
-                                    <td>
-                                        <i class="ph ph-eye"></i>
-                                        <i class="ph ph-pen"></i>
-                                        <i class="ph ph-trash"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <div class="person">
-                                            <img class="preview-image" src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
-                                            <div class="person-info">
-                                                <h4>John Doe</h4>
-                                                <small class="email">john@gmail.com</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>Gym renovation</td>
-                                    <td>Apr 01 2024</td>
-                                    <td>
-                                        <i class="ph ph-eye"></i>
-                                        <i class="ph ph-pen"></i>
-                                        <i class="ph ph-trash"></i>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <div class="person">
-                                            <img class="preview-image" src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
-                                            <div class="person-info">
-                                                <h4>John Doe</h4>
-                                                <small class="email">john@gmail.com</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>Gym renovation</td>
-                                    <td>Apr 01 2024</td>
-                                    <td>
-                                        <i class="ph ph-eye" onclick="openModal('Announcement details for Gym renovation')"></i>
-                                        <i class="ph ph-pen"></i>
-                                        <i class="ph ph-trash"></i>
-                                    </td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-
+            <div class="tables">
+                <div class="last-announcement">
+                    <div class="heading">
+                        <h2>Announcements</h2>
+                        <a href="announcement" class="btn"><i class="ph ph-plus"></i> New Announcement</a>
                     </div>
+                    <br>
+
+                    <table class="list">
+                        <thead>
+                            <tr>
+                                <td>Person</td>
+                                <td>Title</td>
+                                <td>Date</td>
+                                <td>Actions</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($data)): ?>
+                                <?php foreach ($data as $announcement): ?>
+                                    <tr>
+                                        <td>
+                                            <div class="person">
+                                                <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                                                <div class="person-info">
+                                                    <h4>John Doe</h4>
+                                                    <small class="email">john@gmail.com</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($announcement->subject); ?></td>
+                                        <td><?php echo htmlspecialchars($announcement->date); ?></td>
+                                        <td>
+
+                                            <!-- Pass the subject, date, and time as parameters to the openModal() function -->
+                                            <a href="announcement_read/<?php echo $announcement->announcement_id; ?>"><i class="ph ph-eye"></i></a>
+
+
+                                            <a href="announcement_update"><i class="ph ph-pen"></i></a>
+                                            <a href="<?php echo URLROOT; ?>/manager/delete_announcement/<?php echo $announcement->announcement_id; ?>"
+                                                onclick="return confirm('Are you sure you want to delete this announcement?');">
+                                                <i class="ph ph-trash"></i>
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="4">No announcements found.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
 
-        <!--The Model -->
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2 id="modalTitle">Announcement Details</h2>
-                <p id="modalContent">Content goes here...</p>
-            </div>
         </div>
 
     </main>
 
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
-    <script>
-        function openModal(content) {
-            document.getElementById('modalContent').innerText = content;
-            document.getElementById('myModal').style.display = "block";
-        }
 
-        function closeModal() {
-            document.getElementById('myModal').style.display = "none";
-        }
-
-        // Close the modal when the user clicks anywhere outside of it
-        window.onclick = function(event) {
-            var modal = document.getElementById('myModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-    </script>
 </body>
 
 </html>

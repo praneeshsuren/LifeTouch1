@@ -6,8 +6,8 @@
         <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
     </div>
     <div class="user-details">
-        <p class="name">Member</p>
-        <p class="post">John Doe</p>
+        <p class="post">Member</p>
+        <p class="name"><?php echo isset($_SESSION['first_name']) ? $_SESSION['first_name'] : 'User'; ?></p>
     </div>
 </div>
 <div class="nav">
@@ -67,12 +67,6 @@
 <div class="menu">
     <p class="title">Account</p>
     <ul>
-        <li>
-            <a href="#">
-                <i class='icon ph-bold ph-info'></i>
-                <span class="text">Help</span>
-            </a>
-        </li>
         <li class="mode active">
             <div class="moon-sun">
                 <i class='icon ph-bold ph-sun sun'></i>
@@ -85,7 +79,7 @@
             </div>
         </li>
         <li>
-            <a href="#">
+            <a href="<?php echo URLROOT; ?>/login/logout">
                 <i class='icon ph-bold ph-sign-out'></i>
                 <span class="text">Logout</span>
             </a>

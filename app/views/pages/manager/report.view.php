@@ -27,7 +27,7 @@
     <main>
 
         <div class="top">
-            <h1 class="title">Reports</h1>
+            <h1 class="title">Reports Summary</h1>
             <div class="bell">
                 <i class="ph ph-bell"></i>
                 <p>Hi, John!</p>
@@ -37,11 +37,11 @@
         <div class="dropdown-container">
             <div class="heading">
                 <h2>View Report</h2>
-                <a href="report_main" class="btn">New Report</a>
+
             </div>
 
             <div class="row">
-                <label for="type-list">Report Types</label><br>
+                <label for="type-list">Report Type</label><br>
                 <div class="select">
                     <div
                         class="selected"
@@ -78,7 +78,7 @@
                     </div>
                 </div>
 
-
+                <br>
 
             </div>
             <div class="row">
@@ -90,9 +90,11 @@
                     <?php endforeach; ?>
                 </select>
             </div>
+            <br>
             <div class="heading">
                 <h3>Revenue by membership type</h3>
             </div>
+            <br>
             <!--chart-->
             <div class="chart">
                 <ul class="numbers">
@@ -112,10 +114,11 @@
                     </li>
                 </ul>
             </div>
-
-            <div class="heading1">
+            <br>
+            <div class="heading">
                 <h3>Members age category</h3>
             </div>
+            <br>
             <!--chart-->
             <div class="chart">
                 <ul class="numbers">
@@ -134,9 +137,63 @@
                         <div class="bar" data-percentage="80"><span>Elder</span></div>
                     </li>
                 </ul>
-            </div>
-        </div>
 
+            </div>
+            <div class="inventory-container">
+                <div class="heading">
+                    <h3>Gym Equipment Inventory</h3>
+                </div>
+                <div class="inventory-grid">
+                    <div class="inventory-item">
+                        <div class="item-icon">
+                            <i class="ph ph-dumbbell"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>Dumbbells</h4>
+                            <p>50 sets</p>
+                        </div>
+                    </div>
+                    <div class="inventory-item">
+                        <div class="item-icon">
+                            <i class="ph ph-treadmill"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>Treadmills</h4>
+                            <p>10 units</p>
+                        </div>
+                    </div>
+                    <div class="inventory-item">
+                        <div class="item-icon">
+                            <i class="ph ph-elliptical"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>Ellipticals</h4>
+                            <p>8 units</p>
+                        </div>
+                    </div>
+                    <div class="inventory-item">
+                        <div class="item-icon">
+                            <i class="ph ph-weight-lifter"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>Weight Benches</h4>
+                            <p>5 units</p>
+                        </div>
+                    </div>
+                    <div class="inventory-item">
+                        <div class="item-icon">
+                            <i class="ph ph-mat"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>Yoga Mats</h4>
+                            <p>20 mats</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br>
 
 
     </main>

@@ -13,42 +13,29 @@
 </head>
 
 <body>
+    <!-- Display session error message -->
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-danger" id="error-message" style="display:none;">
+            <?= htmlspecialchars($_SESSION['error']); ?>
+        </div>
+        <?php unset($_SESSION['error']); ?>
+    <?php endif; ?>
+
     <header>
-        <a href="#" class="logo">LifeTouch</a>
+        <a href="<?php echo URLROOT; ?>" class="logo">Life<span>Touch</span></a>
 
-        <nav class="navbar">
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Events</a>
-            <a href="#">Contact Us</a>
-        </nav>
+        <div class='bx bx-menu' id="menu-icon"></div>
 
-        <div class="sign-up">
-            <a href="login.html" class="user">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="white"
-                    className="w-6 h-6 relative top-1"
-                >
-                    <path
-                        fillRule="evenodd"
-                        d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
-                        clipRule="evenodd"
-                    />
-                </svg>
-                Sign In
-            </a>
-            <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke-width="1.5" 
-                stroke="white" 
-                id="menu-icon"
-            >
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
+        <ul class="navbar">
+            <li><a href="<?php echo URLROOT; ?>">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#plans">Events</a></li>
+            <li><a href="#review">Trainers</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+        <div class="top-btn">
+            <a href="<?php echo URLROOT; ?>/login" class="nav-btn">Sign in</a>
         </div>
     </header>
     
@@ -56,7 +43,15 @@
         <h1>Start a better shape of you!</h1>
         <h1>Come join us</h1>
         <p>Please complete the login process with correct information.</p>
-        <form action="login.php" method="POST">
+
+        <!-- Display error messages if any -->
+        <?php if (!empty($data['error'])): ?>
+            <div class="error-message">
+                <?php echo $data['error']; ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="<?php echo URLROOT; ?>/login/user" method="POST">
             <div class="input-box">
                 <input type="text" name="username" placeholder="Username" required>
             </div>
@@ -66,8 +61,8 @@
             </div>
             
             <br><a href="#">Forgot password?</a><br>
-            <button type="submit" class="btn">Login</button>
-
+            <button type="submit" name="submit" class="btn">Login</button>
+        </form>
     </div>
 
     <script src="<?php echo URLROOT; ?>/assets/js/login-script.js"></script>

@@ -24,65 +24,71 @@
 
   <main>
     <h1 class="title">Create new annoucement</h1>
-    <div class="announcement">
-      <div class="ann">
-        <section class="container">
-          <form action="#" class="form">
+
+    <div class="ann">
+      <section class="container">
+        <form method="post" class="form">
+
+          <?php if (!empty($errors)): ?>
+            <div class="alert">
+              <?= implode("<br>", $errors);
+              ?>
+            </div>
+          <?php endif; ?>
+
+          <a href="announcement_main" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
+
+          <div class="input-box">
+            <label>Subject</label>
+            <input type="text" name="subject" placeholder="Announcement Subject" />
+          </div>
+
+          <div class="input-box">
+            <label>Announcement</label>
+            <textarea placeholder="Write your announcement here..." name="announcement"></textarea>
+          </div>
 
 
-            <a href="announcement_main" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
+          <div class="column">
 
             <div class="input-box">
-              <label>Subject</label>
-              <input type="text" placeholder="Announcement Subject" required />
+              <label>Date</label>
+              <input type="date" placeholder="MM/DD/YY" name="date" />
             </div>
 
             <div class="input-box">
-              <label>Announcement</label>
-              <textarea placeholder="Write your announcement here..." required></textarea>
+              <label>Time</label>
+              <input type="time" placeholder="12.00 PM" name="time" />
             </div>
 
+          </div>
 
-            <div class="column">
+          <div class="schedule-box">
+            <div class="schedule-option">
 
-              <div class="input-box">
-                <label>Date</label>
-                <input type="date" placeholder="MM/DD/YY" required />
-              </div>
-
-              <div class="input-box">
-                <label>Time</label>
-                <input type="time" placeholder="12.00 PM" required />
-              </div>
-
-            </div>
-
-            <div class="schedule-box">
-              <div class="schedule-option">
-
-                <div class="send">
-                  <div class="radio-container">
-                    <input type="radio" id="check" name="send" checked />
-                    <label for="now">Send now</label>
-                  </div>
+              <div class="send">
+                <div class="radio-container">
+                  <input type="radio" id="sendNow" name="send" checked />
+                  <label for="now">Send now</label>
                 </div>
-
-                <div class="send">
-                  <div class="radio-container">
-                    <input type="radio" id="check" name="send" checked />
-                    <label for="later">schedule later</label>
-                  </div>
-                </div>
-
               </div>
+
+              <div class="send">
+                <div class="radio-container">
+                  <input type="radio" id="scheduleLater" name="send" checked />
+                  <label for="later">schedule later</label>
+                </div>
+              </div>
+
             </div>
+          </div>
 
-            <button>Publish Now</button>
+          <button type="submit">Publish</button>
 
-          </form>
-        </section>
-      </div>
+        </form>
+      </section>
     </div>
+
 
   </main>
   <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
