@@ -72,17 +72,22 @@
     <div id="bookingForm"></div>
     <div id="addBooking">
         <h2>Add Booking</h2>
-        <input type="text" id="bookingtitle" placeholder="Booking title"/>
-        <button id="btnBook">Book</button>
-        <button class="btnClose">Cancel</button>
+        <select id="timeslot"></select>
+        <div class="bookingFormbuttons">
+            <button id="btnBook">Book</button>
+            <button class="btnClose">Cancel</button>
+        </div>
     </div>
     <div id="viewBooking">
-        <p id="bookingText">sample</p>
-        <button id="btnDelete">Delete</button>
-        <button class="btnClose">Close</button>
+        <h1 id="bookingTime"></h1>
+        <div class="bookingFormbuttons">
+            <button id="btnDelete">Cancel Booking</button>
+            <button class="btnClose">Close</button>
+        </div>
     </div>
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/member/calendar.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
   </body>
 </html>
 

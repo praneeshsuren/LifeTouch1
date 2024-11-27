@@ -1,71 +1,11 @@
-// Select all menu items
-const body = document.querySelector('body');
-const menuItems = document.querySelectorAll('.menu ul li a');
-const menuButton = document.querySelector('.menu-btn');
-const modeSwitch = document.querySelector('.toggle-switch');
-const modeText = document.querySelector('.mode-text');
-// Function to remove the active class from all items
-function removeActiveClass() {
-    menuItems.forEach(item => {
-        item.parentElement.classList.remove('active');
-    });
-}
-
-// Add click event listener to each menu item
-if(menuItems.length>0){
-menuItems.forEach(item => {
-    item.addEventListener('click', function() {
-        // Remove the active class from all items
-        removeActiveClass();
-
-        // Add the active class to the clicked item
-        item.parentElement.classList.add('active');
-        
-        // Toggle sub-menu if it exists
-        const subMenu = item.nextElementSibling;
-        if (subMenu && subMenu.classList.contains('sub-menu')) {
-            subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
-        }
-        const arrow = item.querySelector('.arrow');
-        if (arrow) {
-            arrow.classList.toggle('active');
-        }
-    });
-});
-}
-
-menuButton.addEventListener('click', function() {
-    const sidebar = document.querySelector('.sidebar');
-    const main = document.querySelector('.main');
-
-    sidebar.classList.toggle('active');
-    main.classList.toggle('active');
-});
-
-
-let mode = localStorage.getItem('mode');
-if (mode === 'dark') {
-    body.classList.add('dark');
-    modeText.innerText = 'Light Mode';
-}
-
-// Toggle Dark/Light Mode
-modeSwitch.addEventListener('click', () => {
-    body.classList.toggle('dark');
-    const isDarkMode = body.classList.contains('dark');
-    
-    modeText.innerText = isDarkMode ? 'Light Mode' : 'Dark Mode';
-    localStorage.setItem('mode', isDarkMode ? 'dark' : 'light');
-
-});
-
-
 // calendar
 let bookings = [
-    { bdate: "01-11-2024", bookingday: "Dani" },
-    { bdate: "15-11-2024", bookingday: "Alex" },
-    { bdate: "15-12-2024", bookingday: "Aex" },
+    { bdate: "01-11-2024", btime: "9:00 AM" },
+    { bdate: "15-11-2024", btime: "10:00 AM" },
 ];
+
+const timeslots = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM"];
+
 
 document.addEventListener("DOMContentLoaded", () =>{
     generateCalendar();
@@ -81,7 +21,6 @@ const gotoBtn = document.querySelector(".gotoBtn");
 const todayBtn = document.querySelector(".todayBtn");
 const dateInput = document.querySelector(".date-input");
 var navigation = 0;
-
 
 function generateCalendar(inputMonth = null, inputYear = null) {
     const date = new Date();
@@ -132,7 +71,7 @@ function generateCalendar(inputMonth = null, inputYear = null) {
                 if(bookingoftheDay){
                     const bookingBox = document.createElement("td");
                     bookingBox.classList.add("booked");
-                    bookingBox.innerText = bookingoftheDay.bookingday;
+                    bookingBox.innerText = bookingoftheDay.btime;
                     dayBox.appendChild(bookingBox);
                 }
                 //bookingform
@@ -161,6 +100,7 @@ function buttons(){
             generateCalendar();
         });
     }
+
     if(nextMonth){
         nextMonth.addEventListener("click", ()=>{
             navigation++;
@@ -174,6 +114,7 @@ function buttons(){
         generateCalendar();
         });
     }
+
     if(dateInput){
         dateInput.addEventListener("input", (e) => {
             // Allow only numbers and slash
@@ -190,6 +131,7 @@ function buttons(){
             }
         });
     }
+
     if(gotoBtn){
         gotoBtn.addEventListener("click", () => {
             const dateArr = dateInput.value.split("/");
@@ -215,7 +157,35 @@ function buttons(){
             }
         });
     }
-    
+
+    const closebtn = document.querySelectorAll(".btnClose");
+    const deletebtn = document.querySelector("#btnDelete");
+    const bookbtn = document.querySelector("#btnBook");
+
+    closebtn.forEach((btn) =>{
+        btn.addEventListener("click", closeBookingForm);
+    });
+
+    deletebtn.addEventListener("click", function(){
+        bookings = bookings.filter((e) => e.bdate !== clicked);
+        closeBookingForm();
+    });
+
+    bookbtn.addEventListener("click", function(){
+        if(timeslotDropdown.value){
+            timeslotDropdown.classList.remove("error");
+            bookings.push({
+                bdate : clicked,
+                btime: timeslotDropdown.value,
+            });
+            timeslotDropdown.value = "";
+            closeBookingForm();
+            alert("Booking added successfully.");
+        } else{
+            timeslotDropdown.classList.add("error");
+            alert("Please select a valid time slot.");
+        }
+    });
 }
 
 // bookingForm
@@ -223,6 +193,8 @@ let clicked = null;
 const bookingForm = document.getElementById("bookingForm");
 const viewbookingForm = document.getElementById("viewBooking");
 const addbookingForm = document.getElementById("addBooking");
+const timeslotDropdown = document.getElementById("timeslot");
+const bookingTimeDisplay = document.querySelector("#bookingTime");
 
 // showbookingform
 function showbookingForm(dateValue){
@@ -230,14 +202,18 @@ function showbookingForm(dateValue){
     const bookingoftheDay = bookings.find((e) => e.bdate === dateValue);
     if(bookingoftheDay){
         // already booked
-        document.querySelector("#bookingText").innerText=bookingoftheDay.bookingday;
+        bookingTimeDisplay.innerText=bookingoftheDay.btime;
         viewbookingForm.style.display = "block";
-    } else{
+        addbookingForm.style.display = "none";
+    } else {
         // add new
+        populateTimeslots(dateValue);
         addbookingForm.style.display = "block";
+        viewbookingForm.style.display = "none";
     }
     bookingForm.style.display="block";
 }
+
 // closeform
 function closeBookingForm(){
     viewbookingForm.style.display = "none";
@@ -246,31 +222,37 @@ function closeBookingForm(){
     clicked = null;
     generateCalendar();
 }
-const closebtn = document.querySelectorAll(".btnClose");
-const deletebtn = document.querySelector("#btnDelete");
-const bookbtn = document.querySelector("#btnBook");
-const bookingtitle =document.querySelector("#bookingtitle");
 
-closebtn.forEach((btn) =>{
-    btn.addEventListener("click", closeBookingForm);
-});
-deletebtn.addEventListener("click", function(){
-    bookings = bookings.filter((e) => e.bdate !== clicked);
-    closeBookingForm();
-});
-bookbtn.addEventListener("click", function(){
-    if(bookingtitle.value){
-        bookingtitle.classList.remove("error");
-        bookings.push({
-            bdate : clicked,
-            bookingday : bookingtitle.value.trim(),
-        });
-        bookingtitle.value = "";
-        closeBookingForm();
-    } else{
-        bookingtitle.classList.add("error");
-    }
-});
+//timeslot
+function populateTimeslots(dateValue){
+    clicked = dateValue;
+    timeslotDropdown.innerHTML = "";
+
+    // default select
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Select";
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    timeslotDropdown.appendChild(defaultOption);
+
+    // get booked time slots
+    const bookedSlots = bookings
+        .filter((e) => e.bdate === dateValue)
+        .map((e) => e.btime);
+    // dropdown
+    timeslots.forEach((slot) => {
+        const option = document.createElement("option");
+        option.value = slot;
+        option.textContent = slot;
+
+        if(bookedSlots.includes(slot)){
+            option.disabled = true;
+        }
+        timeslotDropdown.appendChild(option);
+    });
+}
+
 
 
 

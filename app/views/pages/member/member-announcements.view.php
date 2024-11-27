@@ -42,7 +42,7 @@
                 <div class="announcementHeader">
                     <div class="aHeading">
                         <h2>Announcements</h2>
-                        <span id="num-of-announcements">4</span>
+                        <span id="num-of-announcements"></span>
                     </div>
                     <p id="mark-as-read">Mark as All Read</p>
                 </div>
@@ -213,6 +213,7 @@
         <!-- APEX CHARTS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.53.0/apexcharts.min.js"></script>
         <!-- SCRIPT -->
-        <script src="<?php echo URLROOT; ?>/assets/js/member-script.js?v=<?php echo time();?>"></script>
+        <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
+        <script src="<?php echo URLROOT; ?>/assets/js/member/announcement.js?v=<?php echo time();?>"></script>
     </body>
 </html>

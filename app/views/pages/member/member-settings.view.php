@@ -39,7 +39,7 @@
       </div>
       
     <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/member-script.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
 
   </body>
 </html>
