@@ -20,6 +20,13 @@
         <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
     </section>
 
+    <?php if (isset($_SESSION['success'])): ?>
+      <script>
+          alert("<?php echo $_SESSION['success']; ?>");
+      </script>
+      <?php unset($_SESSION['success']); // Clear success message after showing it ?>
+    <?php endif; ?>
+
     <main>
       <div class="title">
         
@@ -29,6 +36,57 @@
           <h2>Hi, John!</h2>
         </div>
 
+      </div>
+
+      <div class="table-container">
+        <table class='trainer-table'>
+          <thead>
+              <tr>
+                  <th>Member Id</th>
+                  <th>Profile Picture</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Gender</th>
+                  <th>Date of Birth</th>
+                  <th>Age</th>
+                  <th>Height (m)</th>
+                  <th>Weight (kg)</th>
+                  <th>Home Address</th>
+                  <th>Email Address</th>
+                  <th>Contact Number</th>
+              </tr>
+          </thead>
+          <tbody>
+            <?php if (!empty($data['members'])): ?>
+              <?php foreach ($data['members'] as $member) : ?>
+                <tr>
+                    <td><?php echo $member->member_id; ?></td>
+                    <td><img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="Picture"></td>
+                    <td><?php echo $member->first_name; ?></td>
+                    <td><?php echo $member->last_name; ?></td>
+                    <td><?php echo $member->gender; ?></td>
+                    <td><?php echo $member->date_of_birth; ?></td>
+                    <td><?php echo calculateAge($member->date_of_birth); ?></td>
+                    <td><?php echo $member->height; ?></td>
+                    <td><?php echo $member->weight; ?></td>
+                    <td><?php echo $member->home_address; ?></td>
+                    <td><?php echo $member->email_address; ?></td>
+                    <td><?php echo $member->contact_number; ?></td>
+                </tr>
+              <?php endforeach; ?>
+              <?php else: ?>
+                <tr>
+                    <td colspan="10" style="text-align: center;">No members available</td>
+                </tr>
+              <?php endif; ?>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="add-trainer">
+        <a href="<?php echo URLROOT; ?>/receptionist/members/createMember">
+          <button class="add-trainer-btn">+ Add Member</button>
+        </a>
       </div>
 
       </main>

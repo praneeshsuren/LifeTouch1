@@ -1,4 +1,5 @@
 <?php
+
 class Home extends Controller
 {
     public function index()
@@ -10,3 +11,4 @@ class Home extends Controller
         $this->view('home/index');
     }
 }
+

@@ -20,6 +20,13 @@
         <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
     </section>
 
+    <?php if (isset($_SESSION['success'])): ?>
+      <script>
+          alert("<?php echo $_SESSION['success']; ?>");
+      </script>
+      <?php unset($_SESSION['success']); // Clear success message after showing it ?>
+    <?php endif; ?>
+
     <main>
       <div class="title">
         
@@ -30,6 +37,7 @@
         </div>
 
       </div>
+
       <div class="table-container">
         <table class='trainer-table'>
           <thead>
@@ -41,7 +49,7 @@
                   <th>Gender</th>
                   <th>Date of Birth</th>
                   <th>Age</th>
-                  <th>Address</th>
+                  <th>Home Address</th>
                   <th>Email Address</th>
                   <th>Contact Number</th>
               </tr>
@@ -56,9 +64,9 @@
                     <td><?php echo $trainer->last_name; ?></td>
                     <td><?php echo $trainer->gender; ?></td>
                     <td><?php echo $trainer->date_of_birth; ?></td>
-                    <td><?php echo $trainer->age; ?></td>
-                    <td><?php echo $trainer->address; ?></td>
-                    <td><?php echo $trainer->email; ?></td>
+                    <td><?php echo calculateAge($trainer->date_of_birth); ?></td>
+                    <td><?php echo $trainer->home_address; ?></td>
+                    <td><?php echo $trainer->email_address; ?></td>
                     <td><?php echo $trainer->contact_number; ?></td>
                 </tr>
               <?php endforeach; ?>
@@ -72,11 +80,12 @@
       </div>
 
       <div class="add-trainer">
-        <button class="add-trainer-btn">
-          <a href="<?php echo URLROOT; ?>/receptionist/trainers/createTrainer">+ Add Trainer</a>
-        </button>
+        <a href="<?php echo URLROOT; ?>/receptionist/trainers/createTrainer">
+          <button class="add-trainer-btn">+ Add Trainer</button>
+        </a>
       </div>
       </main>
+      
 
     <!-- APEX CHARTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.53.0/apexcharts.min.js"></script>
