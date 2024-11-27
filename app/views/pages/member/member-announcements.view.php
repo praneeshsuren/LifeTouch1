@@ -42,7 +42,7 @@
                 <div class="announcementHeader">
                     <div class="aHeading">
                         <h2>Announcements</h2>
-                        <span id="num-of-announcements"></span>
+                        <span id="num-of-announcements">4</span>
                     </div>
                     <p id="mark-as-read">Mark as All Read</p>
                 </div>
@@ -50,7 +50,7 @@
                     <div class="announcementCard-Header">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3>Mark Anderson</h3>
@@ -82,7 +82,7 @@
                     <div class="announcementCard-Header">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3>Mark Anderson</h3>
@@ -114,7 +114,7 @@
                     <div class="announcementCard-Header">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3>Mark Anderson</h3>
@@ -146,7 +146,7 @@
                     <div class="announcementCard-Header">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3>Mark Anderson</h3>
@@ -178,7 +178,7 @@
                     <div class="announcementCard-Header">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3>Mark Anderson</h3>

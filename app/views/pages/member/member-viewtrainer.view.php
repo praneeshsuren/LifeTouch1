@@ -64,16 +64,15 @@
             ['name' => 'John', 'image' => 'image.png'],
             ['name' => 'John', 'image' => 'image.png'],
             ['name' => 'John', 'image' => 'image.png'],
-            ['name' => 'John', 'image' => 'image.png'],
           ];
           ?>
       <div class="member-view-trainer-grid-container">
       <div class="member-view-trainer">
         <?php foreach($trianers as $trainer):?>
         <div class="trainer">
-          <img src="<?php echo URLROOT; ?>/public/images/<?php echo $trainer['image']; ?>" alt="" class="trainer-image"/>
+          <img src="<?php echo URLROOT; ?>/assets/images/<?php echo $trainer['image']; ?>" alt="" class="trainer-image"/>
            <h3><?php echo $trainer['name']; ?></h3>
-           <a href="<?php echo URLROOT; ?>/member-viewtrainer-viewbtn">
+           <a href="<?php echo URLROOT; ?>/member/memberViewtrainerViewbtn">
            <button class="member-view-trainer-btn">View</button>
            </a>
         </div>
@@ -81,9 +80,7 @@
       </div>
         </div>
     </main>
-
     <script src="<?php echo URLROOT; ?>/assets/js/member-script.js?v=<?php echo time();?>"></script>
-
   </body>
 </html>
 
