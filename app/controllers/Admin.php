@@ -867,4 +867,7 @@
             }
         }
 
+        public function events(){
+            $this->view('admin/admin-events');
+        }
     }
