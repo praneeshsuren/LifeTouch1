@@ -133,9 +133,53 @@
           </div>
         </div>      
       </div>
+
+      <div class="chart">
+        <div class="chart-header">
+          <h2>Bookings</h2>
+        </div>
+        <div class="chart-container">
+          <table class="paymentHistoryTable">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Trainer's detail</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td>2024.10.12</td>
+                    <td>John</td>
+                    <td>10:00 AM</td>
+                  </tr>
+                  <tr>
+                    <td>2024.10.12</td>
+                    <td>Mark</td>
+                    <td>08:00 AM</td>
+                  </tr>
+                  <tr>
+                    <td>2024.10.12</td>
+                    <td>Mark</td>
+                    <td>08:00 AM</td>
+                  </tr>
+                  <tr>
+                    <td>2024.10.12</td>
+                    <td>Mark</td>
+                    <td>08:00 AM</td>
+                  </tr>
+                  <tr>
+                    <td>2024.10.12</td>
+                    <td>Mark</td>
+                    <td>08:00 AM</td>
+                  </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
     </main>
     <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/member-script.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
   </body>
 </html>
 
