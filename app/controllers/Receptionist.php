@@ -12,6 +12,10 @@
             $this->view('receptionist/receptionist-dashboard');
         }
 
+        public function announcements(){
+            $this->view('receptionist/receptionist-announcements');
+        }
+
         public function trainers($action = null) {
             switch ($action) {
                 case 'createTrainer':
@@ -196,7 +200,7 @@
                 default:
                     // Fetch all trainers and pass to the view
                     $trainerModel = new M_Trainer;
-                    $trainers = $trainerModel->findAll();
+                    $trainers = $trainerModel->findAll('created_at');
         
                     $data = [
                         'trainers' => $trainers
@@ -347,7 +351,7 @@
                 default:
                     // Fetch all members and pass to the view
                     $memberModel = new M_Member;
-                    $members = $memberModel->findAll();
+                    $members = $memberModel->findAll('created_at');
 
                     $data = [
                         'members' => $members
@@ -356,11 +360,6 @@
                     $this->view('receptionist/receptionist-members', $data);
                     break;
             }
-        }
-        
-        public function announcements(){
-            $this->view('receptionist/receptionist-announcements');
-
         }
         
 
