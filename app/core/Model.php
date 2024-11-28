@@ -117,7 +117,6 @@ trait Model
     
         // Add the ID to the data array for the WHERE clause
         $data[$id_column] = $id;
-    
         // Execute the query and return the result
         return $this->query($query, $data);
     }

@@ -24,17 +24,66 @@
     </section>
     
     <main>
-      <div class="title">
-        <h1>Create Event</h1>
-        <div class="greeting">
-        <?php require APPROOT . '/views/components/user-greeting.view.php'; ?>
-        </div>
-      </div>
 
-      <!-- Events Container -->
-      <div class="events-container">
+        <div class="title">
+            <h1>Create Event</h1>
+            <div class="greeting">
+            <?php require APPROOT . '/views/components/user-greeting.view.php'; ?>
+            </div>
+        </div>
         
-      </div>
+        <div class="create-event-container">
+            <div class="form-container">
+                <form action="<?php echo URLROOT; ?>/event/createEvent" method="POST" class="create-event-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Event Name</label>
+                            <input type="text" id="name" name="name" required placeholder="Enter event name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" rows="4" placeholder="Describe your event"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="event_date">Event Date</label>
+                            <input type="date" id="event_date" name="event_date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start_time">Start Time</label>
+                            <input type="time" id="start_time" name="start_time" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="duration">Duration (hours)</label>
+                            <input type="number" id="duration" name="duration" min="0.5" step="0.5" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" name="location" required placeholder="Enter venue or address">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price">Ticket Price ($)</label>
+                            <input type="number" id="price" name="price" min="0" step="0.01" placeholder="0.00">
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="free_for_members" name="free_for_members" value="1" onclick="this.value = this.checked ? 1 : 0">
+                            <label for="free_for_members">Free for Members</label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn submit-btn">Create Event</button>
+                        <button type="reset" class="btn reset-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
       
     </main>
 

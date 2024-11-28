@@ -26,17 +26,28 @@
                     $this->view('admin/admin-createEvent');
                     break;
                 
+                case 'viewEvent':
+                    // Load the view to view a trainer
+                    $eventModel = new M_Event;
+                    $event = $eventModel->findByEventId($_GET['id']);
+        
+                    $data = [
+                        'event' => $event
+                    ];
+        
+                    $this->view('admin/admin-viewEvent', $data);
+                    break;
+                
                 default:
 
-                    // $eventModel = new M_Event;
-                    // $events = $eventModel->findAll('event_id');
+                    $eventModel = new M_Event;
+                    $events = $eventModel->findAll('event_id');
 
-                    // $data = [
-                    //     'events' => $events
-                    // ];
+                    $data = [
+                        'events' => $events
+                    ];
 
-                    // $this->view('admin/admin-events', $data);
-                    $this->view('admin/admin-events');
+                    $this->view('admin/admin-events', $data);
                     break;
             }
         }
