@@ -30,12 +30,11 @@
     </section>
     <main>
         <div class="title">
-            <h1>Book Reservations</h1>
+            <h1>View Supplements</h1>
             <div class="greeting">
-            <span class="bell-container"><i class="ph ph-bell notification"></i></span>
-            <h2>Hi, John!</h2>
-            </div>
+            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
+      </div>
         <div class="bookingBox">
             <div class="calendar-header">
                 <div class="prevMonth">

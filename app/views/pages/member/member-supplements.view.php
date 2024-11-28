@@ -58,30 +58,65 @@
       <!-- View-supplements-section-->
         <?php
           $supplements=[
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
           ];
           ?>
       <div class="member-supplements-grid-container">
       <div class="member-supplements">
         <?php foreach($supplements as $supplement):?>
         <div class="supplement">
-          <img src="<?php echo URLROOT; ?>/public/images/<?php echo $supplement['image']; ?>" alt="" class="supplement-image"/>
+          <img src="<?php echo URLROOT; ?>/assets/images/<?php echo $supplement['image']; ?>" alt="" class="supplement-image"/>
            <h3><?php echo $supplement['name']; ?></h3>
-           <button class="member-supplements-btn">View</button>
+           <p><?php echo $supplement['price']; ?></p>
+           <div class="quantity-counter">
+              <p>Quantity</p>
+              <div class="quantity-counter-btn">
+                <button class="btn-decrease"><i class="ph ph-minus"></i></button>
+                <input type="number" class="quantity-input" value="1" min="1" />
+                <button class="btn-increase"><i class="ph ph-plus"></i></button>
+              </div>
+          </div>
+           <button class="member-supplements-btn">Add</button>
         </div>
         <?php endforeach; ?>
       </div>
         </div>
     </main>
-
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const decreaseBtn = document.querySelector(".btn-decrease");
+        const increaseBtn = document.querySelector(".btn-increase");
+        const quantityInput = document.querySelector(".quantity-input");
 
+        // Decrease quantity
+        decreaseBtn.addEventListener("click", () => {
+          let currentValue = parseInt(quantityInput.value);
+          if (currentValue > parseInt(quantityInput.min)) {
+            quantityInput.value = currentValue - 1;
+          }
+        });
+
+        // Increase quantity
+        increaseBtn.addEventListener("click", () => {
+          let currentValue = parseInt(quantityInput.value);
+          quantityInput.value = currentValue + 1;
+        });
+
+        // Prevent invalid values
+        quantityInput.addEventListener("input", () => {
+          let currentValue = parseInt(quantityInput.value);
+          if (isNaN(currentValue) || currentValue < parseInt(quantityInput.min)) {
+            quantityInput.value = quantityInput.min;
+          }
+        });
+      });
+    </script>
   </body>
 </html>
 
