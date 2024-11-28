@@ -7,7 +7,17 @@
         }
 
         public function index(){
-            $this->view('admin/admin-dashboard');
+            
+            $announcementModel = new M_Announcement;
+
+            $announcements = $announcementModel->findAll('announcement_id', 3);
+
+            $data = [
+                'announcements' => $announcements
+            ];
+
+            $this->view('admin/admin-dashboard', $data);
+            
         }
 
         public function announcements($action = null){

@@ -13,9 +13,9 @@ trait Model
     public $errors = [];
 
 
-    public function findAll($order_column = 'null')
+    public function findAll($order_column = 'null', $limit = 10)
     {
-        $query = " select * from $this->table order by $order_column $this->order_type limit $this->limit offset $this->offset";
+        $query = " select * from $this->table order by $order_column $this->order_type limit $limit offset $this->offset";
         return $this->query($query);
     }
 

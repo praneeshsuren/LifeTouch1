@@ -580,6 +580,7 @@ main .recent-announcements{
     grid-row: 2 / -1;
     padding-top: 1rem;
     padding-left: 0.6rem;
+    overflow-x: hidden;
 }
 
 main .recent-announcements h2{
@@ -597,18 +598,20 @@ main .recent-announcements .announcements{
     padding-left: 20px;
     padding-right: 20px;
     box-shadow: var(--box-shadow-color);
+    max-height: 70%;
 }
 
 main .recent-announcements .announcement{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: start;
     border-bottom: 1px solid var(--separator-color);
     color: var(--hover-btn);
     padding-top: 10px;
     padding-bottom: 15px;
     cursor: pointer;
     margin-bottom: 1rem;
+    overflow: hidden;
 }
 
 main .recent-announcements .announcement:hover{
@@ -618,19 +621,32 @@ main .recent-announcements .announcement:hover{
 
 main .recent-announcements .announcement .profile-img{
     display: flex;
-    margin-bottom: 3rem;
-    margin-left: 0.5rem;
-    width: 4.5rem;
+    margin-bottom: 2rem;
 }
 
 main .recent-announcements .announcement .profile-img img{
     border-radius: 50%;
     width: 100%;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
 }
 
 main .recent-announcements .announcement .message{
 margin-left: 1rem;
+}
+
+main .recent-announcements .announcement .message p {
+    margin: 0;
+}
+
+main .recent-announcements .announcement .message .description-text {
+    display: flex; /* Ensure it's treated as a block for sizing */
+    max-width: 100%; /* Constrain the width */
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis */
+    color: var(--text-color); /* Adjust the color as needed */
 }
 
 /* CHARTS */
