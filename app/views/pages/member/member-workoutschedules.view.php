@@ -37,6 +37,119 @@
           <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
       </div>
+      <div class="workoutContainer">
+        <div class="workout-card">
+          <div class="workoutCard-Header">
+            <div class="workout-img">
+              <img src="<?php echo URLROOT; ?>/assets/images/home/image1.jpg" alt="">
+            </div>
+            <div class="details">
+              <div class="workout-title">
+                <h3>Chest and Triceps</h3>
+                <button class="completebtn">Completed</button>
+              </div>
+              <div class="workout-description">
+                <table>
+                  <tr>
+                    <td>Bench press</td>
+                    <td>4 X 6</td>
+                  </tr>
+                  <tr>
+                    <td>Incline dumbell press</td>
+                    <td>4 X 8</td>
+                  </tr>
+                  <tr>
+                    <td>Dips</td>
+                    <td>4 X 10</td>
+                  </tr>
+                  <tr>
+                    <td>Rope triceps</td>
+                    <td>4 X 10</td>
+                  </tr>
+                  <tr>
+                    <td>Pull-ups</td>
+                    <td>4 X 10</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="workout-card">
+          <div class="workoutCard-Header">
+            <div class="workout-img">
+              <img src="<?php echo URLROOT; ?>/assets/images/home/image1.jpg" alt="">
+            </div>
+            <div class="details">
+              <div class="workout-title">
+                <h3>Chest and Triceps</h3>
+                <button class="notcompletebtn">Not Completed</button>
+              </div>
+              <div class="workout-description">
+                <table>
+                  <tr>
+                    <td>Bench press</td>
+                    <td>4 X 6</td>
+                  </tr>
+                  <tr>
+                    <td>Incline dumbell press</td>
+                    <td>4 X 8</td>
+                  </tr>
+                  <tr>
+                    <td>Dips</td>
+                    <td>4 X 10</td>
+                  </tr>
+                  <tr>
+                    <td>Rope triceps</td>
+                    <td>4 X 10</td>
+                  </tr>
+                  <tr>
+                    <td>Pull-ups</td>
+                    <td>4 X 10</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="workout-card">
+          <div class="workoutCard-Header">
+            <div class="workout-img">
+              <img src="<?php echo URLROOT; ?>/assets/images/home/image1.jpg" alt="">
+            </div>
+            <div class="details">
+              <div class="workout-title">
+                <h3>Chest and Triceps</h3>
+                <button class="notcompletebtn">Not Completed</button>
+              </div>
+              <div class="workout-description">
+                <table>
+                  <tr>
+                    <td>Bench press</td>
+                    <td>4 X 6</td>
+                  </tr>
+                  <tr>
+                    <td>Incline dumbell press</td>
+                    <td>4 X 8</td>
+                  </tr>
+                  <tr>
+                    <td>Dips</td>
+                    <td>4 X 10</td>
+                  </tr>
+                  <tr>
+                    <td>Rope triceps</td>
+                    <td>4 X 10</td>
+                  </tr>
+                  <tr>
+                    <td>Pull-ups</td>
+                    <td>4 X 10</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
