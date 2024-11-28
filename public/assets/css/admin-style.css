@@ -1734,3 +1734,231 @@ main .events-container .card .card-body .view-btn:hover {
         gap: 1.5rem;
     }
 }
+
+/*Create Event Page*/
+main .create-event-container {
+    grid-column: 1 / -1;
+    grid-row: 2 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main .create-event-container .form-container{
+    width: 70%;
+    padding: 4rem 3rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+main .create-event-container .create-event-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+main .create-event-container .create-event-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+main .create-event-container .create-event-form label {
+    margin-bottom: 0.5rem;
+    color: #495057;
+    font-weight: 600;
+}
+
+main .create-event-container .create-event-form input, 
+main .create-event-container .create-event-form textarea {
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+main .create-event-container .create-event-form .checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+main .create-event-container .create-event-form .checkbox-group input {
+    margin-right: 0.5rem;
+}
+
+main .create-event-container .form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 2rem;
+}
+
+main .create-event-container .form-actions button{
+    cursor: pointer;
+    font-size: 1rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: var(--tran-03);
+}
+
+main .create-event-container .form-actions button:hover{
+    transform: scale(1.1);
+}
+
+main .create-event-container .form-actions .submit-btn {
+    padding: 1rem 2rem;
+    background-color: #28a745;
+    color: white;
+}
+ 
+main .create-event-container .form-actions .reset-btn {
+    padding: 1rem 3.5rem;
+    background-color: #dc3545;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .create-event-form .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/*View Event Page*/
+/* Form Container */
+main .event-detail-container {
+    grid-column: 1 / -1;
+    grid-row: 2 / -1;
+}
+
+main .event-detail-container .form-container{
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 50%;
+    margin: 2rem auto;
+}
+
+/* Header */
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.event-header input {
+    width: 70%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    padding: 0.5rem 0;
+    outline: none;
+    background: transparent;
+    color: #333;
+}
+
+.event-header select {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    outline: none;
+}
+
+/* Grid Layout */
+.event-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Form Groups */
+.detail-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.detail-group input, .detail-group select, .detail-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    color: #333;
+    background-color: #fff;
+}
+
+.detail-group input:disabled, 
+.detail-group select:disabled, 
+.detail-group textarea:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    border-color: #ccc;
+}
+
+/* Description Section */
+.event-description h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.event-description textarea {
+    width: 100%;
+    height: 120px;
+    resize: none;
+    padding: 0.8rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    color: #333;
+    background-color: #fff;
+}
+
+/* Actions */
+.event-actions {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.event-actions .btn {
+    border: none;
+    border-radius: 8px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* Checkbox Styling */
+.detail-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    cursor: pointer;
+    accent-color: #6a5af9;
+}
+
+.detail-group label[for="free_for_members"] {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+}
