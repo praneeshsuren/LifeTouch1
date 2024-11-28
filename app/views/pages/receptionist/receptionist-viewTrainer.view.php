@@ -26,8 +26,7 @@
       <div class="title">
         <h1>Trainer Details</h1>
         <div class="greeting">
-          <span class="bell-container"><i class="ph ph-bell notification"></i></span>
-          <h2>Hi, John!</h2>
+            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
       </div>
 
@@ -45,15 +44,26 @@
         </div>
       </div>
       <div class="user-details">
-        <div class="profile-picture">
-          <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="Trainer Picture">
-        </div>
-        <form id="trainerForm" method="POST" action="<?php echo URLROOT; ?>/receptionist/trainers/updateTrainer">
+      <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/receptionist/trainers/updateTrainer">
           <div class="details">
+            <div class="profile-picture">
+              <img 
+                src="<?php echo URLROOT; ?>/assets/images/Trainer/<?php echo !empty($data['trainer']->image) ? $data['trainer']->image : 'default-placeholder.jpg'; ?>" 
+                alt="Trainer Picture" 
+                id="userImage" >
+              
+              <!-- File input for image upload -->
+              <input type="file" name="profile_picture" id="profilePictureInput" style="display: none;" accept="image/*">
+              
+              <!-- Change picture button -->
+              <button type="button" id="changePictureBtn" class="change-picture-btn">Change Picture</button>
+            </div>
+
             <div class="left-column">
               <p>
                 <strong>Trainer ID:</strong>
-                <input type="text" name="trainer_id" id="trainer_id" value="<?php echo $data['trainer']->trainer_id; ?>" disabled>
+                <input type="text" id="user_id" value="<?php echo $data['trainer']->trainer_id; ?>" disabled>
+                <input type="hidden" name="trainer_id" value="<?php echo $data['trainer']->trainer_id; ?>">
               </p>
               <p>
                 <strong>First Name:</strong>
@@ -64,8 +74,12 @@
                 <input type="text" name="last_name" value="<?php echo $data['trainer']->last_name; ?>" disabled>
               </p>
               <p>
+                <strong>NIC Number:</strong>
+                <input type="text" name="NIC_no" value="<?php echo $data['trainer']->NIC_no; ?>" disabled>
+              </p>
+              <p>
                 <strong>Gender:</strong>
-                <select name="gender" disabled>
+                <select name="gender" id="gender" disabled>
                   <option value="Male" <?php echo $data['trainer']->gender == 'Male' ? 'selected' : ''; ?>>Male</option>
                   <option value="Female" <?php echo $data['trainer']->gender == 'Female' ? 'selected' : ''; ?>>Female</option>
                   <option value="Other" <?php echo $data['trainer']->gender == 'Other' ? 'selected' : ''; ?>>Other</option>
@@ -93,7 +107,7 @@
           </div>
           <div class="action-buttons">
             <button type="button" id="editBtn" class="edit-btn">Edit</button>
-            <button type="button" id="deleteBtn" class="delete-btn">Delete</button>
+            <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/trainers/deleteTrainer?id=<?php echo $data['trainer']->trainer_id; ?>';">Delete</button>
             <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
             <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;">Cancel</button>
           </div>
@@ -115,6 +129,26 @@
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
+
+    <script>
+      document.getElementById('changePictureBtn').addEventListener('click', () => {
+        document.getElementById('profilePictureInput').click(); // Trigger file input click
+      });
+
+      document.getElementById('profilePictureInput').addEventListener('change', (event) => {
+        const file = event.target.files[0]; // Get the selected file
+        if (file) {
+          const reader = new FileReader(); // Create a FileReader object
+          
+          // Update the image source once the file is read
+          reader.onload = function(e) {
+            document.getElementById('userImage').src = e.target.result;
+          };
+
+          reader.readAsDataURL(file); // Read the file as a Data URL
+        }
+      });
+    </script>
 
   </body>
 </html>

@@ -23,7 +23,7 @@
     <main>
 
         <div class="top">
-            <h1 class="title">View Euipment</h1>
+            <h1 class="title">View Equipment</h1>
             <div class="bell">
                 <i class="ph ph-bell"></i>
                 <p>Hi, John!</p>

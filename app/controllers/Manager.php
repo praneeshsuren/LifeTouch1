@@ -3,6 +3,11 @@
 class Manager extends Controller
 {
 
+    public function __construct() {
+        // Check if the user is logged in as a manager
+        $this->checkAuth('manager');
+    }
+
     public function index()
     {
         $this->view('manager/manager_dashboard');
@@ -209,19 +214,21 @@ class Manager extends Controller
             $updatedData = [
                 'name' => $_POST['name'],
                 'description' => $_POST['description'],
-
+                'purchase_price' => $_POST['purchase_price'],
+                'purchase_date' => $_POST['purchase_date'],
+                'purchase_shop' => $_POST['purchase_shop'],
             ];
 
             // Check if the user has uploaded a new file
             if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
                 // Handle the file upload
-                //$targetDir = "assets/images/Equipment/";
-                $targetFile = basename($_FILES["file"]["name"]);
+                $targetDir = "assets/images/Equipment/";
+                $targetFile = $targetDir . basename($_FILES["file"]["name"]);
 
                 // Move the uploaded file to the target directory
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
                     // Update the file path in the database
-                    $updatedData['file'] = $targetFile;
+                    $updatedData['file'] = basename($_FILES["file"]["name"]);
                 } else {
                     // Handle error if file upload fails
                     $_SESSION['message'] = "Failed to upload image.";

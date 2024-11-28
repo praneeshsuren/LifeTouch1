@@ -13,7 +13,9 @@ class M_Equipment
         'name',
         'description',
         'file',
-
+        'purchase_price',
+        'purchase_date',
+        'purchase_shop',
     ];
 
 
@@ -40,15 +42,22 @@ class M_Equipment
                 $this->errors['file'] = "File upload failed. Please try again.";
             } elseif ($_FILES['image']['size'] > 2 * 1024 * 1024) { // Check if file size exceeds 2MB
                 $this->errors['file'] = "The file size must be less than 2MB.";
-            } else {
-                $allowed = ['jpg', 'jpeg', 'png', 'gif']; // Allowed file extensions
-                $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-                if (!in_array($ext, $allowed)) {
-                    $this->errors['file'] = "Only JPG, JPEG, PNG, and GIF files are allowed.";
-                }
             }
         }
+        // Date validation
+        if (empty($data['purchase_date'])) {
+            $this->errors['purchase_date'] = "Purchase date is required.";
+        }
+        if (empty($data['purchase_shop'])) {
+            $this->errors['purchase_shop'] = "Purchase shop is required.";
+        }
 
+        // Price validation
+        if (empty($data['purchase_price'])) {
+            $this->errors['purchase_price'] = "Price is required.";
+        } elseif (!is_numeric($data['purchase_price']) || $data['purchase_price'] <= 0) { // Ensure price is numeric and positive
+            $this->errors['purchase_price'] = "Price must be a positive number.";
+        }
 
         // Return true if no errors; otherwise, false
         return empty($this->errors);

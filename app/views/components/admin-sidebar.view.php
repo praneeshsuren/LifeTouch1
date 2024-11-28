@@ -6,8 +6,8 @@
         <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
     </div>
     <div class="user-details">
-        <p class="name">Admin</p>
-        <p class="post">John Doe</p>
+        <p class="post">Admin</p>
+        <p class="name"><?php echo isset($_SESSION['first_name']) ? $_SESSION['first_name'] : 'User'; ?></p>
     </div>
 </div>
 <div class="nav">
@@ -28,42 +28,47 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a href="<?php echo URLROOT; ?>/admin">
+                        <a href="<?php echo URLROOT; ?>/admin/members">
                             <span class="text">Members</span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo URLROOT; ?>/admin">
+                        <a href="<?php echo URLROOT; ?>/admin/trainers">
                             <span class="text">Trainers</span>
                         </a>
                     </li> 
                     <li>
-                        <a href="<?php echo URLROOT; ?>/admin">
+                        <a href="<?php echo URLROOT; ?>/admin/receptionists">
                             <span class="text">Receptionists</span>
                         </a>
                     </li> 
                     <li>
-                        <a href="<?php echo URLROOT; ?>/admin">
-                            <span class="text">Manager</span>
+                        <a href="<?php echo URLROOT; ?>/admin/managers">
+                            <span class="text">Managers</span>
                         </a>
-                    </li> 
+                    </li>
+                    <li>
+                        <a href="<?php echo URLROOT; ?>/admin/admins">
+                            <span class="text">Admins</span>
+                        </a>
+                    </li>
                 </ul> 
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/admin">
+                <a href="<?php echo URLROOT; ?>/admin/announcements">
                     <i class='icon ph-bold ph-newspaper'></i>
-                    <span class="text">Post Announcements</span>
+                    <span class="text">Announcements</span>
                 </a>
             </li>
             <li>
                 <a href="<?php echo URLROOT; ?>/admin/events">
-                    <i class='icon ph-bold ph-newspaper'></i>
+                    <i class='icon ph-bold ph-ticket'></i>
                     <span class="text">Events</span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/admin">
-                    <i class='icon ph-bold ph-newspaper'></i>
+                <a href="<?php echo URLROOT; ?>/admin/inquiries">
+                    <i class='icon ph-bold ph-chat-circle-text'></i>
                     <span class="text">Inquiries</span>
                 </a>
             </li>
@@ -73,7 +78,7 @@
         <p class="title">Settings</p>
         <ul>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/admin/settings">
                     <i class='icon ph-bold ph-gear'></i>
                     <span class="text">Settings</span>
                 </a>
@@ -84,12 +89,6 @@
 <div class="menu">
     <p class="title">Account</p>
     <ul>
-        <li>
-            <a href="#">
-                <i class='icon ph-bold ph-info'></i>
-                <span class="text">Help</span>
-            </a>
-        </li>
         <li class="mode active">
             <div class="moon-sun">
                 <i class='icon ph-bold ph-sun sun'></i>

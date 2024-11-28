@@ -22,7 +22,7 @@
     <?php endif; ?>
 
     <header>
-        <a href="#" class="logo">Life <span>Touch</span></a>
+        <a href="<?php echo URLROOT; ?>" class="logo">Life<span>Touch</span></a>
 
         <div class='bx bx-menu' id="menu-icon"></div>
 

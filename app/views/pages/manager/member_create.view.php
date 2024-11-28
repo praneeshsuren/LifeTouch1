@@ -81,6 +81,16 @@
             </div>
             <div class="input-container">
                 <input type="text" id="input" required="">
+                <label for="input" class="label"><i class="ph ph-person"></i>Height</label>
+                <div class="underline"></div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="input" required="">
+                <label for="input" class="label"><i class="ph ph-person"></i>Weight</label>
+                <div class="underline"></div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="input" required="">
                 <label for="input" class="label"><i class="ph ph-envelope"></i>Email</label>
                 <div class="underline"></div>
             </div>
@@ -96,7 +106,7 @@
             </div>
             <div class="member-buttons">
                 <a href="#"><button class="edit-button">Save</button></a>
-                <a href="member"><button class="delete-button">Back</button></a>
+
             </div>
         </div>
     </main>

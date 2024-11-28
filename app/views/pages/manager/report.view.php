@@ -139,6 +139,58 @@
                 </ul>
 
             </div>
+            <div class="inventory-container">
+                <div class="heading">
+                    <h3>Gym Equipment Inventory</h3>
+                </div>
+                <div class="inventory-grid">
+                    <div class="inventory-item">
+                        <div class="item-icon">
+                            <i class="ph ph-dumbbell"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>Dumbbells</h4>
+                            <p>50 sets</p>
+                        </div>
+                    </div>
+                    <div class="inventory-item">
+                        <div class="item-icon">
+                            <i class="ph ph-treadmill"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>Treadmills</h4>
+                            <p>10 units</p>
+                        </div>
+                    </div>
+                    <div class="inventory-item">
+                        <div class="item-icon">
+                            <i class="ph ph-elliptical"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>Ellipticals</h4>
+                            <p>8 units</p>
+                        </div>
+                    </div>
+                    <div class="inventory-item">
+                        <div class="item-icon">
+                            <i class="ph ph-weight-lifter"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>Weight Benches</h4>
+                            <p>5 units</p>
+                        </div>
+                    </div>
+                    <div class="inventory-item">
+                        <div class="item-icon">
+                            <i class="ph ph-mat"></i>
+                        </div>
+                        <div class="item-details">
+                            <h4>Yoga Mats</h4>
+                            <p>20 mats</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
         <br>
