@@ -34,12 +34,10 @@
       <div class="title">
         <h1>Dashboard</h1>
         <div class="greeting">
-          <<span class="bell-container"><i class="ph ph-bell notification"></i></span>
-          <h2>Hi, John!</h2>
+          <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
       </div>
       <div class="insights">
-
         <div class="members">
           <i class="ph ph-users"></i>
           <div class="middle">
@@ -106,7 +104,7 @@
 
           <div class="announcement">
             <div class="profile-img">
-            <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+            <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
             </div>
             <div class="message">
               <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
@@ -116,7 +114,7 @@
 
           <div class="announcement">
             <div class="profile-img">
-            <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+            <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
             </div>
             <div class="message">
               <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
@@ -126,30 +124,16 @@
 
           <div class="announcement">
             <div class="profile-img">
-            <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+            <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
             </div>
             <div class="message">
               <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
               <small class="text-muted">2 hours ago</small>
             </div>
           </div>
-
         </div>      
       </div>
-
-      <!-- CHARTS -->
-
-      <div class="chart-header">
-        <h2>Busy Hours</h2>
-        <i class="ph ph-dots-three-circle-vertical"></i>
-      </div>
-      <div id="areaChart"></div>
-
     </main>
-
-    <!-- APEX CHARTS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.53.0/apexcharts.min.js"></script>
-
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/member-script.js?v=<?php echo time();?>"></script>
   </body>

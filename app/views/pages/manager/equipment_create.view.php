@@ -32,7 +32,15 @@
             </div>
         </div>
 
+
         <div class="box">
+            <?php if (!empty($errors)): ?>
+                <div class="error-messages">
+                    <?php foreach ($errors as $error): ?>
+                        <p><?php echo esc($error); ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
             <a href="equipment" class="btn" style="float: right; margin-top: -10px; margin-bottom: 3px;">Back</a>
             <form method="post" enctype="multipart/form-data">
 
@@ -43,7 +51,7 @@
                         <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/dumbell_add.png" alt="Equipment Image">
                     </div>
                     <p class="file-upload-text">Click below to select an image</p>
-                    <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="image" required>
+                    <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="image" required accept="image/jpg, image/jpeg, image/png">
                 </div>
 
                 <div class="input-container">
@@ -57,11 +65,27 @@
                     <label for="description" class="label"><i class="ph ph-clipboard-text"></i>Description</label>
                     <div class="underline"></div>
                 </div>
+                <div class="input-container">
+                    <input type="date" id="purchase_date" name="purchase_date" required>
+                    <label for="date" class="label"><i class="ph ph-calendar"></i>Purchase Date</label>
+                    <div class="underline"></div>
+                </div>
 
+                <div class="input-container">
+                    <input type="text" id="purchase_price" name="purchase_price" required>
+                    <label for="price" class="label"><i class="ph ph-money"></i>Purchase Price</label>
+                    <div class="underline"></div>
+                </div>
+
+                <div class="input-container">
+                    <input type="text" id="purchase_shop" name="purchase_shop" required>
+                    <label for="price" class="label"><i class="ph ph-money"></i>Purchase Shop</label>
+                    <div class="underline"></div>
+                </div>
 
                 <div class="member-buttons">
                     <button type="submit" class="edit-button">Save</button>
-                    <a href="equipment" class="delete-button">Back</a>
+
                 </div>
             </form>
         </div>

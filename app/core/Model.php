@@ -13,9 +13,9 @@ trait Model
     public $errors = [];
 
 
-    public function findAll()
+    public function findAll($order_column = 'null')
     {
-        $query = " select * from $this->table order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
+        $query = " select * from $this->table order by $order_column $this->order_type limit $this->limit offset $this->offset";
         return $this->query($query);
     }
 
@@ -85,7 +85,7 @@ trait Model
 
         $this->query($query, $data);
 
-        return false;
+        return true;
     }
 
     public function update($id, $data, $id_column = 'id')
@@ -125,14 +125,20 @@ trait Model
 
     public function delete($id, $id_column = 'id')
     {
-
         $data[$id_column] = $id;
-        $query = "delete from $this->table where $id_column = :$id_column ";
+        $query = "DELETE FROM $this->table WHERE $id_column = :$id_column";
 
-        $this->query($query, $data);
+        // Execute the query and store the result
+        $result = $this->query($query, $data);
 
-        return false;
+        // Assuming $this->query() returns a boolean or similar indicating success/failure
+        if ($result) {
+            return true; // Successful deletion
+        }
+
+        return false; // Deletion failed
     }
+
 
     public function countAll()
     {

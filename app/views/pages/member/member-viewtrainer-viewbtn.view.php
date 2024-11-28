@@ -12,7 +12,6 @@
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/member-style.css?v=<?php echo time();?>" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
@@ -25,51 +24,50 @@
     </section>
 
     <main>
-
-        <div class="top">
-            <h1 class="title">John's Profile</h1>
-            <div class="bell">
-                <i class="ph ph-bell"></i>
-                <p>Hi, John!</p>
+        <div class="title">
+            <h1>Trainer Details</h1>
+            <div class="greeting">
+                <span class="bell-container"><i class="ph ph-bell notification"></i></span>
+                <h2>Hi, John!</h2>
             </div>
         </div>
-
-        <div class="box">
-            <div class="member-card">
-                <div>
-                    <div class="profile-img-container"><img class="profile-img" src="<?php echo URLROOT; ?>/public/images/image.png" alt=""></div>
-                    <a href="member_edit"><button class="edit-button">Edit</button></a>
-                    <button class="delete-button">Delete</button>
-                </div>
-                <div>
-                    <table class="profile-table">
-                        <tr>
-                            <th colspan="2">Trainer Details : </th>
-                        </tr>
-                        <tr>
-                            <th><i class="ph ph-user-circle"></i>First Name</th>
-                            <td>John</td>
-                        </tr>
-                        <tr>
-                            <th><i class="ph ph-user-square"></i>Last Name</th>
-                            <td>Doe</td>
-                        </tr>
-                        <tr>
-                            <th><i class="ph ph-gender-intersex"></i>Gender</th>
-                            <td>Mail</td>
-                        </tr>
-                        <tr>
-                            <th><i class="ph ph-envelope"></i>Email</th>
-                            <td>john@gmail.com</td>
-                        </tr>
-                        <tr>
-                            <th><i class="ph ph-phone"></i>Contact</th>
-                            <td>0774399256</td>
-                        </tr>
-                    </table>
-                </div>
+        <div class="trainerviewbtnBox">
+            <div>
+                <a href="<?php echo URLROOT; ?>/member/memberTrainerbooking">
+                    <button class="trianerviewbtn-Bookreservationbtn" style="float: right; margin-top: -10px;margin-bottom:3px;">Booking Reservation</button>
+                </a>
             </div>
-        </div>
+            <div class="trainerviewbtn-profile">
+                <div class="trainerviewbtn-profile-img">
+                    <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                </div>
+                <div class="trainerviewbtn-profile-detail">
+                    <h2>James marry</h3>
+                    <p>Personal trainer</p>
+                </div>
+            </div>   
+             <div class="trainerviewbtn-profileTable-container">
+                <table>
+                    <tr>
+                        <td class="first"><h4>Age</h4></td>
+                        <td>30 years</td>
+                    </tr>
+                    <tr>
+                        <td class="first"><h4>Email</h4></td>
+                        <td>jamesmary@gmail.com</td>
+                    </tr>
+                    <tr>
+                        <td class="first"><h4>Contact</h4></td>
+                        <td>0711234567</td>
+                    </tr>
+                    <tr>
+                        <td class="first"><h4>Specification</h4></td>
+                        <td>Specialized in weight training</td>
+                    </tr>
+                </table>
+            </div>       
+        </div>   
+               
     </main>
 
     <script src="<?php echo URLROOT; ?>/assets/js/member-script.js?v=<?php echo time();?>"></script>

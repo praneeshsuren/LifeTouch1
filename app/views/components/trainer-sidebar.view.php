@@ -21,23 +21,10 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/trainer/members">
                     <i class='icon ph-bold ph-user'></i>
-                    <span class="text">Users</span>
-                    <i class='arrow ph-bold ph-caret-down'></i>
+                    <span class="text">View Member</span>
                 </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a href="#">
-                            <span class="text">Members</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="text">Trainers</span>
-                        </a>
-                    </li> 
-                </ul> 
             </li>
             <li>
                 <a href="#">
@@ -74,12 +61,6 @@
 <div class="menu">
     <p class="title">Account</p>
     <ul>
-        <li>
-            <a href="#">
-                <i class='icon ph-bold ph-info'></i>
-                <span class="text">Help</span>
-            </a>
-        </li>
         <li class="mode active">
             <div class="moon-sun">
                 <i class='icon ph-bold ph-sun sun'></i>

@@ -30,6 +30,8 @@
         } 
         public function memberSettings(){
             $this->view('member/member-settings');
+        }
+        public function memberTrainerbooking(){
+            $this->view('member/member-trainerbooking');
         } 
-
     }

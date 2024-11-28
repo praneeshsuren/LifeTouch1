@@ -34,8 +34,7 @@
             <div class="title">
                 <h1>View Announcements</h1>
                 <div class="greeting">
-                <span class="bell-container"><i class="ph ph-bell notification"></i></span>
-                <h2>Hi, John!</h2>
+                    <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
                 </div>
             </div>
 
@@ -43,7 +42,7 @@
                 <div class="announcementHeader">
                     <div class="aHeading">
                         <h2>Announcements</h2>
-                        <span id="num-of-announcements"></span>
+                        <span id="num-of-announcements">4</span>
                     </div>
                     <p id="mark-as-read">Mark as All Read</p>
                 </div>
@@ -51,7 +50,7 @@
                     <div class="announcementCard-Header">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3>Mark Anderson</h3>
@@ -83,7 +82,7 @@
                     <div class="announcementCard-Header">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3>Mark Anderson</h3>
@@ -115,7 +114,7 @@
                     <div class="announcementCard-Header">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3>Mark Anderson</h3>
@@ -147,7 +146,7 @@
                     <div class="announcementCard-Header">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3>Mark Anderson</h3>
@@ -179,7 +178,7 @@
                     <div class="announcementCard-Header">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/public/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3>Mark Anderson</h3>

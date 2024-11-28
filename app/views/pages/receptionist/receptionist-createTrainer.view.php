@@ -26,136 +26,165 @@
         
         <h1>Trainers</h1>
         <div class="greeting">
-          <span class="bell-container"><i class="ph ph-bell notification"></i></span>
-          <h2>Hi, John!</h2>
+            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
 
       </div>
 
-      <div class="trainer-form">
-    <h2>Trainer Registration</h2>
-    <form action="<?php echo URLROOT; ?>/receptionist/trainers/registerTrainer" method="post">
-        <div class="form-container">
+      <div class="user-form">
+        <h2>Trainer Registration</h2>
+        <form action="<?php echo URLROOT; ?>/receptionist/trainers/registerTrainer" method="post">
+            <div class="form-container">
 
-            <!-- Left Column -->
-            <div class="left-column">
-                <div class="input-container">
-                    <div class="input-box">
-                        <input type="text" id="first-name" name="first_name" placeholder="First Name" value="<?php echo $_POST['first_name'] ?? ''; ?>" required>
-                        <?php if (!empty($data['errors']['first_name'])): ?>
-                            <span class="invalid-feedback"><?php echo $data['errors']['first_name']; ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <div class="input-container">
-                    <div class="input-box">
-                        <input type="text" id="last-name" name="last_name" placeholder="Last Name" value="<?php echo $_POST['last_name'] ?? ''; ?>" required>
-                        <?php if (!empty($data['errors']['last_name'])): ?>
-                            <span class="invalid-feedback"><?php echo $data['errors']['last_name']; ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <div class="input-container">
-                    <div class="input-box">
-                        <input type="email" id="email-address" name="email_address" placeholder="Email Address" value="<?php echo $_POST['email_address'] ?? ''; ?>" required>
-                        <?php if (!empty($data['errors']['email_address'])): ?>
-                            <span class="invalid-feedback"><?php echo $data['errors']['email_address']; ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <div class="input-container">
-                    <div class="input-box">
-                        <input type="date" id="dob" name="date_of_birth" placeholder="Date of Birth" value="<?php echo $_POST['date_of_birth'] ?? ''; ?>" required>
-                        <?php if (!empty($data['errors']['date_of_birth'])): ?>
-                            <span class="invalid-feedback"><?php echo $data['errors']['date_of_birth']; ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <div class="input-container">
-                    <div class="input-box">
-                        <input type="text" id="home-address" name="home_address" placeholder="Home Address" value="<?php echo $_POST['home_address'] ?? ''; ?>" required>
-                        <?php if (!empty($data['errors']['home_address'])): ?>
-                            <span class="invalid-feedback"><?php echo $data['errors']['home_address']; ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <div class="input-container">
-                    <div class="input-box">
-                        <input type="tel" id="contact-number" name="contact_number" placeholder="Contact Number" value="<?php echo $_POST['contact_number'] ?? ''; ?>" required>
-                        <?php if (!empty($data['errors']['contact_number'])): ?>
-                            <span class="invalid-feedback"><?php echo $data['errors']['contact_number']; ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <div class="input-container">
-                    <div class="input-box">
-                        <select id="gender" name="gender" required>
-                            <option value="" disabled selected>Gender</option>
-                            <option value="Male" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Male') ? 'selected' : ''; ?>>Male</option>
-                            <option value="Female" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Female') ? 'selected' : ''; ?>>Female</option>
-                            <option value="Other" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Other') ? 'selected' : ''; ?>>Other</option>
-                        </select>
-                        <?php if (!empty($data['errors']['gender'])): ?>
-                            <span class="invalid-feedback"><?php echo $data['errors']['gender']; ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Column -->
-            <div class="right-column">
-                <div class="input-container">
-                    <div class="input-image-box">
-                        <label for="trainer-image">Upload Trainer Image</label>
-                        <div class="image-container">
-                            <img id="trainer-image" src="path/to/your/image.jpg" alt="Trainer Image">
+                <!-- Left Column -->
+                <div class="left-column">
+                    <div class="input-container">
+                        <div class="input-box">
+                            <input type="text" id="first-name" name="first_name" placeholder="First Name" value="<?php echo $_POST['first_name'] ?? ''; ?>" required>
+                            <?php if (!empty($data['errors']['first_name'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['first_name']; ?></span>
+                            <?php endif; ?>
                         </div>
-                        <input type="file" id="image-upload" name="image" accept="image/*" />
+                    </div>
+
+                    <div class="input-container">
+                        <div class="input-box">
+                            <input type="text" id="last-name" name="last_name" placeholder="Last Name" value="<?php echo $_POST['last_name'] ?? ''; ?>" required>
+                            <?php if (!empty($data['errors']['last_name'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['last_name']; ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="input-box">
+                            <input type="text" id="NIC-no" name="NIC_no" placeholder="NIC Number" value="<?php echo $_POST['NIC_no'] ?? ''; ?>" required>
+                            <?php if (!empty($data['errors']['NIC_no'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['NIC_no']; ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="input-box">
+                            <input type="email" id="email-address" name="email_address" placeholder="Email Address" value="<?php echo $_POST['email_address'] ?? ''; ?>" required>
+                            <?php if (!empty($data['errors']['email_address'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['email_address']; ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="input-box">
+                            <input type="date" id="dob" name="date_of_birth" placeholder="Date of Birth" value="<?php echo $_POST['date_of_birth'] ?? ''; ?>" required>
+                            <?php if (!empty($data['errors']['date_of_birth'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['date_of_birth']; ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="input-box">
+                            <input type="text" id="home-address" name="home_address" placeholder="Home Address" value="<?php echo $_POST['home_address'] ?? ''; ?>" required>
+                            <?php if (!empty($data['errors']['home_address'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['home_address']; ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="input-box">
+                            <input type="tel" id="contact-number" name="contact_number" placeholder="Contact Number" value="<?php echo $_POST['contact_number'] ?? ''; ?>" required>
+                            <?php if (!empty($data['errors']['contact_number'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['contact_number']; ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="input-box">
+                            <select id="gender" name="gender" required>
+                                <option value="" disabled selected>Gender</option>
+                                <option value="Male" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Male') ? 'selected' : ''; ?>>Male</option>
+                                <option value="Female" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Female') ? 'selected' : ''; ?>>Female</option>
+                                <option value="Other" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Other') ? 'selected' : ''; ?>>Other</option>
+                            </select>
+                            <?php if (!empty($data['errors']['gender'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['gender']; ?></span>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
 
-                <div class="input-container">
-                    <div class="input-box">
-                        <input type="text" id="username" name="username" placeholder="Username" value="<?php echo $_POST['username'] ?? ''; ?>" required>
-                        <?php if (!empty($data['errors']['username'])): ?>
-                            <span class="invalid-feedback"><?php echo $data['errors']['username']; ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>
+                <!-- Right Column -->
+                <div class="right-column">
 
-                <div class="input-container">
-                    <div class="input-box">
-                        <input type="password" id="password" name="password" placeholder="Password" required>
-                        <?php if (!empty($data['errors']['password'])): ?>
-                            <span class="invalid-feedback"><?php echo $data['errors']['password']; ?></span>
-                        <?php endif; ?>
+                    <div class="input-image-box">
+                        <label for="user-image">Upload Trainer Image</label>
+                        <div class="image-container">
+                            <img id="profile-image" src="<?php echo URLROOT; ?>/assets/images/no_img.jpg" alt="Trainer Image">
+                        </div>
+                        <input
+                            type="file"
+                            class="image-upload-input"
+                            name="image"
+                            onchange="display_image(this.files[0])"
+                        >
                     </div>
-                </div>
 
-                <div class="input-container">
-                    <div class="input-box">
-                        <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirm Password" required>
-                        <?php if (!empty($data['errors']['confirm_password'])): ?>
-                            <span class="invalid-feedback"><?php echo $data['errors']['confirm_password']; ?></span>
-                        <?php endif; ?>
+
+                    <div class="input-container">
+                        <div class="input-box">
+                            <input type="text" id="username" name="username" placeholder="Username" value="<?php echo $_POST['username'] ?? ''; ?>" required>
+                            <?php if (!empty($data['errors']['username'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['username']; ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="input-box">
+                            <input type="password" id="password" name="password" placeholder="Password" required>
+                            <?php if (!empty($data['errors']['password'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['password']; ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="input-container">
+                        <div class="input-box">
+                            <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirm Password" required>
+                            <?php if (!empty($data['errors']['confirm_password'])): ?>
+                                <span class="invalid-feedback"><?php echo $data['errors']['confirm_password']; ?></span>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="btn-container">
-            <button type="submit" class="trainer-submit-btn">Create Trainer</button>
-        </div>
-    </form>
-</div>
+            <div class="btn-container">
+                <button type="submit" class="user-create-btn">Create Trainer</button>
+            </div>
+        </form>
+    </div>
 
       </div>
 
+    
+        <script>
+            function display_image(file) {
+                if (file) {
+                    const img = document.getElementById("profile-image"); // Ensure the correct ID is used
+                    img.src = URL.createObjectURL(file); // Create a temporary URL for the file
+                    img.onload = () => URL.revokeObjectURL(img.src); // Revoke the URL after the image is loaded
+                }
+            }
+
+            // Update the `onchange` event listener in the input
+            document.querySelector(".image-upload-input").addEventListener("change", function () {
+                const file = this.files[0]; // Get the selected file
+                display_image(file); // Call the function to update the image
+            });
+        </script>
         <!-- SCRIPT -->
         <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
 

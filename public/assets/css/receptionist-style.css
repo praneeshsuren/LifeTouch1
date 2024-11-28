@@ -398,7 +398,6 @@ main{
     display: grid;
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 3rem 1fr 2fr;
-    gap: 1.6rem;
 }
 
 main.active{
@@ -471,6 +470,8 @@ main > .title > .greeting > .bell-container:hover .notification {
 
 /* Insight Cards */
 main .insights{
+    padding: 1rem;
+    padding-left: 0;
     grid-column: 1;
     grid-row: 2;
     display: grid;
@@ -575,6 +576,8 @@ main .insights .progress .number {
 /* Announcements Section */
 
 main .recent-announcements{
+    padding-left: 0.6rem;
+    padding-top: 1rem;
     grid-column: 2;
     grid-row: 2 / -1;
 }
@@ -668,113 +671,166 @@ main .chart .chart-container{
     width: 100%;
     margin: 0 auto;
     height: 90%;
-
 }
 
 
-/* Trainers */
-
-main .table-container{
+/* Users */
+main .retrieve-users{
     grid-column: 1 / -1;
-    grid-row: 2 / span 2;
-    overflow-y: auto;  /* Enable vertical scrolling */
-    overflow-x: auto;  /* Enable horizontal scrolling */
-    margin: 25px 0;
-    box-shadow: var(--box-shadow-color);
-    border-radius: 10px 10px 0 0;
+    grid-row: 2 / -1;
 }
 
-main .table-container .trainer-table{
-    border-collapse: collapse;
+main .retrieve-users .searchBar {
     width: 100%;
-}
-
-main .table-container .trainer-table thead{
-    background-color: var(--table-head-color);
-    text-align: left;
-}
-
-main .table-container .trainer-table th, main .trainer-table td{
-    padding: 15px 12px;
-    min-width: 150px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--hover-btn);
-}
-
-main .table-container .trainer-table tbody{
-    overflow: auto;
-}
-
-main .table-container .trainer-table tbody tr:hover{
-    background-color: var(--primary-color-light);
-}
-
-main .table-container .trainer-table td{
-    font-weight: normal;
-}
-
-main .table-container .trainer-table td img{
-    width: 3.5rem;
-    border-radius: 50%;
-    object-fit: cover;
-    vertical-align: middle;
-}
-
-main .table-container .trainer-table tbody tr{
-    border-bottom: 1px solid #dddddd;
-}
-
-main .table-container .trainer-table tbody tr:nth-of-type(even){
-    background-color: var(--sidebar-color);
-}
-
-main .table-container .trainer-table tbody tr:last-of-type{
-    border-bottom: 2px solid var(--table-head-color);
-}
-
-main .table-container .trainer-table::-webkit-scrollbar{
-    width: 0.5rem;
-    height: 0.5rem;
-}
-
-main .table-container .trainer-table::-webkit-scrollbar-thumb{
-    border-radius: .5rem;
-    background-color: #0004;
-    visibility: hidden;
-}
-
-main .table-container .trainer-table:hover::-webkit-scrollbar-thumb{ 
-    visibility: visible;
-}
-
-main .add-trainer{
-    grid-column: 1 / -1;
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    z-index: 1000;
 }
 
-main .add-trainer a button{
-    padding: 12px 60px;
-    background-color: #695CFE;
-    color: var(--sidebar-color);
+main .retrieve-users .searchBar input[type="text"] {
+    width: 100%;
+    max-width: 600px; /* Limit maximum width for better layout on large screens */
+    padding: 0.75rem 1rem; /* Padding for a comfortable input size */
+    border: 1px solid #ddd; /* Light border for input */
+    border-radius: 2rem; /* Rounded edges for the input box */
+    font-size: 1rem; /* Comfortable font size */
+    color: #495057; /* Dark gray text */
+    background-color: #ffffff; /* White background for contrast */
+    outline: none; /* Remove outline on focus */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+    transition: all 0.3s ease; /* Smooth transition for hover/focus */
+}
+
+main .retrieve-users .searchBar input[type="text"]:focus {
+    border-color: var(--primary-color); /* Primary purple-blue border on focus */
+    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4); /* Glow effect */
+}
+
+/* Add User Button */
+
+main .retrieve-users .searchBar .add-user a button {
+    padding: 12px 45px;
+    background-color: var(--primary-color); /* Purple-blue button background */
+    color: #ffffff;
     font-size: 1rem;
     font-weight: bold;
     border: none;
-    border-radius: 10px;
+    border-radius: 3rem;
     cursor: pointer;
-    transition: var(--tran-03);
-    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
 }
 
-main .add-trainer a button:hover{
+main .retrieve-users .searchBar .add-user a button:hover {
     transform: scale(1.05);
 }
 
+main .retrieve-users .table-container {
+    overflow: auto;
+    height: 100%;
+    margin: 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-/* Trainer Registration Form */
-main .trainer-form{
+main .retrieve-users .table-container table{
+    margin: 0;
+}
+
+/* Base Table Styles */
+main .retrieve-users .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    background-color: #ffffff;
+}
+
+/* Header Styles */
+main .retrieve-users .user-table thead {
+    background-color: #695CFE; /* Primary purple-blue background */
+    color: #ffffff; /* White text for contrast */
+    border-bottom: 2px solid #09090a; /* Slightly darker border */
+}
+
+main .retrieve-users .user-table th {
+    padding: 1rem;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* Home Address Column Specific Width */
+main .retrieve-users .user-table th:nth-child(9),
+main .retrieve-users .user-table td:nth-child(9) {
+    width: 250px; /* Increase the width for the Home Address column */
+}
+
+/* Body Styles */
+main .retrieve-users .user-table td {
+    padding: 1rem;
+    color: #495057; /* Muted dark gray text */
+    border-bottom: 1px solid #f1f1f1; /* Light border for rows */
+}
+
+/* Row Hover Effect */
+main .retrieve-users .user-table tbody tr:hover {
+    background-color: #f2f1fe; /* Light purple-blue on hover */
+    transition: background-color 0.3s ease;
+}
+
+/* Zebra Striping */
+main .retrieve-users .user-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa; /* Light gray for even rows */
+}
+
+/* Image in Table */
+main .retrieve-users .user-table .user-image {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+}
+
+/* Scrollbar Styling */
+.table-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: #695CFE; /* Matches the header color */
+    border-radius: 3px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: #5e4fda; /* Darker purple-blue on hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .table-container {
+        margin: 1rem 0;
+    }
+
+    .user-table th,
+    .user-table td {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+
+/* User Registration Form */
+main .user-form{
     grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
@@ -784,35 +840,36 @@ main .trainer-form{
     color: var(--hover-btn);
 }
 
-main .trainer-form h2{ 
+main .user-form h2{ 
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 40px;
 }
 
-main .trainer-form .form-container {
+main .user-form .form-container {
     display: grid;
     grid-template-columns: 1fr 1fr;  /* Two columns */
     gap: 4rem;
 }
 
-main .trainer-form .form-container .left-column, .right-column {
+main .user-form .form-container .left-column, .right-column {
     display: flex;
+    justify-content: center;
     flex-direction: column;
 }
 
-main .trainer-form .form-container .input-container{
+main .user-form .form-container .input-container{
     margin-bottom: 10px;
 }
 
 
-main .trainer-form .input-container .input-box {
+main .user-form .input-container .input-box {
     position: relative;
     width: 100%;
     margin-bottom: 20px;
 }
 
-main .trainer-form .input-container .input-box input {
+main .user-form .input-container .input-box input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -823,11 +880,11 @@ main .trainer-form .input-container .input-box input {
     transition: border-color 0.3s ease;
 }
 
-main .trainer-form .input-container .input-box input:focus {
+main .user-form .input-container .input-box input:focus {
     border-color: #2693FF;
 }
 
-main .trainer-form .input-container .input-box #gender {
+main .user-form .input-container .input-box #gender {
     width: 100%;
     padding: 10px;
     font-size: 16px;
@@ -837,34 +894,34 @@ main .trainer-form .input-container .input-box #gender {
     color: #333;
 }
 
-main .trainer-form .input-container .input-box #gender:focus {
+main .user-form .input-container .input-box #gender:focus {
     border-color: #4a90e2;
     outline: none;
     background-color: #fff;
 }
 
-main .trainer-form .input-container .input-box #gender select:invalid {
+main .user-form .input-container .input-box #gender select:invalid {
     color: #999;
 }
 
-main .trainer-form .input-container .input-box #gender option {
+main .user-form .input-container .input-box #gender option {
     color: #333;
 }
 
-main .trainer-form .form-container .right-column .input-image-box {
+main .user-form .form-container .right-column .input-image-box {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-main .trainer-form .form-container .right-column .input-image-box label {
+main .user-form .form-container .right-column .input-image-box label {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 10px;
 }
 
 /* Styling for the circular image component */
-main .trainer-form .form-container .right-column .image-container {
+main .user-form .form-container .right-column .image-container {
     width: 150px; /* Adjust the size as needed */
     height: 150px;
     border-radius: 50%;
@@ -876,18 +933,19 @@ main .trainer-form .form-container .right-column .image-container {
     align-items: center;
 }
 
-main .trainer-form .form-container .right-column .image-container img {
+main .user-form .form-container .right-column .image-container img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
+    object-fit: cover;
+
 }
 
-main .trainer-form .form-container .right-column input[type="file"] {
+main .user-form .form-container .right-column input[type="file"] {
     margin-bottom: 20px;
 }
 
 
-main .trainer-form .btn-container {
+main .user-form .btn-container {
     grid-column: 1 / -1;
     display: flex;
     justify-content: center;
@@ -895,7 +953,7 @@ main .trainer-form .btn-container {
 }
 
 
-main .trainer-form .btn-container .trainer-submit-btn {
+main .user-form .btn-container .user-create-btn {
     width: 50%;
     padding: 12px;
     background-color: #2693FF;
@@ -909,13 +967,13 @@ main .trainer-form .btn-container .trainer-submit-btn {
     align-self: center; /* Center the button */
 }
 
-main .trainer-form .btn-container .trainer-submit-btn:hover {
+main .user-form .btn-container .user-create-btn:hover {
     background-color: #1c7bd9;
     transform: scale(1.05);
 }
 
 /* Error Message Styles */
-main .trainer-form .form-container .input-container .invalid-feedback {
+main .user-form .form-container .input-container .invalid-feedback {
     color: #FF0000; /* Red color for error */
     font-size: 14px;
 }
@@ -927,8 +985,10 @@ main .trainer-form .form-container .input-container .invalid-feedback {
     }
 }
 
-/* View Trainer Page */
+/* View Users Page */
 main .navbar-container{
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
     grid-column: 1 / -1;
     width: 100%;
     display: flex;
@@ -1006,20 +1066,29 @@ main .user-details {
     color: var(--hover-btn);
 }
 
-main .user-details .profile-picture img {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ddd;
-}
-
 main .user-details .details {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     font-size: 1rem;
+}
+
+main .user-details .details .profile-picture{
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+main .user-details .details .profile-picture img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
 }
 
 main .user-details .details .left-column,

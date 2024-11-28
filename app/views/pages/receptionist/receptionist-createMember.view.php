@@ -26,13 +26,12 @@
         
         <h1>Members</h1>
         <div class="greeting">
-          <span class="bell-container"><i class="ph ph-bell notification"></i></span>
-          <h2>Hi, John!</h2>
+            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
 
       </div>
 
-      <div class="trainer-form">
+    <div class="user-form">
     <h2>Member Registration</h2>
     <form action="<?php echo URLROOT; ?>/receptionist/members/registerMember" method="post">
     <div class="form-container">
@@ -55,6 +54,15 @@
                         <span class="invalid-feedback"><?php echo $data['errors']['last_name']; ?></span>
                     <?php endif; ?>
                 </div>
+            </div>
+
+            <div class="input-container">
+                    <div class="input-box">
+                        <input type="text" id="NIC-no" name="NIC_no" placeholder="NIC Number" value="<?php echo $_POST['NIC_no'] ?? ''; ?>" required>
+                        <?php if (!empty($data['errors']['NIC_no'])): ?>
+                            <span class="invalid-feedback"><?php echo $data['errors']['NIC_no']; ?></span>
+                        <?php endif; ?>
+                    </div>
             </div>
 
             <div class="input-container">
@@ -130,15 +138,19 @@
 
         <!-- Right Column -->
         <div class="right-column">
-            <div class="input-container">
+
                 <div class="input-image-box">
-                    <label for="member-image">Upload Member Image</label>
+                    <label for="user-image">Upload Member Image</label>
                     <div class="image-container">
-                        <img id="member-image" src="path/to/your/image.jpg" alt="Member Image">
+                        <img id="profile-image" src="<?php echo URLROOT; ?>/assets/images/no_img.jpg" alt="Member Image">
                     </div>
-                    <input type="file" id="image-upload" name="image" accept="image/*" />
+                    <input
+                        type="file"
+                        class="image-upload-input"
+                        name="image"
+                        onchange="display_image(this.files[0])"
+                    >
                 </div>
-            </div>
 
             <div class="input-container">
                 <div class="input-box">
@@ -169,14 +181,30 @@
         </div>
     </div>
     <div class="btn-container">
-        <button type="submit" class="trainer-submit-btn">Create Member</button>
+        <button type="submit" class="user-create-btn">Create Member</button>
     </div>
 </form>
 
 </div>
 
       </div>
+      
+      
+      <script>
+            function display_image(file) {
+                if (file) {
+                    const img = document.getElementById("profile-image"); // Ensure the correct ID is used
+                    img.src = URL.createObjectURL(file); // Create a temporary URL for the file
+                    img.onload = () => URL.revokeObjectURL(img.src); // Revoke the URL after the image is loaded
+                }
+            }
 
+            // Update the `onchange` event listener in the input
+            document.querySelector(".image-upload-input").addEventListener("change", function () {
+                const file = this.files[0]; // Get the selected file
+                display_image(file); // Call the function to update the image
+            });
+        </script>
         <!-- SCRIPT -->
         <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
 

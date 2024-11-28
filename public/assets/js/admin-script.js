@@ -78,3 +78,64 @@ if (modeSwitch) {
 
 // Initialize the dark mode on page load
 initializeDarkMode();
+
+const editBtn = document.getElementById('editBtn');
+const deleteBtn = document.getElementById('deleteBtn');
+const saveBtn = document.getElementById('saveBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const formElements = document.querySelectorAll('#userForm input');
+const userIdInput = document.getElementById('user_id');
+const changePictureBtn = document.getElementById('changePictureBtn');
+const profilePictureInput = document.getElementById('profilePictureInput');
+
+// Initially hide the "Change Picture" button
+changePictureBtn.style.display = 'none';
+
+// Edit button functionality
+editBtn.addEventListener('click', function () {
+    // Enable the input fields for editing, except the user ID
+    formElements.forEach(element => {
+        if (element !== userIdInput) {
+            element.disabled = false;
+        }
+    });
+
+    // Show "Change Picture" button
+    changePictureBtn.style.display = 'inline-block';
+
+    // Toggle the buttons' visibility
+    saveBtn.style.display = 'inline-block';
+    cancelBtn.style.display = 'inline-block';
+    editBtn.style.display = 'none';
+    deleteBtn.style.display = 'none';
+});
+
+// Save button functionality
+saveBtn.addEventListener('click', function () {
+    // Submit the form after making changes
+    document.getElementById('userForm').submit();
+});
+
+// Cancel button functionality
+cancelBtn.addEventListener('click', function () {
+    // Disable the input fields and revert changes
+    formElements.forEach(element => {
+        if (element !== userIdInput) {
+            element.disabled = true;
+        }
+    });
+
+    // Hide the "Change Picture" button
+    changePictureBtn.style.display = 'none';
+
+    // Hide the save and cancel buttons, show the edit and delete buttons
+    saveBtn.style.display = 'none';
+    cancelBtn.style.display = 'none';
+    editBtn.style.display = 'inline-block';
+    deleteBtn.style.display = 'inline-block';
+});
+
+// Handle "Change Picture" button click
+changePictureBtn.addEventListener('click', function () {
+    profilePictureInput.click(); // Trigger the file input dialog
+});

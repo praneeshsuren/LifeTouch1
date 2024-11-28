@@ -54,8 +54,10 @@
                 <div>
                     <h2 class="announcement-title"><?php echo htmlspecialchars($equipment->name); ?></h2>
                     <div class="para">
-
-                        <p>Description: <?php echo htmlspecialchars($equipment->description); ?></p>
+                        <p>Purchase Date : <?php echo htmlspecialchars($equipment->purchase_date); ?></p>
+                        <p>Purchase Price : <?php echo htmlspecialchars($equipment->purchase_price); ?></p>
+                        <p>Purchase Shop : <?php echo htmlspecialchars($equipment->purchase_shop); ?></p>
+                        <p>Description : <?php echo htmlspecialchars($equipment->description); ?></p>
                     </div>
                 </div>
 
@@ -63,45 +65,42 @@
             </div>
             <!-- Table Section -->
             <div class="purchase-table-container">
-                <h3>Purchase Details</h3>
+                <h3>Service History</h3>
                 <table class="purchase-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Date</th>
-                            <th>Price</th>
-                            <th>Buyer Name</th>
-                            <th>Buyer Shop Name</th>
-                            <th>Action</th>
+                            <th>Service Date</th>
+                            <th>Service Cost</th>
+
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>1</td>
                             <td>2023-11-15</td>
-                            <td>Rs.20000</td>
-                            <td>John Doe</td>
-                            <td>ABC Supplies</td>
-                            <td>
-                                <a href="#"><i class="ph ph-eye"></i></a>
-                                <a href="#"><i class="ph ph-pen"></i></a>
-                                <a href="#"><i class="ph ph-trash"></i></a>
-                            </td>
+                            <td>50000</td>
                         </tr>
                         <tr>
-                            <td>2</td>
                             <td>2023-11-18</td>
-                            <td>Rs.20000</td>
-                            <td>Jane Smith</td>
-                            <td>XYZ Traders</td>
-                            <td>
-                                <a href="#"><i class="ph ph-eye"></i></a>
-                                <a href="#"><i class="ph ph-pen"></i></a>
-                                <a href="#"><i class="ph ph-trash"></i></a>
-                            </td>
+                            <td>50000</td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="service-form">
+                <h2>Add Service</h2>
+                <form method="post" action="add_service.php">
+                    <div class="input-container">
+                        <label for="service_date">Service Date:</label>
+                        <input type="date" id="service_date" name="service_date" required>
+                    </div>
+                    <div class="input-container">
+                        <label for="service_cost">Service Cost:</label>
+                        <input type="text" id="service_cost" name="service_cost" required>
+                    </div>
+                    <div class="button-container">
+                        <button class="edit-button">Add Service</button>
+                    </div>
+                </form>
             </div>
         </div>
     </main>

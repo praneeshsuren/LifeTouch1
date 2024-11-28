@@ -46,28 +46,44 @@
                         <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/Equipment/<?php echo htmlspecialchars($equipment->file); ?>" alt="Equipment Image">
                     </div>
                     <p class="file-upload-text">Click below to select a new image (if needed)</p>
-                    <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="file">
+                    <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="file" accept="image/jpg, image/jpeg, image/png">
                 </div>
 
-                <!-- Edit Name -->
+
                 <div class="input-container">
                     <input type="text" id="name" name="name" value="<?php echo $equipment->name; ?>" required>
                     <label for="name" class="label"><i class="ph ph-barbell"></i>Name</label>
                     <div class="underline"></div>
                 </div>
 
-                <!-- Edit Description -->
+
                 <div class="input-container">
                     <input type="text" id="description" name="description" value="<?php echo $equipment->description; ?>" required>
                     <label for="description" class="label"><i class="ph ph-clipboard-text"></i>Description</label>
                     <div class="underline"></div>
                 </div>
 
+                <div class="input-container">
+                    <input type="text" id="purchase_date" name="purchase_date" value="<?php echo $equipment->purchase_date; ?>" required>
+                    <label for="description" class="label"><i class="ph ph-clipboard-text"></i>Purchase Date</label>
+                    <div class="underline"></div>
+                </div>
+
+                <div class="input-container">
+                    <input type="text" id="purchase_price" name="purchase_price" value="<?php echo $equipment->purchase_price; ?>" required>
+                    <label for="description" class="label"><i class="ph ph-clipboard-text"></i>Purchase Price</label>
+                    <div class="underline"></div>
+                </div>
+
+                <div class="input-container">
+                    <input type="text" id="purchase_shop" name="purchase_shop" value="<?php echo $equipment->purchase_shop; ?>" required>
+                    <label for="description" class="label"><i class="ph ph-clipboard-text"></i>Purchase Shop</label>
+                    <div class="underline"></div>
+                </div>
 
                 <!-- Submit Button -->
                 <div class="member-buttons">
                     <button type="submit" class="edit-button">Save</button>
-                    <a href="<?php echo URLROOT; ?>/manager/equipment" class="delete-button">Back</a>
                 </div>
             </form>
         </div>
