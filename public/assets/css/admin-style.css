@@ -390,7 +390,7 @@ main{
     position: absolute;
     top: 0;
     left: 250px;
-    min-height: 100vh;
+    height: 100vh;
     width: calc(100% - 250px);
     background: var(--body-color);
     z-index: 1;
@@ -1116,7 +1116,7 @@ main .user-details .action-buttons {
     border: none;
     border-radius: 25px;
     cursor: pointer;
-  }
+}
   
 .edit-btn {
     padding: 10px 5rem;
@@ -1131,13 +1131,13 @@ main .user-details .action-buttons {
 }
 
 .save-btn{
-    padding: 10px 5rem;
+    padding: 10px 4.7rem;
     background-color: #2693FF;
     color: white;
 }
 
 .cancel-btn{
-    padding: 10px 4.5rem;
+    padding: 10px 4.3rem;
     background-color: #FF0000;
     color: white;
 }
@@ -1373,28 +1373,108 @@ main .modal {
 
 main .modal-content {
     background: white;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 500px;
-    width: 90%;
+    padding: 3rem;
+    border-radius: 25px;
+    width: 35%;
+    overflow: hidden; /* Prevent overflow */
+    max-height: 80vh; /* Limit height to viewport */
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-main .profile-modal-pic {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-bottom: 15px;
+main .modal-content .details{
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
 
-main .modal-body h3 {
+main .modal-content .details .profile-img{
+    display: flex;
+    width: 4.75rem;
+}
+
+main .modal-content .details .profile-img img{
+    border-radius: 50%;
+    width: 100%;
+    object-fit: cover;
+}
+
+main .modal-content .details .name-and-title{
+    margin-left: 1rem;
+    width: 100%;
+    display: block;
+    color: var(--hover-btn);
+    text-align: left;
+}
+
+main .modal-content .details .name-and-title h3{
+    font-size: 1rem;
+    margin-bottom: 5px
+}
+
+main .modal-content h3{
     margin: 10px 0;
+}
+
+main .modal-content #modalSubject{
+    font-size: 1.4rem;
+    width: 100%;
 }
 
 main .modal-body p {
     margin: 5px 0;
     color: #555;
+    text-align: left;
+}
+
+main .modal-content #modalDescription{
+    margin: 2.5rem 0;
+    width: 100%;
+    font-size: 1rem;
+    height: auto; /* Allow dynamic height */
+    resize: vertical;  /* Allow vertical resizing */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    width: 100%;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar {
+    width: 8px;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+main .modal-body .date-time{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--hover-btn);
+}
+
+main .modal-body .date-time .announcement-date{
+    display: flex;
+    align-items: center;
+}
+
+main .modal-body .date-time .announcement-time{
+    display: flex;
+    align-items: center;
+}
+
+main .modal-body .date-time i{
+    font-size: 1.2rem;
+    margin-right: 6px;
 }
 
 main .close {
@@ -1407,44 +1487,19 @@ main .close {
     cursor: pointer;
 }
 
-main .modal-actions {
-    margin-top: 20px;
+main .modal-body .modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 2rem;
 }
-
-main .modal-actions .btn {
-    padding: 10px 15px;
+  
+main .modal-body .edit-btn, .delete-btn, .save-btn, .cancel-btn{
+    font-size: 1rem;
     border: none;
-    border-radius: 5px;
-    margin: 5px;
+    border-radius: 25px;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
 }
-
-main .modal-actions .edit-btn {
-    background-color: #4CAF50;
-    color: white;
-}
-
-main .modal-actions .delete-btn {
-    background-color: #f44336;
-    color: white;
-}
-
-main .modal-actions .save-btn {
-    background-color: #2196F3;
-    color: white;
-}
-
-main .modal-actions .cancel-btn {
-    background-color: #e7e7e7;
-    color: black;
-}
-
-main .modal-actions .btn:hover {
-    opacity: 0.8;
-}
-
 
 /*Create Announcement Page*/
 
