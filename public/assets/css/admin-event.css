@@ -1,75 +1,86 @@
-.add-btn {
-    background-color: #6a5af9;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.add-btn:hover {
-    background-color: #5948c9;
-}
-
-.events-container{
+main .events-container {
     grid-column: 1 / -1;
-    margin-top: 1rem;
-    padding: 2rem;
+    margin-top: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
-.cards-grid {
+main .events-container .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-    gap: 60px;
+    gap: 40px; /* Reduced gap for better alignment */
 }
 
-.card {
+main .events-container .card {
     background-color: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px; /* Slightly rounded corners for a modern look */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* A bit more shadow for a cleaner look */
     overflow: hidden;
     text-align: center;
-    padding: 3rem 3rem;
+    padding: 2rem; /* Reduced padding for better balance */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between; /* Ensures content is spaced out */
+    transition: transform 0.3s ease-in-out; /* Smooth card hover animation */
 }
 
-.card-header img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 10px auto;
+main .events-container .card:hover {
+    transform: translateY(-10px); /* Slight lift effect on hover */
 }
 
-.card-body {
-    padding: 10px;
+main .events-container .card .card-header {
+    margin-bottom: 20px;
 }
 
-.card-body h2 {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 10px 0;
+main .events-container .card .card-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px; /* Space between header and content */
 }
 
-.card-body p {
+main .events-container .card .card-body {
+    padding: 0;
+    margin-top: 1rem;
+    flex-grow: 1; /* Ensures the body takes up the available space */
+}
+
+main .events-container .card .card-body p {
     font-size: 14px;
-    color: #666;
-    margin: 5px 0;
+    color: #555; /* Lighter color for better readability */
+    margin: 10px 0; /* Space between each paragraph */
+    line-height: 1.5; /* Improve readability with slightly increased line height */
 }
 
-.view-btn {
+main .events-container .card .card-body .view-btn {
     background-color: #6a5af9;
     color: #fff;
-    padding: 8px 16px;
+    padding: 12px 20px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+    margin-top: 20px; /* Give the button some space from the content */
+    width: 100%; /* Make the button take full width */
 }
 
-.view-btn:hover {
-    background-color: #5948c9;
+main .events-container .card .card-body .view-btn:hover {
+    background-color: #5a4ae2; /* Darken the button on hover */
+    transform: scale(1.05); /* Slight grow effect on hover */
+}
+
+main .events-container .card .card-body .view-btn:active {
+    transform: scale(1); /* Reset scale when button is clicked */
+}
+
+@media (max-width: 768px) {
+    main .events-container .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust for smaller screens */
+        gap: 20px;
+    }
+
+    main .events-container .card {
+        padding: 1.5rem; /* Less padding on smaller screens */
+    }
 }

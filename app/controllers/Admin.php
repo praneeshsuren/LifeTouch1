@@ -9,7 +9,6 @@
         public function index(){
             
             $announcementModel = new M_Announcement;
-
             $announcements = $announcementModel->findAll('announcement_id', 3);
 
             $data = [
@@ -18,6 +17,28 @@
 
             $this->view('admin/admin-dashboard', $data);
             
+        }
+
+        public function events($action = null){
+            switch ($action){
+                case 'createEvent':
+
+                    $this->view('admin/admin-createEvent');
+                    break;
+                
+                default:
+
+                    // $eventModel = new M_Event;
+                    // $events = $eventModel->findAll('event_id');
+
+                    // $data = [
+                    //     'events' => $events
+                    // ];
+
+                    // $this->view('admin/admin-events', $data);
+                    $this->view('admin/admin-events');
+                    break;
+            }
         }
 
         public function announcements($action = null){
@@ -877,7 +898,4 @@
             }
         }
 
-        public function events(){
-            $this->view('admin/admin-events');
-        }
     }
