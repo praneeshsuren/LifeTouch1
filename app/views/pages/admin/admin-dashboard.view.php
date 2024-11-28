@@ -97,42 +97,7 @@
       </div>
 
       <div class="recent-announcements">
-
-        <h2>Recent Announcements</h2>
-        <div class="announcements">
-
-          <div class="announcement">
-            <div class="profile-img">
-            <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
-            </div>
-            <div class="message">
-              <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
-              <small class="text-muted">2 hours ago</small>
-            </div>
-          </div>
-
-          <div class="announcement">
-            <div class="profile-img">
-            <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
-            </div>
-            <div class="message">
-              <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
-              <small class="text-muted">2 hours ago</small>
-            </div>
-          </div>
-
-          <div class="announcement">
-            <div class="profile-img">
-            <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
-            </div>
-            <div class="message">
-              <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
-              <small class="text-muted">2 hours ago</small>
-            </div>
-          </div>
-
-        </div>  
-
+        <?php require APPROOT.'/views/components/recent-announcements.view.php' ?>
       </div>
 
       <!-- CHARTS -->
@@ -244,6 +209,41 @@
       // Create the chart
       new Chart(ctx, config);
     });
+
+    const timeAgoElements = document.querySelectorAll(".time-ago");
+
+    timeAgoElements.forEach(element => {
+        const createdDate = element.getAttribute("data-created-date");
+        const createdTime = element.getAttribute("data-created-time");
+
+        // Combine date and time into a single Date object
+        const createdDateTime = new Date(`${createdDate}T${createdTime}`);
+        const currentDateTime = new Date();
+
+        // Calculate the difference in milliseconds
+        const diffMs = currentDateTime - createdDateTime;
+
+        // Calculate time differences in units
+        const minutes = Math.floor(diffMs / (1000 * 60));
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        let timeAgo;
+
+        if (days > 0) {
+            timeAgo = `${days} day${days !== 1 ? 's' : ''} ago`;
+        } else if (hours > 0) {
+            timeAgo = `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+        } else if (minutes > 0) {
+            timeAgo = `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+        } else {
+            timeAgo = "just now";
+        }
+
+        // Update the element's text content
+        element.textContent = timeAgo;
+    });
+
   </script>
   </body>
 </html>
