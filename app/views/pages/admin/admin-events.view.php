@@ -10,32 +10,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-event.css?v=<?php echo time(); ?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- CHART.JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title><?php echo APP_NAME; ?></title>
   </head>
+
   <body>
-    <section class="sidebar">
-        <?php require APPROOT . '/views/components/admin-sidebar.view.php'; ?>
-    </section>
-    
-    <main>
-      <div class="title">
-        <h1>Events</h1>
-        <div class="greeting">
-          <span class="bell-container">
-            <i class="ph ph-bell notification"></i>
-          </span>
-          <h2>Hi, John!</h2>
-        </div>
-      </div>
 
-
-      <!-- PHP to generate event cards -->
-      <?php
+    <!-- PHP to generate event cards -->
+    <?php
       $events = [
           [
               'title' => 'Yoga for Beginners',
@@ -75,25 +60,41 @@
       ];
       ?>
 
-      <!-- Events Container -->
-    <div class="events-container">
-      <div class="cards-grid">
-        <?php foreach ($events as $event): ?>
-          <div class="card">
-              <div class="card-header">
-                  <h2><?php echo $event['title']; ?></h2>
-              </div>
-              <div class="card-body">
-                  <p><strong>Date:</strong> <?php echo $event['date']; ?></p>
-                  <p><strong>Time:</strong> <?php echo $event['time']; ?></p>
-                  <p><strong>Location:</strong> <?php echo $event['location']; ?></p>
-                  <p><?php echo $event['description']; ?></p>
-                  <button class="btn view-btn">View</button>
-              </div>
-          </div>
-        <?php endforeach; ?>
+    <section class="sidebar">
+        <?php require APPROOT . '/views/components/admin-sidebar.view.php'; ?>
+    </section>
+    
+    <main>
+      <div class="title">
+        <h1>Events</h1>
+        <div class="greeting">
+        <?php require APPROOT . '/views/components/user-greeting.view.php'; ?>
+        </div>
       </div>
-    </div> 
+
+      <!-- Events Container -->
+      <div class="events-container">
+        <div class="events-header">
+            <h2>Upcoming Events</h2>
+            <button class="btn add-event-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/events/createEvent'">+ Add New Event</button>
+        </div>
+        <div class="cards-grid">
+            <?php foreach ($events as $event): ?>
+              <div class="card">
+                  <div class="card-header">
+                      <h2><?php echo $event['title']; ?></h2>
+                  </div>
+                  <div class="card-body">
+                      <p><strong>Date:</strong> <?php echo $event['date']; ?></p>
+                      <p><strong>Time:</strong> <?php echo $event['time']; ?></p>
+                      <p><strong>Location:</strong> <?php echo $event['location']; ?></p>
+                      <p><?php echo $event['description']; ?></p>
+                      <button class="btn view-btn">View</button>
+                  </div>
+              </div>
+            <?php endforeach; ?>
+        </div>
+      </div>
       
     </main>
 
