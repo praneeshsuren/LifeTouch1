@@ -56,7 +56,7 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/admin">
+                <a href="<?php echo URLROOT; ?>/admin/events">
                     <i class='icon ph-bold ph-newspaper'></i>
                     <span class="text">Events</span>
                 </a>

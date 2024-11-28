@@ -7,6 +7,7 @@
 
         protected $table = 'trainer';
         protected $allowedColumns = [
+            'trainer_id',
             'first_name',
             'last_name',
             'date_of_birth',
