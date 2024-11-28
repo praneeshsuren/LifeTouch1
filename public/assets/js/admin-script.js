@@ -139,3 +139,27 @@ cancelBtn.addEventListener('click', function () {
 changePictureBtn.addEventListener('click', function () {
     profilePictureInput.click(); // Trigger the file input dialog
 });
+
+// JavaScript for Modal
+const modal = document.getElementById('event-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalDate = document.getElementById('modal-date');
+const modalTime = document.getElementById('modal-time');
+const modalLocation = document.getElementById('modal-location');
+const modalDescription = document.getElementById('modal-description');
+
+// Show modal function
+function showModal(event) {
+  modalTitle.textContent = event.title || 'No Title';
+  modalDate.textContent = `Date: ${event.date || 'No Date'}`;
+  modalTime.textContent = `Time: ${event.time || 'No Time'}`;
+  modalLocation.textContent = `Location: ${event.location || 'No Location'}`;
+  modalDescription.textContent = event.description || 'No Description';
+
+  modal.classList.add('active');
+}
+
+// Close modal function
+function closeModal() {
+  modal.classList.remove('active');
+}

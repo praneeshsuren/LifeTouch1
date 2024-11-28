@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-event.css?v=<?php echo time(); ?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- CHART.JS -->
@@ -31,6 +32,7 @@
           <h2>Hi, John!</h2>
         </div>
       </div>
+
 
       <!-- PHP to generate event cards -->
       <?php
@@ -74,55 +76,25 @@
       ?>
 
       <!-- Events Container -->
-      <div class="container">
+    <div class="events-container">
+      <div class="cards-grid">
         <?php foreach ($events as $event): ?>
-          <div class="event-card">
-            <h2><?php echo $event['title']; ?></h2>
-            <p><strong>Date:</strong> <?php echo $event['date']; ?></p>
-            <p><strong>Time:</strong> <?php echo $event['time']; ?></p>
-            <p><strong>Location:</strong> <?php echo $event['location']; ?></p>
-            <p><?php echo $event['description']; ?></p>
+          <div class="card">
+              <div class="card-header">
+                  <h2><?php echo $event['title']; ?></h2>
+              </div>
+              <div class="card-body">
+                  <p><strong>Date:</strong> <?php echo $event['date']; ?></p>
+                  <p><strong>Time:</strong> <?php echo $event['time']; ?></p>
+                  <p><strong>Location:</strong> <?php echo $event['location']; ?></p>
+                  <p><?php echo $event['description']; ?></p>
+                  <button class="btn view-btn">View</button>
+              </div>
           </div>
         <?php endforeach; ?>
       </div>
-      <div class="recent-announcements">
-
-        <h2>Recent Announcements</h2>
-        <div class="announcements">
-
-          <div class="announcement">
-            <div class="profile-img">
-            <img src="http://localhost/LifeTouch1/public/assets/images/image.png" alt="">
-            </div>
-            <div class="message">
-              <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
-              <small class="text-muted">2 hours ago</small>
-            </div>
-          </div>
-
-          <div class="announcement">
-            <div class="profile-img">
-            <img src="http://localhost/LifeTouch1/public/assets/images/image.png" alt="">
-            </div>
-            <div class="message">
-              <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
-              <small class="text-muted">2 hours ago</small>
-            </div>
-          </div>
-
-          <div class="announcement">
-            <div class="profile-img">
-            <img src="http://localhost/LifeTouch1/public/assets/images/image.png" alt="">
-            </div>
-            <div class="message">
-              <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
-              <small class="text-muted">2 hours ago</small>
-            </div>
-          </div>
-
-        </div>  
-
-      </div>
+    </div> 
+      
     </main>
 
     <!-- SCRIPT -->
