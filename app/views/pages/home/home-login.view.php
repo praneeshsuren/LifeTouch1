@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/login-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/login-style.css?v=<?php echo time(); ?>" />
 </head>
 
 <body>
@@ -22,7 +23,7 @@
     <?php endif; ?>
 
     <header>
-        <a href="<?php echo URLROOT; ?>" class="logo">Life<span>Touch</span></a>
+        <a href="<?php echo URLROOT; ?>" class="logo no-style">Life<span>Touch</span></a>
 
         <div class='bx bx-menu' id="menu-icon"></div>
 
@@ -35,10 +36,10 @@
             <li><a href="#contact">Contact Us</a></li>
         </ul>
         <div class="top-btn">
-            <a href="<?php echo URLROOT; ?>/login" class="nav-btn">Sign in</a>
+            <a href="<?php echo URLROOT; ?>/login" class="nav-btn no-style">Sign in</a>
         </div>
     </header>
-    
+
     <div id="container">
         <h1>Start a better shape of you!</h1>
         <h1>Come join us</h1>
@@ -59,7 +60,7 @@
             <div class="input-box">
                 <input type="password" name="password" placeholder="Password" required>
             </div>
-            
+
             <br><a href="#">Forgot password?</a><br>
             <button type="submit" name="submit" class="btn">Login</button>
         </form>
@@ -67,4 +68,5 @@
 
     <script src="<?php echo URLROOT; ?>/assets/js/login-script.js"></script>
 </body>
+
 </html>
