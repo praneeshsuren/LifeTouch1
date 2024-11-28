@@ -390,6 +390,7 @@ main{
     position: absolute;
     top: 0;
     left: 250px;
+    min-height: 100vh;
     width: calc(100% - 250px);
     background: var(--body-color);
     z-index: 1;
