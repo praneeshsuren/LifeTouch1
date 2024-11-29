@@ -866,7 +866,6 @@ body.dark .heading {
     background-color: var(--primary-color);
     color: white;
     padding: 12px 20px;
-    /* Increased padding for a larger button */
     border: none;
     border-radius: 20px;
     cursor: pointer;
