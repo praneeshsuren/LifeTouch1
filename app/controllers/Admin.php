@@ -31,6 +31,10 @@
             }
         }
 
+        public function inquiries(){
+            $this->view('admin/admin-inquiries');
+        }
+
         public function members($action = null) {
             switch ($action) {
                 case 'createMember':
