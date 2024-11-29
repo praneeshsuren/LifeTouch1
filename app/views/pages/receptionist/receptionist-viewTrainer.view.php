@@ -18,9 +18,21 @@
   </head>
   <body>
 
+    <?php
+      if (isset($_SESSION['success'])) {
+          echo "<script>alert('" . $_SESSION['success'] . "');</script>";
+          unset($_SESSION['success']); // Clear the message after showing it
+      }
+
+      if (isset($_SESSION['error'])) {
+          echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+          unset($_SESSION['error']); // Clear the message after showing it
+      }
+    ?>
+
     <section class="sidebar">
       <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
-    </section>
+    </section>  
 
     <main>
       <div class="title">
@@ -43,6 +55,7 @@
           </ul>
         </div>
       </div>
+      
       <div class="user-details">
       <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/receptionist/trainers/updateTrainer">
           <div class="details">
@@ -115,17 +128,6 @@
       </div>
     </main>
 
-    <?php
-      if (isset($_SESSION['success'])) {
-          echo "<script>alert('" . $_SESSION['success'] . "');</script>";
-          unset($_SESSION['success']); // Clear the message after showing it
-      }
-
-      if (isset($_SESSION['error'])) {
-          echo "<script>alert('" . $_SESSION['error'] . "');</script>";
-          unset($_SESSION['error']); // Clear the message after showing it
-      }
-    ?>
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>

@@ -52,6 +52,12 @@
             }
         }
 
+        public function inquiries(){
+            
+            $this->view('admin/admin-inquiries');
+
+        }
+
         public function announcements($action = null){
             switch ($action){
                 case 'createAnnouncement':
@@ -485,10 +491,10 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Initialize the receptionist model
                         $receptionistModel = new M_Receptionist;
-                
                         // Validate the incoming data
                         if ($receptionistModel->validate($_POST)) {
                             // Prepare the data to update the receptionist
+
 
                             $data = [
                                 'first_name'    => $_POST['first_name'],
@@ -516,6 +522,7 @@
                                 redirect('admin/receptionists/viewReceptionist?id=' . $receptionist_id);
                             }
                         } else {
+
                             // If validation fails, pass errors to the view
                             $data = [
                                 'errors' => $receptionistModel->errors,

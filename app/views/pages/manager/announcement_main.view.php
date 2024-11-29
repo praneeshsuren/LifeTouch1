@@ -24,94 +24,229 @@
 
     <main>
 
-        <div class="top">
-            <h1 class="title">Announcement Summary</h1>
-            <div class="bell">
-                <i class="ph ph-bell"></i>
-                <p>Hi, John!</p>
-            </div>
-        </div>
-        <form class="search">
-            <button>
-                <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
-                    <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-            </button>
-            <div class="search-input">
-                <input class="input" placeholder="Search here..." required="" type="text">
-            </div>
-            <button class="reset" type="reset">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </form>
-
-        <div class="dropdown-container">
-
-            <div class="tables">
-                <div class="last-announcement">
-                    <div class="heading">
-                        <h2>Announcements</h2>
-                        <a href="announcement" class="btn"><i class="ph ph-plus"></i> New Announcement</a>
-                    </div>
-                    <br>
-
-                    <table class="list">
-                        <thead>
-                            <tr>
-                                <td>Person</td>
-                                <td>Title</td>
-                                <td>Date</td>
-                                <td>Actions</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (!empty($data)): ?>
-                                <?php foreach ($data as $announcement): ?>
-                                    <tr>
-                                        <td>
-                                            <div class="person">
-                                                <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
-                                                <div class="person-info">
-                                                    <h4>John Doe</h4>
-                                                    <small class="email">john@gmail.com</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><?php echo htmlspecialchars($announcement->subject); ?></td>
-                                        <td><?php echo htmlspecialchars($announcement->date); ?></td>
-                                        <td>
-
-                                            <!-- Pass the subject, date, and time as parameters to the openModal() function -->
-                                            <a href="announcement_read/<?php echo $announcement->announcement_id; ?>"><i class="ph ph-eye"></i></a>
-
-
-                                            <a href="announcement_update"><i class="ph ph-pen"></i></a>
-                                            <a href="<?php echo URLROOT; ?>/manager/delete_announcement/<?php echo $announcement->announcement_id; ?>"
-                                                onclick="return confirm('Are you sure you want to delete this announcement?');">
-                                                <i class="ph ph-trash"></i>
-                                            </a>
-
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="4">No announcements found.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+    <div class="title">
+                <h1>View Announcements</h1>
+                <div class="greeting">
+                    <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
                 </div>
             </div>
 
-        </div>
+            <div class="announcementsContainer">
+                <div class="announcementHeader">
+                    <div class="aHeading">
+                        <h2>Announcements</h2>
+                        <span id="num-of-announcements"></span>
+                    </div>
+                    <p id="mark-as-read">Mark as All Read</p>
+                </div>
+                <div class="announcement-card">
+                    <div class="announcementCard-Header">
+                        <div class="details">
+                            <div class="profile-img">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                            </div>
+                            <div class="name-and-title">
+                                <h3>Mark Anderson</h3>
+                                <h4>GYM Renovation Notice for all Members and Trainers</h4>
+                            </div>
+                        </div>
+                        <div class="unread-marker unread">
+                            <p>Unread</p>
+                        </div>
+                    </div>
+                    <div class="description">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+                        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+                        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    </div>
+                    <div class="announcementCard-Footer">
+                        <div class="announcement-time">
+                            <i class="ph ph-clock"></i>
+                            <span>10:00 AM</span>
+                        </div>
+                        <div class="announcement-date">
+                            <i class="ph ph-calendar"></i>
+                            <span>14th September 2024</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="announcement-card">
+                    <div class="announcementCard-Header">
+                        <div class="details">
+                            <div class="profile-img">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                            </div>
+                            <div class="name-and-title">
+                                <h3>Mark Anderson</h3>
+                                <h4>GYM Renovation Notice for all Members and Trainers</h4>
+                            </div>
+                        </div>
+                        <div class="unread-marker unread">
+                            <p>Unread</p>
+                        </div>
+                    </div>
+                    <div class="description">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+                        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+                        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    </div>
+                    <div class="announcementCard-Footer">
+                        <div class="announcement-time">
+                            <i class="ph ph-clock"></i>
+                            <span>10:00 AM</span>
+                        </div>
+                        <div class="announcement-date">
+                            <i class="ph ph-calendar"></i>
+                            <span>14th September 2024</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="announcement-card">
+                    <div class="announcementCard-Header">
+                        <div class="details">
+                            <div class="profile-img">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                            </div>
+                            <div class="name-and-title">
+                                <h3>Mark Anderson</h3>
+                                <h4>GYM Renovation Notice for all Members and Trainers</h4>
+                            </div>
+                        </div>
+                        <div class="unread-marker">
+                            <p>Unread</p>
+                        </div>
+                    </div>
+                    <div class="description">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+                        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+                        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    </div>
+                    <div class="announcementCard-Footer">
+                        <div class="announcement-time">
+                            <i class="ph ph-clock"></i>
+                            <span>10:00 AM</span>
+                        </div>
+                        <div class="announcement-date">
+                            <i class="ph ph-calendar"></i>
+                            <span>14th September 2024</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="announcement-card">
+                    <div class="announcementCard-Header">
+                        <div class="details">
+                            <div class="profile-img">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                            </div>
+                            <div class="name-and-title">
+                                <h3>Mark Anderson</h3>
+                                <h4>GYM Renovation Notice for all Members and Trainers</h4>
+                            </div>
+                        </div>
+                        <div class="unread-marker">
+                            <p>Unread</p>
+                        </div>
+                    </div>
+                    <div class="description">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+                        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+                        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    </div>
+                    <div class="announcementCard-Footer">
+                        <div class="announcement-time">
+                            <i class="ph ph-clock"></i>
+                            <span>10:00 AM</span>
+                        </div>
+                        <div class="announcement-date">
+                            <i class="ph ph-calendar"></i>
+                            <span>14th September 2024</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="announcement-card">
+                    <div class="announcementCard-Header">
+                        <div class="details">
+                            <div class="profile-img">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                            </div>
+                            <div class="name-and-title">
+                                <h3>Mark Anderson</h3>
+                                <h4>GYM Renovation Notice for all Members and Trainers</h4>
+                            </div>
+                        </div>
+                        <div class="unread-marker unread">
+                            <p>Unread</p>
+                        </div>
+                    </div>
+                    <div class="description">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+                        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+                        It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    </div>
+                    <div class="announcementCard-Footer">
+                        <div class="announcement-time">
+                            <i class="ph ph-clock"></i>
+                            <span>10:00 AM</span>
+                        </div>
+                        <div class="announcement-date">
+                            <i class="ph ph-calendar"></i>
+                            <span>14th September 2024</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
     </main>
 
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
 
+    <script>
+            const unReadAnnouncements = document.querySelectorAll('.unread');
+            const unReadAnnouncementsCount = document.getElementById('num-of-announcements');
+            const markAllAsReadButton = document.getElementById('mark-as-read');
+
+            updateUnreadCount();
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.remove('unread');
+                        updateUnreadCount();
+                        // Once the announcement is marked as read, we don't need to observe it anymore
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null, // Use the viewport as the root
+                rootMargin: '0px',
+                threshold: 0.5 // Trigger when 50% of the element is visible
+            });
+
+            // Start observing each unread announcement
+            unReadAnnouncements.forEach((announcement) => {
+                observer.observe(announcement);
+            });
+
+            markAllAsReadButton.addEventListener('click', function() {
+                unReadAnnouncements.forEach((announcement) => {
+                    announcement.classList.remove('unread');
+                });
+                updateUnreadCount();
+            });
+
+            function updateUnreadCount() {
+                const currentUnreadCount = document.querySelectorAll('.unread').length;
+                unReadAnnouncementsCount.textContent = currentUnreadCount + ' Unread!';
+                unReadAnnouncementsCount.style.display = currentUnreadCount === 0 ? 'none' : 'flex';
+            }
+        </script>
+        
 </body>
 
 </html>
