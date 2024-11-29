@@ -45,9 +45,7 @@ body.dark {
 main {
     display: grid;
     grid-template-columns: 1fr -100px;
-    /* Adjust as needed */
     gap: 1rem;
-    /* Space between columns */
 }
 
 
