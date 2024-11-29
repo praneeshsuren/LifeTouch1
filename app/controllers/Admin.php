@@ -52,6 +52,12 @@
             }
         }
 
+        public function inquiries(){
+            
+            $this->view('admin/admin-inquiries');
+
+        }
+
         public function announcements($action = null){
             switch ($action){
                 case 'createAnnouncement':
