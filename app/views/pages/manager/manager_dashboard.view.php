@@ -38,6 +38,13 @@
       flex-wrap: wrap;
       text-align: center;
     }
+
+    body.dark .chart-box {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    }
   </style>
 
 </head>
