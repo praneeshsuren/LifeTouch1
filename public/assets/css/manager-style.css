@@ -595,7 +595,6 @@ main .recent-announcements .announcement .message {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Dark Mode for .container */
 body.dark .container {
     background-color: #2E2E2E;
     color: #CCC;
