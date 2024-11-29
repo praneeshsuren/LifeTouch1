@@ -44,55 +44,63 @@
       </div>
 
       <div class="table-container">
-        <table class='user-table'>
-          <thead>
-              <tr>
-                  <th>Admin Id</th>
-                  <th>Profile Picture</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>NIC Number</th>
-                  <th>Gender</th>
-                  <th>Date of Birth</th>
-                  <th>Age</th>
-                  <th>Home Address</th>
-                  <th>Email Address</th>
-                  <th>Contact Number</th>
-              </tr>
-          </thead>
-          <tbody>
-            <?php if (!empty($data['admins'])): ?>
-              <?php foreach ($data['admins'] as $admin) : ?>
-                <tr onclick="window.location.href='<?php echo URLROOT; ?>/admin/admins/viewAdmin?id=<?php echo $admin->admin_id; ?>';" style="cursor: pointer;">
-                    <td><?php echo $admin->admin_id; ?></td>
-                    <td>
-                      <img src="<?php echo URLROOT; ?>/assets/images/Admin/<?php echo !empty($admin->image) ? $admin->image : 'default-placeholder.jpg'; ?>" alt="admin Picture" class="user-image">
-                    </td>
-                    <td><?php echo $admin->first_name; ?></td>
-                    <td><?php echo $admin->last_name; ?></td>
-                    <td><?php echo $admin->NIC_no; ?></td>
-                    <td><?php echo $admin->gender; ?></td>
-                    <td><?php echo $admin->date_of_birth; ?></td>
-                    <td><?php echo calculateAge($admin->date_of_birth); ?></td>
-                    <td><?php echo $admin->home_address; ?></td>
-                    <td><?php echo $admin->email_address; ?></td>
-                    <td><?php echo $admin->contact_number; ?></td>
-                </tr>
-              <?php endforeach; ?>
-              <?php else: ?>
-                <tr>
-                    <td colspan="11" style="text-align: center;">No Admins available</td>
-                </tr>
-              <?php endif; ?>
-          </tbody>
-        </table>
-      </div>
+          <div class="filters">
+            <button class="filter active">All Users</button>
+            <button class="filter">Active Users</button>
+            <button class="filter">Inactive Users</button>
+          </div>
 
-        <div class="add-user">
-          <a href="<?php echo URLROOT; ?>/admin/admins/createAdmin">
-            <button class="add-user-btn">+ Add admin</button>
-          </a>
-        </div>
+          <div class="user-table-header">
+            <input type="text" placeholder="Search" class="search-input">
+            <button class="add-user-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/members/createMember'">+ Add Member</button>
+          </div>
+
+          <div class="user-table-wrapper">
+            <table class='user-table'>
+              <thead>
+                  <tr>
+                      <th>Admin Id</th>
+                      <th>Profile Picture</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>NIC Number</th>
+                      <th>Gender</th>
+                      <th>Date of Birth</th>
+                      <th>Age</th>
+                      <th>Home Address</th>
+                      <th>Email Address</th>
+                      <th>Contact Number</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <?php if (!empty($data['admins'])): ?>
+                  <?php foreach ($data['admins'] as $admin) : ?>
+                    <tr onclick="window.location.href='<?php echo URLROOT; ?>/admin/admins/viewAdmin?id=<?php echo $admin->admin_id; ?>';" style="cursor: pointer;">
+                        <td><?php echo $admin->admin_id; ?></td>
+                        <td>
+                          <img src="<?php echo URLROOT; ?>/assets/images/Admin/<?php echo !empty($admin->image) ? $admin->image : 'default-placeholder.jpg'; ?>" alt="admin Picture" class="user-image">
+                        </td>
+                        <td><?php echo $admin->first_name; ?></td>
+                        <td><?php echo $admin->last_name; ?></td>
+                        <td><?php echo $admin->NIC_no; ?></td>
+                        <td><?php echo $admin->gender; ?></td>
+                        <td><?php echo $admin->date_of_birth; ?></td>
+                        <td><?php echo calculateAge($admin->date_of_birth); ?></td>
+                        <td><?php echo $admin->home_address; ?></td>
+                        <td><?php echo $admin->email_address; ?></td>
+                        <td><?php echo $admin->contact_number; ?></td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                        <td colspan="11" style="text-align: center;">No Admins available</td>
+                    </tr>
+                  <?php endif; ?>
+              </tbody>
+            </table>
+          </div>
+          
+      </div>
       
       </main>
 
