@@ -202,6 +202,19 @@ main .right-column .doughnut-chart:hover{
     transform: scale(1.03);
 }
 
+main .dashboard-container .bar-chart, .doughnut-chart {
+    flex: 1 1 45%; /* Allow charts to grow and shrink */
+    margin: 10px;
+    position: relative;
+    height: 300px; /* Fixed height for consistency */
+}
+
+main .dashboard-container canvas {
+    width: 100% !important;  /* Ensure the canvas takes full width */
+    height: 100% !important; /* Ensure the canvas takes full height */
+}
+  
+
 main .right-column .recent-announcements{
     grid-column: 2;
     background: var(--sidebar-color);

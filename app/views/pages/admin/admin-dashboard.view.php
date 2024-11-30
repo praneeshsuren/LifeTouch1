@@ -11,6 +11,7 @@
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/dashboard.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/sidebar.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- CHART.JS -->
@@ -193,7 +194,7 @@
         data: dataBarChart,
         options: {
           responsive: true,
-          maintainAspectRatio: false,
+          maintainAspectRatio: true,
           animation: {
             duration: 2000, // Duration of the animation (2 seconds)
             easing: 'easeOutQuart', 
@@ -285,7 +286,7 @@
           data: dataDoughnutChart, // Correct reference to the data object
           options: {
               responsive: true,
-              maintainAspectRatio: false,
+              maintainAspectRatio: true,
               animation: {
                   duration: 1500,
                   easing: 'easeInOutQuart',
