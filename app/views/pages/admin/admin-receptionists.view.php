@@ -44,55 +44,64 @@
       </div>
 
       <div class="table-container">
-        <table class='user-table'>
-          <thead>
-              <tr>
-                  <th>Receptionist Id</th>
-                  <th>Profile Picture</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>NIC Number</th>
-                  <th>Gender</th>
-                  <th>Date of Birth</th>
-                  <th>Age</th>
-                  <th>Home Address</th>
-                  <th>Email Address</th>
-                  <th>Contact Number</th>
-              </tr>
-          </thead>
-          <tbody>
-            <?php if (!empty($data['receptionists'])): ?>
-              <?php foreach ($data['receptionists'] as $receptionist) : ?>
-                <tr onclick="window.location.href='<?php echo URLROOT; ?>/admin/receptionists/viewReceptionist?id=<?php echo $receptionist->receptionist_id; ?>';" style="cursor: pointer;">
-                    <td><?php echo $receptionist->receptionist_id; ?></td>
-                    <td>
-                      <img src="<?php echo URLROOT; ?>/assets/images/receptionist/<?php echo !empty($receptionist->image) ? $receptionist->image : 'default-placeholder.jpg'; ?>" alt="receptionist Picture" class="user-image">
-                    </td>
-                    <td><?php echo $receptionist->first_name; ?></td>
-                    <td><?php echo $receptionist->last_name; ?></td>
-                    <td><?php echo $receptionist->NIC_no; ?></td>
-                    <td><?php echo $receptionist->gender; ?></td>
-                    <td><?php echo $receptionist->date_of_birth; ?></td>
-                    <td><?php echo calculateAge($receptionist->date_of_birth); ?></td>
-                    <td><?php echo $receptionist->home_address; ?></td>
-                    <td><?php echo $receptionist->email_address; ?></td>
-                    <td><?php echo $receptionist->contact_number; ?></td>
-                </tr>
-              <?php endforeach; ?>
-              <?php else: ?>
-                <tr>
-                    <td colspan="11" style="text-align: center;">No Receptionists available</td>
-                </tr>
-              <?php endif; ?>
-          </tbody>
-        </table>
-      </div>
 
-        <div class="add-user">
-          <a href="<?php echo URLROOT; ?>/admin/receptionists/createReceptionist">
-            <button class="add-user-btn">+ Add Receptionist</button>
-          </a>
-        </div>
+          <div class="filters">
+            <button class="filter active">All Users</button>
+            <button class="filter">Active Users</button>
+            <button class="filter">Inactive Users</button>
+          </div>
+
+          <div class="user-table-header">
+            <input type="text" placeholder="Search" class="search-input">
+            <button class="add-user-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/members/createReceptionist'">+ Add Receptionist</button>
+          </div>
+          
+          <div class="user-table-wrapper">
+            <table class='user-table'>
+              <thead>
+                  <tr>
+                      <th>Receptionist Id</th>
+                      <th>Profile Picture</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>NIC Number</th>
+                      <th>Gender</th>
+                      <th>Date of Birth</th>
+                      <th>Age</th>
+                      <th>Home Address</th>
+                      <th>Email Address</th>
+                      <th>Contact Number</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <?php if (!empty($data['receptionists'])): ?>
+                  <?php foreach ($data['receptionists'] as $receptionist) : ?>
+                    <tr onclick="window.location.href='<?php echo URLROOT; ?>/admin/receptionists/viewReceptionist?id=<?php echo $receptionist->receptionist_id; ?>';" style="cursor: pointer;">
+                        <td><?php echo $receptionist->receptionist_id; ?></td>
+                        <td>
+                          <img src="<?php echo URLROOT; ?>/assets/images/receptionist/<?php echo !empty($receptionist->image) ? $receptionist->image : 'default-placeholder.jpg'; ?>" alt="receptionist Picture" class="user-image">
+                        </td>
+                        <td><?php echo $receptionist->first_name; ?></td>
+                        <td><?php echo $receptionist->last_name; ?></td>
+                        <td><?php echo $receptionist->NIC_no; ?></td>
+                        <td><?php echo $receptionist->gender; ?></td>
+                        <td><?php echo $receptionist->date_of_birth; ?></td>
+                        <td><?php echo calculateAge($receptionist->date_of_birth); ?></td>
+                        <td><?php echo $receptionist->home_address; ?></td>
+                        <td><?php echo $receptionist->email_address; ?></td>
+                        <td><?php echo $receptionist->contact_number; ?></td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                        <td colspan="11" style="text-align: center;">No Receptionists available</td>
+                    </tr>
+                  <?php endif; ?>
+              </tbody>
+            </table>
+          </div>
+
+      </div>
       
       </main>
 

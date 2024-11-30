@@ -8,17 +8,13 @@
                 </div>
                 <div class="message">
                     <p>
-                        <b><?php echo $announcement->created_by; ?></b></br>
+                        <b>Kavishka Jayathilaka</b></br>
                         <?php echo $announcement->subject; ?></br>
-                        <span class="description-text">
-                            <?php echo $announcement->description; ?>
-                        </span>
                     </p>
-                    <small 
-                        class="text-muted time-ago"
-                        data-created-date="<?php echo $announcement->created_date; ?>"
-                        data-created-time="<?php echo $announcement->created_time; ?>">
-                    </small>
+                    <div class="time-ago">
+                        <p><i class="ph ph-calendar"></i><?php echo $announcement->created_date; ?></p>
+                        <p><i class="ph ph-clock"></i><?php echo $announcement->created_time; ?></p>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>
