@@ -204,7 +204,6 @@ main .right-column .doughnut-chart:hover{
 
 main .dashboard-container .bar-chart, .doughnut-chart {
     flex: 1 1 45%; /* Allow charts to grow and shrink */
-    margin: 10px;
     position: relative;
     height: 300px; /* Fixed height for consistency */
 }
@@ -291,3 +290,15 @@ main .right-column .recent-announcements .announcement .message .time-ago i{
     font-size: 1rem;
     margin-right: 5px;
 }
+
+/* For smaller screens */
+@media (max-width: 768px) {
+    .dashboard-container {
+      flex-direction: column;
+    }
+    .bar-chart, .doughnut-chart {
+      flex: 1 1 100%; /* Full width for smaller screens */
+      height: 250px; /* Adjust height for mobile screens */
+    }
+  }
+  
