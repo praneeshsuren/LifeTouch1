@@ -58,6 +58,8 @@ body.dark{
     background: var(--sidebar-color);
     padding: 24px;
     z-index: 100;
+    border-radius: 20px;
+    transition: var(--tran-05);
 }
 
 .sidebar .head{
@@ -106,6 +108,7 @@ body.dark{
     position: relative;
     list-style: none;
     margin-bottom: 5px;
+    transition: var(--tran-05);
 }
 
 .menu ul li a{
@@ -118,7 +121,7 @@ body.dark{
     padding: 12px 8px;
     text-decoration: none;
     color: var(--text-color);
-    transition: var(--tran-03);
+    transition: var(--tran-05);
 }
 
 .menu ul li > a:hover{
@@ -391,25 +394,23 @@ main{
     position: absolute;
     top: 0;
     left: 250px;
+    height: auto;
     width: calc(100% - 250px);
     background: var(--body-color);
     z-index: 1;
     padding: 1.5rem 2rem;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 3rem 1fr 2fr;
+    transition: var(--tran-05);
 }
 
 main.active{
-    transition: var(--tran-03);
+    transition: var(--tran-05);
 }
 
 main > .title{
-    grid-column: 1 / -1;
-    grid-row: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     color: var(--text-color);
 }
 
@@ -468,227 +469,8 @@ main > .title > .greeting > .bell-container:hover .notification {
     100% { transform: translateX(0); }
 }
 
-/* Insight Cards */
-main .insights{
-    grid-column: 1;
-    grid-row: 2;
-    padding: 1rem;
-    padding-left: 0;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.6rem;
-}
+/*Dashboard*/
 
-main .insights > div{
-    color: var(--hover-btn);
-    background: var(--sidebar-color);
-    padding: 2rem;
-    border-radius: 40px;
-    box-shadow: var(--box-shadow-color);
-}
-
-main .insights > div:hover{
-    background: var(--separator-color);
-    transition: var(--tran-05);
-}
-
-main .insights > div i{
-    background-color: #695CFE;
-    padding: 0.5rem;
-    border-radius: 50%;
-    color: var(--sidebar-color);
-    font-size: 2rem;
-}
-
-main .insights > .bookings  i{
-    background-color: coral;
-}
-
-main .insights > .workouts  i{
-    background-color: lightgreen;
-}
-
-main .insights > div .middle{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-main .insights h3{
-    margin: 1rem 0 0.6rem;
-    font-size: 1rem;
-}
-
-main .insights .progress{
-    position: relative;
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-    margin-left: 2rem;
-}
-
-main .insights svg{
-    width: 7rem;
-    height: 7rem;
-}
-
-@keyframes progress-animation {
-    0% {
-        stroke-dashoffset: 0;
-    }
-    100% {
-        stroke-dashoffset: 92;
-    }
-}
-
-main .insights svg circle {
-    fill: none;
-    stroke-width: 14;
-    stroke: #695CFE;
-    stroke-linecap: round;
-    transform: translate(8px, 8px);
-    stroke-dasharray: 110;
-    animation: progress-animation 0.8s ease-out forwards;
-}
-
-main .insights .progress .number{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-main .insights .progress .number {
-    position: absolute;
-    top: 2.75rem;
-    left: 2.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-color);
-    font-size: 1rem;
-}
-
-/* Announcements Section */
-
-main .recent-announcements{
-    grid-column: 2;
-    grid-row: 2 / -1;
-    padding-top: 1rem;
-    padding-left: 0.6rem;
-    overflow-x: hidden;
-}
-
-main .recent-announcements h2{
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-}
-
-main .recent-announcements .announcements{
-    background: var(--sidebar-color);
-    border-radius: 30px;
-    padding-top: 15px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-shadow: var(--box-shadow-color);
-    max-height: 70%;
-}
-
-main .recent-announcements .announcement{
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    border-bottom: 1px solid var(--separator-color);
-    color: var(--hover-btn);
-    padding-top: 10px;
-    padding-bottom: 15px;
-    cursor: pointer;
-    margin-bottom: 1rem;
-    overflow: hidden;
-}
-
-main .recent-announcements .announcement:hover{
-    transform: translateY(-10px);
-    transition: var(--tran-03);
-}
-
-main .recent-announcements .announcement .profile-img{
-    display: flex;
-    margin-bottom: 2rem;
-}
-
-main .recent-announcements .announcement .profile-img img{
-    border-radius: 50%;
-    width: 100%;
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-}
-
-main .recent-announcements .announcement .message{
-margin-left: 1rem;
-}
-
-main .recent-announcements .announcement .message p {
-    margin: 0;
-}
-
-main .recent-announcements .announcement .message .description-text {
-    display: flex; /* Ensure it's treated as a block for sizing */
-    max-width: 100%; /* Constrain the width */
-    white-space: nowrap; /* Prevent line breaks */
-    overflow: hidden; /* Hide overflow */
-    text-overflow: ellipsis; /* Add ellipsis */
-    color: var(--text-color); /* Adjust the color as needed */
-}
-
-/* CHARTS */
-
-main .chart{
-    grid-row: 3;
-    grid-column: 1;
-    max-width: 100%;
-    overflow-x: auto;
-}
-
-main .chart .chart-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 2.5rem;
-    grid-column: 1;
-}
-
-main .chart .chart-header i{
-    font-size: 1.6rem;
-    color: var(--text-color);
-    border-radius: 50%;
-    margin-right: 1rem;
-    cursor: pointer;
-}
-
-main .chart .chart-header i:hover {
-    color: var(--hover-btn);
-}
-
-main .chart .chart-header h2 {
-    font-size: 1.5rem;
-    color: var(--text-color);
-}
-
-main .chart .chart-container{
-    width: 100%;
-    margin: 0 auto;
-    height: 90%;
-
-}
 
 /*User Table*/
 main .table-container {
@@ -706,13 +488,13 @@ main .table-container {
     height: auto;
 }
   
-  .filters {
+main .table-container .filters {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
   }
   
-  .filter {
+main .table-container .filters .filter {
     padding: 10px 20px;
     border-radius: 20px;
     background-color: #f1f1f1;
@@ -721,26 +503,26 @@ main .table-container {
     font-size: 0.9rem;
   }
   
-  .filter.active {
+main .table-container .filters .filter.active {
     background-color: #007bff;
     color: #fff;
   }
   
-  .user-table-header {
+main .table-container .user-table-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
   }
   
-  .search-input {
+main .table-container .user-table-header .search-input {
     padding: 10px;
     border-radius: 20px;
     border: 1px solid #ddd;
     width: 250px;
   }
   
-  .add-user-btn {
+main .table-container .user-table-header .add-user-btn {
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -749,7 +531,7 @@ main .table-container {
     cursor: pointer;
   }
   
-  .user-table-wrapper {
+main .table-container .user-table-wrapper {
     height: auto; /* Adjust as per your design */
     overflow: hidden; /* Hide scrollbar by default */
     position: relative;
@@ -758,18 +540,18 @@ main .table-container {
     transition: var(--tran-03);
   }
 
-  .user-table-wrapper:hover {
+main .table-container .user-table-wrapper:hover {
     overflow: auto; /* Show scrollbars when hovering over the container */
   }
 
-  .user-table {
+main .table-container .user-table-wrapper .user-table {
     width: 100%;
     border-collapse: collapse;
     position: relative;
   }
   
-  .user-table th,
-  .user-table td {
+main .table-container .user-table-wrapper .user-table th,
+main .table-container .user-table-wrapper .user-table td {
     padding: 10px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -777,7 +559,7 @@ main .table-container {
     text-wrap: nowrap;
   }
   
-  .user-table th {
+main .table-container .user-table-wrapper .user-table th {
     background-color: #f5f5f5;
     font-weight: bold;
     position: sticky; /* Makes the header sticky */
@@ -787,43 +569,43 @@ main .table-container {
     border-bottom: 2px solid #ddd;
   }
   
-  .user-image {
+main .table-container .user-table-wrapper .user-image {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
   }
   
-  .status-badge {
+main .table-container .user-table-wrapper .status-badge {
     padding: 5px 10px;
     border-radius: 10px;
     font-size: 0.8rem;
     color: #fff;
   }
   
-  .status-badge.active {
+main .table-container .user-table-wrapper .status-badge.active {
     background-color: #28a745;
   }
   
-  .status-badge.inactive {
+main .table-container .user-table-wrapper .status-badge.inactive {
     background-color: #dc3545;
   }
 
-  .user-table-wrapper::-webkit-scrollbar {
+main .table-container .user-table-wrapper::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
   
-  .user-table-wrapper::-webkit-scrollbar-thumb {
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb {
     background: #bbb;
     border-radius: 4px;
   }
   
-  .user-table-wrapper::-webkit-scrollbar-thumb:hover {
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb:hover {
     background: #888;
   }
   
-  .user-table-wrapper::-webkit-scrollbar-track {
+main .table-container .user-table-wrapper::-webkit-scrollbar-track {
     background: #f1f1f1;
   }
 
@@ -984,202 +766,188 @@ main .user-form .form-container .input-container .invalid-feedback {
 }
 
 /* View Trainer Page */
-main .navbar-container{
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+main .view-user-container{
     grid-column: 1 / -1;
-    width: 100%;
+}
+
+.navbar-container {
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar ul {
     display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-main .navbar-container .navbar{
-    width: 75%;
-    background-color: var(--sidebar-color);
-    box-shadow: var(--box-shadow-color);
-    border-radius: 50px;
-    margin: 0;
-    padding: 0;
-}
-
-main .navbar .nav-links {
-    margin: 0;
-    padding: 0;
-    width: 100%;
     list-style: none;
-    display: flex; /* Use flexbox for horizontal alignment */
-    justify-content: space-around;
-    align-items: center; /* Aligns items vertically in the center */
-}
-
-main .navbar .nav-links .separator{
-    width: 1px;
-    height: 25px;
+    justify-content: space-between;
     padding: 0;
+  }
+  
+  .navbar ul .separator {
+    width: 1px;
+    height: 20px;
     background-color: #ddd;
-    display: inline-block; /* Makes the separator inline */
-    align-self: center; /* Ensures the separator aligns with the text */
-    margin: 0; /* Adds spacing around the separator */
-    opacity: 1;
-}
+    margin: 0 15px;
+  }
   
-main .navbar .nav-links li {
-    margin: 0 0rem;
-    padding: 0px;
-    border-radius: 50px;
-    transition: background-color 0.3s ease;
-    overflow: hidden;
-    z-index: 1;
-}
-  
-main .navbar .nav-links a {
-    text-wrap: nowrap;
+  .navbar ul li a {
     text-decoration: none;
-    font-size: 1rem;
-    color: var(--hover-btn);
-    transition: all 0.3s ease;
-    padding: 1rem 3.5rem; /* Adjust padding for a balanced appearance */
-    border-radius: 50px;
+    color: #007bff;
+    font-weight: 500;
+  }
+  
+  .navbar ul li a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+  
+  /* Form Section */
+  .view-user-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .user-details {
     display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-main .navbar .nav-links li:hover {
-    background-color: rgb(238, 238, 238); /* Highlight on hover */
-}
-
-main .navbar .nav-links li.active {
-    background-color: rgb(238, 238, 238); /* Highlight on hover */
-}
-
-main .user-details {
-    grid-column: 1 / -1;
+    flex-direction: column;
+  }
+  
+  .details {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-picture {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: var(--hover-btn);
-}
-
-main .user-details .details {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    font-size: 1rem;
-}
-
-main .user-details .details .profile-picture{
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     gap: 10px;
-}
-
-main .user-details .details .profile-picture img {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
+  }
+  
+  .profile-picture img {
+    width: 150px;
+    height: 150px;
     object-fit: cover;
-    border: 2px solid #ddd;
-}
-
-main .user-details .details .left-column,
-main .user-details .details .right-column {
-    padding: 10px; /* Adds padding inside each column */
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-main .user-details .details .left-column {
-    grid-column: 1; /* First column */
-    text-align: left; /* Align text to the left */
-}
-
-main .user-details .details .right-column {
-    grid-column: 2; /* Second column */
-    text-align: left; /* Keep text aligned left for consistency */
-}
-
-
-main .user-details .details p{
-    margin: 8px 0;
-}
-
-main .user-details .details input, select{
-    font-size: 1rem;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-main .user-details .details input{
-    width: 100%;
-}
-
-main .user-details .action-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3rem;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
-}
+    border-radius: 50%;
+    border: 3px solid #ddd;
+  }
   
-.edit-btn, .delete-btn, .save-btn, .cancel-btn{
-    font-size: 1rem;
+  .change-picture-btn {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
     border: none;
-    border-radius: 25px;
+    border-radius: 20px;
     cursor: pointer;
-}
+  }
   
-.edit-btn {
-    padding: 10px 5rem;
-    background-color: #4CAF50;
-    color: white;
-}
+  .change-picture-btn:hover {
+    background-color: #0056b3;
+  }
   
-.delete-btn {
-    padding: 10px 4.5rem;
-    background-color: #F44336;
-    color: white;
-}
-
-.save-btn{
-    padding: 10px 4.7rem;
-    background-color: #2693FF;
-    color: white;
-}
-
-.cancel-btn{
-    padding: 10px 4.3rem;
-    background-color: #FF0000;
-    color: white;
-}
-
-.edit-btn:hover {
-    background-color: #45a049;
-}
+  .left-column,
+  .right-column {
+    flex: 1;
+  }
   
-.delete-btn:hover {
-    background-color: #e53935;
-}
-
-.save-btn:hover {
-    background-color: #1c7bd9;
-}
-
-.cancel-btn:hover {
-    background-color: #e61e1e;
-}
+  .details p {
+    margin-bottom: 1rem;
+  }
+  
+  .details p strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 0.9rem;
+  }
+  
+  .details input,
+  .details select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .details input[disabled],
+  .details select[disabled] {
+    background-color: #f9f9f9;
+    color: #999;
+  }
+  
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+  
+  .edit-btn,
+  .delete-btn,
+  .save-btn,
+  .cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  .edit-btn {
+    background-color: #007bff;
+  }
+  
+  .edit-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .delete-btn {
+    background-color: #dc3545;
+  }
+  
+  .delete-btn:hover {
+    background-color: #b02a37;
+  }
+  
+  .save-btn {
+    background-color: #28a745;
+    display: none;
+  }
+  
+  .save-btn:hover {
+    background-color: #218838;
+  }
+  
+  .cancel-btn {
+    background-color: #6c757d;
+    display: none;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #5a6268;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .details {
+      flex-direction: column;
+    }
+    .title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
 
 /*Announcements page*/
 main .announcements-container{

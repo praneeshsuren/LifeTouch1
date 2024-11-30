@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/dashboard.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- CHART.JS -->
@@ -23,6 +24,7 @@
     </section>
     
     <main>
+
       <div class="title">
         
         <h1>Dashboard</h1>
@@ -32,155 +34,271 @@
 
       </div>
 
-      <div class="insights">
+      <div class="dashboard-container">
 
-        <div class="members">
-          <i class="ph ph-users"></i>
-          <div class="middle">
-            <div class="left">
-              <h3>Total Members</h3>
-              <h1>20</h1>
-            </div>
-            <div class="progress">
-              <svg>
-                <circle cx="38" cy="38" r="38"></circle>
-              </svg>
-              <div class="number">
-                <p>75%</p>
+        <div class="left-column">
+
+          <div class="insights">
+
+            <div class="insight-card card-1">
+              <div class="upper">
+                <i class="ph ph-users"></i>
+                <div class="status-badge">
+                  <span>+9.4%</span>
+                </div>
+              </div>
+              <div class="lower">
+                  <p>Total Members</p>
+                  <div class="progress">
+                    <h1>20000</h1>
+                    <div class="text-muted">
+                      <small>Last 30 days</small>
+                    </div>
+                  </div>
               </div>
             </div>
-          </div>
-          <small class="text-muted">Last 30 days</small>
-        </div>
-        <!-- END OF MEMBERS -->
-
-        <div class="bookings">
-          <i class="ph ph-chart-bar"></i>
-          <div class="middle">
-            <div class="left">
-              <h3>Total Bookings</h3>
-              <h1>10</h1>
-            </div>
-            <div class="progress">
-              <svg>
-                <circle cx="38" cy="38" r="38"></circle>
-              </svg>
-              <div class="number">
-                <p>75%</p>
+           
+            <div class="insight-card card-2">
+              <div class="upper">
+                <i class="ph ph-user-plus"></i>
+                <div class="status-badge">
+                  <span>+9.4%</span>
+                </div>
+              </div>
+              <div class="lower">
+                  <p>New Members</p>
+                  <div class="progress">
+                    <h1>20000</h1>
+                    <div class="text-muted">
+                      <small>Last 30 days</small>
+                    </div>
+                  </div>
               </div>
             </div>
-          </div>
-          <small class="text-muted">Last 30 days</small>
-        </div>
-        <!-- END OF BOOKINGS -->
 
-        <div class="workouts">
-          <i class="ph ph-trend-up"></i>
-          <div class="middle">
-            <div class="left">
-              <h3>Workouts Created</h3>
-              <h1>10</h1>
-            </div>
-            <div class="progress">
-              <svg>
-                <circle cx="38" cy="38" r="38"></circle>
-              </svg>
-              <div class="number">
-                <p>75%</p>
+            <div class="insight-card card-3">
+              <div class="upper">
+                <i class="ph ph-chat-circle-text"></i>
+                <div class="status-badge">
+                  <span>+9.4%</span>
+                </div>
+              </div>
+              <div class="lower">
+                  <p>Total Inquiries</p>
+                  <div class="progress">
+                    <h1>20000</h1>
+                    <div class="text-muted">
+                      <small>Last 30 days</small>
+                    </div>
+                  </div>
               </div>
             </div>
+
+            <div class="insight-card card-4">
+              <div class="upper">
+                <i class="ph ph-calendar-check"></i>
+                <div class="status-badge">
+                  <span>+9.4%</span>
+                </div>
+              </div>
+              <div class="lower">
+                  <p>Total Event Attendees</p>
+                  <div class="progress">
+                    <h1>20000</h1>
+                    <div class="text-muted">
+                      <small>Last 30 days</small>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
           </div>
-          <small class="text-muted">Last 30 days</small>
+
+          <div class="bar-chart">
+
+            <div class="upper">
+
+              <div class="upper-text">
+                <h2>Member Attendance</h2>
+                <p>Track the total number of member who attended</p>
+              </div>
+
+              <div class="period-select">
+                <select id="time-period" name="time-period">
+                  <option value="week">This Week</option>
+                  <option value="month">This Month</option>
+                  <option value="year">This Year</option>
+                </select>
+              </div>
+
+            </div>
+            <div class="lower">
+                <canvas id="BarChart"></canvas>
+            </div>
+          </div>
+
         </div>
-        <!-- END OF WORKOUTS -->
 
-      </div>
+        <div class="right-column">
 
-      <div class="recent-announcements">
-        <?php require APPROOT.'/views/components/recent-announcements.view.php' ?>
-      </div>
+          <div class="doughnut-chart">
+            <div class="upper-text">
+                  <h2>Membership Types</h2>
+                  <p>Membership plan distribution</p>
+            </div> 
+            <div class="lower">
+                <canvas id="DoughnutChart"></canvas>
+            </div>
+          </div>
 
-      <!-- CHARTS -->
+          <div class="recent-announcements">
+            <?php require APPROOT.'/views/components/recent-announcements.view.php' ?>
+          </div>
 
-      <div class="chart">
-        <div class="chart-header">
-          <h2>Busy Hours</h2>
-          <i class="ph ph-dots-three-circle-vertical"></i>
         </div>
-        <div class="chart-container">
-          <canvas id="LineChart"></canvas>
-        </div>
-      </div>
-      
 
     </main>
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-      const ctx = document.getElementById('LineChart').getContext('2d');
-      
-      // Generate current time and past 6 hours
-      const getCurrentTimeLabel = (hoursAgo) => {
-          const date = new Date();
-          date.setHours(date.getHours() - hoursAgo);
-          return date.toLocaleTimeString('en-US', { 
-              hour: 'numeric', 
-              minute: '2-digit', 
-              hour12: true 
-          });
-      };
+      const ctxBarChart = document.getElementById('BarChart').getContext('2d');
+      let delayed;
 
-      // Sample data - you can replace these with data from your PHP controller
-      const data = {
-          labels: [
-              getCurrentTimeLabel(5),
-              getCurrentTimeLabel(4),
-              getCurrentTimeLabel(3),
-              getCurrentTimeLabel(2),
-              getCurrentTimeLabel(1),
-              getCurrentTimeLabel(0)
-          ],
-          datasets: [{
-              label: 'Number of Members',
-              data: [15, 25, 35, 45, 30, 20], // Replace with your actual data
-              fill: true,
-              borderColor: '#7380ec',
-              backgroundColor: 'rgba(115, 128, 236, 0.1)',
-              tension: 0.4,
-              pointBackgroundColor: '#7380ec',
-              pointBorderColor: '#fff',
-              pointBorderWidth: 2,
-              pointRadius: 5,
-              pointHoverRadius: 7,
-          }]
+      const dataBarChart = {
+        labels: [
+          'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+        ],
+        datasets: [{
+          label: 'Number of Members',
+          data: [15, 25, 35, 45, 30, 20], // Replace with your actual data
+          fill: true,
+          borderColor: '#5f63f2',
+          backgroundColor: 'rgba(95, 99, 242, 0.2)',
+          tension: 0.4,
+          pointBackgroundColor: '#5f63f2',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          borderWidth: 2,
+          borderRadius: 10,
+          barThickness: 50
+        }]
       };
 
       // Chart configuration
-      const config = {
-          type: 'line',
-          data: data,
+      const configBarChart = {
+        type: 'bar',
+        data: dataBarChart,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 2000, // Duration of the animation (2 seconds)
+            easing: 'easeOutQuart', 
+            onComplete: () => {
+              delayed = true;
+            },
+            delay: (context) => {
+              let delay = 0;
+              if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                delay = context.dataIndex * 150 + context.datasetIndex * 50;
+              }
+              return delay;
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                drawBorder: false,
+                color: 'rgba(0, 0, 0, 0.1)'
+              },
+              ticks: {
+                stepSize: 10
+              },
+              stacked: true
+            },
+            x: {
+              grid: {
+                drawBorder: false,
+                display: false
+              },
+              ticks: {
+                font: {
+                  family: "'Poppins', sans-serif"
+                }
+              },
+              stacked: true
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                boxWidth: 20,
+                font: {
+                  family: "'Poppins', sans-serif"
+                }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              padding: 10,
+              titleFont: {
+                family: "'Poppins', sans-serif"
+              },
+              bodyFont: {
+                family: "'Poppins', sans-serif"
+              }
+            }
+          }
+        }
+      };
+
+      // Create the chart
+      new Chart(ctxBarChart, configBarChart);
+
+      const ctxDoughnutChart = document.getElementById('DoughnutChart').getContext('2d');
+
+      const dataDoughnutChart = {
+          labels: [
+              'Monthly', 'Quarterly', 'Semi-Annually', 'Annually'
+          ],
+          datasets: [{
+              label: 'Distribution of Membership Plans',
+              data: [300, 150, 220, 80], // Replace with your actual data
+              fill: true,
+              backgroundColor: [
+                  'rgb(255, 99, 132)',  // Red
+                  'rgb(54, 162, 235)',  // Blue
+                  'rgb(255, 205, 86)',  // Yellow
+                  'rgb(75, 192, 192)'   // Teal
+              ],
+              hoverOffset: 4
+          }]
+      };
+
+      const configDoughnutChart = {
+          type: 'doughnut',
+          data: dataDoughnutChart, // Correct reference to the data object
           options: {
               responsive: true,
               maintainAspectRatio: false,
-              scales: {
-                  y: {
-                      beginAtZero: true,
-                      grid: {
-                          drawBorder: false,
-                          color: 'rgba(0, 0, 0, 0.1)'
-                      },
-                      ticks: {
-                          stepSize: 10
-                      }
+              animation: {
+                  duration: 1500,
+                  easing: 'easeInOutQuart',
+                  onComplete: () => {
+                      delayed = true;
                   },
-                  x: {
-                      grid: {
-                          drawBorder: false,
-                          display: false
+                  delay: (context) => {
+                      let delay = 0;
+                      if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                          delay = context.dataIndex * 100 + context.datasetIndex * 50;
                       }
-                  }
+                      return delay;
+                  },
               },
               plugins: {
                   legend: {
@@ -206,45 +324,10 @@
           }
       };
 
-      // Create the chart
-      new Chart(ctx, config);
-    });
+      // Create the doughnut chart
+      new Chart(ctxDoughnutChart, configDoughnutChart);
 
-    const timeAgoElements = document.querySelectorAll(".time-ago");
-
-    timeAgoElements.forEach(element => {
-        const createdDate = element.getAttribute("data-created-date");
-        const createdTime = element.getAttribute("data-created-time");
-
-        // Combine date and time into a single Date object
-        const createdDateTime = new Date(`${createdDate}T${createdTime}`);
-        const currentDateTime = new Date();
-
-        // Calculate the difference in milliseconds
-        const diffMs = currentDateTime - createdDateTime;
-
-        // Calculate time differences in units
-        const minutes = Math.floor(diffMs / (1000 * 60));
-        const hours = Math.floor(diffMs / (1000 * 60 * 60));
-        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-        let timeAgo;
-
-        if (days > 0) {
-            timeAgo = `${days} day${days !== 1 ? 's' : ''} ago`;
-        } else if (hours > 0) {
-            timeAgo = `${hours} hour${hours !== 1 ? 's' : ''} ago`;
-        } else if (minutes > 0) {
-            timeAgo = `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
-        } else {
-            timeAgo = "just now";
-        }
-
-        // Update the element's text content
-        element.textContent = timeAgo;
-    });
-
-  </script>
+    </script>
   </body>
 </html>
 

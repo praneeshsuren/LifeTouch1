@@ -9,7 +9,7 @@
         public function index(){
             
             $announcementModel = new M_Announcement;
-            $announcements = $announcementModel->findAll('announcement_id', 3);
+            $announcements = $announcementModel->findAll('announcement_id', 4);
 
             $data = [
                 'announcements' => $announcements
