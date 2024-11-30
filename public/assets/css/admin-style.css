@@ -25,6 +25,53 @@
     --tran-05: all 0.5s ease; 
 }
 
+.edit-btn,
+.delete-btn,
+.save-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background-color: #007bff;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #b02a37;
+}
+
+.save-btn {
+  background-color: #28a745;
+  display: none;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  display: none;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
 html{
     overflow-y: auto;
 }
@@ -466,8 +513,6 @@ main > .title > .greeting > .bell-container:hover .notification {
 
 /*User Table*/
 main .table-container {
-    grid-column: 1 / -1;
-    overflow: auto;
     margin: 2rem 0;
     border-radius: 0.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -477,7 +522,6 @@ main .table-container {
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    height: auto;
 }
   
 main .table-container .filters {
@@ -603,7 +647,6 @@ main .table-container .user-table-wrapper::-webkit-scrollbar-track {
 
 /* User Registration Form */
 main .user-form{
-    grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -757,80 +800,113 @@ main .user-form .form-container .input-container .invalid-feedback {
     }
 }
 
-/* View Trainer Page */
-main .view-user-container{
-    grid-column: 1 / -1;
+/* View User Page */
+main .view-user-container {
+    display: flex;
+    margin-top: 1rem;
 }
 
-.navbar-container {
+main .view-user-container .navbar-container {
     background-color: #fff;
-    padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: 20px;
     margin-bottom: 2rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+    height: fit-content;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    width:fit-content;
+}
   
-  .navbar ul {
-    display: flex;
-    list-style: none;
-    justify-content: space-between;
-    padding: 0;
-  }
-  
-  .navbar ul .separator {
-    width: 1px;
-    height: 20px;
-    background-color: #ddd;
-    margin: 0 15px;
-  }
-  
-  .navbar ul li a {
-    text-decoration: none;
-    color: #007bff;
-    font-weight: 500;
-  }
-  
-  .navbar ul li a:hover {
-    color: #0056b3;
-    text-decoration: underline;
-  }
-  
-  /* Form Section */
-  .view-user-container {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .user-details {
+main .view-user-container .navbar-container .navbar ul {
     display: flex;
     flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
   
-  .details {
+main .view-user-container .navbar-container .navbar ul li {
+    padding: 0; /* Reset padding for the li */
+  }
+  
+main .view-user-container .navbar-container .navbar ul li a {
+    display: flex; /* Ensures the anchor fills the entire li */
+    align-items: center;
+    justify-content: start;
+    padding: 1rem 2rem;
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 8px; /* Optional for rounded effect */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    text-wrap: nowrap;
+}
+  
+main .view-user-container .navbar-container .navbar ul li i{
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+
+main .view-user-container .navbar-container .navbar ul li a:hover {
+    background-color: #f3f0ff; /* Light purple */
+    color: #5a30c6; /* Purple text */
+}
+  
+main .view-user-container .navbar-container .navbar ul li.active > a {
+    background-color: #f3f0ff; /* Light purple */
+    color: #5a30c6; /* Purple text */
+}
+  
+main .view-user-container .navbar-container .navbar ul li.active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3px;
+    height: 100%;
+    background-color: #5a30c6; /* Dark purple */
+}
+
+main .view-user-container .navbar-container .navbar ul li.active span.active{
+    width: 3px;
+    height: 100%;
+    background-color: var(--primary-color);
+}
+  
+main .view-user-container .user-container {
+    margin-left: 1.5rem;
+    background-color: var(--sidebar-color);
+    padding: 2rem;
+    width: 100%;
+    border-radius: 20px;
+}
+  
+  
+main .view-user-container .user-container .details {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    width: 100%;
     gap: 2rem;
     margin-bottom: 2rem;
   }
   
-  .profile-picture {
+main .view-user-container .user-container .details .profile-picture {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items:end;
     gap: 10px;
   }
   
-  .profile-picture img {
-    width: 150px;
-    height: 150px;
+main .view-user-container .user-container .details .profile-picture img {
+    width: 200px;
+    height: 200px;
     object-fit: cover;
     border-radius: 50%;
     border: 3px solid #ddd;
   }
   
-  .change-picture-btn {
+main .view-user-container .user-container .details .change-picture-btn {
+    margin: 0;
     padding: 10px 15px;
     background-color: #007bff;
     color: #fff;
@@ -839,94 +915,58 @@ main .view-user-container{
     cursor: pointer;
   }
   
-  .change-picture-btn:hover {
+main .view-user-container .user-container .details .change-picture-btn:hover {
     background-color: #0056b3;
   }
-  
-  .left-column,
-  .right-column {
-    flex: 1;
-  }
-  
-  .details p {
+
+main .view-user-container .user-container .details p {
     margin-bottom: 1rem;
+}
+  
+main .view-user-container .user-container .details .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem; /* Adjust spacing between inputs */
   }
   
-  .details p strong {
+main .view-user-container .user-container .details .row > p {
+    flex: 1; /* Ensure inputs are evenly spaced */
+  }
+  
+  main .view-user-container .user-container .details p {
+    margin-bottom: 1rem;
+
+  }
+  
+  main .view-user-container .user-container .details p strong {
     display: block;
     margin-bottom: 5px;
     color: #333;
-    font-size: 0.9rem;
+    font-size: 1rem;
+
   }
   
-  .details input,
-  .details select {
+  main .view-user-container .user-container .details input,
+  main .view-user-container .user-container .details select {
     width: 100%;
-    padding: 8px 10px;
+    padding: 12px 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #555;
   }
   
-  .details input[disabled],
-  .details select[disabled] {
+  main .view-user-container .user-container .details input[disabled],
+  main .view-user-container .user-container .details select[disabled] {
     background-color: #f9f9f9;
     color: #999;
   }
   
   /* Action Buttons */
-  .action-buttons {
+  main .view-user-container .user-container .action-buttons {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-  }
-  
-  .edit-btn,
-  .delete-btn,
-  .save-btn,
-  .cancel-btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: #fff;
-    font-weight: 600;
-  }
-  
-  .edit-btn {
-    background-color: #007bff;
-  }
-  
-  .edit-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .delete-btn {
-    background-color: #dc3545;
-  }
-  
-  .delete-btn:hover {
-    background-color: #b02a37;
-  }
-  
-  .save-btn {
-    background-color: #28a745;
-    display: none;
-  }
-  
-  .save-btn:hover {
-    background-color: #218838;
-  }
-  
-  .cancel-btn {
-    background-color: #6c757d;
-    display: none;
-  }
-  
-  .cancel-btn:hover {
-    background-color: #5a6268;
   }
   
   /* Responsive Design */
@@ -943,8 +983,6 @@ main .view-user-container{
 
 /*Announcements page*/
 main .announcements-container{
-    grid-column: 1 / -1;
-    grid-row: 2 / -1;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -1276,18 +1314,10 @@ main .modal-body .modal-actions {
     justify-content: space-between;
     padding-top: 2rem;
 }
-  
-main .modal-body .edit-btn, .delete-btn, .save-btn, .cancel-btn{
-    font-size: 1rem;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-}
 
 /*Create Announcement Page*/
 
 main .create-announcement {
-    grid-column: 1 / -1;
     width: 80%;
     margin: 2rem auto; /* Centering the form horizontally */
     padding: 3rem;
@@ -1504,8 +1534,6 @@ main .events-container .card .card-body .view-btn:hover {
 
 /*Create Event Page*/
 main .create-event-container {
-    grid-column: 1 / -1;
-    grid-row: 2 / -1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1593,12 +1621,6 @@ main .create-event-container .form-actions .reset-btn {
 }
 
 /*View Event Page*/
-/* Form Container */
-main .event-detail-container {
-    grid-column: 1 / -1;
-    grid-row: 2 / -1;
-}
-
 main .event-detail-container .form-container{
     background-color: #ffffff;
     padding: 2rem;
