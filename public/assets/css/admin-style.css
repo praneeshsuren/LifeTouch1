@@ -848,13 +848,13 @@ main .view-user-container .navbar-container .navbar ul li i{
 }
 
 main .view-user-container .navbar-container .navbar ul li a:hover {
-    background-color: #f3f0ff; /* Light purple */
-    color: #5a30c6; /* Purple text */
+    background-color: #f3f7fb; /* Light purple */
+    color: #007bff; /* Purple text */
 }
   
 main .view-user-container .navbar-container .navbar ul li.active > a {
-    background-color: #f3f0ff; /* Light purple */
-    color: #5a30c6; /* Purple text */
+    background-color: #f3f7fb; /* Light purple */
+    color: #007bff; /* Purple text */
 }
   
 main .view-user-container .navbar-container .navbar ul li.active::after {
@@ -864,7 +864,7 @@ main .view-user-container .navbar-container .navbar ul li.active::after {
     right: 0;
     width: 3px;
     height: 100%;
-    background-color: #5a30c6; /* Dark purple */
+    background-color: #007bff; /* Dark purple */
 }
 
 main .view-user-container .navbar-container .navbar ul li.active span.active{
