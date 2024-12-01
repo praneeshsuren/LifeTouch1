@@ -22,7 +22,7 @@
             </li>
             <li>
                 <a href="#">
-                    <i class='icon ph-bold ph-user'></i>
+                    <i class='icon ph-bold ph-users'></i>
                     <span class="text">Users</span>
                     <i class='arrow ph-bold ph-caret-down'></i>
                 </a>

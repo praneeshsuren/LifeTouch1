@@ -52,7 +52,7 @@
 
           <div class="user-table-header">
             <input type="text" placeholder="Search" class="search-input">
-            <button class="add-user-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/members/createMember'">+ Add Member</button>
+            <button class="add-user-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/admins/createAdmin'">+ Add Admin</button>
           </div>
 
           <div class="user-table-wrapper">

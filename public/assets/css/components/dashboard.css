@@ -26,7 +26,7 @@ main .insights .insight-card{
     padding: 1.5rem;
     border-radius: 40px;
     box-shadow: var(--box-shadow-color);
-    transition: var(--tran-03);
+    transition: var(--tran-05);
 }
 
 main .insights .insight-card:hover{
@@ -118,7 +118,7 @@ main .left-column .bar-chart {
     margin-bottom: 0;
     padding: 2rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: var(--tran-03);
+    transition: var(--tran-05);
     color: var(--hover-btn);
 }
 
@@ -191,7 +191,7 @@ main .right-column .doughnut-chart{
     margin-left: 0.5rem;
     padding: 2rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: var(--tran-03);
+    transition: var(--tran-05);
 }
 
 main .right-column .doughnut-chart .lower{
@@ -223,7 +223,7 @@ main .right-column .recent-announcements{
     margin-left: 0.5rem;
     border-radius: 40px;
     box-shadow: var(--box-shadow-color);
-    transition: var(--tran-03);
+    transition: var(--tran-05);
     color: var(--hover-btn);
 }
 
@@ -249,7 +249,7 @@ main .right-column .recent-announcements .announcement{
 
 main .right-column .recent-announcements .announcement:hover{
     transform: translateY(-10px);
-    transition: var(--tran-03);
+    transition: var(--tran-05);
 }
 
 main .right-column .recent-announcements .announcement .profile-img{
