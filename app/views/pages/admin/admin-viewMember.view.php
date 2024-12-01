@@ -18,6 +18,18 @@
   </head>
   <body>
 
+    <?php
+      if (isset($_SESSION['success'])) {
+          echo "<script>alert('" . $_SESSION['success'] . "');</script>";
+          unset($_SESSION['success']); // Clear the message after showing it
+      }
+
+      if (isset($_SESSION['error'])) {
+          echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+          unset($_SESSION['error']); // Clear the message after showing it
+      }
+    ?>
+
     <section class="sidebar">
       <?php require APPROOT.'/views/components/admin-sidebar.view.php' ?>
     </section>
@@ -148,17 +160,8 @@
 
     </main>
 
-    <?php
-      if (isset($_SESSION['success'])) {
-          echo "<script>alert('" . $_SESSION['success'] . "');</script>";
-          unset($_SESSION['success']); // Clear the message after showing it
-      }
-
-      if (isset($_SESSION['error'])) {
-          echo "<script>alert('" . $_SESSION['error'] . "');</script>";
-          unset($_SESSION['error']); // Clear the message after showing it
-      }
-    ?>
+    <!-- SCRIPT -->
+    <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
 
     <script>
       document.getElementById('changePictureBtn').addEventListener('click', () => {
@@ -183,9 +186,6 @@
         });
       });
     </script>
-
-    <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
 
   </body>
 </html>

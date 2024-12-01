@@ -93,17 +93,23 @@
                             <h3>Profile Picture</h3>
 
                             <div class="input-image-box">
+
                                 <div class="image-container">
                                     <img id="profile-image" src="<?php echo URLROOT; ?>/assets/images/no_img.jpg" alt="Member Image">
                                 </div>
+
+                                <label for="image-upload" class="image-upload-label">Upload Image</label>
+
                                 <input
                                     type="file"
+                                    id="image-upload"
                                     class="image-upload-input"
                                     name="image"
                                     onchange="display_image(this.files[0])"
                                 >
+
                             </div>
-                        
+
                         </div>
                         
 
@@ -309,75 +315,74 @@
                 display_image(file); // Call the function to update the image
             });
 
-            const sectionLinks = document.querySelectorAll('.section-link');
-            const sectionContents = document.querySelectorAll('.section-content');
-            const formControls = document.querySelectorAll('.form-control');
-            const sectionNumbers = document.querySelectorAll('.section-number');
-            const sectionLines = document.querySelectorAll('.section-line');
-            let currentSection = 0;
+            // Updated script to handle input focus
+            document.addEventListener('DOMContentLoaded', function () {
+                const sectionLinks = document.querySelectorAll('.section-link');
+                const sectionContents = document.querySelectorAll('.section-content');
+                const formInputs = document.querySelectorAll('.input-box input, .input-box select, .input-box textarea');
+                const sectionNumbers = document.querySelectorAll('.section-number');
+                const sectionLines = document.querySelectorAll('.section-line');
+                let currentSection = 0;
 
-            function updateActiveSection() {
-            for (let i = 0; i < sectionContents.length; i++) {
-                const sectionRect = sectionContents[i].getBoundingClientRect();
-                if (
-                sectionRect.top >= 0 &&
-                sectionRect.bottom <= window.innerHeight
-                ) {
-                if (currentSection !== i) {
-                    sectionLinks[currentSection].classList.remove('active');
-                    sectionLinks[i].classList.add('active');
-                    sectionNumbers[currentSection].classList.remove('active');
-                    sectionNumbers[i].classList.add('active');
-                    if (currentSection < i) {
-                    markSectionCompleted(currentSection);
+                function markSectionCompleted(sectionIndex) {
+                    sectionNumbers[sectionIndex].classList.remove('active');
+                    sectionNumbers[sectionIndex].classList.add('completed');
+                }
+
+                function highlightLine(fromIndex, toIndex) {
+                    if (fromIndex < toIndex) {
+                        sectionLines[fromIndex].classList.add('active');
+                    } else if (fromIndex > toIndex) {
+                        sectionLines[toIndex].classList.remove('active');
                     }
-                    highlightLine(currentSection, i);
-                    currentSection = i;
                 }
-                return;
+
+                function setActiveSection(sectionIndex) {
+                    sectionLinks.forEach((link, index) => {
+                        link.classList.toggle('active', index === sectionIndex);
+                        sectionNumbers[index].classList.toggle('active', index === sectionIndex);
+                    });
+                    if (currentSection < sectionIndex) {
+                        markSectionCompleted(currentSection);
+                    }
+                    highlightLine(currentSection, sectionIndex);
+                    currentSection = sectionIndex;
                 }
-            }
-            }
 
-            function markSectionCompleted(sectionIndex) {
-            sectionNumbers[sectionIndex].classList.remove('active');
-            sectionNumbers[sectionIndex].classList.add('completed');
-            }
+                function updateActiveSectionOnScroll() {
+                    sectionContents.forEach((section, index) => {
+                        const sectionRect = section.getBoundingClientRect();
+                        if (sectionRect.top <= 150 && sectionRect.bottom >= 150) {
+                            if (currentSection !== index) {
+                                setActiveSection(index);
+                            }
+                        }
+                    });
+                }
 
-            function highlightLine(fromIndex, toIndex) {
-            if (fromIndex < toIndex) {
-                sectionLines[fromIndex].classList.add('active');
-            } else if (fromIndex > toIndex) {
-                sectionLines[toIndex].classList.remove('active');
-            }
-            }
+                // Event Listener for Input Focus
+                formInputs.forEach(input => {
+                    input.addEventListener('focus', function () {
+                        const parentSection = input.closest('.section-content');
+                        if (parentSection) {
+                            const sectionId = parentSection.id;
+                            const activeSectionLink = document.querySelector(`a[href="#${sectionId}"]`);
+                            const sectionIndex = Array.from(sectionLinks).indexOf(activeSectionLink);
 
-            function handleInputFocus(event) {
-            const sectionId = event.target.closest('.section-content').id;
-            sectionLinks.forEach((link, index) => {
-                link.classList.remove('active');
-                sectionNumbers[index].classList.remove('active');
-                sectionLines[index].classList.remove('active');
-            });
-            const activeSectionLink = document.querySelector(`a[href="#${sectionId}"]`);
-            const activeSectionIndex = Array.from(sectionLinks).indexOf(activeSectionLink);
-            activeSectionLink.classList.add('active');
-            sectionNumbers[activeSectionIndex].classList.add('active');
-            if (currentSection < activeSectionIndex) {
-                markSectionCompleted(currentSection);
-            }
-            highlightLine(currentSection, activeSectionIndex);
-            currentSection = activeSectionIndex;
-            }
+                            if (sectionIndex !== -1) {
+                                setActiveSection(sectionIndex);
+                            }
+                        }
+                    });
+                });
 
-            // Event listeners
-            window.addEventListener('scroll', updateActiveSection);
-            formControls.forEach((input) => {
-            input.addEventListener('focus', handleInputFocus);
+                // Event Listener for Scroll
+                window.addEventListener('scroll', updateActiveSectionOnScroll);
+
+                // Example usage: Marking the first section as completed on load
+                markSectionCompleted(0);
             });
 
-            // Example usage: Marking the first section as completed on load
-            markSectionCompleted(0);
 
         </script>
 

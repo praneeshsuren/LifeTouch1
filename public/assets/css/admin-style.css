@@ -33,7 +33,7 @@
     transform: translateY(-50%);
     pointer-events: none;
     background: white;
-    padding: 0 5px;
+    padding: 0 10px;
     color: #999;
     transition: all 0.3s ease;
 }
@@ -103,6 +103,7 @@ input:focus {
 
 html{
     overflow-y: auto;
+    scroll-behavior: smooth;
 }
 
 body{
@@ -133,7 +134,8 @@ body.dark{
     background: var(--sidebar-color);
     padding: 24px;
     z-index: 100;
-    border-radius: 20px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
     transition: var(--tran-05);
 }
 
@@ -733,8 +735,7 @@ main .user-create-container .user-create-sidebar .section-number {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 1rem;
     color: #007bff;
     width: 30px;
     height: 30px;
@@ -807,7 +808,8 @@ main .user-form .input-container .input-box label{
 
 main .user-form .input-container .input-box input{
     width: 100%;
-    padding: 10px;
+    height: 50px;
+    padding: 0 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -842,14 +844,33 @@ main .user-form .form-container .image-container {
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid #ccc; 
-    margin-bottom: 20px;
     display: flex;
+    margin-bottom: 10px;
 }
 
 main .user-form .form-container .image-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+main .user-form .form-container .input-image-box .image-upload-input {
+    display: none;
+}
+
+main .user-form .form-container .input-image-box .image-upload-label {
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 1.5rem;
+}
+
+main .user-form .form-container .input-image-box .image-upload-label:hover {
+    background-color: #0056b3;
 }
 
 
@@ -879,7 +900,7 @@ main .user-form .input-container .input-box #gender option {
 
 main .user-form .btn-container {
     display: flex;
-    justify-content: end;
+    justify-content: center;
     align-items: center;
     border-top: 1px solid #ddd;
     padding-top: 2rem;
@@ -1022,9 +1043,10 @@ main .view-user-container .user-container .details {
   
 main .view-user-container .user-container .details .profile-picture {
     display: flex;
-    flex-direction: row;
-    align-items:end;
-    gap: 10px;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+    gap: 15px;
   }
   
 main .view-user-container .user-container .details .profile-picture img {
@@ -1043,6 +1065,7 @@ main .view-user-container .user-container .details .change-picture-btn {
     border: none;
     border-radius: 20px;
     cursor: pointer;
+    margin-left: 2rem;
   }
   
 main .view-user-container .user-container .details .change-picture-btn:hover {
