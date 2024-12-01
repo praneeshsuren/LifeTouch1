@@ -807,6 +807,7 @@ main .view-user-container {
 }
 
 main .view-user-container .navbar-container {
+    position: fixed;
     background-color: #fff;
     border-radius: 20px;
     margin-bottom: 2rem;
@@ -815,7 +816,9 @@ main .view-user-container .navbar-container {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
     width:fit-content;
+    z-index: 1000;
 }
+
   
 main .view-user-container .navbar-container .navbar ul {
     display: flex;
@@ -825,46 +828,53 @@ main .view-user-container .navbar-container .navbar ul {
     margin: 0;
   }
   
-main .view-user-container .navbar-container .navbar ul li {
-    padding: 0; /* Reset padding for the li */
-  }
-  
+  main .view-user-container .navbar-container .navbar ul li {
+    position: relative; /* Necessary for positioning the pseudo-element */
+    padding: 0; /* Reset padding */
+}
+
 main .view-user-container .navbar-container .navbar ul li a {
-    display: flex; /* Ensures the anchor fills the entire li */
+    display: flex;
     align-items: center;
     justify-content: start;
     padding: 1rem 2rem;
-    color: var(--text-color);
+    color: var(--hover-btn);
     text-decoration: none;
     font-weight: 500;
-    border-radius: 8px; /* Optional for rounded effect */
+    font-size: 0.9rem;
+    border-radius: 8px;
     transition: background-color 0.3s ease, color 0.3s ease;
-    text-wrap: nowrap;
+    position: relative; /* Needed for ::after pseudo-element */
 }
-  
+
 main .view-user-container .navbar-container .navbar ul li i{
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin-right: 10px;
 }
 
+/* Hover effect */
 main .view-user-container .navbar-container .navbar ul li a:hover {
-    background-color: #f3f7fb; /* Light purple */
-    color: #007bff; /* Purple text */
+    background-color: #f3f7fb;
+    color: #007bff;
 }
-  
+
+/* Active state for the clicked <li><a> */
 main .view-user-container .navbar-container .navbar ul li.active > a {
-    background-color: #f3f7fb; /* Light purple */
+    background-color: #f3f7fb; /* Light purple for the background */
     color: #007bff; /* Purple text */
 }
-  
-main .view-user-container .navbar-container .navbar ul li.active::after {
+
+/* Add a rightmost darkened line when the li is active */
+main .view-user-container .navbar-container .navbar ul li.active > a::after {
     content: '';
     position: absolute;
     top: 0;
-    right: 0;
-    width: 3px;
+    right: 0; /* Align to the rightmost end of the <a> element */
+    width: 4px; /* Thickness of the darkened line */
     height: 100%;
-    background-color: #007bff; /* Dark purple */
+    background-color: #007bff; /* Dark purple for the line */
+    border-radius: 0 8px 8px 0; /* Optional for rounded edge effect */
+    transition: background-color 0.3s ease;
 }
 
 main .view-user-container .navbar-container .navbar ul li.active span.active{
@@ -874,10 +884,10 @@ main .view-user-container .navbar-container .navbar ul li.active span.active{
 }
   
 main .view-user-container .user-container {
-    margin-left: 1.5rem;
+    margin-left: calc(300px);
     background-color: var(--sidebar-color);
     padding: 2rem;
-    width: 100%;
+    width: calc(100% - 300px - 2rem);
     border-radius: 20px;
 }
   
