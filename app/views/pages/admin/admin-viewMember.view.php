@@ -63,7 +63,7 @@
         
         <div class="user-container">
 
-          <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/admin/members/updateMember">
+          <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/user/member/updateMember">
 
             <div class="details">
 
@@ -146,7 +146,7 @@
             <div class="action-buttons">
 
               <button type="button" id="editBtn" class="edit-btn">Edit</button>
-              <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/members/deleteMember?id=<?php echo $data['member']->member_id; ?>';">Delete</button>
+              <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/member/deleteMember?id=<?php echo $data['member']->member_id; ?>';">Delete</button>
               <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
               <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;">Cancel</button>
 
