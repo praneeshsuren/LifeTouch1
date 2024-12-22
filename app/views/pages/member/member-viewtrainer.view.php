@@ -55,30 +55,22 @@
             </form>
       </div>
 
-      <!-- View-trianer-section-->
-        <?php
-          $trianers=[
-            ['name' => 'John', 'image' => 'image.png'],
-            ['name' => 'John', 'image' => 'image.png'],
-            ['name' => 'John', 'image' => 'image.png'],
-            ['name' => 'John', 'image' => 'image.png'],
-            ['name' => 'John', 'image' => 'image.png'],
-            ['name' => 'John', 'image' => 'image.png'],
-          ];
-          ?>
+      <!-- View-trainer-section-->
       <div class="member-view-trainer-grid-container">
-      <div class="member-view-trainer">
-        <?php foreach($trianers as $trainer):?>
-        <div class="trainer">
-          <img src="<?php echo URLROOT; ?>/assets/images/<?php echo $trainer['image']; ?>" alt="" class="trainer-image"/>
-           <h3><?php echo $trainer['name']; ?></h3>
-           <a href="<?php echo URLROOT; ?>/member/memberViewtrainerViewbtn">
-           <button class="member-view-trainer-btn">View</button>
-           </a>
+        <div class="member-view-trainer">
+          <?php if(!empty($trainer) ): ?>
+            <?php foreach($trainer as $trainerData):?>
+              <div class="trainer">
+                <img src="<?php echo URLROOT; ?>/assets/images/<?php echo htmlspecialchars($trainerData->image); ?>" alt="Trainer image" class="trainer-image"/>
+                <h3><?php echo htmlspecialchars($trainerData->first_name); ?></h3>
+                <a href="<?php echo URLROOT; ?>/member/memberViewtrainerViewbtn/<?php echo htmlspecialchars($trainerData->trainer_id); ?>">
+                  <button class="member-view-trainer-btn">View</button>
+                </a>
+              </div>
+            <?php endforeach; ?>
+          <?php endif; ?>
         </div>
-        <?php endforeach; ?>
       </div>
-        </div>
     </main>
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
   </body>

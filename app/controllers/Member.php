@@ -11,11 +11,28 @@
             $this->view(('member/member-dashboard'));
         }
         public function memberViewtrainer(){
-            $this->view('member/member-viewtrainer');
+            $trainerModel = new M_Trainer();
+            $data['trainer'] = $trainerModel->findAll();
+            $this->view('member/member-viewtrainer',$data);
         }
-        public function memberViewtrainerViewbtn(){
-            $this->view('member/member-viewtrainer-viewbtn');
+        public function memberViewtrainerViewbtn($trainerId1, $trainerId2, $trainerId3){
+            // Combine the trainer ID parts into a single string
+            $trainerId = $trainerId1 . '/' . $trainerId2 . '/' . $trainerId3;
+        
+            $trainerModel = new M_Trainer();
+            // Fetch the trainer by the combined ID
+            $trainer = $trainerModel->where(['trainer_id' => $trainerId], [], 1);
+        
+            if (!$trainer) {
+                echo "Trainer not found with ID: $trainerId";
+                redirect('member/member-viewtrainer');
+                return;
+            }
+        
+            // Pass the trainer data to the view
+            $this->view('member/member-viewtrainer-viewbtn', ['trainer' => $trainer[0]]);
         }
+        
         public function memberAnnouncements(){
             $this->view('member/member-announcements');
         }

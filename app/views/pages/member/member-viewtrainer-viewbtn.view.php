@@ -34,15 +34,15 @@
         <div class="trainerviewbtnBox">
             <div>
                 <a href="<?php echo URLROOT; ?>/member/memberTrainerbooking">
-                    <button class="trianerviewbtn-Bookreservationbtn" style="float: right; margin-top: -10px;margin-bottom:3px;">Booking Reservation</button>
+                    <button class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: -10px;margin-bottom:3px;">Booking Reservation</button>
                 </a>
             </div>
             <div class="trainerviewbtn-profile">
                 <div class="trainerviewbtn-profile-img">
-                    <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                    <img src="<?php echo URLROOT; ?>/assets/images/Trainer/<?php echo htmlspecialchars($trainer->image); ?>" alt="Trainer image">
                 </div>
                 <div class="trainerviewbtn-profile-detail">
-                    <h2>James marry</h3>
+                    <h2><?php echo htmlspecialchars($trainer->first_name); ?> <?php echo htmlspecialchars($trainer->last_name); ?></h3>
                     <p>Personal trainer</p>
                 </div>
             </div>   
@@ -50,15 +50,20 @@
                 <table>
                     <tr>
                         <td class="first"><h4>Age</h4></td>
-                        <td>30 years</td>
+                        <td><?php
+                        $dateOfBirth = new DateTime($trainer->date_of_birth); 
+                        $currentDate = new DateTime();
+                        $age = $currentDate->diff($dateOfBirth)->y;
+                        echo $age . " years";
+                        ?></td>
                     </tr>
                     <tr>
                         <td class="first"><h4>Email</h4></td>
-                        <td>jamesmary@gmail.com</td>
+                        <td><?php echo htmlspecialchars($trainer->email_address); ?></td>
                     </tr>
                     <tr>
                         <td class="first"><h4>Contact</h4></td>
-                        <td>0711234567</td>
+                        <td><?php echo htmlspecialchars($trainer->contact_number); ?></td>
                     </tr>
                     <tr>
                         <td class="first"><h4>Specification</h4></td>
