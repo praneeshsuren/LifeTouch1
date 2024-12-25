@@ -1070,8 +1070,9 @@ main > .searchbar {
     background: var(--sidebar-color);
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Prevent overflow issues */
     width: 1000px;
-    height: 700px;
+    height: 650px;
     padding: 2rem;
     border-radius: 1.5rem;
     box-shadow: var(--box-shadow-color);
@@ -1079,7 +1080,7 @@ main > .searchbar {
     position: relative; 
     margin-left:75px;
     color: var(--text-color);
-    padding-top: 100px;
+    padding-top: 50px;
 }
 
 .calendar-header {
@@ -1087,7 +1088,7 @@ main > .searchbar {
     top:0;
     left: 0;
     width: 100%;
-    height: 150px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1108,6 +1109,10 @@ main > .searchbar {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
+    color: inherit; 
+    background: none;      
+    border: none; 
 }
 
 .calendar-header .prevMonth:hover,
@@ -1118,10 +1123,13 @@ main > .searchbar {
 .calendar {
     width: 100%;
     margin:1rem 0;
+    margin-top: 2rem;
     border-collapse: collapse;
 } 
 
 .calendar th {
+    color: black;
+    font-weight: bold;
     text-align: center;
     padding: 10px;
     border: 1px solid #ddd; 
@@ -1158,16 +1166,13 @@ main > .searchbar {
     color: var(--sidebar-color);
 }
 
-.calendar td.booked{
-    font-size: 10px;
-    padding: 3px;
-    background-color:var(--hover-btn);
-    border: 0.2px solid var(--hover-btn);
-    color:var(--sidebar-color);
-    border-radius: 5px;
-    height:10px;
-    max-height: 50px;
-    overflow: hidden;
+.booked {
+    background: linear-gradient(45deg,#32CD32, #006400);
+    color: white;
+    border-radius: 1rem;
+    font-size: 1rem;
+    padding: 0 0.4rem;
+    margin:1.5rem;
 }
 
 .gotoToday {
@@ -1222,49 +1227,47 @@ main > .searchbar {
     border-radius: 0;
 }
 
-#bookingForm{
+.modal {
+    display: none; /* Hidden by default */
     position: fixed;
-    top: 0;
+    z-index: 1000;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color:var(--hover-btn);
-    opacity: 0.8;
-    z-index: 10;
-    display: none;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Black background with transparency */
 }
 
-#addBooking,
-#viewBooking{
-    display: none;
-    position: absolute;
-    width: 350px;
-    background-color: var(--sidebar-color);
-    padding: 25px;
-    z-index: 20;
-    margin: 200px 600px;
-    border-radius: 1rem;
-    color: var(--text-color);
+.modal-content {
+    background-color:var(--sidebar-color);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 10px;
 }
 
-.bookingFormbuttons {
-    justify-content: flex-end;
-    bottom: 10px; /* Space from the bottom edge */
-    right: 10px; /* Space from the right edge */
-    display: flex;
-    gap: 10px; /* Space between buttons */
+.close {
+    color:var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
-.btnClose{
-    background: linear-gradient(225deg,#3A3B3C, #fff);
-    color: white;
-    padding: 12px 20px; /* Increased padding for a larger button */
-    border: none;
-    border-radius: 20px;
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
     cursor: pointer;
-    margin-top: 1rem;
-    font-size: 1rem; 
-    transition: var(--tran-03);
+}
+.timeslot{
+    background-color:var(--primary-color);
+    color: var(--sidebar-color);
+    border-radius: 10px;
+    padding: 2px;
+    margin: 5px;
 }
 
 #btnBook{
@@ -1295,22 +1298,6 @@ main > .searchbar {
 #btnBook:hover,
 #btnDelete:hover{
     transform: scale(1.05);
-}
-
-#addBooking select#timeslot {
-    width: 100%; 
-    padding: 8px; 
-    margin: 0; 
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    font-size: 16px; 
-    color: #333; 
-    background-color: #f9f9f9; 
-    box-sizing: border-box;
-}
-
-.error{
-    border-color: #ea2027 !important;
 }
 
 /* payment page */

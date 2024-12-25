@@ -49,6 +49,24 @@
             $this->view('member/member-settings');
         }
         public function memberTrainerbooking(){
-            $this->view('member/member-trainerbooking');
-        } 
+            $month = $_GET['month'] ?? date('m');
+            $year = $_GET['year'] ?? date('Y');
+
+            // Sanitize month and year to avoid invalid values
+            $month = (int)$month;
+            $year = (int)$year;
+    
+            $bookingModel = new M_Booking();
+            $timeslotModel = new M_Timeslot();
+
+            // Fetch 
+            $calendar = $bookingModel->build_calender($month, $year);
+            $time_slots = $timeslotModel->findAll();
+
+            $this->view('member/member-trainerbooking', [
+                'calendar' => $calendar,
+                'time_slots' => $time_slots
+            ]);
+        }
+
     }

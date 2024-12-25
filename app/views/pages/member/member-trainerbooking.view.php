@@ -30,35 +30,13 @@
     </section>
     <main>
         <div class="title">
-            <h1>View Supplements</h1>
+            <h1>View Calendar</h1>
             <div class="greeting">
-            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
-        </div>
-      </div>
-        <div class="bookingBox">
-            <div class="calendar-header">
-                <div class="prevMonth">
-                    <i class="ph ph-caret-circle-left"></i>
-                </div>
-                <div class="monthYear"></div>
-                <div class="nextMonth">
-                    <i class="ph ph-caret-circle-right"></i>
-                </div>
+                <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
             </div>
-            <table class="calendar">
-                <thead>
-                    <tr>
-                        <th>Sun</th>
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
-                        <th>Sat</th>
-                    </tr>
-                </thead>
-                <tbody class="calendarBody"></tbody>
-            </table>
+        </div>
+        <div class="bookingBox">
+            <?php echo $calendar;?>
             <div class="gotoToday">
                 <div class="goto">
                     <input type="text" placeholder="mm/yyyy" class="date-input" />
@@ -66,27 +44,82 @@
                 </div>
                 <button class="todayBtn">Today</button>
             </div>
-        </div>  
+        </div> 
+        <div id="dateModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Date Details</h2>
+                <p id="modalDate"></p>
+                <div>
+                    <?php if(!empty($time_slots)): ?>
+                        <?php foreach($time_slots as $slot): ?>
+                            <button class="timeslot">
+                                <?php echo htmlspecialchars($slot->slot); ?>
+                            </button>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
     </main>
-    <div id="bookingForm"></div>
-    <div id="addBooking">
-        <h2>Add Booking</h2>
-        <select id="timeslot"></select>
-        <div class="bookingFormbuttons">
-            <button id="btnBook">Book</button>
-            <button class="btnClose">Cancel</button>
-        </div>
-    </div>
-    <div id="viewBooking">
-        <h1 id="bookingTime"></h1>
-        <div class="bookingFormbuttons">
-            <button id="btnDelete">Cancel Booking</button>
-            <button class="btnClose">Close</button>
-        </div>
-    </div>
     <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/member/calendar.js?v=<?php echo time();?>"></script>
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
-  </body>
+    <script>
+    // Helper to get query params
+    function updateCalendarParams(month, year) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('month', month);
+        url.searchParams.set('year', year);
+        window.location.href = url.toString();
+    }
+
+    // Handle Today button
+    document.querySelector('.todayBtn').addEventListener('click', () => {
+        const today = new Date();
+        const currentMonth = today.getMonth() + 1; // Months are 0-based
+        const currentYear = today.getFullYear();
+        updateCalendarParams(currentMonth, currentYear);
+    });
+
+    // Handle Go button
+    document.querySelector('.gotoBtn').addEventListener('click', () => {
+        const dateInput = document.querySelector('.date-input').value.trim();
+        const [month, year] = dateInput.split('/').map(Number);
+
+        if (
+            !isNaN(month) &&
+            !isNaN(year) &&
+            month >= 1 &&
+            month <= 12 &&
+            year >= 1000 &&
+            year <= 9999
+        ) {
+            updateCalendarParams(month, year);
+        } else {
+            alert('Invalid date format. Please enter in mm/yyyy format.');
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('dateModal');
+        const modalDate = document.getElementById('modalDate');
+        const closeBtn = document.querySelector('.close');
+
+        // Add event listener to all clickable calendar cells
+        document.querySelectorAll('.calendar .clickable').forEach(cell => {
+            cell.addEventListener('click', function () {
+                const selectedDate = this.getAttribute('data-date');
+                modalDate.textContent = `Selected Date: ${selectedDate}`;
+                modal.style.display = 'block';
+            });
+        });
+
+        // Close the modal when clicking on the 'x' button
+        closeBtn.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+    });
+</script>
+
+    </body>
 </html>
 

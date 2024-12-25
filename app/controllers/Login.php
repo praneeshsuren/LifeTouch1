@@ -44,6 +44,7 @@ class Login extends Controller {
                             $_SESSION['role'] = 'member';
                             $_SESSION['first_name'] = $memberDetails->first_name;
                             $_SESSION['last_name'] = $memberDetails->last_name;
+                            $_SESSION['member_id'] = $memberDetails->member_id; // Store member_id in session
 
                             // Redirect to member dashboard
                             redirect('member');
