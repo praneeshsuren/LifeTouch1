@@ -49,6 +49,8 @@
             $this->view('member/member-settings');
         }
         public function memberTrainerbooking(){
+            $errors = [];
+
             $month = $_GET['month'] ?? date('m');
             $year = $_GET['year'] ?? date('Y');
 
@@ -59,13 +61,35 @@
             $bookingModel = new M_Booking();
             $timeslotModel = new M_Timeslot();
 
+            if($_SERVER['REQUEST_METHOD'] === 'POST'){
+                $data = [
+                    'booking_date' => $_POST['selectedDate'] ?? null,
+                    'time_slot' => $_POST['selectedTimeslot'] ?? null,
+                    'status' => 'pending',
+                ];
+
+                if ($bookingModel->validate($data) && empty($errors)) {
+                    $bookingModel->insert($data);
+
+                    header('Location: memberTrainerbooking');
+                    exit();
+                } else {
+                    $errors = array_merge($errors, $bookingModel->getErrors());
+                }
+
+                header("Location: " . URLROOT . "/member/memberTrainerbooking?month=$month&year=$year");
+                exit;
+
+            }
+
             // Fetch 
             $calendar = $bookingModel->build_calender($month, $year);
             $time_slots = $timeslotModel->findAll();
 
             $this->view('member/member-trainerbooking', [
                 'calendar' => $calendar,
-                'time_slots' => $time_slots
+                'time_slots' => $time_slots,
+                'errors' => $errors ?? null,
             ]);
         }
 

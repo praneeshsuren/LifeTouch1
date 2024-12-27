@@ -20,8 +20,8 @@
                 $this->errors['booking_date'] = 'Date is required';
             } 
     
-            if (empty($data['timeslot'])) {
-                $this->errors['timeslot'] = 'Time slot is required';
+            if (empty($data['time_slot'])) {
+                $this->errors['time_slot'] = 'Time slot is required';
             } 
             
             if (!in_array($data['status'], ['pending', 'approved', 'rejected'])) {
@@ -41,7 +41,7 @@
         //calendar
         public function build_calender($month,$year) {
             // Query to fetch bookings for the given month and year
-            $query = "SELECT booking_date FROM $this->table WHERE YEAR(booking_date) = ? AND MONTH(booking_date) = ?";
+            $query = "SELECT booking_date, time_slot, status FROM $this->table WHERE YEAR(booking_date) = ? AND MONTH(booking_date) = ?";
             $bookingsData = $this->query($query, [$year, $month]);
 
 
@@ -49,7 +49,7 @@
             $bookings = [];
             if ($bookingsData) {
                 foreach ($bookingsData as $row) {
-                    $bookings[] = $row->booking_date;
+                    $bookings[$row->booking_date][$row->time_slot] = $row->status;
                 }
             }
             $daysOfWeek = array('Sun','Mon','Tues','Wed','Thurs','Fri','Sat');
@@ -107,10 +107,20 @@
                 $date = "$year-$monthRel-$currentDayRel";
                 $today = ($date == $dateToday) ? 'today' : '';
 
-                if(in_array($date, $bookings)){
-                    $calendar .="<td class='clickable $today' data-date='$date'>$currentDay</br><a class='booked'>Booked</a></td>";
-                } else{
-                 $calendar .= "<td class='clickable $today' data-date='$date'>$currentDay</td>";
+                // Check if there are bookings for this date and time slot
+                if (isset($bookings[$date])) {
+                    foreach ($bookings[$date] as $timeSlot => $status) {
+                        if ($status === 'rejected') {
+                            $calendar .= "<td class='clickable $today' data-date='$date'>$currentDay</td>";
+                        } else {
+                        $calendar .= "<td class='clickable $today' data-date='$date' data-timeslot='$timeSlot'>";
+                        $calendar .= "$currentDay <br><span class='$status'>" . ucfirst($status) . "</span>";
+                        $calendar .= "</td>";
+                        }
+                    }
+                } else {
+                    // If no bookings, just display the date
+                    $calendar .= "<td class='clickable $today' data-date='$date'>$currentDay</td>";
                 }
 
                 $currentDay++;

@@ -1169,13 +1169,22 @@ main > .searchbar {
     color: var(--sidebar-color);
 }
 
-.booked {
-    background: linear-gradient(45deg,#32CD32, #006400);
+td .pending {
+    background: linear-gradient(45deg, #FFA500, #FF4500);
     color: white;
     border-radius: 1rem;
     font-size: 1rem;
     padding: 0 0.4rem;
     margin:1.5rem;
+}
+
+td .booked {
+    background: linear-gradient(45deg, #32CD32, #006400) !important;
+    color: white !important;
+    border-radius: 1rem !important;
+    font-size: 1rem !important;
+    padding: 0 0.4rem !important;
+    margin: 1.5rem !important;
 }
 
 .gotoToday {
@@ -1277,6 +1286,10 @@ main > .searchbar {
     border-radius: 10px;
     padding: 2px;
     margin: 5px;
+}
+
+.timeslot.selectedTimeslot {
+    background: linear-gradient(45deg,#32CD32, #006400);
 }
 
 .input{

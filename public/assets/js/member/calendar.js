@@ -56,6 +56,11 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             const timeslot = this.getAttribute('data-timeslot'); // Get timeslot from clicked button
             selectedTimeslotInput.value = timeslot; // Update input field with selected timeslot
+
+            document.querySelectorAll('.timeslot').forEach(btn => btn.classList.remove('selectedTimeslot'));
+        
+            // Add 'selected' class to the clicked button
+            this.classList.add('selectedTimeslot');
         });
     });
 
@@ -64,4 +69,6 @@ document.addEventListener('DOMContentLoaded', function () {
     closeBtn.addEventListener('click', function () {
         modal.style.display = 'none';
     });
+
 });
+

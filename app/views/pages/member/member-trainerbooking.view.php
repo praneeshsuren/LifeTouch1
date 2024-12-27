@@ -54,7 +54,7 @@
                 <div class="timeslots">
                     <?php if(!empty($time_slots)): ?>
                         <?php foreach($time_slots as $slot): ?>
-                            <button class="timeslot bookedTimeslot" data-timeslot="<?php echo htmlspecialchars($slot->slot); ?>">
+                            <button class="timeslot" data-timeslot="<?php echo htmlspecialchars($slot->slot); ?>">
                                 <?php echo htmlspecialchars($slot->slot); ?>
                             </button>
                         <?php endforeach; ?>
