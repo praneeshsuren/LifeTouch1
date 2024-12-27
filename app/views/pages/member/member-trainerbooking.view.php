@@ -45,81 +45,45 @@
                 <button class="todayBtn">Today</button>
             </div>
         </div> 
-        <div id="dateModal" class="modal">
+        <div id="bookingModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <h2>Date Details</h2>
-                <p id="modalDate"></p>
-                <div>
+                <div class="title">
+                    <h3>Booking : <span id="modalDate"></span></h3>
+                </div>
+                <div class="timeslots">
                     <?php if(!empty($time_slots)): ?>
                         <?php foreach($time_slots as $slot): ?>
-                            <button class="timeslot">
+                            <button class="timeslot bookedTimeslot" data-timeslot="<?php echo htmlspecialchars($slot->slot); ?>">
                                 <?php echo htmlspecialchars($slot->slot); ?>
                             </button>
                         <?php endforeach; ?>
                     <?php endif; ?>
+                </div>
+                <div class="bookingForm">
+                    <form action="" method="post">
+                        <div class="input">
+                            <div class="input-container">
+                                <label for="selectedDate" class="label"><i class="ph ph-calendar"></i>Date</label>
+                                <input type="text" id="selectedDate" readonly name="selectedDate" required>
+                            </div>
+                            <div class="input-container">
+                                <label for="selectedTimeslot" class="label"><i class="ph ph-clock-countdown"></i>Time</label>
+                                <input type="text" id="selectedTimeslot" readonly name="selectedTimeslot" placeholder="Select the Timeslot" required>
+                            </div>
+                        </div>
+                        <div class="book-btn">
+                            <button type="submit" id="btnBook" name="submit">Book</button>
+                        </div>
+                        </div> 
+                    </form>
                 </div>
             </div>
         </div>
     </main>
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
-    <script>
-    // Helper to get query params
-    function updateCalendarParams(month, year) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('month', month);
-        url.searchParams.set('year', year);
-        window.location.href = url.toString();
-    }
-
-    // Handle Today button
-    document.querySelector('.todayBtn').addEventListener('click', () => {
-        const today = new Date();
-        const currentMonth = today.getMonth() + 1; // Months are 0-based
-        const currentYear = today.getFullYear();
-        updateCalendarParams(currentMonth, currentYear);
-    });
-
-    // Handle Go button
-    document.querySelector('.gotoBtn').addEventListener('click', () => {
-        const dateInput = document.querySelector('.date-input').value.trim();
-        const [month, year] = dateInput.split('/').map(Number);
-
-        if (
-            !isNaN(month) &&
-            !isNaN(year) &&
-            month >= 1 &&
-            month <= 12 &&
-            year >= 1000 &&
-            year <= 9999
-        ) {
-            updateCalendarParams(month, year);
-        } else {
-            alert('Invalid date format. Please enter in mm/yyyy format.');
-        }
-    });
-    document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('dateModal');
-        const modalDate = document.getElementById('modalDate');
-        const closeBtn = document.querySelector('.close');
-
-        // Add event listener to all clickable calendar cells
-        document.querySelectorAll('.calendar .clickable').forEach(cell => {
-            cell.addEventListener('click', function () {
-                const selectedDate = this.getAttribute('data-date');
-                modalDate.textContent = `Selected Date: ${selectedDate}`;
-                modal.style.display = 'block';
-            });
-        });
-
-        // Close the modal when clicking on the 'x' button
-        closeBtn.addEventListener('click', function () {
-            modal.style.display = 'none';
-        });
-    });
-</script>
-
+    <script src="<?php echo URLROOT; ?>/assets/js/member/calendar.js?v=<?php echo time();?>"></script>
     </body>
 </html>
 
