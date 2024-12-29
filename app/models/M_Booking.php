@@ -5,22 +5,32 @@
 
         use Model;
 
-        protected $table = 'trainer_booking';
+        protected $table = 'booking';
         protected $allowedColumns = [
             'booking_id',
+            'member_id',
+            'trainer_id',
             'booking_date',
-            'time_slot',
+            'timeslot_id',
             'status'
         ];
 
         public function validate($data) {
             $this->errors = [];
+
+            if (empty($data['member_id'])) {
+                $this->errors['member_id'] = 'member_id is required';
+            } 
+
+            if (empty($data['trainer_id'])) {
+                $this->errors['trainer_id'] = 'trainer_id is required';
+            } 
         
             if (empty($data['booking_date'])) {
                 $this->errors['booking_date'] = 'Date is required';
             } 
     
-            if (empty($data['time_slot'])) {
+            if (empty($data['timeslot_id'])) {
                 $this->errors['time_slot'] = 'Time slot is required';
             } 
             
@@ -39,21 +49,25 @@
         }
 
         //calendar
-        public function build_calender($month,$year) {
+        public function build_calender($month,$year, $member_id, $trainer_id) {
             // Query to fetch bookings for the given month and year
-            $query = "SELECT booking_date, time_slot, status FROM $this->table WHERE YEAR(booking_date) = ? AND MONTH(booking_date) = ?";
-            $bookingsData = $this->query($query, [$year, $month]);
-
+            $query = "SELECT booking_date, timeslot_id, status 
+              FROM $this->table 
+              WHERE YEAR(booking_date) = ? 
+              AND MONTH(booking_date) = ? 
+              AND member_id = ? 
+              AND trainer_id = ? ";
+            $bookingsData = $this->query($query, [$year, $month, $member_id, $trainer_id]);
 
             // Extract booking dates into an array
             $bookings = [];
             if ($bookingsData) {
                 foreach ($bookingsData as $row) {
-                    $bookings[$row->booking_date][$row->time_slot] = $row->status;
+                    $bookings[$row->booking_date][$row->timeslot_id] = $row->status;
                 }
             }
             $daysOfWeek = array('Sun','Mon','Tues','Wed','Thurs','Fri','Sat');
-            
+           
             $firstDayOfMonth = mktime(0,0,0,$month,1,$year);//firstday of month tht is in thee argument of this function
             $dateComponents = getdate($firstDayOfMonth);
             $numberDays = date('t',$firstDayOfMonth); //number of days of month
@@ -80,9 +94,9 @@
 
             //calendar html
             $calendar = "<div class='calendar-header'>";
-            $calendar .="<a class='prevMonth' href='?month=".$prevMonth."&year=".$prevYear."' aria-label='Previous Month'><i class='ph ph-caret-circle-left'></i></a>";
+            $calendar .="<a class='prevMonth' href='?month=".$prevMonth."&year=".$prevYear."&trainer_id=".$trainer_id."' aria-label='Previous Month'><i class='ph ph-caret-circle-left'></i></a>";
             $calendar .="<div class='monthYear'>$monthName $year</div>";
-            $calendar .="<a class='nextMonth' href='?month=".$nextMonth."&year=".$nextYear."' aria-label='Next Month'><i class='ph ph-caret-circle-right'></i></a>";
+            $calendar .="<a class='nextMonth' href='?month=".$nextMonth."&year=".$nextYear."&trainer_id=".$trainer_id."' aria-label='Next Month'><i class='ph ph-caret-circle-right'></i></a>";
             $calendar .="</div><table class='calendar'>";
             //calendar table
             $calendar .="<tr>";

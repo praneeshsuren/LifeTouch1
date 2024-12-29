@@ -1,4 +1,5 @@
 // Helper to get query params
+document.addEventListener('DOMContentLoaded', function () {
 function updateCalendarParams(month, year) {
     const url = new URL(window.location.href);
     url.searchParams.set('month', month);
@@ -32,14 +33,14 @@ document.querySelector('.gotoBtn').addEventListener('click', () => {
         alert('Invalid date format. Please enter in mm/yyyy format.');
     }
 });
-document.addEventListener('DOMContentLoaded', function () {
+
     const modal = document.getElementById('bookingModal');
     const modalDate = document.getElementById('modalDate');
     const closeBtn = document.querySelector('.close');
     const selectedDateInput = document.getElementById('selectedDate');
     const selectedTimeslotInput = document.getElementById('selectedTimeslot');
         
-    // Add event listener to all clickable calendar cells
+    // // Add event listener to all clickable calendar cells
     document.querySelectorAll('.calendar .clickable').forEach(cell => {cell.addEventListener('click', function () {
             const selectedDate = this.getAttribute('data-date');
             modalDate.textContent = selectedDate;
@@ -55,10 +56,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.timeslot').forEach(button => {
         button.addEventListener('click', function () {
             const timeslot = this.getAttribute('data-timeslot'); // Get timeslot from clicked button
+            const timeslotId = this.getAttribute('data-timeslot-id'); 
             selectedTimeslotInput.value = timeslot; // Update input field with selected timeslot
+            document.getElementById('selectedTimeslotId').value = timeslotId;
 
             document.querySelectorAll('.timeslot').forEach(btn => btn.classList.remove('selectedTimeslot'));
-        
             // Add 'selected' class to the clicked button
             this.classList.add('selectedTimeslot');
         });
@@ -71,4 +73,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
 

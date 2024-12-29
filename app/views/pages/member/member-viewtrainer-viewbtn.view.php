@@ -33,7 +33,7 @@
         </div>
         <div class="trainerviewbtnBox">
             <div>
-                <a href="<?php echo URLROOT; ?>/member/memberTrainerbooking">
+                <a href="<?php echo URLROOT; ?>/member/memberTrainerbooking?trainer_id=<?php echo htmlspecialchars($trainer->trainer_id); ?>">
                     <button class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: -10px;margin-bottom:3px;">Booking Reservation</button>
                 </a>
             </div>

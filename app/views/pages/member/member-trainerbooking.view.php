@@ -61,17 +61,27 @@
                     <?php endif; ?>
                 </div>
                 <div class="bookingForm">
-                    <form action="" method="post">
+                    <form action="<?php echo URLROOT;?>/member/memberTrainerbooking_create" method="POST">
                         <div class="input">
+                            <div class="input-container">
+                                <label for="loggedMember" class="label"><i class="ph ph-person"></i>Member</label>
+                                <input type="text" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_first_name); ?>" required>
+                            </div>
+                            <div class="input-container">
+                                <label for="selectedTrainer" class="label"><i class="ph ph-barbell"></i>Trainer</label>
+                                <input type="text" id="selectedTrainer" readonly name="selectedTrainer" value="<?php echo htmlspecialchars($trainer_first_name); ?>"required>
+                            </div>
                             <div class="input-container">
                                 <label for="selectedDate" class="label"><i class="ph ph-calendar"></i>Date</label>
                                 <input type="text" id="selectedDate" readonly name="selectedDate" required>
                             </div>
                             <div class="input-container">
                                 <label for="selectedTimeslot" class="label"><i class="ph ph-clock-countdown"></i>Time</label>
-                                <input type="text" id="selectedTimeslot" readonly name="selectedTimeslot" placeholder="Select the Timeslot" required>
+                                <input type="text" id="selectedTimeslot" readonly name="selectedTimeslot" placeholder="Select the Timeslot" required>  
                             </div>
                         </div>
+                        <input type="hidden" id="selectedTimeslotId" readonly name="selectedTimeslotId" value="" required>
+                        <input type="hidden" id="selectedTrainerId" readonly name="selectedTrainerId" value="<?php echo htmlspecialchars($trainer_id); ?>"required>
                         <div class="book-btn">
                             <button type="submit" id="btnBook" name="submit">Book</button>
                         </div>
