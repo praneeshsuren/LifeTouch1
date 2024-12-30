@@ -54,22 +54,23 @@
                 <div class="timeslots">
                     <?php if(!empty($time_slots)): ?>
                         <?php foreach($time_slots as $slot): ?>
-                            <button class="timeslot" data-timeslot="<?php echo htmlspecialchars($slot->slot); ?>">
+                            <button class="timeslot" data-timeslot="<?php echo htmlspecialchars($slot->slot); ?>"
+                            data-timeslot-id="<?php echo htmlspecialchars($slot->id); ?>">
                                 <?php echo htmlspecialchars($slot->slot); ?>
                             </button>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
                 <div class="bookingForm">
-                    <form action="<?php echo URLROOT;?>/member/memberTrainerbooking_create" method="POST">
+                    <form action="<?php echo URLROOT;?>/member/memberTrainerbooking" method="POST">
                         <div class="input">
                             <div class="input-container">
-                                <label for="loggedMember" class="label"><i class="ph ph-person"></i>Member</label>
-                                <input type="text" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_first_name); ?>" required>
+                                <label for="loggedMember" class="label"><i class="ph ph-barbell"></i>Member</label>
+                                <input type="text" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_id); ?>"required>
                             </div>
                             <div class="input-container">
-                                <label for="selectedTrainer" class="label"><i class="ph ph-barbell"></i>Trainer</label>
-                                <input type="text" id="selectedTrainer" readonly name="selectedTrainer" value="<?php echo htmlspecialchars($trainer_first_name); ?>"required>
+                                <label for="selectedTrainerId" class="label"><i class="ph ph-barbell"></i>Trainer</label>
+                                <input type="text" id="selectedTrainerId" readonly name="selectedTrainerId" value="<?php echo htmlspecialchars($trainer_id); ?>"required>
                             </div>
                             <div class="input-container">
                                 <label for="selectedDate" class="label"><i class="ph ph-calendar"></i>Date</label>
@@ -77,17 +78,16 @@
                             </div>
                             <div class="input-container">
                                 <label for="selectedTimeslot" class="label"><i class="ph ph-clock-countdown"></i>Time</label>
-                                <input type="text" id="selectedTimeslot" readonly name="selectedTimeslot" placeholder="Select the Timeslot" required>  
+                                <input type="text" id="selectedTimeslot" readonly name="selectedTimeslot" placeholder="Select the Timeslot" required> 
+                                <input type="text" id="selectedTimeslotId" readonly name="selectedTimeslotId" required> 
                             </div>
                         </div>
-                        <input type="hidden" id="selectedTimeslotId" readonly name="selectedTimeslotId" value="" required>
-                        <input type="hidden" id="selectedTrainerId" readonly name="selectedTrainerId" value="<?php echo htmlspecialchars($trainer_id); ?>"required>
+                        
                         <div class="book-btn">
                             <button type="submit" id="btnBook" name="submit">Book</button>
                         </div>
-                        </div> 
                     </form>
-                </div>
+                </div> 
             </div>
         </div>
     </main>
