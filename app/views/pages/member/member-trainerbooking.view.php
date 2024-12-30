@@ -64,25 +64,18 @@
                 <div class="bookingForm">
                     <form action="<?php echo URLROOT;?>/member/memberTrainerbooking" method="POST">
                         <div class="input">
-                            <div class="input-container">
-                                <label for="loggedMember" class="label"><i class="ph ph-barbell"></i>Member</label>
-                                <input type="text" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_id); ?>"required>
-                            </div>
-                            <div class="input-container">
-                                <label for="selectedTrainerId" class="label"><i class="ph ph-barbell"></i>Trainer</label>
-                                <input type="text" id="selectedTrainerId" readonly name="selectedTrainerId" value="<?php echo htmlspecialchars($trainer_id); ?>"required>
-                            </div>
+                            <input type="hidden" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_id); ?>"required>
+                            <input type="hidden" id="selectedTrainerId" readonly name="selectedTrainerId" value="<?php echo htmlspecialchars($trainer_id); ?>"required>
+                            <input type="hidden" id="selectedTimeslotId" readonly name="selectedTimeslotId" required> 
                             <div class="input-container">
                                 <label for="selectedDate" class="label"><i class="ph ph-calendar"></i>Date</label>
                                 <input type="text" id="selectedDate" readonly name="selectedDate" required>
                             </div>
                             <div class="input-container">
                                 <label for="selectedTimeslot" class="label"><i class="ph ph-clock-countdown"></i>Time</label>
-                                <input type="text" id="selectedTimeslot" readonly name="selectedTimeslot" placeholder="Select the Timeslot" required> 
-                                <input type="text" id="selectedTimeslotId" readonly name="selectedTimeslotId" required> 
+                                <input type="text" id="selectedTimeslot" readonly name="selectedTimeslot" placeholder="Select the Timeslot" required>  
                             </div>
                         </div>
-                        
                         <div class="book-btn">
                             <button type="submit" id="btnBook" name="submit">Book</button>
                         </div>
