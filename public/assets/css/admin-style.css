@@ -109,7 +109,7 @@ html{
 body{
     height: 100vh;
     background: var(--body-color);
-    transition: var(--tran-02);
+    transition: var(--tran-05);
 }
 
 body.dark{
@@ -608,7 +608,7 @@ main .table-container .user-table-wrapper {
   }
 
 main .table-container .user-table-wrapper:hover {
-    overflow: auto; /* Show scrollbars when hovering over the container */
+    overflow: auto;
   }
 
 main .table-container .user-table-wrapper .user-table {
@@ -866,7 +866,7 @@ main .user-form .form-container .input-image-box .image-upload-label {
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    margin-left: 1.5rem;
+    margin-left: 2rem;
 }
 
 main .user-form .form-container .input-image-box .image-upload-label:hover {
@@ -948,7 +948,7 @@ main .view-user-container {
 }
 
 main .view-user-container .navbar-container {
-    position: fixed;
+    position: absolute;
     background-color: #fff;
     border-radius: 20px;
     margin-bottom: 2rem;
