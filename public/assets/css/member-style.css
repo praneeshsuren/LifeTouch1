@@ -16,7 +16,8 @@
     --alert-color: red;
     --hover-btn: #000;
     --box-shadow-color: 0px 10px 8px rgba(0, 0, 0, 0.1);
-
+    --modalbg-colour:rgba(0, 0, 0, 0.4);
+    
     --tran-02: all 0.2s ease;
     --tran-03: all 0.3s ease;
     --tran-04: all 0.4s ease;
@@ -39,6 +40,7 @@ body.dark{
     --text-color: #CCC;
     --hover-btn: #FFF;
     --box-shadow-color: 0px 10px 8px rgba(255, 255, 255, 0.1);
+    --modalbg-colour:rgba(255,255,255,0.4);
 }
 /* sidebar */
 .sidebar{ 
@@ -396,7 +398,8 @@ main{
     gap: 1.6rem;
 }
 
-main > .title{
+main > .title,
+.title{
     grid-column: 1 / -1;
     grid-row: 1;
     display: flex;
@@ -1047,7 +1050,7 @@ main > .searchbar {
     }
 }
 
-.trianerviewbtn-Bookreservationbtn{
+.trainerviewbtn-Bookreservationbtn{
     background-color: var(--primary-color);
     color:white;
     padding: 10px; /* Increased padding for a larger button */
@@ -1059,7 +1062,7 @@ main > .searchbar {
     transition: var(--tran-03);
 }
 
-.trianerviewbtn-Bookreservationbtn:hover{
+.trainerviewbtn-Bookreservationbtn:hover{
     color:white;
     background: var(--primary-color);
     transform: scale(1.05);
@@ -1070,8 +1073,9 @@ main > .searchbar {
     background: var(--sidebar-color);
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Prevent overflow issues */
     width: 1000px;
-    height: 700px;
+    height: 650px;
     padding: 2rem;
     border-radius: 1.5rem;
     box-shadow: var(--box-shadow-color);
@@ -1079,7 +1083,7 @@ main > .searchbar {
     position: relative; 
     margin-left:75px;
     color: var(--text-color);
-    padding-top: 100px;
+    padding-top: 50px;
 }
 
 .calendar-header {
@@ -1087,7 +1091,7 @@ main > .searchbar {
     top:0;
     left: 0;
     width: 100%;
-    height: 150px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1108,6 +1112,10 @@ main > .searchbar {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
+    color: inherit; 
+    background: none;      
+    border: none; 
 }
 
 .calendar-header .prevMonth:hover,
@@ -1118,10 +1126,13 @@ main > .searchbar {
 .calendar {
     width: 100%;
     margin:1rem 0;
+    margin-top: 2rem;
     border-collapse: collapse;
 } 
 
 .calendar th {
+    color: black;
+    font-weight: bold;
     text-align: center;
     padding: 10px;
     border: 1px solid #ddd; 
@@ -1158,16 +1169,22 @@ main > .searchbar {
     color: var(--sidebar-color);
 }
 
-.calendar td.booked{
-    font-size: 10px;
-    padding: 3px;
-    background-color:var(--hover-btn);
-    border: 0.2px solid var(--hover-btn);
-    color:var(--sidebar-color);
-    border-radius: 5px;
-    height:10px;
-    max-height: 50px;
-    overflow: hidden;
+td .pending {
+    background: linear-gradient(45deg, #FFA500, #FF4500);
+    color: white;
+    border-radius: 1rem;
+    font-size: 1rem;
+    padding: 0 0.4rem;
+    margin:1.5rem;
+}
+
+td .booked {
+    background: linear-gradient(45deg, #32CD32, #006400) !important;
+    color: white !important;
+    border-radius: 1rem !important;
+    font-size: 1rem !important;
+    padding: 0 0.4rem !important;
+    margin: 1.5rem !important;
 }
 
 .gotoToday {
@@ -1222,59 +1239,105 @@ main > .searchbar {
     border-radius: 0;
 }
 
-#bookingForm{
+.modal {
+    display: none; /* Hidden by default */
     position: fixed;
-    top: 0;
+    z-index: 1000;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color:var(--hover-btn);
-    opacity: 0.8;
-    z-index: 10;
-    display: none;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color:var(--modalbg-colour); 
 }
 
-#addBooking,
-#viewBooking{
-    display: none;
+.modal-content {
     position: absolute;
-    width: 350px;
-    background-color: var(--sidebar-color);
-    padding: 25px;
-    z-index: 20;
-    margin: 200px 600px;
-    border-radius: 1rem;
-    color: var(--text-color);
+    top: 50%;
+    left: 50%;
+    transform: translate(-30%, -120%); /* Center the modal */
+    background-color:var(--sidebar-color);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px; /* Limit modal width */
+    max-height: 90%; /* Prevent it from overflowing */
+    overflow-y: auto; /* Add scroll only if content overflows */
+    border-radius: 10px;
 }
 
-.bookingFormbuttons {
-    justify-content: flex-end;
-    bottom: 10px; /* Space from the bottom edge */
-    right: 10px; /* Space from the right edge */
-    display: flex;
-    gap: 10px; /* Space between buttons */
+.close {
+    color:var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
-.btnClose{
-    background: linear-gradient(225deg,#3A3B3C, #fff);
-    color: white;
-    padding: 12px 20px; /* Increased padding for a larger button */
-    border: none;
-    border-radius: 20px;
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
     cursor: pointer;
-    margin-top: 1rem;
-    font-size: 1rem; 
-    transition: var(--tran-03);
+}
+.timeslot{
+    background-color:var(--primary-color);
+    color: #FFF;
+    border-radius: 10px;
+    padding: 2px;
+    margin: 5px;
 }
 
-#btnBook{
+.timeslot.selectedTimeslot {
+    background: linear-gradient(45deg,#32CD32, #006400);
+}
+
+.input{
+    border-top: 1px solid #ccc;
+    margin-top:10px;
+    padding-top: 10px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem; /* Space between input rows */
+}
+
+.input-container label {
+    width: 120px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    color: var(--hover-btn);
+}
+.input-container i {
+    margin-right: 8px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.input-container input[type="text"] {
+    font-size: 15px;
+    width: 100%;
+    background-color: #ccc;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+}
+
+.book-btn {
+    text-align: right; /* Align the button to the right */
+    margin-top: 10px;
+}
+
+.book-btn button {
     background: linear-gradient(45deg,#32CD32, #006400);
     color: white;
-    padding: 12px 20px; /* Increased padding for a larger button */
+    padding: 10px 20px; /* Increased padding for a larger button */
     border: none;
     border-radius: 20px;
     cursor: pointer;
-    margin-top: 1rem;
     font-size: 1rem; 
     transition: var(--tran-03); 
 }
@@ -1292,25 +1355,9 @@ main > .searchbar {
 }
 
 .btnClose:hover,
-#btnBook:hover,
+.book-btn button:hover,
 #btnDelete:hover{
     transform: scale(1.05);
-}
-
-#addBooking select#timeslot {
-    width: 100%; 
-    padding: 8px; 
-    margin: 0; 
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    font-size: 16px; 
-    color: #333; 
-    background-color: #f9f9f9; 
-    box-sizing: border-box;
-}
-
-.error{
-    border-color: #ea2027 !important;
 }
 
 /* payment page */
