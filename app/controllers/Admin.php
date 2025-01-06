@@ -154,33 +154,30 @@
                     // Load the form view to create a receptionist
                     $this->view('admin/admin-createReceptionist');
                     break;
-
+        
                 case 'viewReceptionist':
-                    // Load the view to view a receptionist
+                    // Return specific receptionist data as JSON
                     $receptionistModel = new M_Receptionist;
                     $receptionist = $receptionistModel->findByReceptionistId($_GET['id']);
-        
-                    $data = [
-                        'receptionist' => $receptionist
-                    ];
-        
-                    $this->view('admin/admin-viewReceptionist', $data);
-                    break;          
-                                       
+                    header('Content-Type: application/json');
+                    $this->view('admin/admin-viewReceptionist');
+                    break;
         
                 default:
-                    // Fetch all receptionists and pass to the view
+                    $this->view('admin/admin-receptionists');
+                    break;
+
+                case 'api':
+                    // Return all receptionists data as JSON
                     $receptionistModel = new M_Receptionist;
-                    $receptionists = $receptionistModel->findAll('created_at');
-        
-                    $data = [
-                        'receptionists' => $receptionists
-                    ];
-        
-                    $this->view('admin/admin-receptionists', $data);
+                    $receptionists = $receptionistModel->findAll('receptionist_id');
+                    header('Content-Type: application/json');
+                    echo json_encode($receptionists);
                     break;
             }
         }
+        
+        
 
         public function managers($action = null) {
             switch ($action) {

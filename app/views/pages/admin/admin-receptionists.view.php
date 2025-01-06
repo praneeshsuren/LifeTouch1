@@ -74,29 +74,7 @@
                   </tr>
               </thead>
               <tbody>
-                <?php if (!empty($data['receptionists'])): ?>
-                  <?php foreach ($data['receptionists'] as $receptionist) : ?>
-                    <tr onclick="window.location.href='<?php echo URLROOT; ?>/admin/receptionists/viewReceptionist?id=<?php echo $receptionist->receptionist_id; ?>';" style="cursor: pointer;">
-                        <td><?php echo $receptionist->receptionist_id; ?></td>
-                        <td>
-                          <img src="<?php echo URLROOT; ?>/assets/images/receptionist/<?php echo !empty($receptionist->image) ? $receptionist->image : 'default-placeholder.jpg'; ?>" alt="receptionist Picture" class="user-image">
-                        </td>
-                        <td><?php echo $receptionist->first_name; ?></td>
-                        <td><?php echo $receptionist->last_name; ?></td>
-                        <td><?php echo $receptionist->NIC_no; ?></td>
-                        <td><?php echo $receptionist->gender; ?></td>
-                        <td><?php echo $receptionist->date_of_birth; ?></td>
-                        <td><?php echo calculateAge($receptionist->date_of_birth); ?></td>
-                        <td><?php echo $receptionist->home_address; ?></td>
-                        <td><?php echo $receptionist->email_address; ?></td>
-                        <td><?php echo $receptionist->contact_number; ?></td>
-                    </tr>
-                  <?php endforeach; ?>
-                  <?php else: ?>
-                    <tr>
-                        <td colspan="11" style="text-align: center;">No Receptionists available</td>
-                    </tr>
-                  <?php endif; ?>
+                <!-- Data will be dynamically populated by JS -->
               </tbody>
             </table>
           </div>
@@ -107,6 +85,78 @@
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tableBody = document.querySelector('.user-table tbody');
+
+  // Fetch data from the API
+  fetch('<?php echo URLROOT; ?>/admin/receptionists/api')
+    .then(response => {
+      console.log('Response Status:', response.status); // Log response status
+      return response.json();
+    })
+    .then(data => {
+      console.log('Fetched Data:', data); // Log the data received
+      if (Array.isArray(data) && data.length > 0) {
+        data.forEach(receptionist => {
+          console.log('Receptionist:', receptionist); // Log each receptionist data
+          const row = document.createElement('tr');
+          row.style.cursor = 'pointer';
+          row.onclick = () => {
+            window.location.href = `<?php echo URLROOT; ?>/admin/receptionists/viewReceptionist?id=${receptionist.receptionist_id}`;
+          };
+
+          row.innerHTML = `
+            <td>${receptionist.receptionist_id}</td>
+            <td>
+              <img src="<?php echo URLROOT; ?>/assets/images/receptionist/${receptionist.image || 'default-placeholder.jpg'}" alt="Receptionist Picture" class="user-image">
+            </td>
+            <td>${receptionist.first_name}</td>
+            <td>${receptionist.last_name}</td>
+            <td>${receptionist.NIC_no}</td>
+            <td>${receptionist.gender}</td>
+            <td>${receptionist.date_of_birth}</td>
+            <td>${calculateAge(new Date(receptionist.date_of_birth))}</td>
+            <td>${receptionist.home_address}</td>
+            <td>${receptionist.email_address}</td>
+            <td>${receptionist.contact_number}</td>
+          `;
+
+          tableBody.appendChild(row);
+        });
+      } else {
+        console.log('No receptionists found.');
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="11" style="text-align: center;">No Receptionists available</td>
+          </tr>
+        `;
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching receptionists:', error); // Log the error
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="11" style="text-align: center;">Error loading data</td>
+        </tr>
+      `;
+    });
+});
+
+function calculateAge(dob) {
+  const today = new Date();
+  const birthDate = new Date(dob);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
+</script>
+
 
   </body>
 </html>
