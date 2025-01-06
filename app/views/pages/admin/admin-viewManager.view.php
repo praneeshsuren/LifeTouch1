@@ -30,96 +30,115 @@
         </div>
       </div>
 
-      <div class="navbar-container">
-        <div class="navbar">
-          <ul class="nav-links">
-            <li><a href="#user-details">User Details</a></li>
-            <div class="separator"></div>
-            <li><a href="#membership-details">Manager Attendance</a></li>
-            <div class="separator"></div>
-            <li><a href="#supplement-records">Salary History</a></li>
-            <div class="separator"></div>
-            <li><a href="#workout-schedules">Manager Calendar</a></li>
-          </ul>
+      <div class="view-user-container">
+
+        <div class="navbar-container">
+
+          <div class="navbar">
+
+            <ul class="nav-links">
+
+              <li><a href="#user-details"><i class="ph ph-user"></i>User Details</a></li>
+              <li><a href="#manager-attendance"><i class="ph ph-calendar-dots"></i>Manager Attendance</a></li>
+              <li><a href="#salary-history"><i class="ph ph-money"></i>Salary History</a></li>
+              <li><a href="#manager-calendar"><i class="ph ph-barbell"></i>Manager Calendar</a></li>
+
+            </ul>
+
+          </div>
+
         </div>
+
+        <div class="user-container">
+
+          <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/user/manager/updateManager">
+
+            <div class="details">
+
+              <div class="profile-picture">
+
+                <img src="<?php echo URLROOT; ?>/assets/images/Manager/<?php echo !empty($data['manager']->image) ? $data['manager']->image : 'default-placeholder.jpg'; ?>" 
+                    alt="Manager Picture" 
+                    id="userImage">
+                <input type="file" name="profile_picture" id="profilePictureInput" accept="image/*" style="display: none;">
+                <button type="button" id="changePictureBtn" class="change-picture-btn">Change Picture</button>
+
+              </div>
+
+              <div class="user-details">
+
+                  <p>
+                    <strong>Manager ID:</strong>
+                    <input type="text" id="user_id" value="<?php echo $data['manager']->manager_id; ?>" disabled>
+                    <input type="hidden" name="manager_id" value="<?php echo $data['manager']->manager_id; ?>">
+                  </p>
+                  <p>
+                    <strong>First Name:</strong>
+                    <input type="text" name="first_name" value="<?php echo $data['manager']->first_name; ?>" disabled>
+                  </p>
+                  <p>
+                    <strong>Last Name:</strong>
+                    <input type="text" name="last_name" value="<?php echo $data['manager']->last_name; ?>" disabled>
+                  </p>
+
+                  <div class="row">
+                    <p>
+                      <strong>NIC Number:</strong>
+                      <input type="text" name="NIC_no" value="<?php echo $data['manager']->NIC_no; ?>" disabled>
+                    </p>
+                    <p>
+                      <strong>Gender:</strong>
+                      <select name="gender" id="gender" disabled>
+                        <option value="Male" <?php echo $data['manager']->gender == 'Male' ? 'selected' : ''; ?>>Male</option>
+                        <option value="Female" <?php echo $data['manager']->gender == 'Female' ? 'selected' : ''; ?>>Female</option>
+                        <option value="Other" <?php echo $data['manager']->gender == 'Other' ? 'selected' : ''; ?>>Other</option>
+                      </select>
+                    </p>
+                  </div>
+
+                  <div class="row">
+                    <p>
+                      <strong>Date of Birth:</strong>
+                      <input type="date" name="date_of_birth" value="<?php echo $data['manager']->date_of_birth; ?>" disabled>
+                    </p>
+                    <p>
+                      <strong>Contact Number:</strong>
+                      <input type="text" name="contact_number" value="<?php echo $data['manager']->contact_number; ?>" disabled>
+                    </p>
+                  </div>
+
+                  <p>
+                    <strong>Home Address:</strong>
+                    <input type="text" name="home_address" value="<?php echo $data['manager']->home_address; ?>" disabled>
+                  </p>
+                  <p>
+                    <strong>Email Address:</strong>
+                    <input type="email" name="email_address" value="<?php echo $data['manager']->email_address; ?>" disabled>
+                  </p>
+                  
+              </div>
+
+            </div>
+
+            <div class="action-buttons">
+
+              <button type="button" id="editBtn" class="edit-btn">Edit</button>
+              <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/managers/deleteManager?id=<?php echo $data['manager']->manager_id; ?>';">Delete</button>
+              <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
+              <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;">Cancel</button>
+
+            </div>
+
+          </form>
+
+        </div>
+
       </div>
-      <div class="user-details">
-      <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/admin/managers/updateManager">
-          <div class="details">
-            <div class="profile-picture">
-              <img src="<?php echo URLROOT; ?>/assets/images/Manager/<?php echo !empty($data['manager']->image) ? $data['manager']->image : 'default-placeholder.jpg'; ?>" 
-                  alt="manager Picture" 
-                  id="userImage">
-              <input type="file" name="profile_picture" id="profilePictureInput" accept="image/*" style="display: none;">
-              <button type="button" id="changePictureBtn" class="change-picture-btn">Change Picture</button>
-            </div>
-            <div class="left-column">
-              <p>
-                <strong>Manager ID:</strong>
-                <input type="text" id="user_id" value="<?php echo $data['manager']->manager_id; ?>" disabled>
-                <input type="hidden" name="manager_id" value="<?php echo $data['manager']->manager_id; ?>">
-              </p>
-              <p>
-                <strong>First Name:</strong>
-                <input type="text" name="first_name" value="<?php echo $data['manager']->first_name; ?>" disabled>
-              </p>
-              <p>
-                <strong>Last Name:</strong>
-                <input type="text" name="last_name" value="<?php echo $data['manager']->last_name; ?>" disabled>
-              </p>
-              <p>
-                <strong>NIC Number:</strong>
-                <input type="text" name="NIC_no" value="<?php echo $data['manager']->NIC_no; ?>" disabled>
-              </p>
-              <p>
-                <strong>Gender:</strong>
-                <select name="gender" id="gender" disabled>
-                  <option value="Male" <?php echo $data['manager']->gender == 'Male' ? 'selected' : ''; ?>>Male</option>
-                  <option value="Female" <?php echo $data['manager']->gender == 'Female' ? 'selected' : ''; ?>>Female</option>
-                  <option value="Other" <?php echo $data['manager']->gender == 'Other' ? 'selected' : ''; ?>>Other</option>
-                </select>
-              </p>
-              <p>
-                <strong>Date of Birth:</strong>
-                <input type="date" name="date_of_birth" value="<?php echo $data['manager']->date_of_birth; ?>" disabled>
-              </p>
-            </div>
-            <div class="right-column">
-              <p>
-                <strong>Home Address:</strong>
-                <input type="text" name="home_address" value="<?php echo $data['manager']->home_address; ?>" disabled>
-              </p>
-              <p>
-                <strong>Email Address:</strong>
-                <input type="email" name="email_address" value="<?php echo $data['manager']->email_address; ?>" disabled>
-              </p>
-              <p>
-                <strong>Contact Number:</strong>
-                <input type="text" name="contact_number" value="<?php echo $data['manager']->contact_number; ?>" disabled>
-              </p>
-            </div>
-          </div>
-          <div class="action-buttons">
-            <button type="button" id="editBtn" class="edit-btn">Edit</button>
-            <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/managers/deleteManager?id=<?php echo $data['manager']->manager_id; ?>';">Delete</button>
-            <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
-            <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;">Cancel</button>
-          </div>
-        </form>
-      </div>
+
     </main>
 
-    <?php
-      if (isset($_SESSION['success'])) {
-          echo "<script>alert('" . $_SESSION['success'] . "');</script>";
-          unset($_SESSION['success']); // Clear the message after showing it
-      }
-
-      if (isset($_SESSION['error'])) {
-          echo "<script>alert('" . $_SESSION['error'] . "');</script>";
-          unset($_SESSION['error']); // Clear the message after showing it
-      }
-    ?>
+    <!-- SCRIPT -->
+    <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
 
     <script>
       document.getElementById('changePictureBtn').addEventListener('click', () => {
@@ -136,10 +155,14 @@
           reader.readAsDataURL(file);
         }
       });
-    </script>
 
-    <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
+      document.querySelectorAll('.nav-links li a').forEach(link => {
+        link.addEventListener('click', function () {
+          document.querySelectorAll('.nav-links li').forEach(item => item.classList.remove('active'));
+          this.parentElement.classList.add('active');
+        });
+      });
+    </script>
 
   </body>
 </html>
