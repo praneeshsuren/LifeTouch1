@@ -84,7 +84,7 @@
 
             <div class="user-form">
 
-                <form action="<?php echo URLROOT; ?>/admin/members/registerMember" method="post">
+                <form action="<?php echo URLROOT; ?>/user/member/registerMember" method="post">
 
                     <div class="form-container">
 

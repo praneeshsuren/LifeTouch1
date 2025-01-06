@@ -51,9 +51,9 @@
             <ul class="nav-links">
 
               <li><a href="#user-details"><i class="ph ph-user"></i>User Details</a></li>
-              <li><a href="#membership-details"><i class="ph ph-calendar-dots"></i>Trainer Attendance</a></li>
-              <li><a href="#supplement-records"><i class="ph ph-money"></i>Salary History</a></li>
-              <li><a href="#workout-schedules"><i class="ph ph-barbell"></i>Trainer Calendar</a></li>
+              <li><a href="#trainer-attendance"><i class="ph ph-calendar-dots"></i>Trainer Attendance</a></li>
+              <li><a href="#salary-history"><i class="ph ph-money"></i>Salary History</a></li>
+              <li><a href="#trainer-calendar"><i class="ph ph-barbell"></i>Trainer Calendar</a></li>
 
             </ul>
 
@@ -63,7 +63,7 @@
 
         <div class="user-container">
 
-          <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/admin/trainers/updateTrainer">
+          <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/user/trainer/updateTrainer">
 
             <div class="details">
 
