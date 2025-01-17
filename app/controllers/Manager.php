@@ -3,7 +3,8 @@
 class Manager extends Controller
 {
 
-    public function __construct() {
+    public function __construct()
+    {
         // Check if the user is logged in as a manager
         $this->checkAuth('manager');
     }
@@ -18,23 +19,35 @@ class Manager extends Controller
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $announcement = new M_Announcement;
             if ($announcement->validate($_POST)) {
+                $temp = $_POST;
 
-                $announcement->insert($_POST);
+                $temp['announcement_id'] = 'A';
+                $offset = str_pad($announcement->countAll() + 1, 4, '0', STR_PAD_LEFT);
+                $temp['announcement_id'] .= $offset;
+
+                $temp['created_by'] = $_SESSION['user_id'];
+
+                $announcement->insert($temp);
+                $_SESSION['success'] = "Announcement has been successfully published!";
                 redirect('manager/announcement_main');
+            } else {
+                $data['errors'] = $announcement->errors;
+                $this->view('manager/announcement', $data);
             }
-            $data['errors'] = $announcement->errors;
+        } else {
+            $this->view('manager/announcement');
         }
-
-
-        $this->view('manager/announcement');
     }
-
+    
     public function announcement_main()
     {
-        $announcement = new M_Announcement();
+        $announcementModel = new M_Announcement;
+            $announcements = $announcementModel->findAll('announcement_id', 4);
 
-        // Fetch all announcements
-        $data = $announcement->findAll();
+            $data = [
+                'announcements' => $announcements
+            ];
+            
         $this->view('manager/announcement_main', ['data' => $data]);
     }
 
@@ -160,22 +173,31 @@ class Manager extends Controller
     }
 
     public function equipment_view($id)
-    {
-        $equipmentModel = new M_Equipment(); // Create an instance of the M_Equipment model
+{
+    // Create an instance of the M_Equipment model
+    $equipmentModel = new M_Equipment();
+    
+    // Fetch the equipment record by ID, limit the result to 1
+    $equipment = $equipmentModel->where(['equipment_id' => $id], [], 1);
 
-        // Fetch the equipment record by ID, limit the result to 1
-        $equipment = $equipmentModel->where(['equipment_id' => $id], [], 1);
-
-        // Check if the equipment exists
-        if (!$equipment) {
-            // Redirect to the equipment list if no record found
-            redirect('manager/equipment');
-            return;
-        }
-
-        // Pass the first item of the equipment result to the view
-        $this->view('manager/equipment_view', ['equipment' => $equipment[0]]);
+    // Check if the equipment exists
+    if (!$equipment) {
+        // Redirect to the equipment list if no record found
+        redirect('manager/equipment');
+        return;
     }
+
+    // Fetch the service history for the given equipment ID
+    $serviceModel = new M_Service();
+    $services = $serviceModel->where(['equipment_id' => $id],[],1);
+
+    // Pass both the equipment data and service history to the view
+    $this->view('manager/equipment_view', [
+        'equipment' => $equipment[0],  // Assuming it's an array, or adjust if it's an object
+        'services' => $services
+    ]);
+}
+
 
     public function equipment_delete($id)
     {

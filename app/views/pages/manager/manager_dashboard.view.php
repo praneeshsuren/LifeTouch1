@@ -308,38 +308,17 @@
   </script>
 
   <script>
-    // Replace with actual years and equipment data
-    const labels = ['2019', '2020', '2021', '2022', '2023'];
+    // Data for gym equipment counts
     const data = {
-      labels: labels,
+      labels: ['Treadmills', 'Dumbbells', 'Bikes', 'Rowing Machines'], // Equipment names on x-axis
       datasets: [{
-          label: 'Treadmills',
-          data: [50, 55, 60, 65, 70], // Example counts
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          stack: 'Stack 0',
-        },
-        {
-          label: 'Dumbbells',
-          data: [100, 110, 120, 130, 140], // Example counts
-          backgroundColor: 'rgba(54, 162, 235, 0.5)',
-          stack: 'Stack 0',
-        },
-        {
-          label: 'Bikes',
-          data: [30, 35, 40, 45, 50], // Example counts
-          backgroundColor: 'rgba(75, 192, 192, 0.5)',
-          stack: 'Stack 1',
-        },
-        {
-          label: 'Rowing Machines',
-          data: [20, 25, 30, 35, 40], // Example counts
-          backgroundColor: 'rgba(153, 102, 255, 0.5)',
-          stack: 'Stack 1',
-        },
-      ],
+        label: 'Count of Equipment',
+        data: [70, 140, 50, 40], // Equipment counts
+        backgroundColor: 'rgba(75, 192, 192, 0.5)', // Color for the bars
+      }, ],
     };
 
-    // Configuration for a stacked bar chart displaying gym equipment counts year by year
+    // Configuration for the bar chart
     const inconfig = {
       type: 'bar',
       data: data,
@@ -347,7 +326,7 @@
         plugins: {
           title: {
             display: true,
-            text: 'Gym Equipment Counts by Year',
+            text: 'Gym Equipment Counts', // Chart title
           },
         },
         responsive: true,
@@ -356,17 +335,17 @@
         },
         scales: {
           x: {
-            stacked: true,
+            stacked: false, // No stacking on the x-axis
             title: {
               display: true,
-              text: 'Year',
+              text: 'Equipment', // X-axis label
             },
           },
           y: {
-            stacked: true,
+            stacked: false, // No stacking on the y-axis
             title: {
               display: true,
-              text: 'Equipment Count',
+              text: 'Count', // Y-axis label
             },
           },
         },
