@@ -10,42 +10,62 @@
         public function index(){
             $this->view(('member/member-dashboard'));
         }
-        public function memberViewtrainer(){
-            $trainerModel = new M_Trainer();
-            $data['trainer'] = $trainerModel->findAll();
-            $this->view('member/member-viewtrainer',$data);
-        }
-        public function memberViewtrainerViewbtn($trainerId1, $trainerId2, $trainerId3){
-            // Combine the trainer ID parts into a single string
-            $trainerId = $trainerId1 . '/' . $trainerId2 . '/' . $trainerId3;
-        
-            $trainerModel = new M_Trainer();
-            // Fetch the trainer by the combined ID
-            $trainer = $trainerModel->where(['trainer_id' => $trainerId], [], 1);
-        
-            if (!$trainer) {
-                echo "Trainer not found with ID: $trainerId";
-                redirect('member/member-viewtrainer');
-                return;
+        public function Trainer($action = null){
+            switch($action){
+                case 'api':
+                    $trainerModel = new M_Trainer();
+                    $trainers = $trainerModel->findAll(); 
+                    header('Content-Type: application/json');
+                    echo json_encode($trainers);    
+                    break;
+
+                case 'viewTrainerapi':
+                    $trainerModel = new M_Trainer;
+                    $trainer = $trainerModel->findByTrainerId($_GET['id']);
+                    header('Content-Type: application/json');
+                    echo json_encode($trainer);
+                    break;
+                    
+                case 'viewTrainer':
+                    $this->view('member/member-viewtrainer');
+                    break;
+                        
+                default:
+                    $this->view('member/member-trainer');
+                    break;
             }
-        
-            // Pass the trainer data to the view
-            $this->view('member/member-viewtrainer-viewbtn', ['trainer' => $trainer[0]]);
         }
+        // public function memberViewtrainerViewbtn($trainerId1, $trainerId2, $trainerId3){
+        //     // Combine the trainer ID parts into a single string
+        //     $trainerId = $trainerId1 . '/' . $trainerId2 . '/' . $trainerId3;
         
-        public function memberAnnouncements(){
+        //     $trainerModel = new M_Trainer();
+        //     // Fetch the trainer by the combined ID
+        //     $trainer = $trainerModel->where(['trainer_id' => $trainerId], [], 1);
+        
+        //     if (!$trainer) {
+        //         echo "Trainer not found with ID: $trainerId";
+        //         redirect('member/member-viewtrainer');
+        //         return;
+        //     }
+        
+        //     // Pass the trainer data to the view
+        //     $this->view('member/member-viewtrainer-viewbtn', ['trainer' => $trainer[0]]);
+        // }
+        
+        public function Announcements(){
             $this->view('member/member-announcements');
         }
-        public function memberSupplements(){
+        public function Supplements(){
             $this->view('member/member-supplements');
         }
-        public function memberWorkoutschedules(){
+        public function Workoutschedules(){
             $this->view('member/member-workoutschedules');
         } 
-        public function memberPayment(){
+        public function Payment(){
             $this->view('member/member-payment');
         } 
-        public function memberSettings(){
+        public function Settings(){
             $this->view('member/member-settings');
         }
         public function memberTrainerbooking() {

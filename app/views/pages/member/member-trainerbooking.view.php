@@ -35,8 +35,22 @@
                 <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
             </div>
         </div>
-        <div class="bookingBox">
-            <?php echo $calendar;?>
+        <div class="calendarContainer">
+            <div class="calendar-header">
+                <i class='prevMonth ph ph-caret-circle-left'></i>
+                <div class="monthYear"></div>
+                <i class='nextMonth ph ph-caret-circle-right'></i>
+            </div>
+            <table class="calendar">
+                <th>Sun</th>
+                <th>Mon</th>
+                <th>Tues</th>
+                <th>Wed</th>
+                <th>Thur</th>
+                <th>Fri</th>
+                <th>Sat</th>
+                <tbody class="calendarBody"></tbody>
+            </table>
             <div class="gotoToday">
                 <div class="goto">
                     <input type="text" placeholder="mm/yyyy" class="date-input" />
@@ -45,28 +59,26 @@
                 <button class="todayBtn">Today</button>
             </div>
         </div> 
+        <div class="recent-announcements">
+            <div class="announcements">
+            <h2 style="font-size:1.5rem; font-weight:500; padding-top:1rem;text-align:center">Details</h2>
+                <div class="announcement">hi</div>
+                <div class="announcement"></div>
+            </div>
+        </div>
         <div id="bookingModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <div class="title">
                     <h3>Booking : <span id="modalDate"></span></h3>
                 </div>
-                <div class="timeslots">
-                    <?php if(!empty($time_slots)): ?>
-                        <?php foreach($time_slots as $slot): ?>
-                            <button class="timeslot" data-timeslot="<?php echo htmlspecialchars($slot->slot); ?>"
-                            data-timeslot-id="<?php echo htmlspecialchars($slot->id); ?>">
-                                <?php echo htmlspecialchars($slot->slot); ?>
-                            </button>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </div>
+                <div class="timeslots"></div>
                 <div class="bookingForm">
                     <form action="<?php echo URLROOT;?>/member/memberTrainerbooking" method="POST">
                         <div class="input">
-                            <input type="hidden" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_id); ?>"required>
-                            <input type="hidden" id="selectedTrainerId" readonly name="selectedTrainerId" value="<?php echo htmlspecialchars($trainer_id); ?>"required>
-                            <input type="hidden" id="selectedTimeslotId" readonly name="selectedTimeslotId" required> 
+                            <input type="text" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_id); ?>"required>
+                            <input type="text" id="selectedTrainerId" readonly name="selectedTrainerId" value="<?php echo htmlspecialchars($trainer_id); ?>"required>
+                            <input type="text" id="selectedTimeslotId" readonly name="selectedTimeslotId" required> 
                             <div class="input-container">
                                 <label for="selectedDate" class="label"><i class="ph ph-calendar"></i>Date</label>
                                 <input type="text" id="selectedDate" readonly name="selectedDate" required>

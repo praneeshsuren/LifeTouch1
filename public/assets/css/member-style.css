@@ -1069,19 +1069,19 @@ main > .searchbar {
 }
 
 /* book reservations */
-.bookingBox {
-    background: var(--sidebar-color);
+main .calendarContainer {
+    grid-column: 1;
+    background-color: var(--sidebar-color);
     display: flex;
     flex-direction: column;
     overflow: hidden; /* Prevent overflow issues */
-    width: 1000px;
+    width: 750px;
     height: 650px;
     padding: 2rem;
     border-radius: 1.5rem;
     box-shadow: var(--box-shadow-color);
     transition: var(--tran-03);
     position: relative; 
-    margin-left:75px;
     color: var(--text-color);
     padding-top: 50px;
 }
@@ -1123,7 +1123,7 @@ main > .searchbar {
     box-shadow: var(--box-shadow-color);
 }
 
-.calendar {
+.calendar{
     width: 100%;
     margin:1rem 0;
     margin-top: 2rem;
@@ -1135,7 +1135,7 @@ main > .searchbar {
     font-weight: bold;
     text-align: center;
     padding: 10px;
-    border: 1px solid #ddd; 
+    border: 1px solid #ddd;
 } 
 
 .calendar td {
@@ -1147,7 +1147,6 @@ main > .searchbar {
     font-size: 20px;
     padding: 5px;
     border: 1px solid #ddd; 
-   
 }
 
 .calendar td:hover {
