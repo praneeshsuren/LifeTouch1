@@ -1,105 +1,103 @@
-// Helper to get query params
-document.addEventListener("DOMContentLoaded", () =>{
-    generateCalendar();
+document.addEventListener("DOMContentLoaded", () => {
+    buildCalendar();
     buttons();
 });
-    
+
+// Extract query parameters from the URL
+const urlParams = new URLSearchParams(window.location.search);
+console.log(urlParams);
+const trainerId = urlParams.get('id'); 
+let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; // Default to the current month
+let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
+
 const calendarBody = document.querySelector('.calendarBody');
-const monthYear = document.querySelector(".monthYear"); 
-const prevMonth = document.querySelector(".prevMonth");
-const nextMonth = document.querySelector(".nextMonth");
-const weekDays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const calendarHeader = document.querySelector('.calendar-header');
+const monthYear = document.querySelector(".monthYear");
+const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 const gotoBtn = document.querySelector(".gotoBtn");
 const todayBtn = document.querySelector(".todayBtn");
 const dateInput = document.querySelector(".date-input");
-var navigation = 0;
 
-const modal = document.getElementById('bookingModal');
-const closeModal = document.querySelector('.modal .close');
-const modalDate = document.getElementById('modalDate');
-const selectedDateInput = document.getElementById('selectedDate');
-    
-function generateCalendar(inputMonth = null, inputYear = null) {
-    const date = new Date();
-        if(navigation !=0){
-            date.setMonth(date.getMonth() + navigation);
-        }
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
+// Function to build the calendar body
+function buildCalendar() {
+    const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1);
+    const dayInMonth = new Date(currentYear, currentMonth, 0).getDate(); // Number of days in the month
+    const emptyDays = firstDayOfMonth.getDay(); // Day index of the first day (0-6)
+    const dateToday = new Date().toISOString().split('T')[0];
+    const monthYear = firstDayOfMonth.toLocaleDateString("en-us", { month: "long", year: "numeric" });
 
-    // If specific month/year is provided (from the date input), use that
-    if (inputYear !== null && inputMonth !== null) {
-        date.setFullYear(inputYear);
-        date.setMonth(inputMonth - 1); // Month is zero-indexed, so subtract 1
+    // Calculate previous and next month/year
+    let prevMonth = currentMonth - 1;
+    let nextMonth = currentMonth + 1;
+    let prevYear = currentYear;
+    let nextYear = currentYear;
+
+    if (prevMonth < 1) {
+        prevMonth = 12;
+        prevYear--;
     }
-    
-    monthYear.innerText = `${date.toLocaleDateString
-        ("en-us", 
-            {month: "long",})} ${year}`;
+    if (nextMonth > 12) {
+        nextMonth = 1;
+        nextYear++;
+    }
 
-    const dayInMonth = new Date(year,month + 1, 0).getDate();//no.of days in current month
-    const firstDayofMonth = new Date(year, month, 1);
-    const emptyDays = firstDayofMonth.getDay();//get first day index
+    // Update header
+    calendarHeader.innerHTML = `
+        <a class='prevMonth' href='?id=${trainerId}&month=${prevMonth}&year=${prevYear}' aria-label='Previous Month'><i class='ph ph-caret-circle-left'></i></a>
+        <div class='monthYear'>${monthYear}</div>
+        <a class='nextMonth' href='?id=${trainerId}&month=${nextMonth}&year=${nextYear}' aria-label='Next Month'><i class='ph ph-caret-circle-right'></i></a>
+    `;
 
-    //clr the calendar before regenrating
+    // Build calendar table
     calendarBody.innerHTML = "";
+    let row = document.createElement("tr");
 
-    for(let i=1; i <= dayInMonth + emptyDays; i++){
-        if((i-1)%7 === 0){
-            // create new row every 7 days
-            var row = document.createElement("tr");
+    // Empty days before the first day of the month
+    for (let i = 0; i < emptyDays; i++) {
+        const emptyCell = document.createElement("td");
+        emptyCell.classList.add("plain");
+        row.appendChild(emptyCell);
+    }
+
+    // Calendar days
+    for (let day = 1; day <= dayInMonth; day++) {
+        if ((emptyDays + day - 1) % 7 === 0) {
             calendarBody.appendChild(row);
+            row = document.createElement("tr");
         }
-        const dayBox = document.createElement("td");
-        dayBox.classList.add("day");
-        if(i > emptyDays){
-            const currentDay = i - emptyDays;
-            dayBox.innerText = currentDay;
 
-            const dateValue = `${currentDay.toString().padStart(2, '0')}-${(month + 1).toString().padStart(2, '0')}-${year}`;
-                //highlight today
-                if (currentDay === day && navigation === 0) {
-                    dayBox.classList.add("today"); // Add class to today's date cell
-                }
-        } else{
-            dayBox.classList.add("plain");
-        }
-        row.append(dayBox);
-    } 
-    // Add plain class to the remaining empty days in the last week
-    const totalCells = dayInMonth + emptyDays;
-    const remainingCells = 7 - (totalCells % 7); 
+        const date = `${currentYear}-${String(currentMonth).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const dayCell = document.createElement("td");
+        dayCell.classList.add("day");
+        dayCell.dataset.date = date;
+        dayCell.innerText = day;
 
-    if (remainingCells < 7) { 
-        for (let j = 0; j < remainingCells; j++) {
-            const dayBox = document.createElement("td");
-            dayBox.classList.add("plain");
-            row.append(dayBox);
+        if (date === dateToday) {
+            dayCell.classList.add("today");
         }
+
+        row.appendChild(dayCell);
     }
+
+    // Add remaining empty cells for the last week
+    while (row.children.length < 7) {
+        const emptyCell = document.createElement("td");
+        emptyCell.classList.add("plain");
+        row.appendChild(emptyCell);
+    }
+    calendarBody.appendChild(row);
 }
-    
-function buttons(){
-       
-    if(prevMonth){
-        prevMonth.addEventListener("click", ()=>{
-            navigation--;
-            generateCalendar();
-        });
-    }
 
-    if(nextMonth){
-        nextMonth.addEventListener("click", ()=>{
-            navigation++;
-            generateCalendar();
-        });
-    }
-        
-    if(todayBtn){ 
+function buttons(){
+    if(todayBtn){
         todayBtn.addEventListener("click", ()=>{
-        navigation = 0;
-        generateCalendar();
+            const today = new Date();
+            currentMonth = today.getMonth() + 1;
+            currentYear = today.getFullYear();
+
+            window.location.href =`<?php echo URLROOT; ?>/member/Booking?id=${trainerId}&month=${currentMonth}&year=${currentYear}`;
+            buildCalendar();
         });
     }
 
@@ -116,78 +114,22 @@ function buttons(){
     }
 
     if(gotoBtn){
-        gotoBtn.addEventListener("click", () => {
-            const dateArr = dateInput.value.split("/");
-            if (dateArr.length === 2) {
-                const inputMonth = parseInt(dateArr[0], 10);
-                const inputYear = parseInt(dateArr[1], 10);
-         
-                // Validate month and year
-                if (
-                    inputMonth >= 1 && inputMonth <= 12 && // Month between 1 and 12
-                    inputYear >= 1900 && inputYear <= 2100 && // Year in valid range
-                    dateArr[1].length === 4 // Year has 4 digits
-                ) {
-                    // Calculate navigation based on input month/year
-                    const currentDate = new Date();
-                    navigation = (inputYear - currentDate.getFullYear()) * 12 + (inputMonth - 1) - currentDate.getMonth();
-                    generateCalendar(inputMonth, inputYear);
-                    dateInput.value = "";
-                } else {
-                    alert("Invalid date or year.");
-                }
+        gotoBtn.addEventListener("click", ()=>{
+            const input = dateInput.value.trim();
+            const [inputMonth, inputYear] = input.split("/").map(Number);// Split MM/YYYY and convert to numbers
+             
+            if (
+                inputMonth >= 1 && 
+                inputMonth <= 12 && 
+                inputYear >= 1900 && 
+                inputYear <= 2100
+            ) {
+                currentMonth = inputMonth;
+                currentYear = inputYear;
+                buildCalendar(); // Build calendar for the new date
             } else {
-                alert("Invalid date format. Please use MM/YYYY.");
+                alert("Please enter a valid date in MM/YYYY format.");
             }
         });
     }
 }
-
-// Open modal on date box click
-    calendarBody.addEventListener('click', function (event) {
-        const clickedElement = event.target;
-
-        // Check if the clicked element is a date box
-        if (clickedElement.classList.contains('day') && !clickedElement.classList.contains('plain')) {
-            const selectedDate = clickedElement.innerText;
-            const currentMonthYear = document.querySelector('.monthYear').innerText;
-
-            // Set the modal's date display and hidden input field
-            modalDate.innerText = `${selectedDate} ${currentMonthYear}`;
-            selectedDateInput.value = `${selectedDate} ${currentMonthYear}`;
-
-            // Show the modal
-            modal.style.display = 'block';
-        }
-    });
-
-    // Close modal when 'x' is clicked
-    closeModal.addEventListener('click', function () {
-        modal.style.display = 'none';
-    });
-    
-
-// const modal = document.getElementById('bookingModal');
-// const modalDate = document.getElementById('modalDate');
-// const closeBtn = document.querySelector('.close');
-// const selectedDateInput = document.getElementById('selectedDate');
-// const selectedTimeslotInput = document.getElementById('selectedTimeslot');
-        
-// // // Add event listener to all clickable calendar cells
-// document.querySelectorAll('.calendar .clickable').forEach(cell => {cell.addEventListener('click', function () {
-//     const selectedDate = this.getAttribute('data-date');
-//     modalDate.textContent = selectedDate;
-//     selectedDateInput.value = selectedDate;
-//     selectedTimeslotInput.value = ''; 
-//     selectedTimeslotInput.placeholder = 'Select the Timeslot';
-
-//     modal.style.display = 'block';
-// });
-// });
-
-// // Close the modal when clicking on the 'x' button
-// closeBtn.addEventListener('click', function () {
-//     modal.style.display = 'none';
-// });
-
-

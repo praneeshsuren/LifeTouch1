@@ -38,7 +38,9 @@
             const urlParams = new URLSearchParams(window.location.search);
             const trainerId = urlParams.get('id'); 
             if (trainerId) {
-                fetch(`<?php echo URLROOT; ?>/member/Trainer/viewTrainerapi?id=${trainerId}`)
+                const apiUrl = `<?php echo URLROOT; ?>/member/Trainer/viewTrainerapi?id=${trainerId}`;  // This will be replaced by PHP when rendering the page
+            console.log("API URL:", apiUrl);
+            fetch(apiUrl)
                     .then(response => {
                         console.log('Response Status:', response.status); // Log response status
                         return response.json();
@@ -62,7 +64,10 @@
                         
             const bookingbutton = bookigbuttonDiv.querySelector('.trainerviewbtn-Bookreservationbtn');
             bookingbutton.onclick = () =>{
-                window.location.href =`<?php echo URLROOT; ?>/member/memberTrainerbooking?id=${trainerId}`;
+                const today = new Date();
+                const month = today.getMonth(); // Zero-based index
+                const year = today.getFullYear();
+                window.location.href =`<?php echo URLROOT; ?>/member/Booking?id=${trainerId}&month=${month+1}&year=${year}`;
             };
             container.appendChild(bookigbuttonDiv);
 
