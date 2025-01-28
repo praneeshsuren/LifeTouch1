@@ -38,16 +38,16 @@ class Manager extends Controller
             $this->view('manager/announcement');
         }
     }
-    
+
     public function announcement_main()
     {
         $announcementModel = new M_Announcement;
-            $announcements = $announcementModel->findAll('announcement_id', 4);
+        $announcements = $announcementModel->findAll('announcement_id', 4);
 
-            $data = [
-                'announcements' => $announcements
-            ];
-            
+        $data = [
+            'announcements' => $announcements
+        ];
+
         $this->view('manager/announcement_main', ['data' => $data]);
     }
 
@@ -84,7 +84,7 @@ class Manager extends Controller
         $this->view('manager/report_main');
     }
 
-    
+
     public function member()
     {
         $this->view('manager/member');
@@ -175,30 +175,30 @@ class Manager extends Controller
     }
 
     public function equipment_view($id)
-{
-    // Create an instance of the M_Equipment model
-    $equipmentModel = new M_Equipment();
-    
-    // Fetch the equipment record by ID, limit the result to 1
-    $equipment = $equipmentModel->where(['equipment_id' => $id], [], 1);
+    {
+        // Create an instance of the M_Equipment model
+        $equipmentModel = new M_Equipment();
 
-    // Check if the equipment exists
-    if (!$equipment) {
-        // Redirect to the equipment list if no record found
-        redirect('manager/equipment');
-        return;
+        // Fetch the equipment record by ID, limit the result to 1
+        $equipment = $equipmentModel->where(['equipment_id' => $id], [], 1);
+
+        // Check if the equipment exists
+        if (!$equipment) {
+            // Redirect to the equipment list if no record found
+            redirect('manager/equipment');
+            return;
+        }
+
+        // Fetch the service history for the given equipment ID
+        $serviceModel = new M_Service();
+        $services = $serviceModel->where(['equipment_id' => $id], [], 1);
+
+        // Pass both the equipment data and service history to the view
+        $this->view('manager/equipment_view', [
+            'equipment' => $equipment[0],  // Assuming it's an array, or adjust if it's an object
+            'services' => $services
+        ]);
     }
-
-    // Fetch the service history for the given equipment ID
-    $serviceModel = new M_Service();
-    $services = $serviceModel->where(['equipment_id' => $id],[],1);
-
-    // Pass both the equipment data and service history to the view
-    $this->view('manager/equipment_view', [
-        'equipment' => $equipment[0],  // Assuming it's an array, or adjust if it's an object
-        'services' => $services
-    ]);
-}
 
 
     public function equipment_delete($id)
