@@ -83,6 +83,8 @@ class Manager extends Controller
     {
         $this->view('manager/report_main');
     }
+
+    
     public function member()
     {
         $this->view('manager/member');
