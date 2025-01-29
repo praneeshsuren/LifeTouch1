@@ -57,9 +57,8 @@
         </div> 
         <div class="recent-announcements">
             <div class="announcements">
-            <h2 style="font-size:1.5rem; font-weight:500; padding-top:1rem;text-align:center">Details</h2>
-                <div class="announcement">hi</div>
-                <div class="announcement"></div>
+                <h2 style="font-size:1.5rem; font-weight:500; padding-top:1rem;text-align:center">Details</h2>
+                <div class="announcement-list"></div>
             </div>
         </div>
         <div id="bookingModal" class="modal">
@@ -73,7 +72,7 @@
                     <form action="<?php echo URLROOT;?>/member/memberTrainerbooking" method="POST">
                         <div class="input">
                             <input type="text" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_id); ?>"required>
-                            <input type="text" id="selectedTrainerId" readonly name="selectedTrainerId" value="<?php echo htmlspecialchars($trainer_id); ?>"required>
+                            <input type="text" id="selectedTrainerId" readonly name="selectedTrainerId" required>
                             <input type="text" id="selectedTimeslotId" readonly name="selectedTimeslotId" required> 
                             <div class="input-container">
                                 <label for="selectedDate" class="label"><i class="ph ph-calendar"></i>Date</label>
@@ -100,39 +99,150 @@
         const trainerId = urlParams.get('id'); 
         let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; // Default to the current month
         let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
+        const dateToday = new Date().toISOString().split('T')[0];
+        const bookDiv = document.querySelector('.announcement-list');
 
-        document.addEventListener("DOMContentLoaded", () =>{
+        document.addEventListener("DOMContentLoaded", () =>{ 
             if (trainerId) {
-                fetch(`<?php echo URLROOT; ?>/member/Booking/api?id=${trainerId}&month=${currentMonth}&year=${currentYear}`)
-                    .then(response => {
-                        console.log('Response Status:', response.status); // Log response status
-                        return response.json();
-                    })
-                    .then(data => {
-                            console.log('Fetched Data:',data); 
+                if(currentYear >= new Date().getFullYear() && currentMonth >= (new Date().getMonth() + 1)){
+                    fetch(`<?php echo URLROOT; ?>/member/Booking/api?id=${trainerId}&month=${currentMonth}&year=${currentYear}`)
+                        .then(response => {
+                            console.log('Response Status:', response.status); // Log response status
+                            return response.json();
                         })
-                    .catch(error => console.error('Error fetching bookings details:', error));
-            } 
+                        .then(data => {
+                            console.log('Bookings:', data.bookings);
+                            // Mark bookings in the calendar
+                            if (Array.isArray(data.bookings) && data.bookings.length > 0) {
+                                markBookings(data.bookings);
+                            } else {
+                                bookDiv.innerHTML = `<div style="text-align: center; color: gray;">No bookings available.</div>`;
+                                console.log('No bookings found.');
+                            }
+                            console.log('Time Slots:', data.timeSlots);
+                            if(Array.isArray(data.timeSlots) && data.timeSlots.length > 0){
+                                displayTimeSlots(data.timeSlots);
+                            } else {
+                                console.log('No timeslots found.');
+                            }
+                        })
+                        .catch(error => console.error('Error fetching bookings details:', error));
+                } else {
+                    bookDiv.innerHTML = `<div style="text-align: center; color: gray;">Bookings are not available for past months.</div>`;
+                }
+            }
             buildCalendar();
             buttons(); 
+            modal();
         });
 
+        //timeslots
+        function displayTimeSlots(timeSlots){
+            const timeSlotsContainer = document.querySelector('.timeslots');
+            timeSlotsContainer.innerHTML = '';
+            timeSlots.forEach(timeSlot => {
+                let timeSlotBtn = document.createElement('button');
+                timeSlotBtn.classList.add('timeslot');
+                timeSlotBtn.dataset.slot = timeSlot.slot;
+                timeSlotBtn.dataset.timeslotId = timeSlot.id;
+                timeSlotBtn.textContent = timeSlot.slot;
+
+                timeSlotBtn.addEventListener('click', () => {
+                    const selectedTimeslotInput = document.getElementById('selectedTimeslot');
+                    const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
+                    selectedTimeslotInput.value = timeSlot.slot;
+                    selectedTimeslotIdInput.value = timeSlot.id;
+                });
+                timeSlotsContainer.appendChild(timeSlotBtn);
+            });
+        }
+
+        function markBookings(bookings) {
+            bookDiv.innerHTML = ''; // Clear existing content
+
+            // Filter bookings for "booked" and "pending" statuses
+            const filteredBookings = bookings.filter(
+                booking => booking.status === 'booked' || booking.status === 'pending'
+            );
+
+            // Group bookings by date
+            const groupedBookings = filteredBookings.reduce((acc, booking) => {
+                const { booking_date, slot, status } = booking; // `timeslot` is assumed to be a string like "9:00AM-10:00AM"
+                if (!acc[booking_date]) acc[booking_date] = [];
+                acc[booking_date].push({slot, status});
+                return acc;
+            }, {});
+            
+            const todayFutureBookings = Object.keys(groupedBookings).filter(date => date >= dateToday);
+            const sortedDates = todayFutureBookings.sort((a, b) => new Date(a) - new Date(b));
+
+            // Loop through the grouped bookings and generate HTML
+            sortedDates.forEach(date => {
+                // Create and append a date heading
+                const dateHeading = document.createElement('div');
+                dateHeading.classList.add('date-heading');
+                dateHeading.innerText = date;
+                bookDiv.appendChild(dateHeading);
+
+                // Iterate through timeslots for each date
+                const sortedTimeslots = groupedBookings[date].sort((a,b) => {
+                    const timeA = convertTo24hrs(a.slot.split(' - ')[0]);
+                    console.log(timeA);
+                    const timeB = convertTo24hrs(b.slot.split(' - ')[0]);
+                    console.log(timeB);
+                    return timeA - timeB;
+                });
+                
+                sortedTimeslots.forEach(timeslot => {
+                    const timeslotItem = document.createElement('div');
+                    timeslotItem.classList.add('announcement');
+                
+                    // Create the status circle
+                    const statusCircle = document.createElement('div');
+                    if(timeslot.status === 'booked'){
+                        statusCircle.classList.add('booked');
+                    } else{
+                        statusCircle.classList.add('pending');
+                    }
+
+                    // Add the slot text
+                    const slotText = document.createElement('span');
+                    slotText.style.color = '#757575';
+                    slotText.innerText = timeslot.slot;
+
+                    // Append the circle and text to the item
+                    timeslotItem.appendChild(slotText);
+                    timeslotItem.appendChild(statusCircle);
+                    
+                    // Append the item to the booking div
+                    bookDiv.appendChild(timeslotItem);
+                });
+            });
+        }
+        function convertTo24hrs(time){
+            const [hrMin, period] = time.trim().split(' '); //AM,PM
+            let [hr, min] =hrMin.split(':');
+            hr = parseInt(hr, 10);
+            min = parseInt(min, 10);
+            let hr24 = hr;
+            if(period === 'PM' && hr24 < 12) {
+                hr24 +=12;
+            } else if (period === 'AM' && hr24 ===12) {
+                hr24 = 0;
+            }
+            return new Date(1970, 0, 1, hr24, min);
+        }
+
+        // calender
         const calendarBody = document.querySelector('.calendarBody');
-        const calendarHeader = document.querySelector('.calendar-header');
-        const monthYear = document.querySelector(".monthYear");
-        const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-        const gotoBtn = document.querySelector(".gotoBtn");
-        const todayBtn = document.querySelector(".todayBtn");
-        const dateInput = document.querySelector(".date-input");
-
-        // Function to build the calendar body
         function buildCalendar() {
+            const calendarHeader = document.querySelector('.calendar-header');
+            const monthYear = document.querySelector(".monthYear");
+            const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; 
             const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1);
             const dayInMonth = new Date(currentYear, currentMonth, 0).getDate(); // Number of days in the month
             const emptyDays = firstDayOfMonth.getDay(); // Day index of the first day (0-6)
-            const dateToday = new Date().toISOString().split('T')[0];
-            const monthYear = firstDayOfMonth.toLocaleDateString("en-us", { month: "long", year: "numeric" });
+            const monthYearName = firstDayOfMonth.toLocaleDateString("en-us", { month: "long", year: "numeric" });
 
             // Calculate previous and next month/year
             let prevMonth = currentMonth - 1;
@@ -152,7 +262,7 @@
             // Update header
             calendarHeader.innerHTML = `
                 <a class='prevMonth' href='?id=${trainerId}&month=${prevMonth}&year=${prevYear}' aria-label='Previous Month'><i class='ph ph-caret-circle-left'></i></a>
-                <div class='monthYear'>${monthYear}</div>
+                <div class='monthYear'>${monthYearName}</div>
                 <a class='nextMonth' href='?id=${trainerId}&month=${nextMonth}&year=${nextYear}' aria-label='Next Month'><i class='ph ph-caret-circle-right'></i></a>
             `;
 
@@ -197,6 +307,10 @@
         }
 
         function buttons(){
+            const gotoBtn = document.querySelector(".gotoBtn");
+            const todayBtn = document.querySelector(".todayBtn");
+            const dateInput = document.querySelector(".date-input");
+
             if(todayBtn){
                 todayBtn.addEventListener("click", ()=>{
                     const today = new Date();
@@ -239,6 +353,44 @@
                     }
                 });
             }
+        }
+
+        // modal
+        function modal(){
+            const modal = document.getElementById('bookingModal');
+            const closeModal = document.querySelector('.modal .close');
+
+            calendarBody.addEventListener('click', function (event) {
+                const modalDate = document.getElementById('modalDate');
+                const selectedDateInput = document.getElementById('selectedDate');
+                const trainerIdInput = document.getElementById('selectedTrainerId');
+                const clickedElement = event.target;
+
+                // Check if the clicked element is a date box
+                if (clickedElement.classList.contains('day') && !clickedElement.classList.contains('plain')) {
+                    const selectedDate = clickedElement.getAttribute('data-date');
+                    // Only allow selecting present or future dates
+                    if (selectedDate < dateToday) {
+                        return; 
+                    }
+                    const selectedDay = selectedDate.split('-')[2];
+                    const currentMonthYear = document.querySelector('.monthYear').innerText;
+                    const loggedMemberId = document.getElementById('loggedMember').value;
+
+                    // Set the modal's input
+                    trainerIdInput.value= `${trainerId}`;
+                    modalDate.innerText = `${selectedDay} ${currentMonthYear}`;
+                    selectedDateInput.value = `${selectedDay} ${currentMonthYear}`;
+
+                    // Show the modal
+                    modal.style.display = 'block';
+                }
+            });
+
+            // Close modal when 'x' is clicked
+            closeModal.addEventListener('click', function () {
+                modal.style.display = 'none';
+            });
         }
     </script>
     </body>

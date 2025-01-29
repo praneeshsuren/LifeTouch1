@@ -41,14 +41,20 @@
             
             if ($action === 'api') {
                 $bookingModel = new M_Booking();
+                $timeslotModel = new M_Timeslot();
+                $timeSlots = $timeslotModel->findAll();
                 $bookings = $bookingModel->getBookingsByMonthAndYear($member_id, $trainer_id, $month, $year);
         
                 header('Content-Type: application/json');
-                echo json_encode($bookings);
+                echo json_encode([
+                    'bookings' => $bookings,
+                    'timeSlots' => $timeSlots
+                ]);
                 exit;
             }
-        
-            $this->view('member/member-booking');
+
+            $data = ['member_id' => $member_id];
+            $this->view('member/member-booking', $data);
         }
         public function Announcements(){
             $this->view('member/member-announcements');

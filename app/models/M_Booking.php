@@ -16,11 +16,13 @@
         ];
 
         public function getBookingsByMonthAndYear($member_id, $trainer_id, $month, $year) {
-            $query = "SELECT * FROM $this->table 
-                    WHERE member_id = :member_id 
-                    AND trainer_id = :trainer_id 
-                    AND MONTH(booking_date) = :month 
-                    AND YEAR(booking_date) = :year";
+            $query = "SELECT b.*, ts.slot 
+                FROM $this->table AS b
+                JOIN time_slots AS ts ON b.timeslot_id = ts.id
+                WHERE b.member_id = :member_id 
+                AND b.trainer_id = :trainer_id 
+                AND MONTH(b.booking_date) = :month 
+                AND YEAR(b.booking_date) = :year";
 
             $data = [
                 'member_id' => $member_id,

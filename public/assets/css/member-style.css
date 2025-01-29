@@ -589,6 +589,17 @@ main .recent-announcements .announcements{
     box-shadow: var(--box-shadow-color);
 }
 
+main .recent-announcements .announcement-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+main .recent-announcements .announcement-list .date-heading{
+    font-size: 1.2rem;
+    text-align: left;
+}
+
 main .recent-announcements .announcement{
     display: flex;
     align-items: center;
@@ -1168,22 +1179,18 @@ main .calendarContainer {
     color: var(--sidebar-color);
 }
 
-td .pending {
+.pending {
     background: linear-gradient(45deg, #FFA500, #FF4500);
-    color: white;
-    border-radius: 1rem;
-    font-size: 1rem;
-    padding: 0 0.4rem;
-    margin:1.5rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
 }
 
-td .booked {
+.booked {
     background: linear-gradient(45deg, #32CD32, #006400) !important;
-    color: white !important;
-    border-radius: 1rem !important;
-    font-size: 1rem !important;
-    padding: 0 0.4rem !important;
-    margin: 1.5rem !important;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
 }
 
 .gotoToday {

@@ -80,7 +80,7 @@
             data.forEach(trainer => {
               const trainerDiv = document.createElement('div');
               trainerDiv.classList.add('trainer');
-              trainerDiv.innerHTML = `
+              trainerDiv.innerHTML += `
                 <img src="<?php echo URLROOT; ?>/assets/images/${trainer.image || 'image.png'}" alt="${trainer.first_name}'s image" class="trainer-image"/>
                 <h3>${trainer.first_name}</h3>
                 <button class="member-view-trainer-btn">View</button>
