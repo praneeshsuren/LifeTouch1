@@ -40,6 +40,66 @@ body.dark {
     --box-shadow-color: 0px 10px 8px rgba(255, 255, 255, 0.1);
 }
 
+main>.title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    color: var(--text-color);
+}
+
+main>.title>h1 {
+    font-size: 2rem;
+}
+
+main>.title>.greeting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+main>.title>.greeting h2 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--text-color);
+}
+
+main>.title>.greeting>.bell-container {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: var(--separator-color);
+    /* Background color for the circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+}
+
+main>.title>.greeting>.bell-container:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Enhanced shadow on hover */
+}
+
+main>.title>.greeting>.bell-container .notification {
+    font-size: 1.5rem;
+    /* Size of the bell icon */
+    color: var(--text-color);
+    /* Adjust the bell color */
+}
+
+main>.title>.greeting>.bell-container:hover .notification {
+    transform: scale(1.3);
+    /* Pop out effect */
+    animation: vibrate 0.3s ease-in-out infinite;
+    /* Vibrate effect */
+}
+
 /* Announcements Section */
 
 main {
@@ -841,6 +901,151 @@ body.dark form button:hover {
 
 }
 
+main .announcements-container{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+main .announcements-container .searchBar {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    z-index: 1000;
+}
+
+main .announcements-container .searchBar input[type="text"] {
+    width: 100%;
+    max-width: 400px; /* Limit maximum width for better layout on large screens */
+    padding: 0.75rem 1rem; /* Padding for a comfortable input size */
+    border: 1px solid #ddd; /* Light border for input */
+    border-radius: 2rem; /* Rounded edges for the input box */
+    font-size: 1rem; /* Comfortable font size */
+    color: #495057; /* Dark gray text */
+    background-color: #ffffff; /* White background for contrast */
+    outline: none; /* Remove outline on focus */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+    transition: all 0.3s ease; /* Smooth transition for hover/focus */
+    margin-left: 3rem;
+}
+
+main .announcements-container .searchBar input[type="text"]:focus {
+    border-color: var(--primary-color); /* Primary purple-blue border on focus */
+    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4); /* Glow effect */
+}
+
+main .announcements-container .heading{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+}
+
+main .announcements-container .table-container {
+    width: 80%;
+    height: 100%;
+    padding: 2rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    background-color: var(--sidebar-color);
+}
+
+main .announcements-container .table-container .heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+main .announcements-container .table-container .heading .btn {
+    padding: 12px 30px;
+    background-color: var(--primary-color); /* Purple-blue button background */
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 3rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none;
+    text-wrap: nowrap;
+}
+
+main .announcements-container .table-container .heading .btn:hover {
+    transform: scale(1.05);
+}
+
+/* Table Scrolling */
+main .announcements-container .table-container .table-scroll {
+    border: 1px solid #ddd;
+}
+
+main .announcements-container .table-container .table-scroll table {
+    width: 100%;
+    height: 100%; /* Adjust the height as needed */
+    border-collapse: collapse;
+    overflow-y: auto;
+}
+
+main .announcements-container .table-container .table-scroll table tbody tr:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+main .announcements-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+main .announcements-container table thead {
+    background-color: #f1f1f1;
+}
+
+main .announcements-container table thead td {
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+}
+
+main .announcements-container table tbody tr {
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.2s ease;
+}
+
+main .announcements-container table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+main .announcements-container table td {
+    padding: 1rem;
+}
+
+main .announcements-container table td a {
+    color: #007bff;
+    margin-right: 10px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+main .announcements-container table td a:hover {
+    color: #0056b3;
+}
+
+main .announcements-container table tbody tr td[colspan] {
+    text-align: center;
+    vertical-align: middle;
+    height: 100px; /* Set a height for the row to make the message more prominent */
+    color: #6c757d; /* Optional: Add a soft color for the message */
+    font-size: 1rem; /* Adjust font size */
+    font-style: italic; /* Optional: Italicize the message for emphasis */
+}
 
 /* Dark Mode for .last-announcement */
 body.dark .last-announcement {
@@ -2517,6 +2722,100 @@ a {
 
 
 }
+/*announcemt form*/
+/*Create Announcement Page*/
+
+main .create-announcement {
+    width: 80%;
+    margin: 2rem auto; /* Centering the form horizontally */
+    padding: 3rem;
+    background-color: #ffffff; /* White background for better contrast */
+    border-radius: 1rem; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+  
+  /* Input Box */
+main .create-announcement .input-box {
+    margin-bottom: 1.5rem;
+}
+  
+main .create-announcement .input-box label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+  
+main .create-announcement .input-box input[type="text"],
+  .input-box textarea {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ddd; /* Light border for inputs */
+    border-radius: 5px; /* Rounded edges */
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+  
+  /* Input Focus State */
+main .create-announcement .input-box input[type="text"]:focus,
+  .input-box textarea:focus {
+    border-color: var(--primary-color); /* Highlighted border */
+    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4); /* Subtle glow */
+  }
+  
+  /* Textarea Styling */
+main .create-announcement .input-box textarea {
+    min-height: 150px; /* Default height for textarea */
+    resize: vertical; /* Allow resizing only vertically */
+  }
+  
+  /* Publish Button */
+main .create-announcement button[type="submit"] {
+    display: inline-block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: var(--primary-color); /* Primary purple-blue */
+    border: none;
+    border-radius: 2rem; /* Rounded edges */
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  
+main .create-announcement button[type="submit"]:hover {
+    background-color: #5c4ef7; /* Slightly darker shade on hover */
+    transform: scale(1.02); /* Subtle scaling effect */
+  }
+  
+  /* Alert Message */
+main .create-announcement .alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    color: #842029; /* Dark red text */
+    background-color: #f8d7da; /* Light red background */
+    border: 1px solid #f5c2c7; /* Matching border color */
+    border-radius: 5px; /* Rounded edges */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    main .create-announcement {
+      padding: 1.5rem;
+    }
+  
+    main .create-announcement h1 {
+      font-size: 1.2rem;
+    }
+  
+    main .create-announcement button[type="submit"] {
+      font-size: 0.9rem;
+    }
+  }
 
 /* Announcement Card */
 
@@ -2806,170 +3105,242 @@ body.dark .inventory-item .item-details p {
     color: #ccc;
 }
 
-/* Announcements Page */
-main .announcementsContainer{
-    padding-top: 1rem;
-    grid-column: 1 / -1;
-    height: 100vh;
+/* User Registration Form */
+.user-create-container {
     display: flex;
-    align-items: center;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
-}
-
-main .announcementsContainer .announcementHeader{
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    width: 100%;
+    padding: 2rem;
+    max-width: 1200px;
+    margin-left: 80px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
 }
 
-
-main .announcementsContainer .announcementHeader .aHeading{
-    display: flex;
-    align-items: center;
+.user-create-sidebar {
+    width: 25%;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-main .announcementsContainer .announcementHeader .aHeading h2{
+.section-nav h2 {
     font-size: 1.5rem;
-    color: var(--text-color);
+    margin-bottom: 1rem;
+    color: #333;
 }
 
-main .announcementsContainer .announcementHeader .aHeading #num-of-announcements{
+.section-link-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: var(--alert-color);
-    border: 2px solid var(--alert-color);
-    border-radius: 20px;
-    padding: 0.2rem 0.5rem;
-    margin-left: 10px;
+    margin-bottom: 1rem;
 }
 
-main .announcementsContainer .announcementHeader #mark-as-read{
-    color: var(--text-color);
-    cursor: pointer;
-    transition: var(--tran-05);
-    padding: 0.2rem 0.5rem;
-    border-radius: 20px;
-    border: 1px solid var(--text-color);
-}
-
-main .announcementsContainer .announcementHeader #mark-as-read:hover{
-    color: var(--hover-btn);
-    border: 1px solid var(--hover-btn);
-    box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.1);
-}
-
-main .announcementsContainer .announcement-card{
-    background-color: var(--sidebar-color);
-    width: 90%;
-    padding: 2rem 2rem;
-    border-radius: 1.5rem;
-    display: block;
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .details{
-    display: flex;
-    align-items: center;
-    width: 92%;
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .details .profile-img{
-    display: flex;
-    margin-left: 0.5rem;
-    width: 4.5rem;
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .details .profile-img img{
-    border-radius: 50%;
-    width: 100%;
-    object-fit: cover;
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .details .name-and-title{
-    margin-left: 1rem;
-    display: block;
-    color: var(--hover-btn);
-    text-align: left;
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .details .name-and-title h3{
-    margin-bottom: 5px
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .unread-marker{
-    display: none;
-    border-radius: 20px;
-    border: 1px solid var(--alert-color);
-    padding: 0.2rem 0.5rem;
-    color: var(--alert-color);
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .unread-marker.unread{
-    display: block;
-}
-
-main .announcementsContainer .announcement-card .description{
-    margin-top: 1.5rem;
-    margin-left: 1rem;
-    color: var(--hover-btn);
-    text-align: left;
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Footer{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1.5rem;
-    margin-left: 0.5rem;
-    color: var(--hover-btn);
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Footer .announcement-time{
-    display: flex;
-    align-items: center;
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Footer .announcement-date{
-    display: flex;
-    align-items: center;
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Footer i{
+.section-number {
     font-size: 1.2rem;
+    font-weight: 600;
     margin-right: 0.5rem;
+    color: #007bff;
 }
 
-/* Responsive adjustments */
-@media screen and (max-width: 1200px) {
-    main {
-        grid-template-columns: 1fr;
-    }
-
-    main .recent-announcements {
-        grid-column: 1;
-        grid-row: 3;
-    }
-
+.section-line {
+    height: 2px;
+    flex-grow: 1;
+    background-color: #ccc;
 }
 
-@media screen and (max-width: 768px) {
-    main {
-        left: 0;
-        width: 100%;
-        padding: 1rem;
-    }
+.section-link {
+    font-size: 1rem;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
 
-    main .insights {
-        grid-template-columns: 1fr;
-    }
+.section-link:hover {
+    color: #007bff;
+}
+
+.section-link-wrapper.active .section-number {
+    color: #28a745;
+}
+
+.section-link-wrapper.active .section-line {
+    background-color: #28a745;
+}
+
+.user-form {
+    width: 70%;
+    padding: 1rem;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section-content {
+    margin-bottom: 2rem;
+}
+
+h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.input-container {
+    margin-bottom: 1.5rem;
+}
+
+.input-box {
+    position: relative;
+    width: 100%;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+label.floating-label {
+    position: absolute;
+    top: 0.75rem;
+    left: 1rem;
+    font-size: 0.9rem;
+    color: #999;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+input:focus + .floating-label,
+input:not(:focus):valid + .floating-label,
+select:focus + .floating-label {
+    top: -0.5rem;
+    left: 1rem;
+    font-size: 0.8rem;
+    color: #007bff;
+}
+
+.invalid-feedback {
+    font-size: 0.9rem;
+    color: #e74c3c;
+    margin-top: 0.5rem;
+}
+
+main .user-form .btn-container {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+
+main .user-form .btn-container .user-create-btn {
+    width: 50%;
+    padding: 12px;
+    background-color: #2693FF;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    align-self: center; /* Center the button */
+}
+
+main .user-form .btn-container .user-create-btn:hover {
+    background-color: #1c7bd9;
+    transform: scale(1.05);
+}
+
+
+.user-create-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    background-color: #2693FF;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.user-create-btn:hover {
+    background-color: #2693FF;
+}
+/* Password input field */
+.input-box {
+    position: relative;
+    width: 100%;
+}
+
+input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Floating label */
+.floating-label {
+    position: absolute;
+    top: 0.75rem;
+    left: 1rem;
+    font-size: 0.9rem;
+    color: #999;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 1; /* Ensure label stays above input */
+}
+
+input[type="password"]:focus + .floating-label,
+input[type="password"]:not(:focus):valid + .floating-label {
+    top: -0.5rem;
+    left: 1rem;
+    font-size: 0.8rem;
+    color: #007bff;
+}
+
+/* Error message */
+.invalid-feedback {
+    font-size: 0.9rem;
+    color: #e74c3c;
+    margin-top: 0.5rem;
+}
+
+/* Styling the input box on focus */
+input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
 }
