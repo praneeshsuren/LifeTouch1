@@ -86,8 +86,8 @@
                                             <div class="profile-pic">
                                                 <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                                                 <div class="person-info">
-                                                    <h4>John Doe</h4>
-                                                    <small class="email">john@gmail.com</small>
+                                                    <h4>Kavishka</h4>
+                                                    <small class="email">kavishka@gmail.com</small>
                                                 </div>
                                             </div>
                                         </td>

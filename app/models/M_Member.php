@@ -62,10 +62,21 @@
 
             if (empty($data['height'])) {
                 $this->errors['height'] = 'Height is required';
+            } elseif ($data['height'] < 0) {
+                $this->errors['height'] = 'Height cannot be negative';
             }
-
+            
             if (empty($data['weight'])) {
                 $this->errors['weight'] = 'Weight is required';
+            } elseif ($data['weight'] < 0) {
+                $this->errors['weight'] = 'Weight cannot be negative';
+            }
+            
+
+            if (empty($data['NIC_no'])) {
+                $this->errors['NIC_no'] = 'NIC number is required';
+            } elseif (strlen($data['NIC_no']) > 12) {
+                $this->errors['NIC_no'] = 'NIC number cannot exceed 12 characters';
             }
 
             // If there are no errors, return true; otherwise, return false.

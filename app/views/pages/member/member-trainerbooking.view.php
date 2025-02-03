@@ -30,35 +30,13 @@
     </section>
     <main>
         <div class="title">
-            <h1>View Supplements</h1>
+            <h1>View Calendar</h1>
             <div class="greeting">
-            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
-        </div>
-      </div>
-        <div class="bookingBox">
-            <div class="calendar-header">
-                <div class="prevMonth">
-                    <i class="ph ph-caret-circle-left"></i>
-                </div>
-                <div class="monthYear"></div>
-                <div class="nextMonth">
-                    <i class="ph ph-caret-circle-right"></i>
-                </div>
+                <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
             </div>
-            <table class="calendar">
-                <thead>
-                    <tr>
-                        <th>Sun</th>
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
-                        <th>Sat</th>
-                    </tr>
-                </thead>
-                <tbody class="calendarBody"></tbody>
-            </table>
+        </div>
+        <div class="bookingBox">
+            <?php echo $calendar;?>
             <div class="gotoToday">
                 <div class="goto">
                     <input type="text" placeholder="mm/yyyy" class="date-input" />
@@ -66,27 +44,49 @@
                 </div>
                 <button class="todayBtn">Today</button>
             </div>
-        </div>  
+        </div> 
+        <div id="bookingModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div class="title">
+                    <h3>Booking : <span id="modalDate"></span></h3>
+                </div>
+                <div class="timeslots">
+                    <?php if(!empty($time_slots)): ?>
+                        <?php foreach($time_slots as $slot): ?>
+                            <button class="timeslot" data-timeslot="<?php echo htmlspecialchars($slot->slot); ?>"
+                            data-timeslot-id="<?php echo htmlspecialchars($slot->id); ?>">
+                                <?php echo htmlspecialchars($slot->slot); ?>
+                            </button>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+                <div class="bookingForm">
+                    <form action="<?php echo URLROOT;?>/member/memberTrainerbooking" method="POST">
+                        <div class="input">
+                            <input type="hidden" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_id); ?>"required>
+                            <input type="hidden" id="selectedTrainerId" readonly name="selectedTrainerId" value="<?php echo htmlspecialchars($trainer_id); ?>"required>
+                            <input type="hidden" id="selectedTimeslotId" readonly name="selectedTimeslotId" required> 
+                            <div class="input-container">
+                                <label for="selectedDate" class="label"><i class="ph ph-calendar"></i>Date</label>
+                                <input type="text" id="selectedDate" readonly name="selectedDate" required>
+                            </div>
+                            <div class="input-container">
+                                <label for="selectedTimeslot" class="label"><i class="ph ph-clock-countdown"></i>Time</label>
+                                <input type="text" id="selectedTimeslot" readonly name="selectedTimeslot" placeholder="Select the Timeslot" required>  
+                            </div>
+                        </div>
+                        <div class="book-btn">
+                            <button type="submit" id="btnBook" name="submit">Book</button>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+        </div>
     </main>
-    <div id="bookingForm"></div>
-    <div id="addBooking">
-        <h2>Add Booking</h2>
-        <select id="timeslot"></select>
-        <div class="bookingFormbuttons">
-            <button id="btnBook">Book</button>
-            <button class="btnClose">Cancel</button>
-        </div>
-    </div>
-    <div id="viewBooking">
-        <h1 id="bookingTime"></h1>
-        <div class="bookingFormbuttons">
-            <button id="btnDelete">Cancel Booking</button>
-            <button class="btnClose">Close</button>
-        </div>
-    </div>
     <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/member/calendar.js?v=<?php echo time();?>"></script>
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
-  </body>
+    <script src="<?php echo URLROOT; ?>/assets/js/member/calendar.js?v=<?php echo time();?>"></script>
+    </body>
 </html>
 
