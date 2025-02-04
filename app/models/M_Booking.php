@@ -33,6 +33,26 @@
 
             return $this->query($query, $data);
         }
+
+        public function isBooked($member_id, $trainer_id, $booking_date, $timeslot_id){
+            $query = "SELECT * FROM $this->table
+                WHERE trainer_id = :trainer_id 
+                AND booking_date = :booking_date 
+                AND timeslot_id = :timeslot_id";
+
+            $data = [
+                'member_id' => $member_id,
+                'trainer_id' => $trainer_id, 
+                'booking_date' => $booking_date,
+                'timeslot_id' => $timeslot_id,
+            ];
+            $result = $this->query($query, $data);
+            if($result){
+                return true;
+            } else{
+                return false;
+            }
+        }
             
         public function validate($data) {
             $this->errors = [];

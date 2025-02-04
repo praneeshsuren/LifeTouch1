@@ -25,6 +25,20 @@
     <title><?php echo APP_NAME; ?></title>
   </head>
   <body>
+
+    <!-- PHP Alerts for Success/Error Messages -->
+    <?php
+        if (isset($_SESSION['success'])) {
+            echo "<script>alert('" . $_SESSION['success'] . "');</script>";
+            unset($_SESSION['success']); // Clear the message after showing it
+        }
+
+        if (isset($_SESSION['error'])) {
+            echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+            unset($_SESSION['error']); // Clear the message after showing it
+        }
+        ?>
+
     <section class="sidebar">
     <?php require APPROOT.'/views/components/member-sidebar.view.php' ?>
     </section>
@@ -69,7 +83,7 @@
                 </div>
                 <div class="timeslots"></div>
                 <div class="bookingForm">
-                    <form action="<?php echo URLROOT;?>/member/memberTrainerbooking" method="POST">
+                    <form action="<?php echo URLROOT;?>/member/Booking" method="POST">
                         <div class="input">
                             <input type="text" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_id); ?>"required>
                             <input type="text" id="selectedTrainerId" readonly name="selectedTrainerId" required>
@@ -369,6 +383,7 @@
                 // Check if the clicked element is a date box
                 if (clickedElement.classList.contains('day') && !clickedElement.classList.contains('plain')) {
                     const selectedDate = clickedElement.getAttribute('data-date');
+                    console.log(selectedDate);
                     // Only allow selecting present or future dates
                     if (selectedDate < dateToday) {
                         return; 
