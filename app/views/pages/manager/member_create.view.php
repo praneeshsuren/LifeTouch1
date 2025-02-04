@@ -10,7 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/manager-style.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/registration-style.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time(); ?>" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
     <!-- ICONS -->
@@ -25,20 +26,22 @@
     </section>
 
     <main>
-        <div class="top">
-            <h1 class="title">Add Member</h1>
-            <div class="bell">
-                <i class="ph ph-bell"></i>
-                <p>Hi, John!</p>
+    <div class="title">
+            
+            <h1>Members</h1>
+            <div class="greeting">
+            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
             </div>
+
         </div>
 
+
         <div class="user-create-container">
-            
+
             <div class="user-create-sidebar">
 
                 <div class="section-nav">
-                    
+
                     <h2>Member Registration</h2>
 
                     <div class="section-link-wrapper">
@@ -47,7 +50,7 @@
                             <div class="section-line"></div>
                         </div>
                         <a href="#profile-picture" class="section-link">Profile Picture</a>
-                    </div>      
+                    </div>
 
                     <div class="section-link-wrapper">
                         <div class="section-line-wrapper">
@@ -112,14 +115,14 @@
                             </div>
 
                         </div>
-                        
+
 
                         <div class="section-content" id="personal-details">
 
                             <h3>Personal Details</h3>
 
                             <div class="input-container">
-                                <div class="input-box">
+                                <div class="input-box1">
                                     <input type="text" id="first-name" name="first_name" value="<?php echo $_POST['first_name'] ?? ''; ?>" required>
                                     <label class="floating-label">First Name</label>
                                     <?php if (!empty($data['errors']['first_name'])): ?>
@@ -129,7 +132,7 @@
                             </div>
 
                             <div class="input-container">
-                                <div class="input-box">
+                                <div class="input-box1">
                                     <input type="text" id="last-name" name="last_name" value="<?php echo $_POST['last_name'] ?? ''; ?>" required>
                                     <label class="floating-label">Last Name</label>
                                     <?php if (!empty($data['errors']['last_name'])): ?>
@@ -139,7 +142,7 @@
                             </div>
 
                             <div class="input-container">
-                                <div class="input-box">
+                                <div class="input-box1">
                                     <input type="text" id="NIC-no" name="NIC_no" value="<?php echo $_POST['NIC_no'] ?? ''; ?>" required>
                                     <label class="floating-label">NIC Number</label>
                                     <?php if (!empty($data['errors']['NIC_no'])): ?>
@@ -151,7 +154,7 @@
                             <div class="row">
 
                                 <div class="input-container">
-                                    <div class="input-box">
+                                    <div class="input-box1">
                                         <label>Date of Birth:</label>
                                         <input type="date" id="dob" name="date_of_birth" value="<?php echo $_POST['date_of_birth'] ?? ''; ?>" required>
                                         <?php if (!empty($data['errors']['date_of_birth'])): ?>
@@ -161,7 +164,7 @@
                                 </div>
 
                                 <div class="input-container">
-                                    <div class="input-box">
+                                    <div class="input-box1">
                                         <select id="gender" name="gender" required>
                                             <option value="" disabled selected>Gender</option>
                                             <option value="Male" <?php echo (isset($_POST['gender']) && $_POST['gender'] === 'Male') ? 'selected' : ''; ?>>Male</option>
@@ -177,7 +180,7 @@
                             </div>
 
                             <div class="input-container">
-                                <div class="input-box">
+                                <div class="input-box1">
                                     <input type="text" id="home-address" name="home_address" value="<?php echo $_POST['home_address'] ?? ''; ?>" required>
                                     <label class="floating-label">Home Address</label>
                                     <?php if (!empty($data['errors']['home_address'])): ?>
@@ -185,15 +188,15 @@
                                     <?php endif; ?>
                                 </div>
                             </div>
-                                        
+
                         </div>
 
                         <div class="section-content" id="contact-details">
 
-                            <h3>Contact Details</h3>    
+                            <h3>Contact Details</h3>
 
                             <div class="input-container">
-                                <div class="input-box">
+                                <div class="input-box1">
                                     <input type="tel" id="contact-number" name="contact_number" value="<?php echo $_POST['contact_number'] ?? ''; ?>" required>
                                     <label class="floating-label">Contact Number</label>
                                     <?php if (!empty($data['errors']['contact_number'])): ?>
@@ -203,7 +206,7 @@
                             </div>
 
                             <div class="input-container">
-                                <div class="input-box">
+                                <div class="input-box1">
                                     <input type="email" id="email-address" name="email_address" value="<?php echo $_POST['email_address'] ?? ''; ?>" required>
                                     <label class="floating-label">Email Address</label>
                                     <?php if (!empty($data['errors']['email_address'])): ?>
@@ -211,7 +214,7 @@
                                     <?php endif; ?>
                                 </div>
                             </div>
-                
+
                         </div>
 
                         <div class="section-content" id="health-details">
@@ -221,7 +224,7 @@
                             <div class="row">
 
                                 <div class="input-container">
-                                    <div class="input-box">
+                                    <div class="input-box1">
                                         <input type="number" id="weight" name="weight" value="<?php echo $_POST['weight'] ?? ''; ?>" step="0.001" required>
                                         <label class="floating-label">Weight (kg)</label>
                                         <?php if (!empty($data['errors']['weight'])): ?>
@@ -232,7 +235,7 @@
 
 
                                 <div class="input-container">
-                                    <div class="input-box">
+                                    <div class="input-box1">
                                         <input type="number" id="height" name="height" value="<?php echo $_POST['height'] ?? ''; ?>" step="0.001" required>
                                         <label class="floating-label">Height (m)</label>
                                         <?php if (!empty($data['errors']['height'])): ?>
@@ -242,11 +245,11 @@
                                 </div>
 
                             </div>
-                                        
+
                         </div>
 
                         <div class="section-content" id="login-credentials">
-                            
+
                             <h3>Login Credentials</h3>
 
                             <div class="input-container">
@@ -282,7 +285,7 @@
                                 </div>
 
                             </div>
-                            
+
                         </div>
 
 
@@ -299,7 +302,7 @@
         </div>
 
         <!-- SCRIPT -->
-        <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
+        <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time(); ?>"></script>
 
         <script>
             function display_image(file) {
@@ -311,13 +314,13 @@
             }
 
             // Update the `onchange` event listener in the input
-            document.querySelector(".image-upload-input").addEventListener("change", function () {
+            document.querySelector(".image-upload-input").addEventListener("change", function() {
                 const file = this.files[0]; // Get the selected file
                 display_image(file); // Call the function to update the image
             });
 
             // Updated script to handle input focus
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
                 const sectionLinks = document.querySelectorAll('.section-link');
                 const sectionContents = document.querySelectorAll('.section-content');
                 const formInputs = document.querySelectorAll('.input-box input, .input-box select, .input-box textarea');
@@ -363,7 +366,7 @@
 
                 // Event Listener for Input Focus
                 formInputs.forEach(input => {
-                    input.addEventListener('focus', function () {
+                    input.addEventListener('focus', function() {
                         const parentSection = input.closest('.section-content');
                         if (parentSection) {
                             const sectionId = parentSection.id;
@@ -383,9 +386,8 @@
                 // Example usage: Marking the first section as completed on load
                 markSectionCompleted(0);
             });
-
         </script>
-    <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
+        <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>
