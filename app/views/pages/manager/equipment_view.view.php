@@ -66,28 +66,39 @@
             <!-- Table Section -->
             <div class="purchase-table-container">
                 <h3>Service History</h3>
-                <table class="purchase-table">
-                    <thead>
-                        <tr>
-                            <th>Service Date</th>
-                            <th>Service Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($services)): ?>
-                            <?php foreach ($services as $service): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($service->service_date); ?></td>
-                                    <td><?php echo htmlspecialchars($service->service_cost); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
+                <div class="user-table-wrapper">
+                    <table class='user-table'>
+                        <thead>
                             <tr>
-                                <td colspan="2">No service history available</td>
+                                <th>Service Date</th>
+                                <th>Service Cost</th>
+                                <th>Actions</th>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+
+                            <?php if (!empty($services)): ?>
+                                <?php foreach ($services as $service): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($service->service_date); ?></td>
+                                        <td><?php echo htmlspecialchars($service->service_cost); ?></td>
+                                        <td>
+                                            <a href="<?php echo URLROOT; ?>/manager/service_edit/<?php echo $service->service_id; ?>">
+                                                <button class="edit-button"><i class="ph ph-pencil-line"></i></button>
+                                            </a> <a href="<?php echo URLROOT; ?>/service/deleteService/<?php echo $service->service_id; ?>" onclick="return confirm('Are you sure you want to delete this equipment?');">
+                                                <button class="delete-button"><i class="ph ph-x"></i></button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="2">No service history available</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="service-form">
@@ -112,6 +123,9 @@
         </div>
     </main>
 
+    <script>
+
+    </script>
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
 </body>
 

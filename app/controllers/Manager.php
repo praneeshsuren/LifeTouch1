@@ -309,6 +309,10 @@ class Manager extends Controller
     {
         $this->view('manager/admin_view');
     }
+    public function service_edit()
+    {
+        $this->view('manager/service_edit');
+    }
     public function equipment()
     {
         $equipmentModel = new M_Equipment(); // Assume this is your equipment model

@@ -21,12 +21,19 @@
 <style>
 
 .doughnut-chart .lower {
-    width: 700px;
+    width: 400px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; /* Aligns to the left */
     margin-top: -20px; /* Moves it up */
 }
-
+.insights {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    margin-left: -20px;
+}
 
 
 </style>
@@ -94,13 +101,13 @@
 
             <div class="insight-card card-3">
               <div class="upper">
-                <i class="ph ph-chat-circle-text"></i>
+              <i class="ph ph-barbell"></i>
                 <div class="status-badge">
                   <span>+9.4%</span>
                 </div>
               </div>
               <div class="lower">
-                  <p>Total Inquiries</p>
+                  <p>Total Equipments</p>
                   <div class="progress">
                     <h1>20000</h1>
                     <div class="text-muted">
@@ -112,13 +119,13 @@
 
             <div class="insight-card card-4">
               <div class="upper">
-                <i class="ph ph-calendar-check"></i>
+              <i class="ph ph-notepad"></i>
                 <div class="status-badge">
                   <span>+9.4%</span>
                 </div>
               </div>
               <div class="lower">
-                  <p>Total Event Attendees</p>
+                  <p>Total Workouts Created</p>
                   <div class="progress">
                     <h1>20000</h1>
                     <div class="text-muted">
@@ -130,7 +137,7 @@
 
           </div>
 
-          <div class="bar-chart">
+          <div class="bar-chart" style="margin-left:30px">
 
             <div class="upper">
 
@@ -153,6 +160,16 @@
             </div>
           </div>
 
+          <div class="bar-chart" style="width: 700px; margin-top:30px; margin-left:30px">
+          <div class="upper-text">
+                <h2>Member Age Distribution</h2>
+              </div>
+            <div class="lower">
+                <canvas id="chart2"></canvas>
+            </div>
+          </div>
+
+
         </div>
 
         <div class="right-column">
@@ -172,7 +189,18 @@
           </div>
 
         </div>
-
+        <div class="right-column" style="width: 700px; margin-left: -835px;">
+        <div class="doughnut-chart">
+            <div class="upper-text">
+                  <h2>Invetory</h2>
+                  <p>Invetory distribution</p>
+            </div> 
+            <div class="lower">
+                <canvas id="chart3"></canvas>
+            </div>
+          </div>
+        </div>
+        
     </main>
 
     <!-- SCRIPT -->
@@ -344,4 +372,107 @@
       new Chart(ctxDoughnutChart, configDoughnutChart);
 
     </script>
+
+<script>
+    // Data for gym equipment counts
+    const data = {
+      labels: ['Treadmills', 'Dumbbells', 'Bikes', 'Rowing Machines'], // Equipment names on x-axis
+      datasets: [{
+        label: 'Count of Equipment',
+        data: [70, 140, 50, 40], // Equipment counts
+        backgroundColor: 'rgba(75, 192, 192, 0.5)', // Color for the bars
+      }, ],
+    };
+
+    // Configuration for the bar chart
+    const inconfig = {
+      type: 'bar',
+      data: data,
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Gym Equipment Counts', // Chart title
+          },
+        },
+        responsive: true,
+        interaction: {
+          intersect: false,
+        },
+        scales: {
+          x: {
+            stacked: false, // No stacking on the x-axis
+            title: {
+              display: true,
+              text: 'Equipment', // X-axis label
+            },
+          },
+          y: {
+            stacked: false, // No stacking on the y-axis
+            title: {
+              display: true,
+              text: 'Count', // Y-axis label
+            },
+          },
+        },
+      },
+    };
+    // Render the chart
+    document.addEventListener('DOMContentLoaded', () => {
+      const ctx3 = document.getElementById('chart3').getContext('2d');
+      const ageChart = new Chart(ctx3, inconfig); // Create a new Chart.js instance
+    });
+  </script>
+
+<script>
+    // Define age category data
+    // Define age category data
+    const ageData = {
+      labels: ['18-25', '26-35', '36-45', '46-60', '60+'], // Age categories
+      datasets: [{
+        label: 'Age Distribution',
+        data: [12, 19, 10, 7, 5], // Example data for each age category
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)', // Red
+          'rgba(54, 162, 235, 0.5)', // Blue
+          'rgba(255, 206, 86, 0.5)', // Yellow
+          'rgba(75, 192, 192, 0.5)', // Green
+          'rgba(153, 102, 255, 0.5)' // Purple
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)'
+        ],
+        borderWidth: 1,
+      }],
+    };
+
+    // Pie chart configuration
+    const ageConfig = {
+      type: 'pie',
+      data: ageData,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'right', // Positions the legend at the top
+          },
+          title: {
+            display: true,
+            text: 'Age Distribution of Members', // Chart title
+          },
+        },
+      },
+    };
+
+    // Render the chart
+    document.addEventListener('DOMContentLoaded', () => {
+      const ctx2 = document.getElementById('chart2').getContext('2d');
+      const ageChart = new Chart(ctx2, ageConfig); // Create a new Chart.js instance
+    });
+  </script>
+
   </body>
