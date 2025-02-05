@@ -34,6 +34,22 @@
             return $this->query($query, $data);
         }
 
+        public function bookingsMemberTrainerDetail(){
+            $query = "SELECT 
+                b.*, 
+                m.member_id AS member_id, 
+                CONCAT(m.first_name, ' ', m.last_name) AS member_name, 
+                t.trainer_id AS trainer_id, 
+                CONCAT(t.first_name, ' ', t.last_name) AS trainer_name, 
+                ts.slot AS time_slot
+              FROM booking AS b
+              JOIN time_slots ts ON b.timeslot_id = ts.id
+              JOIN member m ON b.member_id = m.member_id
+              JOIN trainer t ON b.trainer_id = t.trainer_id";
+            
+            return $this->query($query);
+        }
+
         public function isBooked($member_id, $trainer_id, $booking_date, $timeslot_id){
             $query = "SELECT * FROM $this->table
                 WHERE trainer_id = :trainer_id 
@@ -49,7 +65,7 @@
             $result = $this->query($query, $data);
             if($result){
                 return true;
-            } else{
+            } else {
                 return false;
             }
         }

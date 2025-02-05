@@ -247,4 +247,29 @@
             }
         }
 
+        public function bookings($action = null){
+            $bookingModel = new M_Booking();
+            $bookings = $bookingModel->bookingsMemberTrainerDetail();
+        
+            if ($action === 'api'){
+                header('Content-Type: application/json');
+                echo json_encode($bookings);
+                exit;
+            }
+            $this->view('admin/admin-booking');
+        }
+
+        public function calendar($action = null){
+            $bookingModel = new M_Booking();
+            $bookings = $bookingModel->bookingsMemberTrainerDetail();
+        
+            if ($action === 'api'){
+                header('Content-Type: application/json');
+                echo json_encode($bookings);
+                exit;
+            }
+
+            $this->view('admin/admin-calendar');
+        }
+
     }

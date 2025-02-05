@@ -43,7 +43,7 @@
 
       </div>
 
-      <div class="table-container">
+      <div class="booking-container">
 
           <div class="filters">
             <button class="filter active">New Bookings</button>
@@ -52,7 +52,7 @@
             <button class="filter">Rejected</button>
           </div>
 
-          <div class="user-table-header">
+          <div class="booking-table-header">
             <input type="text" placeholder="Search" class="search-input">
             <button class="add-user-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/receptionists/createReceptionist'">+ Add Receptionist</button>
           </div>
@@ -61,7 +61,6 @@
             <table class='user-table'>
               <thead>
                   <tr>
-                      <th>Member Id</th>
                       <th>Profile Picture</th>
                       <th>Member Name</th>
                       <th>Date</th>
@@ -72,7 +71,7 @@
               <tbody></tbody>
             </table>
           </div>
-          
+
       </div>
       
       </main>

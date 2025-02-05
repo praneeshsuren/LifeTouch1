@@ -39,8 +39,9 @@
             $month = (int)($_GET['month'] ?? date('m'));
             $year = (int)($_GET['year'] ?? date('Y'));
             
+            $bookingModel = new M_Booking();
+            
             if ($action === 'api') {
-                $bookingModel = new M_Booking();
                 $timeslotModel = new M_Timeslot();
                 $timeSlots = $timeslotModel->findAll();
                 $bookings = $bookingModel->getBookingsByMonthAndYear($member_id, $trainer_id, $month, $year);
@@ -71,57 +72,4 @@
         public function Settings(){
             $this->view('member/member-settings');
         }   
-        // public function memberTrainerbooking() {
-        //     $errors = [];
-        
-        //     // Validate session member_id
-        //     $member_id = $_SESSION['member_id'] ?? null;
-            
-        //     // Validate trainer_id
-        //     $trainer_id = $_GET['trainer_id'] ?? null;
-        //     $trainer_id = htmlspecialchars($trainer_id);
-           
-        //     $month = (int)($_GET['month'] ?? date('m'));
-        //     $year = (int)($_GET['year'] ?? date('Y'));
-        
-        //     $bookingModel = new M_Booking();
-        //     $timeslotModel = new M_Timeslot();
-         
-        //     // Fetch time slots
-        //     $time_slots = $timeslotModel->findAll();
-        
-        //     // Build calendar
-        //     $calendar = $bookingModel->build_calender($month, $year, $member_id, $trainer_id);
-
-        //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        //         $selectedTrainerId = $_POST['selectedTrainerId'] ?? null;
-        //         $selectedDate = $_POST['selectedDate'] ?? null;
-        //         $selectedTimeslotId = $_POST['selectedTimeslotId'] ?? null;
-        
-        //         $data = [
-        //             'member_id' => $member_id,
-        //             'trainer_id' => $selectedTrainerId,
-        //             'booking_date' => $selectedDate,
-        //             'timeslot_id' => $selectedTimeslotId,
-        //             'status' => 'pending',
-        //         ];
-        
-        //         $booking = new M_Booking();
-        //         if ($booking->validate($data) && empty($errors)) {
-        //             $booking->insert($data);
-        //             header('Location: ' . URLROOT . '/member/memberTrainerbooking?trainer_id=' . urlencode($selectedTrainerId));
-        //         } else {
-        //             $errors = array_merge($errors, $booking->getErrors());
-        //         }
-        //     }
-        
-        //     $this->view('member/member-trainerbooking', [
-        //         'calendar' => $calendar,
-        //         'time_slots' => $time_slots,
-        //         'trainer_id' => $trainer_id,
-        //         'member_id' => $member_id,
-        //         'errors' => $errors,
-        //     ]);
-        // }
-        
-    }
+}
