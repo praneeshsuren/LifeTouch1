@@ -249,7 +249,7 @@
 
         public function bookings($action = null){
             $bookingModel = new M_Booking();
-            $bookings = $bookingModel->bookingsMemberTrainerDetail();
+            $bookings = $bookingModel->bookingsfForAdmin();
         
             if ($action === 'api'){
                 header('Content-Type: application/json');
@@ -259,16 +259,7 @@
             $this->view('admin/admin-booking');
         }
 
-        public function calendar($action = null){
-            $bookingModel = new M_Booking();
-            $bookings = $bookingModel->bookingsMemberTrainerDetail();
-        
-            if ($action === 'api'){
-                header('Content-Type: application/json');
-                echo json_encode($bookings);
-                exit;
-            }
-
+        public function calendar(){
             $this->view('admin/admin-calendar');
         }
 

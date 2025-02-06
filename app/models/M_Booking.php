@@ -34,7 +34,22 @@
             return $this->query($query, $data);
         }
 
-        public function bookingsMemberTrainerDetail(){
+        public function bookingsForTrainer($trainer_id){
+            $query = "SELECT 
+                b.*, 
+                m.member_id AS member_id, 
+                CONCAT(m.first_name, ' ', m.last_name) AS member_name, 
+                ts.slot AS time_slot
+                FROM booking AS b
+                JOIN time_slots ts ON b.timeslot_id = ts.id
+                JOIN member m ON b.member_id = m.member_id
+                WHERE b.trainer_id = :trainer_id 
+            ";
+
+            return $this->query($query, ['trainer_id' => $trainer_id]);
+        }
+
+        public function bookingsfForAdmin(){
             $query = "SELECT 
                 b.*, 
                 m.member_id AS member_id, 

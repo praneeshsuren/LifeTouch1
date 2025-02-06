@@ -45,4 +45,24 @@
             }
         }
 
+        public function bookings($action = null) {
+            $trainer_id = $_SESSION['trainer_id'] ?? null;
+        
+            $bookingModel = new M_Booking();
+            $bookings = $bookingModel->bookingsForTrainer($trainer_id);
+        
+            if ($action === 'api') {
+                header('Content-Type: application/json');
+                echo json_encode($bookings);
+                exit;
+            }
+        
+            $this->view('trainer/trainer-booking');
+        }
+        
+
+        public function calendar(){
+            $this->view('trainer/trainer-calendar');
+        }
+
     }

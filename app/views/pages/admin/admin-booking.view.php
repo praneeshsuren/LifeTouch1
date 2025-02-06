@@ -67,7 +67,7 @@
       </main>
 
     <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () =>{ 
             const tableBody = document.querySelector('.user-table tbody');

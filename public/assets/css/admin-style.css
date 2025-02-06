@@ -1960,7 +1960,7 @@ main .event-detail-container .form-container{
     background: #f9f9f9;
   }
 
-  /* booking page */
+/* booking page */
 .status {
     width:80px;
     height:40px;
@@ -2081,7 +2081,7 @@ main .calendarContainer {
 .booked-count {
     background: linear-gradient(45deg, #32CD32, #006400) !important;
     color: #fff;
-    width: 20px;
+    width: 40px;
     height: 20px;
     font-size: 15px;
     display: flex;
@@ -2151,11 +2151,12 @@ main .calendarContainer {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color:var(--modalbg-colour); 
+    background-color:var(--modalbg-colour);
 }
 
 .bookingModal-content {
     position: absolute;
+    top: 30%;
     left: 50%;
     transform: translate(-30%, -120%); /* Center the modal */
     background-color:var(--sidebar-color);
@@ -2163,10 +2164,9 @@ main .calendarContainer {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
-    max-width: 500px; /* Limit modal width */
-    max-height: 90%; /* Prevent it from overflowing */
-    overflow-y: auto; /* Add scroll only if content overflows */
+    width: 500px; 
+    height: 250px;
+    overflow-y: auto; 
     border-radius: 10px;
 }
 
@@ -2197,11 +2197,11 @@ main .calendarContainer {
 
 .trainerviewbtn-profileTable-container tr{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr; 
+    grid-template-columns: 140px 140px 180px; 
 }
 
 .trainerviewbtn-profileTable-container td{
-    border-bottom: 1px solid var(--text-color);
+    border-bottom: 1px solid var(--body-color);
     word-break: break-word;
 }
 

@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/trainer-style.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script>
@@ -26,7 +26,7 @@
   </head>
   <body>
     <section class="sidebar">
-    <?php require APPROOT.'/views/components/admin-sidebar.view.php' ?>
+    <?php require APPROOT.'/views/components/trainer-sidebar.view.php' ?>
     </section>
     <main>
         <div class="title">
@@ -79,7 +79,7 @@
         
         document.addEventListener("DOMContentLoaded", () =>{
 
-            fetch('<?php echo URLROOT; ?>/admin/bookings/api')
+            fetch('<?php echo URLROOT; ?>/trainer/bookings/api')
                 .then(response => {
                     console.log('Response Status:', response.status); // Log response status
                     return response.json();
@@ -199,7 +199,7 @@
                     const today = new Date();
                     currentMonth = today.getMonth() + 1;
                     currentYear = today.getFullYear();
-                    window.location.href =`<?php echo URLROOT; ?>/admin/calendar?month=${currentMonth}&year=${currentYear}`;
+                    window.location.href =`<?php echo URLROOT; ?>/trainer/calendar?month=${currentMonth}&year=${currentYear}`;
                     buildCalendar();
                 });
             }
@@ -229,7 +229,7 @@
                     ) {
                         currentMonth = inputMonth;
                         currentYear = inputYear;
-                        window.location.href =`<?php echo URLROOT; ?>/admin/calendar?month=${currentMonth}&year=${currentYear}`;
+                        window.location.href =`<?php echo URLROOT; ?>/trainer/calendar?month=${currentMonth}&year=${currentYear}`;
                         buildCalendar(); // Build calendar for the new date
                     } else {
                         alert("Please enter a valid date in MM/YYYY format.");
@@ -242,7 +242,7 @@
         function bookingModal(){
             const modal = document.getElementById('bookingModal');
             const closeModal = document.querySelector('.bookingModal .bookingModalClose');
-
+            
             calendarBody.addEventListener('click', function (event) {
                 const modalDate = document.getElementById('modalDate');
                 const clickedElement = event.target;
@@ -267,7 +267,7 @@
                                 <table class="trainerviewbtn-profileTable-container">
                                     <tr>
                                         <td>${book.member_id}</td>
-                                        <td>${book.trainer_id}</td>
+                                        <td>${book.member_name}</td>
                                         <td>${book.time_slot}</td>
                                     </tr>
                                 </table>
