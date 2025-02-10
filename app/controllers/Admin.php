@@ -247,4 +247,20 @@
             }
         }
 
+        public function bookings($action = null){
+            $bookingModel = new M_Booking();
+            $bookings = $bookingModel->bookingsfForAdmin();
+        
+            if ($action === 'api'){
+                header('Content-Type: application/json');
+                echo json_encode($bookings);
+                exit;
+            }
+            $this->view('admin/admin-booking');
+        }
+
+        public function calendar(){
+            $this->view('admin/admin-calendar');
+        }
+
     }

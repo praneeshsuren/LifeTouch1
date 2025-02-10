@@ -27,6 +27,12 @@
                 </a>
             </li>
             <li>
+                <a href="<?php echo URLROOT; ?>/trainer/bookings">
+                    <i class="ph ph-notebook"></i>
+                    <span class="text">Bookings</span>
+                </a>
+            </li>
+            <li>
                 <a href="#">
                     <i class='icon ph-bold ph-barbell'></i>
                     <span class="text">Workouts</span>
