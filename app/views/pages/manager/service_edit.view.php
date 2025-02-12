@@ -16,8 +16,58 @@
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
-</head>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
 
+        .service-form {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-container {
+            margin-bottom: 15px;
+        }
+
+        .input-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .input-container input[type="date"],
+        .input-container input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            text-align: right;
+        }
+
+        .edit-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .edit-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
 
 <body>
     <section class="sidebar">
@@ -25,43 +75,39 @@
     </section>
 
     <main>
-        <div class="top">
-            <h1 class="title">Edit Equipment</h1>
-        </div>
+        <div class="title">
 
-        <div class="box">
-        <a href="<?php echo URLROOT; ?>/manager/equipment_view/<?php echo $equipment->equipment_id; ?>" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
-
-            <div class="service-form">
-                <h2>Add Service</h2>
-                <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/service/updateService">
-                    <input type="hidden" name="service_id" value="<?php echo htmlspecialchars($service->service_id); ?>">
-
-                    <div class="input-container">
-                        <label for="service_date">Service Date:</label>
-                        <input type="date" id="service_date" name="service_date" value="<?php echo $service->service_date; ?>" required>
-                    </div>
-                    <div class="input-container">
-                        <label for="service_cost">Service Cost:</label>
-                        <input type="text" id="service_cost" name="service_cost" value="<?php echo $service->service_cost; ?>" required>
-                    </div>
-                    <div class="button-container">
-                        <button class="edit-button">update Service</button>
-                    </div>
-                </form>
-
+            <h1 style="margin-top: -30px;">Edit Service history</h1>
+            <div class="greeting">
+                <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
             </div>
-        </div>
-    </main>
 
-    <script>
-        function display_image(file) {
-            if (file) {
-                var img = document.querySelector(".profile-img");
-                img.src = URL.createObjectURL(file);
-            }
-        }
-    </script>
+    </div>
+
+
+        <div class="service-form" style="margin-top: -90px; height: 90%; width:1000px;">
+
+            <a href="<?php echo URLROOT; ?>/manager/equipment_view/<?php echo isset($equipment->equipment_id) ? htmlspecialchars($equipment->equipment_id) : ''; ?>" class="btn" style="float: right; margin-top: 10px;margin-bottom:3px;">Back</a>
+
+            <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/service/updateService">
+                <input type="hidden" name="service_id" value="<?php echo htmlspecialchars(isset($service->service_id) ? $service->service_id : ''); ?>">
+
+                <div class="input-container">
+                    <label for="service_date">Service Date:</label>
+                    <input type="date" id="service_date" name="date" value="<?php echo htmlspecialchars(isset($service->service_date) ? $service->service_date : ''); ?>" placeholder="mm/dd/yyyy" required>
+                </div>
+                <div class="input-container">
+                    <label for="service_cost">Service Cost:</label>
+                    <input type="text" id="service_cost" name="cost" value="<?php echo htmlspecialchars(isset($service->service_cost) ? $service->service_cost : ''); ?>" required>
+                </div>
+                <div class="button-container">
+
+                    <button class="edit-button" style="display: block; margin: 0 auto; border-radius: 20px;width:200px;margin-top:20px;">Update</button>
+                </div>
+            </form>
+        </div>
+
+    </main>
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
 </body>
 

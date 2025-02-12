@@ -57,7 +57,6 @@ class Service extends Controller
         $serviceModel = new M_Service();
 
         // Fetch the existing equipment details by ID
-        $data = ['service_id' => $id];
         $service = $serviceModel->where(['service_id' => $id], [], 1);
 
         if (!$service) {
@@ -94,22 +93,24 @@ class Service extends Controller
 
 
 public function deleteService($id)
-    {
-        $serviceModel = new M_Service();  // Create an instance of the M_Equipment model
+{
+    $serviceModel = new M_Service();  // Create an instance of the M_Equipment model
 
-        // Call the delete method from the model
-        $result = $serviceModel->delete($id, 'service_id');  // 'equipment_id' is the column to identify the equipment
+    // Call the delete method from the model
+    $result = $serviceModel->delete($id, 'service_id');  // 'service_id' is the column to identify the service
 
-        if ($result === false) {
-            // Handle failure (e.g., redirect to the equipment list with a failure message)
-            $_SESSION['message'] = 'Failed to delete serive.';
-        } else {
-            // Handle success (e.g., redirect to the equipment list with a success message)
-            $_SESSION['message'] = 'service deleted successfully.';
-        }
-
-        // Redirect back to the equipment list
-        redirect('manager/equipment_view/'.$id);
+    if ($result === false) {
+        // Handle failure (e.g., redirect to the equipment list with a failure message)
+        $_SESSION['message'] = 'Failed to delete service.';
+    } else {
+        // Handle success (e.g., redirect to the equipment list with a success message)
+        $_SESSION['message'] = 'Service deleted successfully.';
     }
+
+    // Redirect back to the same page
+    $referer = $_SERVER['HTTP_REFERER'];
+    header("Location: $referer");
+    exit;
+}
 
 }

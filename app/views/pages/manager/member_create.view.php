@@ -26,11 +26,11 @@
     </section>
 
     <main>
-    <div class="title">
-            
+        <div class="title">
+
             <h1>Members</h1>
             <div class="greeting">
-            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
+                <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
             </div>
 
         </div>
@@ -89,7 +89,7 @@
 
             <div class="user-form">
 
-                <form action="<?php echo URLROOT; ?>/user/member/registerMember" method="post">
+                <form action="<?php echo URLROOT; ?>/manager_user/member/registerMember" method="post">
 
                     <div class="form-container">
 

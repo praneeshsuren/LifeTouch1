@@ -19,39 +19,45 @@
 
     <style>
         .member-buttons {
-    display: flex;
-    height: 100px; /* Adjust height if necessary */
-}
+            display: flex;
+            height: 100px;
+            /* Adjust height if necessary */
+        }
 
-.edit-button {
-    border-radius: 20px;
-    width: 150px;
-    height: 50px;
-    text-align: center;
-    font-size: 16px;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    background-color: #007bff; /* Change to your preferred color */
-    color: white;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
+        .edit-button {
+            border-radius: 20px;
+            width: 150px;
+            height: 50px;
+            text-align: center;
+            font-size: 16px;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            background-color: #007bff;
+            /* Change to your preferred color */
+            color: white;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
 
-.edit-button:hover {
-    transform: scale(1.1); /* Scales the button on hover */
-    background-color: #0056b3; /* Darker shade on hover */
-}
-.input-container {
-    width: 100%;
-    max-width: 800px; /* Ensures the container doesn't exceed 100% of its parent */
-    margin-bottom: 15px; /* Optional: Add some spacing between input fields */
-}
+        .edit-button:hover {
+            transform: scale(1.1);
+            /* Scales the button on hover */
+            background-color: #0056b3;
+            /* Darker shade on hover */
+        }
 
-.input-container input {
-    width: 100%; /* Makes the input element take up the full width of its container */
-}
+        .input-container {
+            width: 100%;
+            max-width: 800px;
+            /* Ensures the container doesn't exceed 100% of its parent */
+            margin-bottom: 15px;
+            /* Optional: Add some spacing between input fields */
+        }
 
-
+        .input-container input {
+            width: 100%;
+            /* Makes the input element take up the full width of its container */
+        }
     </style>
 </head>
 
@@ -61,12 +67,13 @@
     </section>
 
     <main>
-        <div class="top">
-            <h1 class="title">Add Equipment</h1>
-            <div class="bell">
-                <i class="ph ph-bell"></i>
-                <p>Hi, John!</p>
+        <div class="title">
+
+            <h1>Add Equipment</h1>
+            <div class="greeting">
+                <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
             </div>
+
         </div>
 
 

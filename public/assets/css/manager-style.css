@@ -3141,3 +3141,43 @@ body.dark .inventory-item .item-details p {
     margin: 0 auto; /* Centers the box if needed */
     padding: 20px; /* You can adjust padding as necessary */
 }
+main > .title > .greeting{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+main > .title > .greeting h2{
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--text-color);
+}
+
+main > .title > .greeting > .bell-container {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: var(--separator-color); /* Background color for the circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+main > .title > .greeting > .bell-container:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+main > .title > .greeting > .bell-container .notification {
+    font-size: 1.5rem; /* Size of the bell icon */
+    color: var(--text-color); /* Adjust the bell color */
+}
+
+main > .title > .greeting > .bell-container:hover .notification {
+    transform: scale(1.3); /* Pop out effect */
+    animation: vibrate 0.3s ease-in-out infinite; /* Vibrate effect */
+}
