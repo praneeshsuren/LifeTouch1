@@ -74,6 +74,7 @@
                                 'contact_number'=> $_POST['contact_number'],
                                 'gender'        => $_POST['gender'],
                                 'email_address' => $_POST['email_address'],
+                                'membership_plan' => $_POST['membership_plan'],
                                 'image'         => $_POST['image']
                             ];
 
