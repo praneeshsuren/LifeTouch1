@@ -249,7 +249,7 @@
 
         public function bookings($action = null){
             $bookingModel = new M_Booking();
-            $bookings = $bookingModel->bookingsfForAdmin();
+            $bookings = $bookingModel->bookingsForAdmin();
         
             if ($action === 'api'){
                 header('Content-Type: application/json');

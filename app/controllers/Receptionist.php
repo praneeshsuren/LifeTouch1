@@ -359,8 +359,41 @@
 
                     $this->view('receptionist/receptionist-members', $data);
                     break;
+                }
             }
-        }
-        
 
+                public function bookings($action = null){
+                    $bookingModel = new M_Booking();
+                    $bookings = $bookingModel->bookingsForAdmin();
+                
+                    if ($action === 'api'){
+                        header('Content-Type: application/json');
+                        echo json_encode($bookings);
+                        exit;
+                    }
+                    $this->view('receptionist/receptionist-booking');
+                }
+        
+                public function calendar(){
+                    $this->view('receptionist/receptionist-calendar');
+                }
+                public function holiday($action = null){
+                    $holidayModal = new M_Holiday();
+                    $holidays = $holidayModal->findHolidays();
+                    $timeslotModel = new M_Timeslot();
+                    $timeSlots = $timeslotModel->findAll();
+                    $trainerModal = new M_Trainer();
+                    $trainers = $trainerModal->findAll();
+
+                    if($action === 'api'){
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'holidays' => $holidays,
+                            'timeSlots' => $timeSlots,
+                            'trainers' => $trainers
+                        ]);
+                        exit;
+                    }
+                    $this->view('receptionist/receptionist-holiday');
+                }
     }

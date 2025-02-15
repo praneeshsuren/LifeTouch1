@@ -17,6 +17,7 @@
     --hover-btn: #000;
     --box-shadow-color: 0px 10px 8px rgba(0, 0, 0, 0.1);
     --table-head-color: #c977fb;
+    --modalbg-colour:rgba(0, 0, 0, 0.4);
 
     --tran-02: all 0.2s ease;
     --tran-03: all 0.3s ease;
@@ -44,6 +45,7 @@ body.dark{
     --text-color: #CCC;
     --hover-btn: #FFF;
     --box-shadow-color: 0px 10px 8px rgba(255, 255, 255, 0.1);
+    --modalbg-colour:rgba(255,255,255,0.4);
 }
 
 /* Sidebar */
@@ -1349,4 +1351,530 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
     main .insights {
         grid-template-columns: 1fr;
     }
+}
+
+/* booking page */
+main .table-container {
+    margin: 2rem 3rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+  
+main .table-container .filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .filters .filter {
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+main .table-container .filters .filter.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+main .table-container .user-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .user-table-header .search-input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    width: 250px;
+  }
+  
+main .table-container .user-table-header .add-user-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+main .table-container .user-table-wrapper {
+    width:1000px;
+    height: auto; /* Adjust as per your design */
+    overflow: hidden; /* Hide scrollbar by default */
+    position: relative;
+    border: 1px solid #ddd; /* Optional: border around the scrollable area */
+    border-radius: 0.5rem;
+    transition: var(--tran-03);
+  }
+
+main .table-container .user-table-wrapper:hover {
+    overflow: auto;
+  }
+
+main .table-container .user-table-wrapper .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    position: relative;
+  }
+  
+main .table-container .user-table-wrapper .user-table th,
+main .table-container .user-table-wrapper .user-table td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    min-width: 100px;
+    text-wrap: nowrap;
+  }
+  
+main .table-container .user-table-wrapper .user-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    position: sticky; /* Makes the header sticky */
+    top: 0; /* Sticks to the top of the container */
+    z-index: 2; /* Ensures it stays above table body */
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+  }
+  
+main .table-container .user-table-wrapper .user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+main .table-container .user-table-wrapper .status-badge {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.active {
+    background-color: #28a745;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.inactive {
+    background-color: #dc3545;
+  }
+
+main .table-container .user-table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #888;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+.status {
+    width:80px;
+    height:40px;
+    padding: 5px 10px;
+    border-radius: 10px; /* Smooth rounded corners */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white; /* Ensure text is readable */
+    text-align: center;
+}
+
+.pending{ background: linear-gradient(45deg, #FFA500, #FF4500);}
+.booked { background: linear-gradient(45deg, #32CD32, #006400);}
+.rejected{ background: linear-gradient(45deg, #FF0000, #8B0000);}
+
+/* calendar */
+main .calendarContainer {
+    grid-column: 1;
+    background-color: var(--sidebar-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent overflow issues */
+    width: 1000px;
+    height: 650px;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: var(--box-shadow-color);
+    transition: var(--tran-03);
+    position: relative; 
+    color: var(--text-color);
+    padding-top: 10px;
+    margin: 2rem 4rem;
+}
+
+.calendarContainer .holiday-header{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    top: 0;
+}
+
+.calendarContainer .add-holiday-btn{
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.calendarContainer .add-holiday-btn:hover{
+    transform: scale(1.05);
+    transition: var(--tran-02);
+}
+.calendar-header {
+    position:absolute;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    color: var(--text-color); 
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.calendar-header .prevMonth,
+.calendar-header .nextMonth {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit; 
+    background: none;      
+    border: none; 
+}
+
+.calendar-header .prevMonth:hover,
+.calendar-header .nextMonth:hover {
+    box-shadow: var(--box-shadow-color);
+}
+
+.calendar{
+    width: 100%;
+    margin:1rem 0;
+    margin-top: 4rem;
+    border-collapse: collapse;
+} 
+
+.calendar th {
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+} 
+
+.calendar td {
+    text-align: left;
+    vertical-align: top;
+    cursor: pointer;
+    width: calc(100%/7);
+    height: 70px;
+    font-size: 20px;
+    padding: 5px;
+    border: 1px solid #ddd; 
+}
+
+.calendar td:hover {
+    background-color: var(--primary-color);
+    color: var(--sidebar-color);
+}
+
+.calendar td.plain {
+    pointer-events: none; /* Disable interaction */
+    cursor: default; 
+}
+
+.calendar td.today {
+    border: 2px solid var(--primary-color)
+}
+
+.calendar td.active{
+    background-color: var(--primary-color);
+    color: var(--sidebar-color);
+}
+
+.booked-count {
+    background: linear-gradient(45deg, #32CD32, #006400) !important;
+    color: #fff;
+    width: 40px;
+    height: 20px;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px auto;
+}
+
+.gotoToday {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    gap: 5px;
+    padding: 0 20px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    margin-top: 0.5rem;
+}
+
+.gotoToday .goto{
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--text-color);
+}
+
+.gotoToday .goto input {
+    background-color: var(--sidebar-color);
+    width: 100%;
+    height: 30px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 0 20px;
+    color: var(--text-color);
+}
+
+.gotoToday button {
+    padding: 5px 10px;
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
+    background-color: transparent;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.gotoToday button:hover {
+    color: #fff;
+    background-color: var(--primary-color);
+}
+
+.gotoToday .goto button {
+    border: none;
+    border-left: 1px solid var(--text-color);
+    border-radius: 0;
+}
+
+.bookingModal {
+    display:none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color:var(--modalbg-colour); 
+}
+
+.bookingModal-content {
+    position: absolute;
+    background-color:var(--sidebar-color);
+    color: var(--text-color);
+    margin: 130px 550px;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 500px; 
+    height: 330px;
+    max-height: 500px;
+    overflow-y: auto; 
+    border-radius: 10px;
+    transition: var(--tran-03);
+}
+
+.bookingModalClose {
+    color:var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.bookingModalClose:hover,
+.bookingModalClose:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+.trainerviewbtn-profileTable-container{
+    margin-top:1rem;
+    color: var(--hover-btn);
+}
+
+.trainerviewbtn-profileTable-container table{
+    width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.trainerviewbtn-profileTable-container tr{
+    display: grid;
+    grid-template-columns: 110px 160px 180px; 
+}
+
+.trainerviewbtn-profileTable-container td{
+    border-bottom: 1px solid var(--body-color);
+    word-break: break-word;
+}
+
+.trainerviewbtn-profileTable-container tr:hover{
+    background-color: var(--body-color);
+}
+
+.book-btn {
+    text-align: right; 
+    margin:auto;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.book-btn button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px; 
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem; 
+    transition: var(--tran-03); 
+}
+
+/* holiday */
+.select-wrapper {
+    font-size: 15px;
+    margin: 1rem 0;
+}
+
+.select-wrapper label {
+    width: 120px;
+    font-size: 16px;
+    align-items: center;
+    color: var(--hover-btn);
+}
+
+.select-wrapper i {
+    margin-right: 8px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.select-wrapper input[type="date"] {
+    font-size: 15px;
+    width: 100%;
+    background-color: #ccc;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+}
+
+.select-btn, .select-option li{
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+.select-btn{
+    height: 35px;
+    padding: 5px 20px;
+    border-radius: 10px;
+    background:#ccc ;
+    justify-content: space-between;
+}
+
+.select-btn i{
+    transition: var(--tran-03);
+}
+
+.select-wrapper.active .select-btn i{
+    transform: rotate(-180deg);
+}
+.select-content{
+    display: none;
+    margin-top: 5px;
+    padding: 2px 20px;
+    background: #ccc;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+.select-wrapper.active .select-content{
+    display: block;
+}
+
+.select-content .select-search{
+    margin-top: 5px;
+    position: relative;
+}
+
+.select-search input{
+    background: #ccc;
+    height: 35px;
+    width: 100%;
+    outline: none;
+    border-radius: 10px;
+    padding: 0 15px;
+    border: 1px solid #757575;
+}
+
+.select-content .select-option{
+    margin: 5px 0px;
+    max-height: 98px;
+    overflow-y: auto;
+}
+
+.select-option::-webkit-scrollbar{
+    width: 7px;
+}
+
+.select-option::-webkit-scrollbar-track{
+    background: #b3b3b3;
+    border-radius: 20px;
+}
+
+.select-option::-webkit-scrollbar-thumb{
+    background: #757575;
+    border-radius: 20px;
+}
+.select-option li{
+    height: 30px;
+    border-radius: 5px;
+    padding: 0 10px;
+}
+
+.select-option li:hover{
+    background: #b3b3b3;
 }

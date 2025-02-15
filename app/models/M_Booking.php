@@ -49,7 +49,7 @@
             return $this->query($query, ['trainer_id' => $trainer_id]);
         }
 
-        public function bookingsfForAdmin(){
+        public function bookingsForAdmin(){
             $query = "SELECT 
                 b.*, 
                 m.member_id AS member_id, 

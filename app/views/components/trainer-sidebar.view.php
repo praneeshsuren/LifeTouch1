@@ -44,12 +44,6 @@
                     <span class="text">View Announcements</span>
                 </a>
             </li>
-            <li>
-                <a href="#">
-                    <i class='icon ph-bold ph-calendar-dots'></i>
-                    <span class="text">View Calendar</span>
-                </a>
-            </li>
         </ul>
     </div>
     <div class="menu">
