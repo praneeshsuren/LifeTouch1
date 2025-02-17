@@ -1878,3 +1878,40 @@ main .calendarContainer {
 .select-option li:hover{
     background: #b3b3b3;
 }
+
+
+.edit-dlt {
+    display: flex;
+    gap: 10px; 
+    align-items: center;
+    justify-content: center;
+}
+
+.edit, .dlt {
+    width: 30px; 
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; 
+    cursor: pointer;
+    transition: var(--tran-03);
+    color: #FFF;
+}
+
+.edit {
+    background-color: #007bff;
+}
+
+.dlt {
+    background-color: #d9534f; 
+}
+
+.dlt:hover, .edit:hover {
+    transform: scale(1.05);
+    transition: var(--tran-02); 
+}
+
+.edit i, .dlt i {
+    font-size: 18px; 
+}

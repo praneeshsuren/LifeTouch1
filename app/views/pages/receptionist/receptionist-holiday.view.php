@@ -41,6 +41,7 @@
                       <th>Date</th>
                       <th>Time</th>
                       <th>Trainer</th>
+                      <th>Action</th>
                   </tr>
               </thead>
               <tbody></tbody>
@@ -51,7 +52,7 @@
             <div class="bookingModal-content" >
                 <div class="bookingModalClose">&times;</div>
                 <div class="bookingModal-body" style = "color:black">
-                  <form>
+                  <form id="holidayForm" method="POST">
                     <div class="select-wrapper" style="display:flex; align-items:center; width:200px; gap:10px;">
                       <label for="holidayDate" class="label" ><i class="ph ph-calendar"></i>Date</label>
                       <input type="date" id="holidayDate" required>
@@ -82,10 +83,10 @@
                         <ul class="select-option trainer-option"></ul>
                       </div>
                     </div>
-                    <div class="holidayTime"></div>
-                    <div class="holidayTrainer"></div>
+                    <input type="text" id="holidayTimeId">
+                    <input type="text" name="holidayTrainer" id="holidayTrainerValue">
                     <div class="book-btn">
-                      <button type="submit" id="btnBook" name="submit">Add</button>
+                      <button type="submit" id="submitBtn" name="submit">Add</button>
                     </div>
                   </form>
                 </div>
@@ -118,8 +119,7 @@
             console.log('Time Slots:', data.timeSlots);
             if(Array.isArray(data.timeSlots) && data.timeSlots.length > 0){
                 timeslots = data.timeSlots;
-                let allSlots = timeslots.map(timeslots => timeslots.slot);
-                allSlots = ["Full Day", ...allSlots];
+                let allSlots = [{ id: 0, slot: "Full Day" }, ...data.timeSlots];
                 displaytimeslots(allSlots);
             } else {
               console.log('No timeslots found.');
@@ -143,10 +143,62 @@
             `;
           });
 
+        submitBtn = document.getElementById("submitBtn");
+        submitBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+
+          const holidayDate = document.getElementById("holidayDate").value;
+          let holidayTimeId = document.getElementById("holidayTimeId").value;
+          let holidayTrainerValue = document.getElementById("holidayTrainerValue").value;
+          console.log(holidayDate);
+          console.log(holidayTimeId);
+          console.log(holidayTrainerValue);
+
+          if (!holidayDate || !holidayTimeId || !holidayTrainerValue) {
+              alert("Please fill in all fields before submitting.");
+              return;
+          }
+
+          if(holidayTimeId === "0"){
+            holidayTimeId = timeslots.map(slot => slot.id).join(",");
+            console.log(holidayTimeId);
+          }
+
+          if(holidayTrainerValue === "All"){
+            holidayTrainerValue = trainers.map(trainer => trainer.trainer_id).join(",");
+            console.log(holidayTrainerValue);
+          }
+
+
+          const formData = new FormData();
+          formData.append("holidayDate", holidayDate);
+          formData.append("holidayTimeId", holidayTimeId);
+          formData.append("holidayTrainer", holidayTrainerValue);
+
+          fetch("<?php echo URLROOT; ?>/receptionist/holiday/submit",{
+            method:"POST",
+            body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Holiday added successfully!");
+                    document.getElementById("bookingModal").style.display = "none"; // Close modal
+                    location.reload(); // Reload the page to update the table
+                } else {
+                    alert("Failed to add holiday: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error submitting form:", error);
+                alert("An error occurred while submitting the form.");
+            });
+        });
+
         holidayModal();
         dropdownToggle();
-        updateModalHeight()
-
+        updateModalHeight();
+    
       });
 
       function renderTable(holidays){
@@ -156,14 +208,32 @@
           holidays.forEach(holiday => {
             const row = document.createElement('tr');
             row.style.cursor = 'pointer';
-
+            
             row.innerHTML = `
-              <td>${holiday.date}</td>
-              <td>${holiday.slot}</td>
-              <td>${holiday.trainer_id}</td>
+                <td class="table-cell">${holiday.date}</td>
+                <td class="table-cell">${holiday.time_slots}</td>
+                <td class="table-cell">${holiday.trainer_ids}</td>
+                <td class="table-cell">
+                  <div class="edit-dlt">
+                    <div class="edit"><i class="ph ph-eraser"></i></div>
+                    <div class="dlt"><i class="ph ph-trash-simple"></i></div>
+                  </div>
+                </td> 
             `;
 
             tableBody.appendChild(row);
+
+            row.querySelector(".edit").addEventListener('click', ()=> {
+              openEditModal(holiday);
+            });
+
+            document.querySelectorAll('.table-cell').forEach(cell => {
+            cell.style.maxWidth = "240px";
+            cell.style.overflow = "hidden";
+            cell.style.textOverflow = "ellipsis";
+            cell.style.wordWrap = "break-word";
+            cell.style.whiteSpace = "normal";
+        });
           });
         } else {
           console.log('No holidays found.');
@@ -174,7 +244,7 @@
           `;
         }
       }
-      
+
       const addHolidayBtn = document.querySelector(".add-user-btn");
       const modal = document.getElementById("bookingModal");
       const closeModal = document.querySelector(".bookingModalClose");
@@ -182,6 +252,7 @@
 
       function holidayModal(){
         addHolidayBtn.addEventListener('click', function() {
+          resetModalFields();
           modal.style.display = "block";
         });
 
@@ -196,10 +267,42 @@
         });
       }
 
+      function openEditModal(holiday) {
+        resetModalFields();
+        const holidayDate = document.getElementById("holidayDate");
+        const holidayTimeId = document.getElementById("holidayTimeId");
+        const holidayTrainerValue = document.getElementById("holidayTrainerValue");
+        const timeText = document.querySelector(".time-btn span");
+        const trainerText = document.querySelector(".trainer-btn span");
+        
+        holidayDate.value = holiday.date;
+        const timeSlotsArray = holiday.time_slots_ids.split(",").map(item => item.trim());
+        const trainersArray = holiday.trainer_ids.split(",").map(item => item.trim());
+
+        if(timeSlotsArray.length > 1){
+          timeText.textContent = "Full Day";
+          holidayTimeId.value = "0";
+        } else{
+          timeText.textContent = holiday.time_slots;
+          holidayTimeId.value = holiday.time_slots_ids;
+        }
+
+        if(trainersArray.length > 1){
+          trainerText.textContent = "All";
+          holidayTrainerValue.value = "All"
+        } else {
+          holidayTrainerValue.value = holiday.trainer_ids;
+          trainerText.textContent = holidayTrainerValue.value;
+        }
+
+        modal.style.display = "block";
+      }
+
       const timeWrapper = document.querySelector(".time-wrapper");
       const timeBtn = document.querySelector(".time-btn");
       const timeOption = document.querySelector(".time-option")
       const timeText = document.querySelector(".time-btn span");
+      const timeslotId = document.getElementById("holidayTimeId");
 
       function displaytimeslots(allSlots){
         const searchInput = document.querySelector(".select-search input");
@@ -210,9 +313,10 @@
         if(allSlots.length > 0){
           allSlots.forEach(slot => {
             let li = document.createElement("li");
-            li.textContent =slot;
+            li.textContent =slot.slot;
             li.addEventListener('click', () => {
-              timeText.textContent = slot;
+              timeText.textContent = slot.slot;
+              timeslotId.value = slot.id;
               timeWrapper.classList.remove("active");
             });
             timeOption.appendChild(li);
@@ -222,7 +326,7 @@
         searchInput.addEventListener("keyup", () =>{
           let searchValue = searchInput.value.toLowerCase();
           let filteredTimeslots = allSlots.filter(data => {
-            return data.toLowerCase().includes(searchValue);
+            return data.slot.toLowerCase().includes(searchValue);
           });
 
           timeOption.innerHTML = "";
@@ -235,9 +339,9 @@
           } else{
             filteredTimeslots.forEach(filteredTimeslot => {
             let li = document.createElement("li");
-            li.textContent = filteredTimeslot;
+            li.textContent = filteredTimeslot.slot;
             li.addEventListener('click', () => {
-              timeText.textContent = filteredTimeslot;
+              timeText.textContent = filteredTimeslot.slot;
               timeWrapper.classList.remove("active");
             });
             timeOption.appendChild(li);
@@ -250,6 +354,7 @@
       const trainerBtn = document.querySelector(".trainer-btn");
       const trainerOption = document.querySelector(".trainer-option");
       const trainerText = document.querySelector(".trainer-btn span");
+      const trainerValue = document.getElementById("holidayTrainerValue");
 
       function displayTrainers(allTrainerIds){
         const searchInput = document.querySelector(".trainer-content .select-search input");
@@ -263,6 +368,7 @@
             li.textContent = trainerId;
             li.addEventListener("click", () => {
               trainerText.textContent = trainerId;
+              trainerValue.value = trainerId;
               trainerWrapper.classList.remove("active");
             });
             trainerOption.appendChild(li);
@@ -322,7 +428,6 @@
           } else {
               modalContent.style.height = "330px";
           }
-          console.log(modalContent.style.height);
         });
 
         trainerWrapper.addEventListener('click', () => {
@@ -331,8 +436,19 @@
           } else {
               modalContent.style.height = "330px";
           }
-          console.log(modalContent.style.height);
         });
+      }
+
+      function resetModalFields() {
+        document.getElementById("holidayDate").value = '';
+        document.getElementById("holidayTimeId").value = '';
+        document.getElementById("holidayTrainerValue").value = '';
+
+        const timeText = document.querySelector(".time-btn span");
+        const trainerText = document.querySelector(".trainer-btn span");
+
+        timeText.textContent = "Full Day";
+        trainerText.textContent = "All";
       }
 
     </script>

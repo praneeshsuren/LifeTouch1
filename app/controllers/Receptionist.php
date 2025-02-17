@@ -393,7 +393,70 @@
                             'trainers' => $trainers
                         ]);
                         exit;
+                    } elseif ($action === "submit"){
+                        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+                            $date = $_POST['holidayDate'] ?? '';
+                            $timeslot_ids = explode(",", $_POST['holidayTimeId'] ?? '');
+                            $trainers = explode(",", $_POST['holidayTrainer'] ?? '');
+
+                            foreach ($timeslot_ids as $timeslot_id) {
+                                foreach($trainers as $trainer){
+                                    $data = [
+                                        'date' => $date,
+                                        'time_slot_id' => trim($timeslot_id), 
+                                        'trainer_id' => trim($trainer)
+                                    ];
+                        
+                                    if (!$holidayModal->insert($data)) {
+                                        header('Content-Type: application/json');
+                                        echo json_encode(["success" => false, "message" => "Failed to add holiday"]);
+                                        exit;
+                                    } 
+                                }
+                            }
+                    
+                            header('Content-Type: application/json');
+                            echo json_encode(["success" => true, "message" => "Holiday added successfully!"]);
+                            exit;
+                        }
+                    } elseif ($action === "edit"){
+                        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                            // Get the updated data from the form
+                            $holidayId = $_POST['holidayId'] ?? null;
+                            $date = $_POST['holidayDate'] ?? '';
+                            $timeslot_ids = explode(",", $_POST['holidayTimeId'] ?? '');
+                            $trainers = explode(",", $_POST['holidayTrainer'] ?? '');
+                
+                            if (!$holidayId) {
+                                header('Content-Type: application/json');
+                                echo json_encode(["success" => false, "message" => "Holiday ID is required"]);
+                                exit;
+                            }
+                
+                            // Update the holiday record
+                            foreach ($timeslot_ids as $timeslot_id) {
+                                foreach ($trainers as $trainer) {
+                                    $editdata = [
+                                        'id' => $holidayId,
+                                        'date' => $date,
+                                        'time_slot_id' => trim($timeslot_id), 
+                                        'trainer_id' => trim($trainer)
+                                    ];
+                
+                                    if (!$holidayModal->update($holidayId,$editdata)) {
+                                        header('Content-Type: application/json');
+                                        echo json_encode(["success" => false, "message" => "Failed to update holiday"]);
+                                        exit;
+                                    }
+                                }
+                            }
+                
+                            header('Content-Type: application/json');
+                            echo json_encode(["success" => true, "message" => "Holiday updated successfully!"]);
+                            exit;
+                        }
                     }
+
                     $this->view('receptionist/receptionist-holiday');
                 }
     }

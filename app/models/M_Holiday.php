@@ -14,10 +14,14 @@
         ];
 
         public function findHolidays(){
-            $query = "SELECT h.*,
-                t.slot AS slot
-              FROM holiday AS h
-              JOIN time_slots as t ON h.time_slot_id = t.id
+            $query = "SELECT h.date, 
+                GROUP_CONCAT(DISTINCT t.slot ORDER BY t.id SEPARATOR ', ') AS time_slots,
+                GROUP_CONCAT(DISTINCT t.id ORDER BY t.id SEPARATOR ', ') AS time_slots_ids,
+                GROUP_CONCAT(DISTINCT h.trainer_id ORDER BY h.trainer_id SEPARATOR ', ') AS trainer_ids
+                FROM holiday AS h
+                JOIN time_slots AS t ON FIND_IN_SET(t.id, h.time_slot_id)
+                GROUP BY h.date;
+
             ";
 
             return $this->query($query);
