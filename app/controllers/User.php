@@ -142,9 +142,11 @@
                     break;
                 
             }
+            
 
         }
 
+        
         
         public function trainer($action = null) {
 
