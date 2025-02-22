@@ -33,7 +33,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/trainer/workouts">
                     <i class='icon ph-bold ph-barbell'></i>
                     <span class="text">Workouts</span>
                 </a>

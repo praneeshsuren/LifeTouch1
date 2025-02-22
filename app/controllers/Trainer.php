@@ -65,4 +65,8 @@
             $this->view('trainer/trainer-calendar');
         }
 
+        public function workouts(){
+            $this->view('trainer/trainer-workouts');
+        }
+
     }
