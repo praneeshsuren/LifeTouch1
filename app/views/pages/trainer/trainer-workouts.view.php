@@ -31,7 +31,6 @@
       </div>
 
       <div class="workouts-container">
-
         <div class="workouts-header">
             <div class="searchBar">
                 <input type="text" placeholder="Search for workouts" />
@@ -39,152 +38,185 @@
             <button class="add-workout-btn">+ Add Workout</button>
         </div>
 
-        <div class="workouts">
-            <div class="equipment-cards-container"></div>
+        <div class="workouts" id="workouts-container">
+            <!-- Workout cards will be dynamically inserted here -->
         </div>
-
       </div>
     </main>
 
     <!-- Modal for Creating Workout -->
     <div class="modal" id="createWorkoutModal">
-    <div class="modal-content">
+      <div class="modal-content">
         <span class="close-btn" id="closeModal">&times;</span>
         <h2>Create Workout</h2>
         <form id="createWorkoutForm">
-            <div class="form-group">
-                <label for="equipment">Select Equipment:</label>
-                <select id="equipment" name="equipment" required>
-                    <option value="">-- Choose Equipment --</option>
-                </select>
-                <div id="selected-equipment">
-                    <img id="equipment-image" src="" alt="Equipment Image" style="width: 50px; height: 50px; display: none;" />
-                    <p id="equipment-name"></p>
-                    <p id="equipment-id"></p> <!-- Display equipment ID here -->
-                </div>
+          <div class="form-group">
+            <label for="equipment">Select Equipment:</label>
+            <select id="equipment" name="equipment" required>
+              <option value="">-- Choose Equipment --</option>
+            </select>
+            <div id="selected-equipment">
+              <img id="equipment-image" src="" alt="Equipment Image" style="width: 50px; height: 50px; display: none;" />
+              <p id="equipment-name"></p>
+              <p id="equipment-id"></p> <!-- Display equipment ID here -->
             </div>
+          </div>
 
-            <div class="form-group">
-                <label for="workout-name">Workout Name:</label>
-                <input type="text" id="workout-name" name="workout-name" placeholder="Enter workout name" required />
-            </div>
+          <div class="form-group">
+            <label for="workout-name">Workout Name:</label>
+            <input type="text" id="workout-name" name="workout-name" placeholder="Enter workout name" required />
+          </div>
 
-            <div class="form-group">
-                <label for="workout-description">Description:</label>
-                <textarea id="workout-description" name="workout-description" placeholder="Enter description" required></textarea>
-            </div>
+          <div class="form-group">
+            <label for="workout-description">Description:</label>
+            <textarea id="workout-description" name="workout-description" placeholder="Enter description" required></textarea>
+          </div>
 
-            <div class="form-actions">
-                <button type="button" id="cancelBtn">Cancel</button>
-                <button type="submit" id="saveBtn">Save Workout</button>
-            </div>
+          <div class="form-actions">
+            <button type="button" id="cancelBtn">Cancel</button>
+            <button type="submit" id="saveBtn">Save Workout</button>
+          </div>
         </form>
+      </div>
     </div>
-</div>
-
-
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
     <script>
-   // Global variable to store fetched equipment data for reference
-let equipmentData = [];
+      let equipmentData = [];
+      let workoutData = [];
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Show the modal when the "Create Workout" button is clicked
-    document.querySelector('.add-workout-btn').addEventListener('click', function() {
-        document.getElementById('createWorkoutModal').style.display = 'flex'; // Use 'flex' to center modal
-        fetchEquipment();
-        resetModal(); // Reset modal when opened
-    });
+      document.addEventListener('DOMContentLoaded', function() {
+          // Show the modal when the "Create Workout" button is clicked
+          document.querySelector('.add-workout-btn').addEventListener('click', function() {
+              document.getElementById('createWorkoutModal').style.display = 'flex'; 
+              fetchEquipment();
+              resetModal(); // Reset modal when opened
+          });
 
-    // Close the modal when the close button is clicked
-    document.getElementById('closeModal').addEventListener('click', function() {
-        document.getElementById('createWorkoutModal').style.display = 'none';
-        resetModal(); // Reset modal when closed
-    });
+          // Close the modal when the close button is clicked
+          document.getElementById('closeModal').addEventListener('click', function() {
+              document.getElementById('createWorkoutModal').style.display = 'none';
+              resetModal(); // Reset modal when closed
+          });
 
-    // Close the modal when the cancel button is clicked
-    document.getElementById('cancelBtn').addEventListener('click', function() {
-        document.getElementById('createWorkoutModal').style.display = 'none';
-        resetModal(); // Reset modal when canceled
-    });
+          // Close the modal when the cancel button is clicked
+          document.getElementById('cancelBtn').addEventListener('click', function() {
+              document.getElementById('createWorkoutModal').style.display = 'none';
+              resetModal(); // Reset modal when canceled
+          });
 
-    // Handle form submission
-    document.getElementById('createWorkoutForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+          // Handle form submission
+          document.getElementById('createWorkoutForm').addEventListener('submit', function(event) {
+              event.preventDefault();
 
-        const workoutName = document.getElementById('workout-name').value;
-        const workoutDescription = document.getElementById('workout-description').value;
-        const equipmentId = document.getElementById('equipment').value;
+              const workoutName = document.getElementById('workout-name').value;
+              const workoutDescription = document.getElementById('workout-description').value;
+              const equipmentId = document.getElementById('equipment').value;
 
-        const workoutData = {
-            name: workoutName,
-            description: workoutDescription,
-            equipment_id: equipmentId
-        };
+              const workoutData = {
+                  name: workoutName,
+                  description: workoutDescription,
+                  equipment_id: equipmentId
+              };
 
-        // Here you can send the workout data to your server via an AJAX request
-        console.log(workoutData);
+              fetch('<?php echo URLROOT; ?>/workout/createWorkout', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(workoutData)
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Workout created successfully!');
+                      document.getElementById('createWorkoutModal').style.display = 'none';
+                      resetModal();
+                      fetchWorkouts();  // Refresh workouts list
+                  } else {
+                      alert('Failed to create workout');
+                  }
+              })
+              .catch(error => {
+                  console.error('Error creating workout:', error);
+                  alert('There was an error creating the workout.');
+              });
+          });
 
-        // Close the modal after saving
-        document.getElementById('createWorkoutModal').style.display = 'none';
-        resetModal(); // Reset modal after saving
-    });
-});
+          // Fetch workouts when page loads
+          fetchWorkouts();
+      });
 
-// Fetch equipment data to populate the dropdown
-function fetchEquipment() {
-    fetch('<?php echo URLROOT; ?>/equipment/api') // Adjust API endpoint
-        .then(response => response.json())
-        .then(data => {
-            equipmentData = data; // Store fetched data globally
-            populateEquipmentDropdown(data);
-        })
-        .catch(error => console.error('Error fetching equipment:', error));
-}
+      // Fetch equipment data to populate the dropdown
+      function fetchEquipment() {
+          fetch('<?php echo URLROOT; ?>/equipment/api')
+              .then(response => response.json())
+              .then(data => {
+                  equipmentData = data;
+                  populateEquipmentDropdown(data);
+              })
+              .catch(error => console.error('Error fetching equipment:', error));
+      }
 
-// Populate the equipment dropdown with fetched equipment
-function populateEquipmentDropdown(equipment) {
-    const equipmentSelect = document.getElementById('equipment');
-    equipmentSelect.innerHTML = '<option value="">-- Choose Equipment --</option>'; // Reset options
-    equipment.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.equipment_id; // Use 'equipment_id' from the database
-        option.textContent = item.name;
-        equipmentSelect.appendChild(option);
-    });
-}
+      // Fetch workouts from the database
+      function fetchWorkouts() {
+          fetch('<?php echo URLROOT; ?>/workout/api')
+              .then(response => response.json())
+              .then(data => {
+                  workoutData = data;
+                  displayWorkouts(data);
+              })
+              .catch(error => console.error('Error fetching workouts:', error));
+      }
 
-// Display the selected equipment's name, ID, and image
-document.getElementById('equipment').addEventListener('change', function() {
-    const selectedEquipmentId = this.value;
-    const equipmentContainer = document.getElementById('selected-equipment');
+      // Display workouts as cards
+      function displayWorkouts(workouts) {
+          const container = document.getElementById('workouts-container');
+          container.innerHTML = ''; // Clear the container before adding new cards
 
-    if (selectedEquipmentId) {
-        const selectedEquipment = equipmentData.find(item => item.equipment_id == selectedEquipmentId); // Use 'equipment_id'
-        if (selectedEquipment) {
-            document.getElementById('equipment-image').src = selectedEquipment.file; // 'file' is the image field
-            document.getElementById('equipment-image').style.display = 'block';
-            document.getElementById('equipment-id').textContent = `Equipment ID: ${selectedEquipment.equipment_id}`;
-            document.getElementById('equipment-name').textContent = selectedEquipment.name;
-        }
-    } else {
-        document.getElementById('equipment-image').style.display = 'none';
-        document.getElementById('equipment-id').textContent = '';
-        document.getElementById('equipment-name').textContent = '';
-    }
-});
+          workouts.forEach(workout => {
+              const workoutCard = document.createElement('div');
+              workoutCard.classList.add('workout-card');
 
-// Reset modal content (image, ID, and name) when the modal is closed or canceled
-function resetModal() {
-    // Reset equipment image and details
-    document.getElementById('equipment-image').style.display = 'none';
-    document.getElementById('equipment-id').textContent = '';
-    document.getElementById('equipment-name').textContent = '';
-    document.getElementById('equipment').value = ''; // Reset dropdown to default
-}
+              const equipment = equipmentData.find(item => item.equipment_id === workout.equipment_id);
 
+              workoutCard.innerHTML = `
+                  <div class="workout-image">
+                      <img src="${equipment ? equipment.file : ''}" alt="Equipment Image" style="width: 50px; height: 50px;" />
+                  </div>
+                  <div class="workout-details">
+                      <h3>${workout.workout_name}</h3>
+                      <p><strong>Description:</strong> ${workout.workout_description}</p>
+                      <p><strong>Equipment:</strong> ${equipment ? equipment.name : 'N/A'}</p>
+                      <p><strong>Equipment ID:</strong> ${equipment ? equipment.equipment_id : 'N/A'}</p>
+                      <p><strong>Workout ID:</strong> ${workout.workout_id}</p>
+                  </div>
+              `;
 
+              container.appendChild(workoutCard);
+          });
+      }
+
+      // Populate the equipment dropdown with fetched equipment
+      function populateEquipmentDropdown(equipment) {
+          const equipmentSelect = document.getElementById('equipment');
+          equipmentSelect.innerHTML = '<option value="">-- Choose Equipment --</option>'; 
+          equipment.forEach(item => {
+              const option = document.createElement('option');
+              option.value = item.equipment_id;
+              option.textContent = item.name;
+              equipmentSelect.appendChild(option);
+          });
+      }
+
+      // Reset modal content
+      function resetModal() {
+          document.getElementById('equipment-image').style.display = 'none';
+          document.getElementById('equipment-id').textContent = '';
+          document.getElementById('equipment-name').textContent = '';
+          document.getElementById('equipment').value = ''; // Reset dropdown
+      }
     </script>
-</body>
+  </body>
+</html>
