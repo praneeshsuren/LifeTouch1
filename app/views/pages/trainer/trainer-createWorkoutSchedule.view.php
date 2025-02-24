@@ -45,87 +45,95 @@
         </div>
       </div>
 
-      <form action="create_schedule.php" method="POST">
-        <table id="workout-schedule" border="1">
-          <thead>
-            <tr>
-              <th>Workout ID</th>
-              <th>Workout Name</th>
-              <th>Equipment ID</th>
-              <th>Equipment Name</th>
-              <th>Sets</th>
-              <th>Reps</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="workout-id-cell"><input type="text" readonly></td>
-              <td class="workout-name-cell" data-id=""><input type="text" class="workout-name-input" readonly></td>
-              <td class="equipment-id-cell"><input type="text" readonly></td>
-              <td class="equipment-name-cell"><input type="text" readonly></td>
-              <td><input type="number" name="sets[]" min="1" required></td>
-              <td><input type="number" name="reps[]" min="1" required></td>
-            </tr>
-            <!-- More rows can be added dynamically -->
-          </tbody>
+      <div class="workout-schedule-container">
+    <form action="create_schedule.php" method="POST">
+        <table id="workout-schedule">
+            <thead>
+                <tr>
+                    <th>Workout ID</th>
+                    <th>Workout Name</th>
+                    <th>Equipment ID</th>
+                    <th>Equipment Name</th>
+                    <th>Sets</th>
+                    <th>Reps</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="workout-id-cell"><input type="text" readonly></td>
+                    <td class="workout-name-cell" data-id="">
+                        <select class="workout-name-select" required>
+                            <option value="" disabled selected>Select Workout</option>
+                            <!-- Workouts will be dynamically loaded here -->
+                        </select>
+                    </td>
+                    <td class="equipment-id-cell"><input type="text" readonly></td>
+                    <td class="equipment-name-cell"><input type="text" readonly></td>
+                    <td><input type="number" name="sets[]" min="1" required></td>
+                    <td><input type="number" name="reps[]" min="1" required></td>
+                </tr>
+                <!-- More rows can be added dynamically -->
+            </tbody>
         </table>
         <button type="button" id="add-row">Add Row</button>
         <button type="submit">Save Schedule</button>
-      </form>
+    </form>
+</div>
+
     </main>
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
 
     <script>
-      $(document).ready(function() {
-        // Fetch all workouts from the database
-        $.ajax({
-          url: 'get_workouts.php',
-          method: 'GET',
-          success: function(data) {
-            const workouts = JSON.parse(data);
-            // Create dropdown when clicking on the workout name cell
-            $('.workout-name-cell').click(function() {
-              const workoutNameCell = $(this);
-              const dropdown = $('<select></select>').addClass('workout-dropdown');
-              workouts.forEach(workout => {
-                dropdown.append(`<option value="${workout.workout_id}" data-equipment="${workout.equipment_id}" data-equipment-name="${workout.equipment_name}">${workout.workout_name}</option>`);
-              });
-
-              workoutNameCell.html(dropdown);
-              dropdown.focus();
-              
-              // When an option is selected
-              dropdown.change(function() {
-                const selectedOption = $(this).find('option:selected');
-                const workoutId = selectedOption.val();
-                const equipmentId = selectedOption.data('equipment');
-                const equipmentName = selectedOption.data('equipment-name');
-
-                // Update the table cells
-                workoutNameCell.html(selectedOption.text());
-                workoutNameCell.data('id', workoutId);
-                workoutNameCell.next().text(equipmentName);
-                workoutNameCell.closest('tr').find('.workout-id-cell input').val(workoutId);
-                workoutNameCell.closest('tr').find('.equipment-id-cell input').val(equipmentId);
-                workoutNameCell.closest('tr').find('input[name="sets[]"]').focus();
-              });
+      document.addEventListener('DOMContentLoaded', function () {
+    // Fetch workout data via API
+    fetch('<?php echo URLROOT; ?>/workout/api') // Adjust the URL to your API endpoint
+        .then(response => response.json())
+        .then(data => {
+            const workoutSelects = document.querySelectorAll('.workout-name-select');
+            
+            // Populate the dropdowns with workout data
+            workoutSelects.forEach(select => {
+                data.forEach(workout => {
+                    const option = document.createElement('option');
+                    option.value = workout.workout_id;
+                    option.textContent = workout.workout_name;
+                    select.appendChild(option);
+                });
             });
-          }
-        });
 
-        // Add a new row to the table
-        $('#add-row').click(function() {
-          const newRow = $('#workout-schedule tbody tr:first').clone();
-          newRow.find('input').val('');
-          newRow.find('.workout-name-cell').data('id', '').html('<input type="text" class="workout-name-input" readonly>');
-          newRow.find('.equipment-name-cell').html('<input type="text" readonly>');
-          newRow.find('.workout-id-cell input').val('');
-          newRow.find('.equipment-id-cell input').val('');
-          $('#workout-schedule tbody').append(newRow);
-        });
-      });
+            // Add event listener to each workout select
+            workoutSelects.forEach(select => {
+                select.addEventListener('change', function () {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const workoutId = selectedOption.value;
+
+                    // Find the corresponding workout data
+                    const selectedWorkout = data.find(workout => workout.workout_id == workoutId);
+
+                    // Auto-populate the workout_id, equipment_id, and equipment_name fields
+                    const row = this.closest('tr');
+                    row.querySelector('.workout-id-cell input').value = selectedWorkout ? selectedWorkout.workout_id : '';
+                    row.querySelector('.equipment-id-cell input').value = selectedWorkout ? selectedWorkout.equipment_id : '';
+                    row.querySelector('.equipment-name-cell input').value = selectedWorkout ? selectedWorkout.equipment_name : '';
+                });
+            });
+        })
+        .catch(error => console.error('Error fetching workout data:', error));
+
+    // Add row functionality
+    document.getElementById('add-row').addEventListener('click', function () {
+        const tbody = document.querySelector('#workout-schedule tbody');
+        const newRow = tbody.rows[0].cloneNode(true); // Clone the first row
+
+        // Reset values in the new row
+        newRow.querySelectorAll('input').forEach(input => input.value = '');
+        newRow.querySelector('.workout-name-select').value = ''; // Clear the dropdown
+        tbody.appendChild(newRow); // Append the new row
+    });
+});
+
     </script>
   </body>
 </html>

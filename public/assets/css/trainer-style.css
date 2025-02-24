@@ -1142,3 +1142,128 @@ main .user-container .add-workout-btn{
     border-radius: 20px;
     cursor: pointer;
 }
+
+/* General Styles for the Table and Form */
+.workout-schedule-container {
+  margin-top: 2rem;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+/* Table styling */
+#workout-schedule {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: fixed;
+}
+
+#workout-schedule th,
+#workout-schedule td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+#workout-schedule th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+#workout-schedule td {
+  font-size: 0.9rem;
+}
+
+#workout-schedule tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Styling for the Workout Name Dropdown */
+.workout-name-select {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.workout-name-select:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+/* Styling for the Inputs */
+.workout-id-cell input,
+.equipment-id-cell input,
+.equipment-name-cell input,
+input[type="number"] {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.workout-id-cell input:focus,
+.equipment-id-cell input:focus,
+.equipment-name-cell input:focus,
+input[type="number"]:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+/* Add Row and Submit Button Styling */
+button {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 5rem;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#add-row {
+  background-color: #28a745;
+}
+
+#add-row:hover {
+  background-color: #218838;
+}
+
+button:disabled {
+  background-color: #d6d6d6;
+  cursor: not-allowed;
+}
+
+/* For mobile responsiveness */
+@media screen and (max-width: 768px) {
+  .workout-schedule-container {
+      padding: 1rem;
+  }
+
+  #workout-schedule th,
+  #workout-schedule td {
+      font-size: 0.8rem;
+      padding: 8px;
+  }
+}
