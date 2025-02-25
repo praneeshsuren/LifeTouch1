@@ -1226,7 +1226,7 @@ input[type="number"]:focus {
 }
 
 /* Add Row and Submit Button Styling */
-button {
+button{
   padding: 10px 20px;
   font-size: 0.9rem;
   color: #fff;
@@ -1267,3 +1267,17 @@ button:disabled {
       padding: 8px;
   }
 }
+
+.delete-row-btn {
+  margin: 0;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.delete-row-btn:hover {
+  background-color: darkred;
+}
+

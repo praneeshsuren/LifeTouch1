@@ -56,6 +56,7 @@
                     <th>Equipment Name</th>
                     <th>Sets</th>
                     <th>Reps</th>
+                    <th>Actions</th> <!-- New Actions column -->
                 </tr>
             </thead>
             <tbody>
@@ -71,12 +72,13 @@
                     <td class="equipment-name-cell"><input type="text" readonly></td>
                     <td><input type="number" name="sets[]" min="1" required></td>
                     <td><input type="number" name="reps[]" min="1" required></td>
+                    <td><button type="button" class="delete-row-btn">Delete</button></td> <!-- Delete button -->
                 </tr>
                 <!-- More rows can be added dynamically -->
             </tbody>
         </table>
         <button type="button" id="add-row">Add Row</button>
-        <button type="submit">Save Schedule</button>
+        <button type="submit" id="save-schedule">Save Schedule</button>
     </form>
 </div>
 
@@ -104,7 +106,7 @@
             });
 
             // Add event listener to each workout select
-            workoutSelects.forEach(select => {
+            function addWorkoutSelectEventListener(select) {
                 select.addEventListener('change', function () {
                     const selectedOption = this.options[this.selectedIndex];
                     const workoutId = selectedOption.value;
@@ -118,22 +120,55 @@
                     row.querySelector('.equipment-id-cell input').value = selectedWorkout ? selectedWorkout.equipment_id : '';
                     row.querySelector('.equipment-name-cell input').value = selectedWorkout ? selectedWorkout.equipment_name : '';
                 });
+            }
+
+            workoutSelects.forEach(select => {
+                addWorkoutSelectEventListener(select); // Add event listener to each select
+            });
+
+            // Add row functionality
+            document.getElementById('add-row').addEventListener('click', function () {
+                const tbody = document.querySelector('#workout-schedule tbody');
+                const newRow = tbody.rows[0].cloneNode(true); // Clone the first row
+
+                // Reset values in the new row
+                newRow.querySelectorAll('input').forEach(input => input.value = '');
+                newRow.querySelector('.workout-name-select').value = ''; // Clear the dropdown
+
+                // Re-add event listener to the new row's workout select
+                const newSelect = newRow.querySelector('.workout-name-select');
+                addWorkoutSelectEventListener(newSelect);
+
+                // Add the delete button functionality for the new row
+                const newDeleteButton = newRow.querySelector('.delete-row-btn');
+                newDeleteButton.addEventListener('click', function () {
+                    // Only allow deletion if there's more than one row
+                    const rows = tbody.querySelectorAll('tr');
+                    if (rows.length > 1) {
+                        newRow.remove(); // Remove the row when delete button is clicked
+                    } else {
+                        alert('At least one row is required.');
+                    }
+                });
+
+                tbody.appendChild(newRow); // Append the new row
+            });
+
+            // Add delete button event listeners for existing rows
+            document.querySelectorAll('.delete-row-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const row = this.closest('tr');
+                    const rows = row.closest('tbody').querySelectorAll('tr');
+                    if (rows.length > 1) {
+                        row.remove(); // Remove the row when delete button is clicked
+                    } else {
+                        alert('At least one row is required.');
+                    }
+                });
             });
         })
         .catch(error => console.error('Error fetching workout data:', error));
-
-    // Add row functionality
-    document.getElementById('add-row').addEventListener('click', function () {
-        const tbody = document.querySelector('#workout-schedule tbody');
-        const newRow = tbody.rows[0].cloneNode(true); // Clone the first row
-
-        // Reset values in the new row
-        newRow.querySelectorAll('input').forEach(input => input.value = '');
-        newRow.querySelector('.workout-name-select').value = ''; // Clear the dropdown
-        tbody.appendChild(newRow); // Append the new row
-    });
 });
-
     </script>
   </body>
 </html>
