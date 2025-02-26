@@ -71,24 +71,30 @@
                         <tr>
                             <th>Service Date</th>
                             <th>Service Cost</th>
-
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>2023-11-15</td>
-                            <td>50000</td>
-                        </tr>
-                        <tr>
-                            <td>2023-11-18</td>
-                            <td>50000</td>
-                        </tr>
+                        <?php if (!empty($services)): ?>
+                            <?php foreach ($services as $service): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($service->service_date); ?></td>
+                                    <td><?php echo htmlspecialchars($service->service_cost); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="2">No service history available</td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
+
             <div class="service-form">
                 <h2>Add Service</h2>
-                <form method="post" action="add_service.php">
+                <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/service/createservice">
+                    <input type="hidden" name="equipment_id" value="<?php echo htmlspecialchars($equipment->equipment_id); ?>">
+
                     <div class="input-container">
                         <label for="service_date">Service Date:</label>
                         <input type="date" id="service_date" name="service_date" required>
@@ -101,6 +107,7 @@
                         <button class="edit-button">Add Service</button>
                     </div>
                 </form>
+
             </div>
         </div>
     </main>

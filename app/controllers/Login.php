@@ -65,6 +65,7 @@ class Login extends Controller {
                             $_SESSION['role'] = 'trainer';
                             $_SESSION['first_name'] = $trainerDetails->first_name;
                             $_SESSION['last_name'] = $trainerDetails->last_name;
+                            $_SESSION['trainer_id'] = $trainerDetails->trainer_id;
 
                             // Redirect to trainer dashboard
                             redirect('trainer');

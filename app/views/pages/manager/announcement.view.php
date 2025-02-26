@@ -23,74 +23,46 @@
   </section>
 
   <main>
-    <h1 class="title">Create new annoucement</h1>
 
-    <div class="ann">
-      <section class="container">
-        <form method="post" class="form">
-
-          <?php if (!empty($errors)): ?>
-            <div class="alert">
-              <?= implode("<br>", $errors);
-              ?>
-            </div>
-          <?php endif; ?>
-
-          <a href="announcement_main" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
-
-          <div class="input-box">
-            <label>Subject</label>
-            <input type="text" name="subject" placeholder="Announcement Subject" />
-          </div>
-
-          <div class="input-box">
-            <label>Announcement</label>
-            <textarea placeholder="Write your announcement here..." name="announcement"></textarea>
-          </div>
-
-
-          <div class="column">
-
-            <div class="input-box">
-              <label>Date</label>
-              <input type="date" placeholder="MM/DD/YY" name="date" />
-            </div>
-
-            <div class="input-box">
-              <label>Time</label>
-              <input type="time" placeholder="12.00 PM" name="time" />
-            </div>
-
-          </div>
-
-          <div class="schedule-box">
-            <div class="schedule-option">
-
-              <div class="send">
-                <div class="radio-container">
-                  <input type="radio" id="sendNow" name="send" checked />
-                  <label for="now">Send now</label>
-                </div>
-              </div>
-
-              <div class="send">
-                <div class="radio-container">
-                  <input type="radio" id="scheduleLater" name="send" checked />
-                  <label for="later">schedule later</label>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <button type="submit">Publish</button>
-
-        </form>
-      </section>
+    <div class="title">
+      <h1>Create Announcement</h1>
+      <div class="greeting">
+        <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
+      </div>
     </div>
 
+    <div class="create-announcement">
+      <form action="<?php echo URLROOT; ?>/announcement/createAnnouncement" method="post" id="announcementForm">
 
+        <?php if (!empty($errors)): ?>
+          <div class="alert">
+            <?= implode("<br>", $errors); ?>
+          </div>
+        <?php endif; ?>
+
+        <div class="input-box">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="Announcement Subject" required />
+        </div>
+
+        <div class="input-box">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" placeholder="Write your announcement here..." required></textarea>
+        </div>
+
+        <button type="submit" id="publishButton">Publish</button>
+
+      </form>
+    </div>
   </main>
+  <script>
+    document.getElementById('announcementForm').addEventListener('submit', function(event) {
+      const confirmation = confirm("Are you sure you want to publish this Announcement?");
+      if (!confirmation) {
+        event.preventDefault(); // Prevent form submission if user cancels
+      }
+    });
+  </script>
   <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
 </body>
 
