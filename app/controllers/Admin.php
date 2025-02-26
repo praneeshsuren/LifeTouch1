@@ -113,6 +113,7 @@
                     break;
             }
         }
+        
 
         public function trainers($action = null) {
             switch ($action) {

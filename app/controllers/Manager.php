@@ -248,8 +248,41 @@ class Manager extends Controller
     {
         $this->view('manager/member_edit');
     }
-    public function member_create()
+    public function member_create($action = null)
     {
+            switch ($action) {
+                case 'createMember':
+                    // Load the form view to create a member
+                    $this->view('manager/member_create');
+                    break;
+        
+
+                case 'viewMember':
+                    // Load the view to view a trainer
+                    $memberModel = new M_Member;
+                    $member = $memberModel->findByMemberId($_GET['id']);
+        
+                    $data = [
+                        'member' => $member
+                    ];
+        
+                    $this->view('admin/admin-viewMember', $data);
+                    break;
+                
+                
+                default:
+                    // Fetch all members and pass to the view
+                    $memberModel = new M_Member;
+                    $members = $memberModel->findAll('created_at');
+
+                    $data = [
+                        'members' => $members
+                    ];
+
+                    $this->view('admin/admin-members', $data);
+                    break;
+            }
+        
         $this->view('manager/member_create');
     }
     public function trainer()
@@ -275,6 +308,10 @@ class Manager extends Controller
     public function admin_view()
     {
         $this->view('manager/admin_view');
+    }
+    public function service_edit()
+    {
+        $this->view('manager/service_edit');
     }
     public function equipment()
     {

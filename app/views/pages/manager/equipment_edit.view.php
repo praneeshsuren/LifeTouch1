@@ -25,12 +25,17 @@
     </section>
 
     <main>
-        <div class="top">
-            <h1 class="title">Edit Equipment</h1>
+        <div class="title">
+
+            <h1>Edit Equipemnt</h1>
+            <div class="greeting">
+                <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
+            </div>
+
         </div>
 
         <div class="box">
-            <a href="<?php echo URLROOT; ?>/manager/equipment_view/<?php echo $equipment->equipment_id; ?>" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
+            <a href="equipment_view/<?php echo $item->equipment_id; ?>" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
 
             <form method="post" enctype="multipart/form-data">
                 <?php if (!empty($errors)): ?>

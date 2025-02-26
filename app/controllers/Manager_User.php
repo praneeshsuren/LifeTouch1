@@ -40,15 +40,15 @@
                             $_SESSION['success'] = "Member has been successfully registered!";
             
                             // Redirect to trainers list with success message
-                            redirect('admin/members');
+                            redirect('manager/member');
                         } else {
                             // Merge validation errors and pass to the view
                             $data['errors'] = array_merge($user->errors, $member->errors);
-                            $this->view('admin/admin-createMember', $data);
+                            $this->view('manager/member_create', $data);
                         }
                     }
                     else{
-                        redirect('admin/members');
+                        redirect('manager/member');
                     }
 
                     break;
@@ -74,7 +74,6 @@
                                 'contact_number'=> $_POST['contact_number'],
                                 'gender'        => $_POST['gender'],
                                 'email_address' => $_POST['email_address'],
-                                'membership_plan' => $_POST['membership_plan'],
                                 'image'         => $_POST['image']
                             ];
 
@@ -142,11 +141,9 @@
                     break;
                 
             }
-            
 
         }
 
-        
         
         public function trainer($action = null) {
 
@@ -360,7 +357,7 @@
                             $receptionist->insert($temp);
             
                             // Set a session message or flag for success
-                            $_SESSION['success'] = "Receptionist has been successfully registered!";
+                            $_SESSION['success'] = "receptionist has been successfully registered!";
             
                             // Redirect to receptionists list with success message
                             redirect('admin/receptionists');

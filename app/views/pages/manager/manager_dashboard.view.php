@@ -11,41 +11,32 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <!-- STYLESHEET -->
   <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/manager-style.css?v=<?php echo time(); ?>" />
+  <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/dashboard.css?v=<?php echo time();?>" />
+
   <!-- ICONS -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <!-- CHART.JS -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <title><?php echo APP_NAME; ?></title>
+<style>
 
-  <style>
-    .chart-box {
-      background: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      width: 90%;
-      min-width: 300px;
-      flex: 1;
-      text-align: center;
-    }
+.doughnut-chart .lower {
+    width: 400px;
+    display: flex;
+    justify-content: flex-start; /* Aligns to the left */
+    margin-top: -20px; /* Moves it up */
+}
+.insights {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    margin-left: -20px;
+}
 
-    .charts-container {
 
-      gap: 20px;
-      justify-content: space-around;
-      padding: 20px;
-      flex-wrap: wrap;
-      text-align: center;
-    }
-
-    body.dark .chart-box {
-      background: #1e1e1e;
-      border: 1px solid #333;
-      color: #ffffff;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
-    }
-  </style>
+</style>
 
 </head>
 
@@ -56,207 +47,384 @@
   </section>
 
   <main>
-    <div class="title">
 
-      <h1>Dashboard</h1>
-      <div class="greeting">
-        <span class="bell-container"><i class="ph ph-bell notification"></i></span>
-        <h2>Hi, John!</h2>
+      <div class="title">
+        
+        <h1>Dashboard</h1>
+        <div class="greeting">
+          <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
+        </div>
+
       </div>
 
-    </div>
+      <div class="dashboard-container">
 
-    <div class="insights">
+        <div class="left-column">
 
-      <div class="members">
-        <i class="ph ph-users"></i>
-        <div class="middle">
-          <div class="left">
-            <h3>Total Members</h3>
-            <h1>20</h1>
+          <div class="insights">
+
+            <div class="insight-card card-1">
+              <div class="upper">
+                <i class="ph ph-users"></i>
+                <div class="status-badge">
+                  <span>+9.4%</span>
+                </div>
+              </div>
+              <div class="lower">
+                  <p>Total Members</p>
+                  <div class="progress">
+                    <h1>20000</h1>
+                    <div class="text-muted">
+                      <small>Last 30 days</small>
+                    </div>
+                  </div>
+              </div>
+            </div>
+           
+            <div class="insight-card card-2">
+              <div class="upper">
+                <i class="ph ph-user-plus"></i>
+                <div class="status-badge">
+                  <span>+9.4%</span>
+                </div>
+              </div>
+              <div class="lower">
+                  <p>New Members</p>
+                  <div class="progress">
+                    <h1>20000</h1>
+                    <div class="text-muted">
+                      <small>Last 30 days</small>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="insight-card card-3">
+              <div class="upper">
+              <i class="ph ph-barbell"></i>
+                <div class="status-badge">
+                  <span>+9.4%</span>
+                </div>
+              </div>
+              <div class="lower">
+                  <p>Total Equipments</p>
+                  <div class="progress">
+                    <h1>20000</h1>
+                    <div class="text-muted">
+                      <small>Last 30 days</small>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="insight-card card-4">
+              <div class="upper">
+              <i class="ph ph-notepad"></i>
+                <div class="status-badge">
+                  <span>+9.4%</span>
+                </div>
+              </div>
+              <div class="lower">
+                  <p>Total Workouts Created</p>
+                  <div class="progress">
+                    <h1>20000</h1>
+                    <div class="text-muted">
+                      <small>Last 30 days</small>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
           </div>
-          <div class="progress">
-            <svg>
-              <circle cx="38" cy="38" r="38"></circle>
-            </svg>
-            <div class="number">
-              <p>75%</p>
+
+          <div class="bar-chart" style="margin-left:30px">
+
+            <div class="upper">
+
+              <div class="upper-text">
+                <h2>Member Attendance</h2>
+                <p>Track the total number of member who attended</p>
+              </div>
+
+              <div class="period-select">
+                <select id="time-period" name="time-period">
+                  <option value="week">This Week</option>
+                  <option value="month">This Month</option>
+                  <option value="year">This Year</option>
+                </select>
+              </div>
+
+            </div>
+            <div class="lower">
+                <canvas id="BarChart"></canvas>
+            </div>
+          </div>
+
+          <div class="bar-chart" style="width: 700px; margin-top:30px; margin-left:30px">
+          <div class="upper-text">
+                <h2>Member Age Distribution</h2>
+              </div>
+            <div class="lower">
+                <canvas id="chart2"></canvas>
+            </div>
+          </div>
+
+
+        </div>
+
+        <div class="right-column">
+
+          <div class="doughnut-chart">
+            <div class="upper-text">
+                  <h2>Membership Types</h2>
+                  <p>Membership plan distribution</p>
+            </div> 
+            <div class="lower">
+                <canvas id="DoughnutChart"></canvas>
+            </div>
+          </div>
+
+          <div class="recent-announcements">
+            <?php require APPROOT.'/views/components/recent-announcements.view.php' ?>
+          </div>
+
+        </div>
+        <div class="right-column" style="width: 700px; margin-left: -835px;">
+        <div class="doughnut-chart">
+            <div class="upper-text">
+                  <h2>Invetory</h2>
+                  <p>Invetory distribution</p>
+            </div> 
+            <div class="lower">
+                <canvas id="chart3"></canvas>
             </div>
           </div>
         </div>
-        <small class="text-muted">Last 30 days</small>
-      </div>
-      <!-- END OF MEMBERS -->
+        
+    </main>
 
-      <div class="bookings">
-        <i class="ph ph-chart-bar"></i>
-        <div class="middle">
-          <div class="left">
-            <h3>Total Bookings</h3>
-            <h1>10</h1>
-          </div>
-          <div class="progress">
-            <svg>
-              <circle cx="38" cy="38" r="38"></circle>
-            </svg>
-            <div class="number">
-              <p>75%</p>
-            </div>
-          </div>
-        </div>
-        <small class="text-muted">Last 30 days</small>
-      </div>
-      <!-- END OF BOOKINGS -->
+    <!-- SCRIPT -->
+    <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
+    <script>
+      const ctxBarChart = document.getElementById('BarChart').getContext('2d');
+      let delayed;
 
-      <div class="workouts">
-        <i class="ph ph-trend-up"></i>
-        <div class="middle">
-          <div class="left">
-            <h3>Workouts Created</h3>
-            <h1>10</h1>
-          </div>
-          <div class="progress">
-            <svg>
-              <circle cx="38" cy="38" r="38"></circle>
-            </svg>
-            <div class="number">
-              <p>75%</p>
-            </div>
-          </div>
-        </div>
-        <small class="text-muted">Last 30 days</small>
-      </div>
-      <!-- END OF WORKOUTS -->
-
-    </div>
-
-
-    <div class="charts-container">
-      <!-- Chart 1: Revenue by Membership Type -->
-      <div class="chart-box">
-        <div class="chart-header">
-          <h2>Revenue by Membership Type</h2>
-        </div>
-        <div class="chart-container">
-          <canvas id="chart1" style="width:100px;height:50px"></canvas>
-        </div>
-      </div>
-      <br>
-      <!-- Chart 2: Members Age Category -->
-      <div class="chart-box">
-        <div class="chart-header">
-          <h2>Members Age Category</h2>
-        </div>
-        <div class="chart-container" style="width: 300px;height:300px;">
-          <canvas id="chart2"></canvas>
-        </div>
-      </div>
-      <br>
-      <div class="chart-box">
-        <div class="chart-header">
-          <h2>Inventory</h2>
-        </div>
-        <div class="chart-container">
-          <canvas id="chart3"></canvas>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="recent-announcements">
-
-      <h2>Recent Announcements</h2>
-      <div class="announcements">
-
-        <div class="announcement">
-          <div class="profile-img">
-            <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
-          </div>
-          <div class="message">
-            <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
-            <small class="text-muted">2 hours ago</small>
-          </div>
-        </div>
-
-        <div class="announcement">
-          <div class="profile-img">
-            <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
-          </div>
-          <div class="message">
-            <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
-            <small class="text-muted">2 hours ago</small>
-          </div>
-        </div>
-
-        <div class="announcement">
-          <div class="profile-img">
-            <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
-          </div>
-          <div class="message">
-            <p><b>Mark Anderson</b></br>GYM Renovation Notice for all Members and Trainers</p>
-            <small class="text-muted">2 hours ago</small>
-          </div>
-        </div>
-
-      </div>
-
-
-
-
-  </main>
-
-  <!-- SCRIPT -->
-  <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const ctx1 = document.getElementById('chart1').getContext('2d');
-
-      const data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        datasets: [{
-            label: 'Monthly',
-            data: [10, 20, 30, 40, 50, 60, 70, 45, 50, 30, 55, 20],
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          },
-          {
-            label: 'Drop-in',
-            data: [15, 25, 35, 45, 55, 65, 75, 25, 35, 45, 55, 65],
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-          },
-          {
-            label: 'Annual',
-            data: [5, 15, 25, 35, 45, 55, 65, 30, 40, 50, 60, 70],
-            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-          },
+      const dataBarChart = {
+        labels: [
+          'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
         ],
+        datasets: [{
+          label: 'Number of Members',
+          data: [15, 25, 35, 45, 30, 20], // Replace with your actual data
+          fill: true,
+          borderColor: '#5f63f2',
+          backgroundColor: 'rgba(95, 99, 242, 0.2)',
+          tension: 0.4,
+          pointBackgroundColor: '#5f63f2',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          borderWidth: 2,
+          borderRadius: 10,
+          barThickness: 50
+        }]
       };
 
-      const config = {
+      // Chart configuration
+      const configBarChart = {
         type: 'bar',
-        data: data,
+        data: dataBarChart,
         options: {
           responsive: true,
+          maintainAspectRatio: true,
+          animation: {
+            duration: 2000, // Duration of the animation (2 seconds)
+            easing: 'easeOutQuart', 
+            onComplete: () => {
+              delayed = true;
+            },
+            delay: (context) => {
+              let delay = 0;
+              if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                delay = context.dataIndex * 150 + context.datasetIndex * 50;
+              }
+              return delay;
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                drawBorder: false,
+                color: 'rgba(0, 0, 0, 0.1)'
+              },
+              ticks: {
+                stepSize: 10
+              },
+              stacked: true
+            },
+            x: {
+              grid: {
+                drawBorder: false,
+                display: false
+              },
+              ticks: {
+                font: {
+                  family: "'Poppins', sans-serif"
+                }
+              },
+              stacked: true
+            }
+          },
           plugins: {
             legend: {
               position: 'top',
+              labels: {
+                boxWidth: 20,
+                font: {
+                  family: "'Poppins', sans-serif"
+                }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              padding: 10,
+              titleFont: {
+                family: "'Poppins', sans-serif"
+              },
+              bodyFont: {
+                family: "'Poppins', sans-serif"
+              }
+            }
+          }
+        }
+      };
+
+      // Create the chart
+      new Chart(ctxBarChart, configBarChart);
+
+      const ctxDoughnutChart = document.getElementById('DoughnutChart').getContext('2d');
+
+      const dataDoughnutChart = {
+          labels: [
+              'Monthly', 'Quarterly', 'Semi-Annually', 'Annually'
+          ],
+          datasets: [{
+              label: 'Distribution of Membership Plans',
+              data: [300, 150, 220, 80], // Replace with your actual data
+              fill: true,
+              backgroundColor: [
+                  'rgb(255, 99, 132)',  // Red
+                  'rgb(54, 162, 235)',  // Blue
+                  'rgb(255, 205, 86)',  // Yellow
+                  'rgb(75, 192, 192)'   // Teal
+              ],
+              hoverOffset: 4
+          }]
+      };
+
+      const configDoughnutChart = {
+          type: 'doughnut',
+          data: dataDoughnutChart, // Correct reference to the data object
+          options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              animation: {
+                  duration: 1500,
+                  easing: 'easeInOutQuart',
+                  onComplete: () => {
+                      delayed = true;
+                  },
+                  delay: (context) => {
+                      let delay = 0;
+                      if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                          delay = context.dataIndex * 100 + context.datasetIndex * 50;
+                      }
+                      return delay;
+                  },
+              },
+              plugins: {
+                  legend: {
+                      position: 'top',
+                      labels: {
+                          boxWidth: 20,
+                          font: {
+                              family: "'Poppins', sans-serif"
+                          }
+                      }
+                  },
+                  tooltip: {
+                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                      padding: 10,
+                      titleFont: {
+                          family: "'Poppins', sans-serif"
+                      },
+                      bodyFont: {
+                          family: "'Poppins', sans-serif"
+                      }
+                  }
+              }
+          }
+      };
+
+      // Create the doughnut chart
+      new Chart(ctxDoughnutChart, configDoughnutChart);
+
+    </script>
+
+<script>
+    // Data for gym equipment counts
+    const data = {
+      labels: ['Treadmills', 'Dumbbells', 'Bikes', 'Rowing Machines'], // Equipment names on x-axis
+      datasets: [{
+        label: 'Count of Equipment',
+        data: [70, 140, 50, 40], // Equipment counts
+        backgroundColor: 'rgba(75, 192, 192, 0.5)', // Color for the bars
+      }, ],
+    };
+
+    // Configuration for the bar chart
+    const inconfig = {
+      type: 'bar',
+      data: data,
+      options: {
+        plugins: {
+          title: {
+            display: true,
+            text: 'Gym Equipment Counts', // Chart title
+          },
+        },
+        responsive: true,
+        interaction: {
+          intersect: false,
+        },
+        scales: {
+          x: {
+            stacked: false, // No stacking on the x-axis
+            title: {
+              display: true,
+              text: 'Equipment', // X-axis label
             },
           },
-          scales: {
-            x: {
-              stacked: true,
-            },
-            y: {
-              stacked: true,
+          y: {
+            stacked: false, // No stacking on the y-axis
+            title: {
+              display: true,
+              text: 'Count', // Y-axis label
             },
           },
         },
-      };
-
-      const myChart = new Chart(ctx1, config);
+      },
+    };
+    // Render the chart
+    document.addEventListener('DOMContentLoaded', () => {
+      const ctx3 = document.getElementById('chart3').getContext('2d');
+      const ageChart = new Chart(ctx3, inconfig); // Create a new Chart.js instance
     });
   </script>
 
-  <script>
+<script>
     // Define age category data
     // Define age category data
     const ageData = {
@@ -307,56 +475,4 @@
     });
   </script>
 
-  <script>
-    // Data for gym equipment counts
-    const data = {
-      labels: ['Treadmills', 'Dumbbells', 'Bikes', 'Rowing Machines'], // Equipment names on x-axis
-      datasets: [{
-        label: 'Count of Equipment',
-        data: [70, 140, 50, 40], // Equipment counts
-        backgroundColor: 'rgba(75, 192, 192, 0.5)', // Color for the bars
-      }, ],
-    };
-
-    // Configuration for the bar chart
-    const inconfig = {
-      type: 'bar',
-      data: data,
-      options: {
-        plugins: {
-          title: {
-            display: true,
-            text: 'Gym Equipment Counts', // Chart title
-          },
-        },
-        responsive: true,
-        interaction: {
-          intersect: false,
-        },
-        scales: {
-          x: {
-            stacked: false, // No stacking on the x-axis
-            title: {
-              display: true,
-              text: 'Equipment', // X-axis label
-            },
-          },
-          y: {
-            stacked: false, // No stacking on the y-axis
-            title: {
-              display: true,
-              text: 'Count', // Y-axis label
-            },
-          },
-        },
-      },
-    };
-    // Render the chart
-    document.addEventListener('DOMContentLoaded', () => {
-      const ctx3 = document.getElementById('chart3').getContext('2d');
-      const ageChart = new Chart(ctx3, inconfig); // Create a new Chart.js instance
-    });
-  </script>
-</body>
-
-</html>
+  </body>

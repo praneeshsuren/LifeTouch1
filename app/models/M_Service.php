@@ -42,5 +42,5 @@ class M_Service
     {
         $sql = "SELECT * FROM {$this->table} WHERE equipment_id = :equipment_id";
         $queryResult = $this->query($sql, ['equipment_id' => $equipment_id]);
-        }
+    }
 }
