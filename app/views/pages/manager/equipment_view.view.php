@@ -83,7 +83,7 @@
                                         <td><?php echo htmlspecialchars($service->service_date); ?></td>
                                         <td><?php echo htmlspecialchars($service->service_cost); ?></td>
                                         <td>
-                                            
+
                                             </a> <a href="<?php echo URLROOT; ?>/service/deleteService/<?php echo $service->service_id; ?>" onclick="return confirm('Are you sure you want to delete this equipment?');">
                                                 <button style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.2em;">X</button>
                                             </a>

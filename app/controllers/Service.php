@@ -56,11 +56,12 @@ class Service extends Controller
     {
         $serviceModel = new M_Service();
 
-        // Fetch the existing equipment details by ID
+        // Fetch the existing service details by ID
+        
         $service = $serviceModel->where(['service_id' => $id], [], 1);
 
         if (!$service) {
-            // If no equipment found, redirect to the equipment list
+            // If no service found, redirect to the equipment list
             redirect('manager/equipment');
         }
 
@@ -72,25 +73,22 @@ class Service extends Controller
                 'service_cost' => $_POST['cost'],
             ];
 
-            
-
-            // Update the equipment in the database
+            // Update the service in the database
             $updateResult = $serviceModel->update($id, $updatedData, 'service_id');
 
             if ($updateResult === false) {
-                $_SESSION['message'] = "Failed to update equipment.";
+                $_SESSION['message'] = "Failed to update service.";
             } else {
-                $_SESSION['message'] = "Equipment updated successfully.";
+                $_SESSION['message'] = "Service updated successfully.";
             }
 
             // Redirect to the equipment list page after updating
             redirect('manager/equipment');
         }
 
-        // Pass the equipment data to the view for editing
-        $this->view('manager/equipment_edit', ['service' => $service[0]]);
+        // Pass the service data to the view for editing
+        $this->view('manager/service_edit', ['service' => $service]);
     }
-
 
 public function deleteService($id)
 {

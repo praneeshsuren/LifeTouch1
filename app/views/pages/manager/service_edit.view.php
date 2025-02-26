@@ -89,22 +89,32 @@
 
             <a href="<?php echo URLROOT; ?>/manager/equipment_view/<?php echo isset($equipment->equipment_id) ? htmlspecialchars($equipment->equipment_id) : ''; ?>" class="btn" style="float: right; margin-top: 10px;margin-bottom:3px;">Back</a>
 
-            <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/service/updateService">
-                <input type="hidden" name="service_id" value="<?php echo htmlspecialchars(isset($service->service_id) ? $service->service_id : ''); ?>">
+            <?php
+if (isset($service)) {
+    // Proceed with the form and populate fields
+    $service_date = $service->service_date;
+    $service_cost = $service->service_cost;
+} else {
+    echo "Service data is not available.";
+}
+?>
 
-                <div class="input-container">
-                    <label for="service_date">Service Date:</label>
-                    <input type="date" id="service_date" name="date" value="<?php echo htmlspecialchars(isset($service->service_date) ? $service->service_date : ''); ?>" placeholder="mm/dd/yyyy" required>
-                </div>
-                <div class="input-container">
-                    <label for="service_cost">Service Cost:</label>
-                    <input type="text" id="service_cost" name="cost" value="<?php echo htmlspecialchars(isset($service->service_cost) ? $service->service_cost : ''); ?>" required>
-                </div>
-                <div class="button-container">
+<form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/service/updateService">
+    <input type="hidden" name="service_id" value="<?php echo htmlspecialchars(isset($service->service_id) ? $service->service_id : ''); ?>">
 
-                    <button class="edit-button" style="display: block; margin: 0 auto; border-radius: 20px;width:200px;margin-top:20px;">Update</button>
-                </div>
-            </form>
+    <div class="input-container">
+        <label for="service_date">Service Date:</label>
+        <input type="date" id="service_date" name="date" value="<?php echo isset($service_date) ? htmlspecialchars($service_date) : ''; ?>" required>
+    </div>
+    <div class="input-container">
+        <label for="service_cost">Service Cost:</label>
+        <input type="text" id="service_cost" name="cost" value="<?php echo isset($service_cost) ? htmlspecialchars($service_cost) : ''; ?>" required>
+    </div>
+    <div class="button-container">
+        <button class="edit-button" style="display: block; margin: 0 auto; border-radius: 20px;width:200px;margin-top:20px;">Update</button>
+    </div>
+</form>
+
         </div>
 
     </main>
