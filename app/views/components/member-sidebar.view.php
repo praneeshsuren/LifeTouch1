@@ -21,31 +21,31 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/memberViewtrainer">
+                <a href="<?php echo URLROOT; ?>/member/Trainer">
                     <i class='icon ph-bold ph-user'></i>
                     <span class="text">View trainer</span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/memberWorkoutschedules">
+                <a href="<?php echo URLROOT; ?>/member/Workoutschedules">
                     <i class='icon ph-bold ph-barbell'></i>
                     <span class="text">Workout schedules</span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/memberAnnouncements">
+                <a href="<?php echo URLROOT; ?>/member/Announcements">
                     <i class='icon ph-bold ph-newspaper'></i>
                     <span class="text">View Announcements</span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/memberSupplements">
+                <a href="<?php echo URLROOT; ?>/member/Supplements">
                     <i class='icon ph-bold ph-flask'></i>
                     <span class="text">Supplements</span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/memberPayment">
+                <a href="<?php echo URLROOT; ?>/member/Payment">
                     <i class='icon ph-bold ph-credit-card'></i>
                     <span class="text">Payment</span>
                 </a>
@@ -56,7 +56,7 @@
         <p class="title">Settings</p>
         <ul>
             <li>
-                <a href="memberSettings">
+                <a href="Settings">
                     <i class='icon ph-bold ph-gear'></i>
                     <span class="text">Settings</span>
                 </a>

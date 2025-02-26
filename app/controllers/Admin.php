@@ -232,20 +232,36 @@
                     ];
         
                     $this->view('admin/admin-viewAdmin', $data);
-                    break;                               
+                    break;          
+                    
+                case 'api':
+                    // Return all admins data as JSON
+                    $adminModel = new M_Admin;
+                    $admins = $adminModel->findAll('admin_id');
+                    header('Content-Type: application/json');
+                    echo json_encode($admins);
+                    break; 
         
                 default:
-                    // Fetch all admins and pass to the view
-                    $adminModel = new M_Admin;
-                    $admins = $adminModel->findAll('created_at');
-        
-                    $data = [
-                        'admins' => $admins
-                    ];
-        
-                    $this->view('admin/admin-admins', $data);
-                    break;
+                    $this->view('admin/admin-admins');
+                    break; 
             }
+        }
+
+        public function bookings($action = null){
+            $bookingModel = new M_Booking();
+            $bookings = $bookingModel->bookingsfForAdmin();
+        
+            if ($action === 'api'){
+                header('Content-Type: application/json');
+                echo json_encode($bookings);
+                exit;
+            }
+            $this->view('admin/admin-booking');
+        }
+
+        public function calendar(){
+            $this->view('admin/admin-calendar');
         }
 
     }
