@@ -161,42 +161,44 @@
 
       // Fetch workouts from the database
       function fetchWorkouts() {
-          fetch('<?php echo URLROOT; ?>/workout/api')
-              .then(response => response.json())
-              .then(data => {
-                  workoutData = data;
-                  displayWorkouts(data);
-              })
-              .catch(error => console.error('Error fetching workouts:', error));
-      }
+    fetch('<?php echo URLROOT; ?>/workout/api')
+        .then(response => response.json())
+        .then(data => {
+            workoutData = data;
+            displayWorkouts(data);  // Pass the data directly to displayWorkouts
+        })
+        .catch(error => console.error('Error fetching workouts:', error));
+}
 
-      // Display workouts as cards
-      function displayWorkouts(workouts) {
-          const container = document.getElementById('workouts-container');
-          container.innerHTML = ''; // Clear the container before adding new cards
+// Display workouts as cards
+function displayWorkouts(workouts) {
+    const container = document.getElementById('workouts-container');
+    container.innerHTML = ''; // Clear the container before adding new cards
 
-          workouts.forEach(workout => {
-              const workoutCard = document.createElement('div');
-              workoutCard.classList.add('workout-card');
+    workouts.forEach(workout => {
+        const workoutCard = document.createElement('div');
+        workoutCard.classList.add('workout-card');
 
-              const equipment = equipmentData.find(item => item.equipment_id === workout.equipment_id);
+        // Since equipment info is already part of the workout data (from the view), we can directly access it
+        const { workout_id, workout_name, workout_description, equipment_id, equipment_name, file } = workout;
 
-              workoutCard.innerHTML = `
-                  <div class="workout-image">
-                      <img src="${equipment ? equipment.file : ''}" alt="Equipment Image" style="width: 50px; height: 50px;" />
-                  </div>
-                  <div class="workout-details">
-                      <h3>${workout.workout_name}</h3>
-                      <p><strong>Description:</strong> ${workout.workout_description}</p>
-                      <p><strong>Equipment:</strong> ${equipment ? equipment.name : 'N/A'}</p>
-                      <p><strong>Equipment ID:</strong> ${equipment ? equipment.equipment_id : 'N/A'}</p>
-                      <p><strong>Workout ID:</strong> ${workout.workout_id}</p>
-                  </div>
-              `;
+        workoutCard.innerHTML = `
+            <div class="workout-image">
+                <img src="${file || ''}" alt="Equipment Image" style="width: 50px; height: 50px;" />
+            </div>
+            <div class="workout-details">
+                <h3>${workout_name}</h3>
+                <p><strong>Description:</strong> ${workout_description}</p>
+                <p><strong>Equipment:</strong> ${equipment_name || 'N/A'}</p>
+                <p><strong>Equipment ID:</strong> ${equipment_id || 'N/A'}</p>
+                <p><strong>Workout ID:</strong> ${workout_id}</p>
+            </div>
+        `;
 
-              container.appendChild(workoutCard);
-          });
-      }
+        container.appendChild(workoutCard);
+    });
+}
+
 
       // Populate the equipment dropdown with fetched equipment
       function populateEquipmentDropdown(equipment) {
@@ -208,7 +210,27 @@
               option.textContent = item.name;
               equipmentSelect.appendChild(option);
           });
+
+          equipmentSelect.addEventListener('change', function() {
+            const selectedEquipmentId = this.value;
+            updateEquipmentDetails(selectedEquipmentId);
+        });
       }
+
+      function updateEquipmentDetails(equipmentId) {
+        const selectedEquipment = equipmentData.find(item => item.equipment_id == equipmentId);
+
+        if (selectedEquipment) {
+            document.getElementById('equipment-image').style.display = 'block';
+            document.getElementById('equipment-image').src = selectedEquipment.file || '';
+            document.getElementById('equipment-name').textContent = selectedEquipment.name || '';
+            document.getElementById('equipment-id').textContent = selectedEquipment.equipment_id || '';
+        } else {
+            document.getElementById('equipment-image').style.display = 'none';
+            document.getElementById('equipment-name').textContent = '';
+            document.getElementById('equipment-id').textContent = '';
+        }
+    }
 
       // Reset modal content
       function resetModal() {

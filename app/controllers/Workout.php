@@ -4,8 +4,8 @@
 
         public function api(){
 
-            $workoutModel = new M_Workout;
-            $workout = $workoutModel->findAll();
+            $workoutView = new M_WorkoutEquipmentView;
+            $workout = $workoutView->findAll();
 
             header('Content-Type: application/json');
             echo json_encode($workout);
