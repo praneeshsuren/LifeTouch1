@@ -1802,12 +1802,12 @@ main .calendarContainer {
     border-radius: 10px;
 }
 
-.select-btn, .select-option li{
+.select-btn, .select-option li {
     display: flex;
     cursor: pointer;
     align-items: center;
 }
-.select-btn{
+.select-btn {
     height: 35px;
     padding: 5px 20px;
     border-radius: 10px;
@@ -1815,14 +1815,15 @@ main .calendarContainer {
     justify-content: space-between;
 }
 
-.select-btn i{
+.select-btn i {
     transition: var(--tran-03);
 }
 
-.select-wrapper.active .select-btn i{
+.select-wrapper.active .select-btn i {
     transform: rotate(-180deg);
 }
-.select-content{
+
+.select-content {
     display: none;
     margin-top: 5px;
     padding: 2px 20px;
@@ -1831,16 +1832,16 @@ main .calendarContainer {
     overflow-y: auto;
 }
 
-.select-wrapper.active .select-content{
+.select-wrapper.active .select-content {
     display: block;
 }
 
-.select-content .select-search{
+.select-content .select-search {
     margin-top: 5px;
     position: relative;
 }
 
-.select-search input{
+.select-search input {
     background: #ccc;
     height: 35px;
     width: 100%;
@@ -1850,32 +1851,32 @@ main .calendarContainer {
     border: 1px solid #757575;
 }
 
-.select-content .select-option{
+.select-content .select-option {
     margin: 5px 0px;
     max-height: 98px;
     overflow-y: auto;
 }
 
-.select-option::-webkit-scrollbar{
+.select-option::-webkit-scrollbar {
     width: 7px;
 }
 
-.select-option::-webkit-scrollbar-track{
+.select-option::-webkit-scrollbar-track {
     background: #b3b3b3;
     border-radius: 20px;
 }
 
-.select-option::-webkit-scrollbar-thumb{
+.select-option::-webkit-scrollbar-thumb {
     background: #757575;
     border-radius: 20px;
 }
-.select-option li{
+.select-option li {
     height: 30px;
     border-radius: 5px;
     padding: 0 10px;
 }
 
-.select-option li:hover{
+.select-option li:hover {
     background: #b3b3b3;
 }
 

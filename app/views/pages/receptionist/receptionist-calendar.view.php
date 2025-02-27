@@ -273,7 +273,7 @@
                                     <tr>
                                         <td>${book.member_id}</td>
                                         <td>${book.trainer_id}</td>
-                                        <td>${book.time_slot}</td>
+                                        <td>${book.timeslot}</td>
                                     </tr>
                                 </table>
                             </div>`;

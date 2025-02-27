@@ -55,7 +55,7 @@
                   <form id="holidayForm" method="POST">
                     <div class="select-wrapper" style="display:flex; align-items:center; width:200px; gap:10px;">
                       <label for="holidayDate" class="label" ><i class="ph ph-calendar"></i>Date</label>
-                      <input type="date" id="holidayDate" required>
+                      <input type="date" name="holidayDate" id="holidayDate">
                     </div>
                     <div class="select-wrapper time-wrapper">
                       <label for="holidayTime" class="label"><i class="ph ph-clock"></i>Time</label>
@@ -83,8 +83,8 @@
                         <ul class="select-option trainer-option"></ul>
                       </div>
                     </div>
-                    <input type="text" id="holidayTimeId">
-                    <input type="text" name="holidayTrainer" id="holidayTrainerValue">
+                    <input type="hidden" name="holidayTimeId" id="holidayTimeId" required>
+                    <input type="text" name="holidayTrainerValue" id="holidayTrainerValue" required>
                     <div class="book-btn">
                       <button type="submit" id="submitBtn" name="submit">Add</button>
                     </div>
@@ -117,22 +117,10 @@
               renderTable(allHolidays);
             }
             console.log('Time Slots:', data.timeSlots);
-            if(Array.isArray(data.timeSlots) && data.timeSlots.length > 0){
-                timeslots = data.timeSlots;
-                let allSlots = [{ id: 0, slot: "Full Day" }, ...data.timeSlots];
-                displaytimeslots(allSlots);
-            } else {
-              console.log('No timeslots found.');
-            }
-            console.log('trainers:',data.trainers);
-            if(Array.isArray(data.trainers) && data.trainers.length > 0){
-              trainers = data.trainers;
-              let allTrainerIds = trainers.map(trainer => trainer.trainer_id);
-              allTrainerIds = ["All", ...allTrainerIds];
-              displayTrainers(allTrainerIds);
-            } else {
-              console.log('No ttrainers found.');
-            }
+            timeslots = data.timeSlots;
+            console.log('trainers:', data.trainers);
+            trainers = data.trainers
+            dropdownOptions(timeslots,trainers);
           })
           .catch(error => {
             console.error('Error fetching holidays:', error);
@@ -143,57 +131,26 @@
             `;
           });
 
-        submitBtn = document.getElementById("submitBtn");
-        submitBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-
-          const holidayDate = document.getElementById("holidayDate").value;
-          let holidayTimeId = document.getElementById("holidayTimeId").value;
-          let holidayTrainerValue = document.getElementById("holidayTrainerValue").value;
-          console.log(holidayDate);
-          console.log(holidayTimeId);
-          console.log(holidayTrainerValue);
-
-          if (!holidayDate || !holidayTimeId || !holidayTrainerValue) {
-              alert("Please fill in all fields before submitting.");
-              return;
-          }
-
-          if(holidayTimeId === "0"){
-            holidayTimeId = timeslots.map(slot => slot.id).join(",");
-            console.log(holidayTimeId);
-          }
-
-          if(holidayTrainerValue === "All"){
-            holidayTrainerValue = trainers.map(trainer => trainer.trainer_id).join(",");
-            console.log(holidayTrainerValue);
-          }
-
-
-          const formData = new FormData();
-          formData.append("holidayDate", holidayDate);
-          formData.append("holidayTimeId", holidayTimeId);
-          formData.append("holidayTrainer", holidayTrainerValue);
-
-          fetch("<?php echo URLROOT; ?>/receptionist/holiday/submit",{
-            method:"POST",
-            body: formData,
+          document.getElementById("holidayForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+              
+            const formData = new FormData(this);
+            
+            fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
+                method: "POST",
+                body: formData
             })
             .then(response => response.json())
-            .then(data => {
-                if (data.success) {
+            .then(result => {
+                if (result.success) {
                     alert("Holiday added successfully!");
-                    document.getElementById("bookingModal").style.display = "none"; // Close modal
-                    location.reload(); // Reload the page to update the table
+                    location.reload();
                 } else {
-                    alert("Failed to add holiday: " + data.message);
+                    alert("Error: " + result.message);
                 }
             })
-            .catch(error => {
-                console.error("Error submitting form:", error);
-                alert("An error occurred while submitting the form.");
+            .catch(error => console.error("Error inserting holiday:", error));
             });
-        });
 
         holidayModal();
         dropdownToggle();
@@ -211,7 +168,7 @@
             
             row.innerHTML = `
                 <td class="table-cell">${holiday.date}</td>
-                <td class="table-cell">${holiday.time_slots}</td>
+                <td class="table-cell">${holiday.timeslots}</td>
                 <td class="table-cell">${holiday.trainer_ids}</td>
                 <td class="table-cell">
                   <div class="edit-dlt">
@@ -267,138 +224,45 @@
         });
       }
 
-      function openEditModal(holiday) {
-        resetModalFields();
-        const holidayDate = document.getElementById("holidayDate");
-        const holidayTimeId = document.getElementById("holidayTimeId");
-        const holidayTrainerValue = document.getElementById("holidayTrainerValue");
-        const timeText = document.querySelector(".time-btn span");
-        const trainerText = document.querySelector(".trainer-btn span");
-        
-        holidayDate.value = holiday.date;
-        const timeSlotsArray = holiday.time_slots_ids.split(",").map(item => item.trim());
-        const trainersArray = holiday.trainer_ids.split(",").map(item => item.trim());
-
-        if(timeSlotsArray.length > 1){
-          timeText.textContent = "Full Day";
-          holidayTimeId.value = "0";
-        } else{
-          timeText.textContent = holiday.time_slots;
-          holidayTimeId.value = holiday.time_slots_ids;
-        }
-
-        if(trainersArray.length > 1){
-          trainerText.textContent = "All";
-          holidayTrainerValue.value = "All"
-        } else {
-          holidayTrainerValue.value = holiday.trainer_ids;
-          trainerText.textContent = holidayTrainerValue.value;
-        }
-
-        modal.style.display = "block";
-      }
-
       const timeWrapper = document.querySelector(".time-wrapper");
-      const timeBtn = document.querySelector(".time-btn");
-      const timeOption = document.querySelector(".time-option")
-      const timeText = document.querySelector(".time-btn span");
-      const timeslotId = document.getElementById("holidayTimeId");
-
-      function displaytimeslots(allSlots){
-        const searchInput = document.querySelector(".select-search input");
-        if(!timeOption) return;
-
-        timeOption.innerHTML = "";
-
-        if(allSlots.length > 0){
-          allSlots.forEach(slot => {
-            let li = document.createElement("li");
-            li.textContent =slot.slot;
-            li.addEventListener('click', () => {
-              timeText.textContent = slot.slot;
-              timeslotId.value = slot.id;
-              timeWrapper.classList.remove("active");
-            });
-            timeOption.appendChild(li);
-          });
-        }
-
-        searchInput.addEventListener("keyup", () =>{
-          let searchValue = searchInput.value.toLowerCase();
-          let filteredTimeslots = allSlots.filter(data => {
-            return data.slot.toLowerCase().includes(searchValue);
-          });
-
-          timeOption.innerHTML = "";
-
-          if (filteredTimeslots.length === 0){
-            let li = document.createElement("li");
-            li.textContent = "Timeslot Not Found";
-            li.style.pointerEvents = "none"; 
-            timeOption.appendChild(li);
-          } else{
-            filteredTimeslots.forEach(filteredTimeslot => {
-            let li = document.createElement("li");
-            li.textContent = filteredTimeslot.slot;
-            li.addEventListener('click', () => {
-              timeText.textContent = filteredTimeslot.slot;
-              timeWrapper.classList.remove("active");
-            });
-            timeOption.appendChild(li);
-          });
-          }          
-        });
-      }
-
       const trainerWrapper = document.querySelector(".trainer-wrapper");
+      const timeBtn = document.querySelector(".time-btn");
       const trainerBtn = document.querySelector(".trainer-btn");
-      const trainerOption = document.querySelector(".trainer-option");
+      const timeList = document.querySelector(".time-option");
+      const trainerList = document.querySelector(".trainer-option");
+      const timeText = document.querySelector(".time-btn span");
       const trainerText = document.querySelector(".trainer-btn span");
-      const trainerValue = document.getElementById("holidayTrainerValue");
+      const holidayTimeId = document.getElementById("holidayTimeId");
+      const holidayTrainerValue = document.getElementById("holidayTrainerValue");
 
-      function displayTrainers(allTrainerIds){
-        const searchInput = document.querySelector(".trainer-content .select-search input");
-        if (!trainerOption) return;
+      function dropdownOptions(timeslots,trainers){
+        let timeHtml = `<li data-id="ALL">Full Day</li>`;
+        timeslots.forEach(slot =>{
+          timeHtml += `<li data-id="${slot.id}">${slot.slot}</li>`;
+        });
+        timeList.innerHTML = timeHtml;
 
-        trainerOption.innerHTML = "";
+        let trainerHTML = `<li data-id="ALL">All</li>`; 
+        trainers.forEach(trainer => {
+          trainerHTML += `<li data-id="${trainer.trainer_id}">${trainer.trainer_id}</li>`;
+        });
+        trainerList.innerHTML = trainerHTML;
 
-        if (allTrainerIds.length > 0) {
-          allTrainerIds.forEach(trainerId => {
-            let li = document.createElement("li");
-            li.textContent = trainerId;
-            li.addEventListener("click", () => {
-              trainerText.textContent = trainerId;
-              trainerValue.value = trainerId;
+        
+        document.querySelectorAll(".time-option li").forEach(item =>{
+          item.addEventListener('click', function(){
+            timeText.textContent = this.textContent;
+            holidayTimeId.value = this.getAttribute("data-id");
+            timeWrapper.classList.remove("active");
+          });
+        });
+
+        document.querySelectorAll(".trainer-option li").forEach(item => {
+            item.addEventListener("click", function () {
+              trainerText.textContent = this.textContent;
+              holidayTrainerValue.value = this.getAttribute("data-id");
               trainerWrapper.classList.remove("active");
             });
-            trainerOption.appendChild(li);
-          });
-        }
-
-        searchInput.addEventListener("keyup", () => {
-          let searchValue = searchInput.value.toLowerCase();
-          let filteredTrainers = allTrainerIds.filter(data => {
-            return data.toLowerCase().includes(searchValue);
-          });
-
-          trainerOption.innerHTML = "";
-
-          if(filteredTrainers.length === 0){
-            let li = document.createElement("li");
-            li.textContent = "Trainer Not Found";
-            li.style.pointerEvents = "none"; 
-            trainerOption.appendChild(li);
-          } else{
-            filteredTrainers.forEach(filteredTrainerId => {
-            let li = document.createElement("li");
-            li.textContent = filteredTrainerId;
-            li.addEventListener("click", () => {
-              trainerText.textContent = filteredTrainerId;
-              trainerWrapper.classList.remove("active");
-            });
-            trainerOption.appendChild(li);
-          });
-          }
         });
       }
 

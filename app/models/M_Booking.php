@@ -18,7 +18,7 @@
         public function getBookingsByMonthAndYear($member_id, $trainer_id, $month, $year) {
             $query = "SELECT b.*, ts.slot 
                 FROM $this->table AS b
-                JOIN time_slots AS ts ON b.timeslot_id = ts.id
+                JOIN timeslot AS ts ON b.timeslot_id = ts.id
                 WHERE b.member_id = :member_id 
                 AND b.trainer_id = :trainer_id 
                 AND MONTH(b.booking_date) = :month 
@@ -39,9 +39,9 @@
                 b.*, 
                 m.member_id AS member_id, 
                 CONCAT(m.first_name, ' ', m.last_name) AS member_name, 
-                ts.slot AS time_slot
+                ts.slot AS timeslot
                 FROM booking AS b
-                JOIN time_slots ts ON b.timeslot_id = ts.id
+                JOIN timeslot ts ON b.timeslot_id = ts.id
                 JOIN member m ON b.member_id = m.member_id
                 WHERE b.trainer_id = :trainer_id 
             ";
@@ -56,9 +56,9 @@
                 CONCAT(m.first_name, ' ', m.last_name) AS member_name, 
                 t.trainer_id AS trainer_id, 
                 CONCAT(t.first_name, ' ', t.last_name) AS trainer_name, 
-                ts.slot AS time_slot
+                ts.slot AS timeslot
               FROM booking AS b
-              JOIN time_slots ts ON b.timeslot_id = ts.id
+              JOIN timeslot ts ON b.timeslot_id = ts.id
               JOIN member m ON b.member_id = m.member_id
               JOIN trainer t ON b.trainer_id = t.trainer_id";
             

@@ -150,7 +150,7 @@
                                     </div>
                                 </td>
                                 <td>${booking.booking_date}</td>
-                                <td>${booking.time_slot}</td>
+                                <td>${booking.timeslot}</td>
                                 <td> 
                                     <div class="status ${statusClass}">
                                         ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase()}
