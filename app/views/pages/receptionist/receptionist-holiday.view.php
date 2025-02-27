@@ -38,7 +38,7 @@
             <table class='user-table'>
               <thead>
                   <tr>
-                      <th>Date</th>
+                      <th>Datde</th>
                       <th>Time</th>
                       <th>Trainer</th>
                       <th>Action</th>
@@ -104,6 +104,8 @@
         let allHolidays = [];
         let timeslots = [];
         let trainers = [];
+        let noOftimeslots = 0;
+        let noOftrainers = 0;
 
         fetch('<?php echo URLROOT; ?>/receptionist/holiday/api')
           .then(response => {
@@ -114,12 +116,15 @@
             console.log('Holidays:', data.holidays);
             if(Array.isArray(data.holidays) && data.holidays.length > 0){
               allHolidays = data.holidays; 
-              renderTable(allHolidays);
             }
             console.log('Time Slots:', data.timeSlots);
             timeslots = data.timeSlots;
+            noOftimeslots = timeslots.length;
+            trainers = data.trainers;
             console.log('trainers:', data.trainers);
-            trainers = data.trainers
+            noOftrainers = trainers.length;
+            
+            renderTable(allHolidays, noOftimeslots, noOftrainers);
             dropdownOptions(timeslots,trainers);
           })
           .catch(error => {
@@ -158,18 +163,26 @@
     
       });
 
-      function renderTable(holidays){
+      function renderTable(holidays, noOftimeslots, noOftrainers) {
         tableBody.innerHTML = '';
 
         if(holidays.length > 0){
           holidays.forEach(holiday => {
             const row = document.createElement('tr');
             row.style.cursor = 'pointer';
+    
+            let timeDisplay = "N/A";
+            holiday.timeslots = holiday.timeslots.split(",").map(slot => slot.trim());
+            timeDisplay = holiday.timeslots.length === noOftimeslots ? "Full Day" : holiday.timeslots.join(", ");
+    
+            let trainerDisplay = "N/A";
+            holiday.trainer_ids = holiday.trainer_ids.split(",").map(trainer => trainer.trim());
+            trainerDisplay = holiday.trainer_ids.length === noOftrainers ? "All" : holiday.trainer_ids.join(", ");
             
             row.innerHTML = `
                 <td class="table-cell">${holiday.date}</td>
-                <td class="table-cell">${holiday.timeslots}</td>
-                <td class="table-cell">${holiday.trainer_ids}</td>
+                <td class="table-cell">${timeDisplay}</td>
+                <td class="table-cell">${trainerDisplay}</td>
                 <td class="table-cell">
                   <div class="edit-dlt">
                     <div class="edit"><i class="ph ph-eraser"></i></div>
