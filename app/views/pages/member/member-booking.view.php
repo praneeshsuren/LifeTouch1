@@ -25,22 +25,8 @@
     <title><?php echo APP_NAME; ?></title>
   </head>
   <body>
-
-    <!-- PHP Alerts for Success/Error Messages -->
-    <?php
-        if (isset($_SESSION['success'])) {
-            echo "<script>alert('" . $_SESSION['success'] . "');</script>";
-            unset($_SESSION['success']); // Clear the message after showing it
-        }
-
-        if (isset($_SESSION['error'])) {
-            echo "<script>alert('" . $_SESSION['error'] . "');</script>";
-            unset($_SESSION['error']); // Clear the message after showing it
-        }
-        ?>
-
     <section class="sidebar">
-    <?php require APPROOT.'/views/components/member-sidebar.view.php' ?>
+        <?php require APPROOT.'/views/components/member-sidebar.view.php' ?>
     </section>
     <main>
         <div class="title">

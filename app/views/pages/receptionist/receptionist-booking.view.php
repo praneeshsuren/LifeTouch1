@@ -35,7 +35,6 @@
             <button class="filter active">ALL</button>
             <button class="filter">Booked</button>
             <button class="filter">Pending</button>
-            <button class="filter">Rejected</button>
           </div>
 
           <div class="user-table-header">
@@ -72,6 +71,7 @@
         document.addEventListener('DOMContentLoaded', () =>{ 
             const tableBody = document.querySelector('.user-table tbody');
             const filterButtons = document.querySelectorAll('.filters .filter');
+            const searchInput = document.querySelector('.search-input'); 
             let allBookings = [];
 
             fetch('<?php echo URLROOT; ?>/receptionist/bookings/api')
@@ -80,9 +80,11 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Fetched Data:', data);
-                    if (Array.isArray(data) && data.length > 0){
-                        allBookings = data;
+                    console.log("Fetched booking data:", data.bookings);
+                    console.log("Fetched holiday data:", data.holidays);
+
+                    if (Array.isArray(data.bookings) && data.bookings.length > 0){
+                        allBookings = data.bookings;
                         renderTable(allBookings);
                     }
                 })
@@ -111,6 +113,19 @@
                     });
                 });
 
+                searchInput.addEventListener('input', (event) => {
+                    let searchQuery = event.target.value.toLowerCase();
+                    let filteredBookings = allBookings.filter(booking => {
+                        return booking.member_name.toLowerCase().includes(searchQuery) || 
+                            booking.trainer_name.toLowerCase().includes(searchQuery) ||
+                            booking.member_id.toLowerCase().includes(searchQuery) ||
+                            booking.trainer_id.toLowerCase().includes(searchQuery) ||
+                            booking.booking_date.toLowerCase().includes(searchQuery) ||
+                            booking.timeslot.toLowerCase().includes(searchQuery);
+                    });
+                    renderTable(filteredBookings);
+                });
+
                 function renderTable(bookings){
                     tableBody.innerHTML = '';
 
@@ -130,10 +145,8 @@
                                 statusClass = "booked";
                             } else if (booking.status === "pending") {
                                 statusClass = "pending";
-                            } else if (booking.status === "rejected") {
-                                statusClass = "rejected";
                             }
-                            
+
                             row. innerHTML = `
                                 <td>${booking.member_id}</td>
                                 <td>
@@ -172,3 +185,5 @@
                 }
         });
     </script>
+  </body>
+</html>

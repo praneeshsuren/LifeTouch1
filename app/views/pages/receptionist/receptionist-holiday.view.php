@@ -30,7 +30,7 @@
           <div class="filters"></div>
 
           <div class="user-table-header">
-            <input type="text" placeholder="Search" class="search-input">
+            <input type="text" placeholder="Search by Date" class="search-input">
             <button class="add-user-btn">+</button>
           </div>
           
@@ -38,9 +38,8 @@
             <table class='user-table'>
               <thead>
                   <tr>
-                      <th>Datde</th>
-                      <th>Time</th>
-                      <th>Trainer</th>
+                      <th>Date</th>
+                      <th>Reason</th>
                       <th>Action</th>
                   </tr>
               </thead>
@@ -57,34 +56,10 @@
                       <label for="holidayDate" class="label" ><i class="ph ph-calendar"></i>Date</label>
                       <input type="date" name="holidayDate" id="holidayDate">
                     </div>
-                    <div class="select-wrapper time-wrapper">
-                      <label for="holidayTime" class="label"><i class="ph ph-clock"></i>Time</label>
-                      <div class="select-btn time-btn">
-                        <span>Full Day</span>
-                        <i class="ph ph-caret-down"></i>
-                      </div>
-                      <div class="select-content time-content">
-                        <div class="select-search">
-                          <input type="text" placeholder="Search">
-                        </div>
-                        <ul class="select-option time-option"></ul>
-                      </div>
+                    <div class="select-wrapper">
+                      <label for="holidayReason" class="label" ><i class="ph ph-pencil-simple-line"></i>Reason</label>
+                      <textarea name="holidayReason" id="holidayReason" rows="6" style="width: 100%; height: 130px; resize: none;"></textarea>
                     </div>
-                    <div class="select-wrapper trainer-wrapper">
-                      <label for="holidayTrainer" class="label"><i class="ph ph-user"></i>Trainer</label>
-                      <div class="select-btn trainer-btn">
-                        <span>All</span>
-                        <i class="ph ph-caret-down"></i>
-                      </div>
-                      <div class="select-content trainer-content">
-                        <div class="select-search">
-                          <input type="text" placeholder="Search">
-                        </div>
-                        <ul class="select-option trainer-option"></ul>
-                      </div>
-                    </div>
-                    <input type="hidden" name="holidayTimeId" id="holidayTimeId" required>
-                    <input type="text" name="holidayTrainerValue" id="holidayTrainerValue" required>
                     <div class="book-btn">
                       <button type="submit" id="submitBtn" name="submit">Add</button>
                     </div>
@@ -100,12 +75,10 @@
     <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
     <script>
       const tableBody = document.querySelector('.user-table tbody');
+      const searchInput = document.querySelector(".search-input");
       document.addEventListener("DOMContentLoaded", () =>{
         let allHolidays = [];
-        let timeslots = [];
-        let trainers = [];
-        let noOftimeslots = 0;
-        let noOftrainers = 0;
+        let bookings = [];
 
         fetch('<?php echo URLROOT; ?>/receptionist/holiday/api')
           .then(response => {
@@ -114,18 +87,10 @@
           })
           .then(data =>{
             console.log('Holidays:', data.holidays);
-            if(Array.isArray(data.holidays) && data.holidays.length > 0){
-              allHolidays = data.holidays; 
-            }
-            console.log('Time Slots:', data.timeSlots);
-            timeslots = data.timeSlots;
-            noOftimeslots = timeslots.length;
-            trainers = data.trainers;
-            console.log('trainers:', data.trainers);
-            noOftrainers = trainers.length;
-            
-            renderTable(allHolidays, noOftimeslots, noOftrainers);
-            dropdownOptions(timeslots,trainers);
+            console.log('Bookings:', data.bookings);
+            allHolidays = data.holidays; 
+            bookings = data.bookings;
+            renderTable(allHolidays);
           })
           .catch(error => {
             console.error('Error fetching holidays:', error);
@@ -136,74 +101,95 @@
             `;
           });
 
+          searchInput.addEventListener("input", function() {
+            const query = searchInput.value.trim().toLowerCase();
+            const filteredHolidays = allHolidays.filter(holiday => holiday.date.includes(query));
+            renderTable(filteredHolidays);
+          });
+
           document.getElementById("holidayForm").addEventListener("submit", function (event) {
             event.preventDefault();
-              
-            const formData = new FormData(this);
-            
-            fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    alert("Holiday added successfully!");
-                    location.reload();
-                } else {
-                    alert("Error: " + result.message);
+
+            const holidayDateInput = document.getElementById("holidayDate").value;
+            if (!holidayDateInput) {
+                alert("Date is required.");
+                return;
+            }
+            const today = new Date().toISOString().split("T")[0];
+            if (holidayDateInput < today) {
+                alert("You cannot add a holiday for a past date.");
+                return;
+            }
+            const conflictingBooking = bookings.find(booking => booking.booking_date === holidayDateInput);
+            if (conflictingBooking) {
+                const userConfirmed = window.confirm("There is already a booking for this date. Do you want to delete the bookings and add the holiday?");
+                if (!userConfirmed) {
+                    return; // If user cancels, do not proceed
                 }
-            })
-            .catch(error => console.error("Error inserting holiday:", error));
-            });
+
+                // Delete the bookings for the given date before adding the holiday
+                const formData = new FormData(this);
+                fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            alert("Holiday added and bookings deleted successfully!");
+                            location.reload();
+                        } else {
+                            alert("Error: " + result.message);
+                        }
+                    })
+                    .catch(error => console.error("Error inserting holiday:", error));
+            } else {
+                // If no conflicting booking, proceed to add the holiday directly
+                const formData = new FormData(this);
+                fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            alert("Holiday added successfully!");
+                            location.reload();
+                        } else {
+                            alert("Error: " + result.message);
+                        }
+                    })
+                    .catch(error => console.error("Error inserting holiday:", error));
+            }
+        });
+
 
         holidayModal();
-        dropdownToggle();
-        updateModalHeight();
-    
       });
 
-      function renderTable(holidays, noOftimeslots, noOftrainers) {
+      function renderTable(holidays) {
         tableBody.innerHTML = '';
 
         if(holidays.length > 0){
           holidays.forEach(holiday => {
             const row = document.createElement('tr');
             row.style.cursor = 'pointer';
-    
-            let timeDisplay = "N/A";
-            holiday.timeslots = holiday.timeslots.split(",").map(slot => slot.trim());
-            timeDisplay = holiday.timeslots.length === noOftimeslots ? "Full Day" : holiday.timeslots.join(", ");
-    
-            let trainerDisplay = "N/A";
-            holiday.trainer_ids = holiday.trainer_ids.split(",").map(trainer => trainer.trim());
-            trainerDisplay = holiday.trainer_ids.length === noOftrainers ? "All" : holiday.trainer_ids.join(", ");
-            
+
+            let reason = "N/A";
+            reason = holiday.reason === null ? reason : holiday.reason;
+
             row.innerHTML = `
                 <td class="table-cell">${holiday.date}</td>
-                <td class="table-cell">${timeDisplay}</td>
-                <td class="table-cell">${trainerDisplay}</td>
+                <td class="table-cell">${reason}</td>
                 <td class="table-cell">
                   <div class="edit-dlt">
-                    <div class="edit"><i class="ph ph-eraser"></i></div>
-                    <div class="dlt"><i class="ph ph-trash-simple"></i></div>
+                    <div class="edit"><i class="ph ph-eraser" onclick="editHoliday('${holiday.id}', '${holiday.date}', '${reason}')"></i></div>
+                    <div class="dlt" onclick="deleteHoliday('${holiday.id}')"><i class="ph ph-trash-simple"></i></div>
                   </div>
                 </td> 
             `;
 
             tableBody.appendChild(row);
-
-            row.querySelector(".edit").addEventListener('click', ()=> {
-              openEditModal(holiday);
-            });
-
-            document.querySelectorAll('.table-cell').forEach(cell => {
-            cell.style.maxWidth = "240px";
-            cell.style.overflow = "hidden";
-            cell.style.textOverflow = "ellipsis";
-            cell.style.wordWrap = "break-word";
-            cell.style.whiteSpace = "normal";
-        });
           });
         } else {
           console.log('No holidays found.');
@@ -215,14 +201,78 @@
         }
       }
 
+      function deleteHoliday(id){
+        if (!confirm("Are you sure you want to delete this holiday?")) return;
+
+        fetch('<?php echo URLROOT; ?>/receptionist/holiday/delete', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `date=${encodeURIComponent(id)}`,
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (!result.success) {
+                alert("Holiday deleted successfully!");
+                location.reload();
+            } else {
+                alert("Error: " + result.message);
+            }
+        })
+        .catch(error => console.error("Error deleting holiday:", error));
+      }
+
       const addHolidayBtn = document.querySelector(".add-user-btn");
       const modal = document.getElementById("bookingModal");
       const closeModal = document.querySelector(".bookingModalClose");
       const modalContent = document.querySelector(".bookingModal-content");
 
+      function editHoliday(id, date, currentReason){
+        modal.style.display= "block";
+
+        const holidayReason = document.getElementById("holidayReason");
+        holidayReason.value = currentReason || "";
+
+        const dateInput = document.getElementById("holidayDate");
+        dateInput.value = date;
+        dateInput.disabled = true; 
+
+        const submitBtn = document.getElementById("submitBtn");
+        submitBtn.innerText = "Update";
+
+        submitBtn.onclick = function(event) {
+            event.preventDefault(); 
+            const newReason = holidayReason.value.trim();
+            
+            if (!confirm("Are you sure you want to update this holiday's reason?")) return;
+              fetch('<?php echo URLROOT; ?>/receptionist/holiday/edit', {
+                method :'POST',
+                headers: {
+                  "Content-type": "application/x-www-form-urlencoded",
+                },
+                body: `id=${encodeURIComponent(id)}&reason=${encodeURIComponent(newReason)}`,
+              })
+              .then(response => response.json())
+              .then(result =>{
+                console.log(result);
+                if (!result.success) {
+                    alert("Holiday reason updated successfully!");
+                    modal.style.display = "none";
+                    location.reload();
+                } else {
+                    alert("Error: " + result.message);
+                }
+              })
+              .catch(error => console.error("Error updating holiday:", error));
+
+        };
+      }
+
+
       function holidayModal(){
         addHolidayBtn.addEventListener('click', function() {
-          resetModalFields();
+          document.getElementById("holidayForm").reset();
           modal.style.display = "block";
         });
 
@@ -237,95 +287,6 @@
         });
       }
 
-      const timeWrapper = document.querySelector(".time-wrapper");
-      const trainerWrapper = document.querySelector(".trainer-wrapper");
-      const timeBtn = document.querySelector(".time-btn");
-      const trainerBtn = document.querySelector(".trainer-btn");
-      const timeList = document.querySelector(".time-option");
-      const trainerList = document.querySelector(".trainer-option");
-      const timeText = document.querySelector(".time-btn span");
-      const trainerText = document.querySelector(".trainer-btn span");
-      const holidayTimeId = document.getElementById("holidayTimeId");
-      const holidayTrainerValue = document.getElementById("holidayTrainerValue");
-
-      function dropdownOptions(timeslots,trainers){
-        let timeHtml = `<li data-id="ALL">Full Day</li>`;
-        timeslots.forEach(slot =>{
-          timeHtml += `<li data-id="${slot.id}">${slot.slot}</li>`;
-        });
-        timeList.innerHTML = timeHtml;
-
-        let trainerHTML = `<li data-id="ALL">All</li>`; 
-        trainers.forEach(trainer => {
-          trainerHTML += `<li data-id="${trainer.trainer_id}">${trainer.trainer_id}</li>`;
-        });
-        trainerList.innerHTML = trainerHTML;
-
-        
-        document.querySelectorAll(".time-option li").forEach(item =>{
-          item.addEventListener('click', function(){
-            timeText.textContent = this.textContent;
-            holidayTimeId.value = this.getAttribute("data-id");
-            timeWrapper.classList.remove("active");
-          });
-        });
-
-        document.querySelectorAll(".trainer-option li").forEach(item => {
-            item.addEventListener("click", function () {
-              trainerText.textContent = this.textContent;
-              holidayTrainerValue.value = this.getAttribute("data-id");
-              trainerWrapper.classList.remove("active");
-            });
-        });
-      }
-
-      function dropdownToggle() {
-        timeBtn.addEventListener('click', () => {
-          trainerWrapper.classList.remove("active");
-          timeWrapper.classList.toggle("active");
-        });
-
-        trainerBtn.addEventListener('click', () => {
-          timeWrapper.classList.remove("active");
-          trainerWrapper.classList.toggle("active");
-        });
-
-        document.addEventListener("click", (event) => {
-          if (!modal.contains(event.target)) {
-            timeWrapper.classList.remove("active");
-            trainerWrapper.classList.remove("active");
-          }
-        });
-      }
-
-      function updateModalHeight() {
-        timeWrapper.addEventListener('click', () =>{
-          if (timeWrapper.classList.contains("active")) {
-            modalContent.style.height = "500px";
-          } else {
-              modalContent.style.height = "330px";
-          }
-        });
-
-        trainerWrapper.addEventListener('click', () => {
-          if (trainerWrapper.classList.contains("active")) {
-            modalContent.style.height = "500px";
-          } else {
-              modalContent.style.height = "330px";
-          }
-        });
-      }
-
-      function resetModalFields() {
-        document.getElementById("holidayDate").value = '';
-        document.getElementById("holidayTimeId").value = '';
-        document.getElementById("holidayTrainerValue").value = '';
-
-        const timeText = document.querySelector(".time-btn span");
-        const trainerText = document.querySelector(".trainer-btn span");
-
-        timeText.textContent = "Full Day";
-        trainerText.textContent = "All";
-      }
-
     </script>
+  </body>
+</html>

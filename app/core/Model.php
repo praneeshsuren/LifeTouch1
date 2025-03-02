@@ -70,7 +70,6 @@ trait Model
 
     public function insert($data)
     {
-
         //remove columns that are not part of the allowed columns
         if (!empty($this->allowedColumns)) {
             foreach ($data as $key => $value) {

@@ -365,10 +365,15 @@
                 public function bookings($action = null){
                     $bookingModel = new M_Booking();
                     $bookings = $bookingModel->bookingsForAdmin();
+                    $holidayModal = new M_Holiday();
+                    $holidays = $holidayModal->findAll();
                 
                     if ($action === 'api'){
                         header('Content-Type: application/json');
-                        echo json_encode($bookings);
+                        echo json_encode([
+                            'bookings' =>$bookings,
+                            'holidays' => $holidays
+                        ]);
                         exit;
                     }
                     $this->view('receptionist/receptionist-booking');
@@ -379,18 +384,15 @@
                 }
                 public function holiday($action = null){
                     $holidayModal = new M_Holiday();
-                    $holidays = $holidayModal->findHolidays();
-                    $timeslotModel = new M_Timeslot();
-                    $timeSlots = $timeslotModel->findAll();
-                    $trainerModal = new M_Trainer();
-                    $trainers = $trainerModal->findAll();
-
+                    $holidays = $holidayModal->findAll();
+                    $bookingModel = new M_Booking();
+                    $bookings = $bookingModel->findAll();
+                
                     if($action === 'api'){
                         header('Content-Type: application/json');
                         echo json_encode([
                             'holidays' => $holidays,
-                            'timeSlots' => $timeSlots,
-                            'trainers' => $trainers
+                            'bookings' => $bookings
                         ]);
                         exit;
                     } elseif ($action === 'add') {
@@ -398,22 +400,19 @@
                             header('Content-Type: application/json');
                     
                             $date = $_POST['holidayDate'] ?? null;
-                            $timeslot_id = $_POST['holidayTimeId'] ?? null;
-                            $trainer_id = $_POST['holidayTrainerValue'] ?? null;
-                     
-                    
-                            // Validate inputs
-                            if (!$date || !$timeslot_id || !$trainer_id) {
-                                echo json_encode(["success" => false, "message" => "Missing required fields"]);
+                            $reason = isset($_POST['holidayReason']) && $_POST['holidayReason'] !== '' ? $_POST['holidayReason'] : null;
+
+                            $existingHoliday = $holidayModal->first(['date' => $date]);
+                            if($existingHoliday){
+                                echo json_encode(["success" => false, "message" => "A holiday already exists for this date"]);
                                 exit;
                             }
-                     
+                 
                             $data = [
                                 'date' => $date,
-                                'timeslot_id' => $timeslot_id,
-                                'trainer_id' => $trainer_id
+                                'reason' => $reason
                             ];
-                    
+                            
                             $result = $holidayModal->insert($data);
                             
                             echo json_encode([
@@ -426,6 +425,42 @@
                         // Ensure a response is always sent
                         echo json_encode(["success" => false, "message" => "Invalid request"]);
                         exit;
+                    } elseif($action === "delete"){
+                        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                            $date = $_POST['date'];
+                    
+                            if ($holidayModal->delete($date)) {
+                                echo json_encode(["success" => true, "message" => "Holiday deleted successfully!"]);
+                                exit;
+                            } else {
+                                echo json_encode(["success" => false, "message" => "Error deleting holiday."]);
+                                exit;
+                            }
+                        }
+                        echo json_encode(["success" => false, "message" => "Invalid request."]);
+                        exit;
+                    } elseif ($action === 'edit'){
+                        header('Content-type: application/json');
+
+                        $id = $_POST['id'] ?? null;
+                        $reason = isset($_POST['reason']) && $_POST['reason'] !== '' ? $_POST['reason'] : null;
+
+                        if (!$id) {
+                            echo json_encode(["success" => false, "message" => "Missing required fields"]);
+                            exit;
+                        }
+
+                        $data = ['reason' => $reason];
+                        $result = $holidayModal->update($id, $data);
+
+                        echo json_encode(
+                            [
+                                "success" => $result ? true : false,
+                                "message" => $result ? "Holiday reason updated successfully!" : "Failed to update reason"
+                            ]
+                            );
+                        exit;
+
                     }
                     $this->view('receptionist/receptionist-holiday'); 
                 }

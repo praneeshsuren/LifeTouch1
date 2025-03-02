@@ -1619,6 +1619,10 @@ main .calendarContainer {
 .calendar td.today {
     border: 2px solid var(--primary-color)
 }
+.calendar td.holiday {
+    background-color:rgb(224, 224, 224, 0.5);
+    color: var(--text-color);
+}
 
 .calendar td.active{
     background-color: var(--primary-color);
@@ -1885,7 +1889,7 @@ main .calendarContainer {
     display: flex;
     gap: 10px; 
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .edit, .dlt {
