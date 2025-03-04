@@ -427,9 +427,9 @@
                         exit;
                     } elseif($action === "delete"){
                         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                            $date = $_POST['date'];
+                            $id = $_POST['id'];
                     
-                            if ($holidayModal->delete($date)) {
+                            if ($holidayModal->delete($id)) {
                                 echo json_encode(["success" => true, "message" => "Holiday deleted successfully!"]);
                                 exit;
                             } else {

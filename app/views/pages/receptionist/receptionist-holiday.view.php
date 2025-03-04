@@ -122,45 +122,30 @@
             }
             const conflictingBooking = bookings.find(booking => booking.booking_date === holidayDateInput);
             if (conflictingBooking) {
-                const userConfirmed = window.confirm("There is already a booking for this date. Do you want to delete the bookings and add the holiday?");
-                if (!userConfirmed) {
-                    return; // If user cancels, do not proceed
+              const userConfirmed = window.confirm("There is already a booking for this date. Do you want to delete the bookings and add the holiday?");
+              if (!userConfirmed) {
+                  return; // If user cancels, do not proceed
+              }
+              // Delete the bookings for the given date before adding the holiday
+              
+              } else {
+              const formData = new FormData(this);
+              fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
+                  method: "POST",
+                  body: formData
+              })
+              .then(response => response.json())
+              .then(result => {
+                if (result.success) {
+                  alert("Holiday added successfully!");
+                  location.reload();
+                } else {
+                  alert("Error: " + result.message);
                 }
-
-                // Delete the bookings for the given date before adding the holiday
-                const formData = new FormData(this);
-                fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
-                    method: "POST",
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(result => {
-                        if (result.success) {
-                            alert("Holiday added and bookings deleted successfully!");
-                            location.reload();
-                        } else {
-                            alert("Error: " + result.message);
-                        }
-                    })
-                    .catch(error => console.error("Error inserting holiday:", error));
-            } else {
-                // If no conflicting booking, proceed to add the holiday directly
-                const formData = new FormData(this);
-                fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
-                    method: "POST",
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(result => {
-                        if (result.success) {
-                            alert("Holiday added successfully!");
-                            location.reload();
-                        } else {
-                            alert("Error: " + result.message);
-                        }
-                    })
-                    .catch(error => console.error("Error inserting holiday:", error));
+              })
+              .catch(error => console.error("Error inserting holiday:", error));
             }
+          
         });
 
 
@@ -209,7 +194,7 @@
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: `date=${encodeURIComponent(id)}`,
+            body: `id=${encodeURIComponent(id)}`,
         })
         .then(response => response.json())
         .then(result => {

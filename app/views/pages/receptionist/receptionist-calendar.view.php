@@ -192,7 +192,7 @@
                     dayCell.appendChild(bookingCount);
                 }
 
-                if(holidayData[date]){
+                if(date in holidayData){
                     dayCell.classList.add("holiday");
                 }
 
