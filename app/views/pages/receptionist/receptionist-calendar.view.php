@@ -279,7 +279,7 @@
                     const modalBody = document.querySelector('.bookingModal-body');
 
                     const selectedBookings = bookedBookings.filter(booking => booking.booking_date === selectedDate);
-                    const selectedHoliday = holidays[selectedDate];
+                    let selectedHoliday = holidays[selectedDate] === null ? "N/A" : holidays[selectedDate];
                     
                     modalBody.innerHTML = "";
 
@@ -303,8 +303,6 @@
                     } else {
                         modalBody.innerHTML = `<div style="padding-top: 80px; padding-bottom:75px; text-align: center;">No bookings for this date.</div>`;
                     }
-                    console.log(selectedDate);
-                    console.log(modalBody.innerHTML);
                     
                     // Show the modal
                     modal.style.display = 'block';
