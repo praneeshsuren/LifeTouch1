@@ -73,6 +73,7 @@
             const filterButtons = document.querySelectorAll('.filters .filter');
             const searchInput = document.querySelector('.search-input'); 
             let allBookings = [];
+            let filterBookings = [];
 
             fetch('<?php echo URLROOT; ?>/receptionist/bookings/api')
                 .then(response => {
@@ -103,28 +104,32 @@
                         button.classList.add('active');
 
                         let filterStatus = button.textContent.trim().toLowerCase();
-                        let filterBookings = allBookings;
+                        filterBookings = allBookings;
 
                         if(filterStatus !== 'all'){
                             filterBookings = allBookings.filter(booking => booking.status.toLowerCase() === filterStatus);
                         }
 
-                        renderTable(filterBookings);
+                        applySearchFilter();
                     });
                 });
 
-                searchInput.addEventListener('input', (event) => {
-                    let searchQuery = event.target.value.toLowerCase();
-                    let filteredBookings = allBookings.filter(booking => {
-                        return booking.member_name.toLowerCase().includes(searchQuery) || 
+                searchInput.addEventListener('input', applySearchFilter);
+
+                function applySearchFilter() {
+                    let searchQuery = searchInput.value.toLowerCase();
+
+                    let filteredResults = filterBookings.filter(booking => {
+                        return booking.member_name.toLowerCase().includes(searchQuery) ||
                             booking.trainer_name.toLowerCase().includes(searchQuery) ||
                             booking.member_id.toLowerCase().includes(searchQuery) ||
                             booking.trainer_id.toLowerCase().includes(searchQuery) ||
                             booking.booking_date.toLowerCase().includes(searchQuery) ||
                             booking.timeslot.toLowerCase().includes(searchQuery);
                     });
-                    renderTable(filteredBookings);
-                });
+
+                    renderTable(filteredResults);
+                }
 
                 function renderTable(bookings){
                     tableBody.innerHTML = '';
