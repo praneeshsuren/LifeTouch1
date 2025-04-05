@@ -69,18 +69,19 @@
                 </div>
                 <div class="timeslots"></div>
                 <div class="bookingForm">
-                    <form action="<?php echo URLROOT;?>/member/Booking" method="POST">
+                    <form id="bookingForm">
                         <div class="input">
-                            <input type="text" id="loggedMember" readonly name="loggedMember" value="<?php echo htmlspecialchars($member_id); ?>"required>
-                            <input type="text" id="selectedTrainerId" readonly name="selectedTrainerId" required>
-                            <input type="text" id="selectedTimeslotId" readonly name="selectedTimeslotId" required> 
+                            <input type="text" value="<?php echo htmlspecialchars($member_id); ?>" name="memberId" required>
+                            <input type="text" id="selectedTrainerId"  name="trainerId" required>
+                            <input type="text" id="selectedTimeslotId" name="timeslotId" required> 
+                            <input type="text" id="date" name="date" required> 
                             <div class="input-container">
-                                <label for="selectedDate" class="label"><i class="ph ph-calendar"></i>Date</label>
-                                <input type="text" id="selectedDate" readonly name="selectedDate" required>
+                                <div  class="label"><i class="ph ph-calendar"></i>Date</div>
+                                <div id="selectedDate"></div>
                             </div>
                             <div class="input-container">
-                                <label for="selectedTimeslot" class="label"><i class="ph ph-clock-countdown"></i>Time</label>
-                                <input type="text" id="selectedTimeslot" readonly name="selectedTimeslot" placeholder="Select the Timeslot" required>  
+                                <div class="label"><i class="ph ph-clock-countdown"></i>Time</div>
+                                <div id="selectedTimeslot"></div>
                             </div>
                         </div>
                         <div class="book-btn">
@@ -131,6 +132,40 @@
                     bookDiv.innerHTML = `<div style="text-align: center; color: gray;">Bookings are not available for past months.</div>`;
                 }
             }
+
+            //submit
+            document.getElementById("bookingForm").addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const timeslotId = document.getElementById("selectedTimeslotId").value;
+                const date = document.getElementById('date').value;
+
+                if (!timeslotId) {
+                    alert("timeslot is required");
+                    return;
+                }
+                if(date < dateToday){
+                    alert("You cannot add booking for a past date.");
+                    return;
+                }
+
+                const formData = new FormData(this);
+                fetch('<?php echo URLROOT; ?>/member/Booking/add',{
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                    alert("Booking added successfully!");
+                    location.reload();
+                    } else {
+                    alert("Error: " + result.message);
+                    }
+                })
+                .catch(error => console.error("Error inserting booking:", error));
+            });
+
             buildCalendar();
             buttons(); 
             modal();
@@ -150,7 +185,7 @@
                 timeSlotBtn.addEventListener('click', () => {
                     const selectedTimeslotInput = document.getElementById('selectedTimeslot');
                     const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
-                    selectedTimeslotInput.value = timeSlot.slot;
+                    selectedTimeslotInput.textContent = timeSlot.slot;
                     selectedTimeslotIdInput.value = timeSlot.id;
                 });
                 timeSlotsContainer.appendChild(timeSlotBtn);
@@ -162,63 +197,52 @@
 
             // Filter bookings for "booked" and "pending" statuses
             const filteredBookings = bookings.filter(
-                booking => booking.status === 'booked' || booking.status === 'pending'
+            booking => (booking.status === 'booked' || booking.status === 'pending') && 
+                        new Date(booking.booking_date).getTime() >= new Date(dateToday).getTime()
             );
 
             // Group bookings by date
-            const groupedBookings = filteredBookings.reduce((acc, booking) => {
-                const { booking_date, slot, status } = booking; // `timeslot` is assumed to be a string like "9:00AM-10:00AM"
+            const groupedBookings = filteredBookings.reduce((acc, {id, booking_date, slot, status }) => {
                 if (!acc[booking_date]) acc[booking_date] = [];
-                acc[booking_date].push({slot, status});
+                acc[booking_date].push({ id, slot, status });
                 return acc;
             }, {});
-            
-            const todayFutureBookings = Object.keys(groupedBookings).filter(date => date >= dateToday);
-            const sortedDates = todayFutureBookings.sort((a, b) => new Date(a) - new Date(b));
 
-            // Loop through the grouped bookings and generate HTML
-            sortedDates.forEach(date => {
-                // Create and append a date heading
+            const todayFutureBookings = Object.keys(groupedBookings).sort((a, b) => new Date(a) - new Date(b));
+
+            todayFutureBookings.forEach(date => {
                 const dateHeading = document.createElement('div');
                 dateHeading.classList.add('date-heading');
                 dateHeading.innerText = date;
                 bookDiv.appendChild(dateHeading);
 
-                // Iterate through timeslots for each date
-                const sortedTimeslots = groupedBookings[date].sort((a,b) => {
-                    const timeA = convertTo24hrs(a.slot.split(' - ')[0]);
-                    console.log(timeA);
-                    const timeB = convertTo24hrs(b.slot.split(' - ')[0]);
-                    console.log(timeB);
-                    return timeA - timeB;
-                });
-                
-                sortedTimeslots.forEach(timeslot => {
-                    const timeslotItem = document.createElement('div');
-                    timeslotItem.classList.add('announcement');
-                
-                    // Create the status circle
-                    const statusCircle = document.createElement('div');
-                    if(timeslot.status === 'booked'){
-                        statusCircle.classList.add('booked');
-                    } else{
-                        statusCircle.classList.add('pending');
-                    }
+                groupedBookings[date]
+                    .sort((a, b) => convertTo24hrs(a.slot.split(' - ')[0]) - convertTo24hrs(b.slot.split(' - ')[0]))
+                    .forEach(({ id, slot, status }) => {
+                        const timeslotItem = document.createElement('div');
+                        timeslotItem.classList.add('announcement');
 
-                    // Add the slot text
-                    const slotText = document.createElement('span');
-                    slotText.style.color = '#757575';
-                    slotText.innerText = timeslot.slot;
+                        const statusCircle = document.createElement('div');
+                        statusCircle.classList.add(status === 'booked' ? 'booked' : 'pending');
 
-                    // Append the circle and text to the item
-                    timeslotItem.appendChild(slotText);
-                    timeslotItem.appendChild(statusCircle);
-                    
-                    // Append the item to the booking div
-                    bookDiv.appendChild(timeslotItem);
-                });
+                        const slotText = document.createElement('span');
+                        slotText.style.color = '#757575';
+                        slotText.innerText = slot;
+
+                        const editDtl = document.createElement('div');
+                        editDtl.innerHTML = `
+                            <div class="edit-dlt">
+                                <div class="edit" onclick="editBooking('${id}')"><i class="ph ph-eraser"></i></div>
+                                <div class="dlt" onclick="dltBooking('${id}')"><i class="ph ph-trash-simple"></i></div>
+                            </div>
+                        `;
+
+                        timeslotItem.append(statusCircle, slotText, editDtl);
+                        bookDiv.appendChild(timeslotItem);
+                    });
             });
         }
+
         function convertTo24hrs(time){
             const [hrMin, period] = time.trim().split(' '); //AM,PM
             let [hr, min] =hrMin.split(':');
@@ -231,6 +255,34 @@
                 hr24 = 0;
             }
             return new Date(1970, 0, 1, hr24, min);
+        }
+
+        function dltBooking(id){
+            console.log("Deleting booking with ID:", id);
+            if (!confirm("Are you sure you want to delete this booking?")) return;
+
+            fetch('<?php echo URLROOT?>/member/Booking/delete',{
+                method: "POST",
+                headers: {
+                    "Content-Type":  "application/x-www-form-urlencoded",
+                },
+                body: `id=${encodeURIComponent(id)}`,
+            })
+            .then(response => response.json())
+            .then(result => { 
+                if (!result.success) {
+                    alert("Booking deleted successfully!");
+                    location.reload();
+                } else {
+                    alert("Error: " + result.message);
+                }
+            })
+            .catch(error => console.error("Error deleting Booking:", error));
+
+        }
+
+        function editBooking(id){
+            
         }
 
         // calender
@@ -364,6 +416,9 @@
                 const modalDate = document.getElementById('modalDate');
                 const selectedDateInput = document.getElementById('selectedDate');
                 const trainerIdInput = document.getElementById('selectedTrainerId');
+                const date = document.getElementById("date");
+                const selectedTimeslotInput = document.getElementById('selectedTimeslot');
+                const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
                 const clickedElement = event.target;
 
                 // Check if the clicked element is a date box
@@ -376,12 +431,14 @@
                     }
                     const selectedDay = selectedDate.split('-')[2];
                     const currentMonthYear = document.querySelector('.monthYear').innerText;
-                    const loggedMemberId = document.getElementById('loggedMember').value;
 
                     // Set the modal's input
                     trainerIdInput.value= `${trainerId}`;
                     modalDate.innerText = `${selectedDay} ${currentMonthYear}`;
-                    selectedDateInput.value = `${selectedDay} ${currentMonthYear}`;
+                    selectedDateInput.textContent = `${selectedDay} ${currentMonthYear}`;
+                    date.value = selectedDate;
+                    selectedTimeslotInput.textContent = `Select timeslot`;
+                    selectedTimeslotIdInput.value = '';
 
                     // Show the modal
                     modal.style.display = 'block';

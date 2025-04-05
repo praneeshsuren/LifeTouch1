@@ -52,6 +52,43 @@
                     'timeSlots' => $timeSlots
                 ]);
                 exit;
+            } elseif($action === 'add'){
+                if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                    header('Content-Type: application/json');
+                    $date = $_POST['date']?? null;
+                    $timeslotId = $_POST['timeslotId'] ?? null;
+                    $member_id = $_POST['memberId'] ?? null;
+                    $trainer_id = $_POST['trainerId'] ?? null;
+
+                    $data = [
+                        'booking_date' => $date,
+                        'trainer_id' => $trainer_id,
+                        'member_id' => $member_id,
+                        'timeslot_id' => $timeslotId
+                    ];
+
+                    $result = $bookingModel->insert($data);
+                    echo json_encode([
+                        "success" => $result ? true : false, 
+                        "message" => $result ? "bokking added successfully!" : "Failed to add booking"
+                    ]);
+                    exit;
+
+                }
+            } elseif($action === 'delete'){
+                if($_SERVER['REQUEST_METHOD'] === "POST"){
+                    $id = $_POST['id'];
+
+                    if ($bookingModel->delete($id)) {
+                        echo json_encode(["success" => true, "message" => "Booking deleted successfully!"]);
+                        exit;
+                    } else {
+                        echo json_encode(["success" => false, "message" => "Error deleting Booking."]);
+                        exit;
+                    }
+                }
+                echo json_encode(["success" => false, "message" => "Invalid request."]);
+                exit;
             }
 
             $data = ['member_id' => $member_id];

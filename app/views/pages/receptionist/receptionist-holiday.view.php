@@ -51,7 +51,7 @@
             <div class="bookingModal-content" >
                 <div class="bookingModalClose">&times;</div>
                 <div class="bookingModal-body" style = "color:black">
-                  <form id="holidayForm" method="POST">
+                  <form id="holidayForm">
                     <div class="select-wrapper" style="display:flex; align-items:center; width:200px; gap:10px;">
                       <label for="holidayDate" class="label" ><i class="ph ph-calendar"></i>Date</label>
                       <input type="date" name="holidayDate" id="holidayDate">
@@ -100,13 +100,14 @@
               </tr>
             `;
           });
-
+          //search
           searchInput.addEventListener("input", function() {
             const query = searchInput.value.trim().toLowerCase();
             const filteredHolidays = allHolidays.filter(holiday => holiday.date.includes(query));
             renderTable(filteredHolidays);
           });
 
+          //submit
           document.getElementById("holidayForm").addEventListener("submit", function (event) {
             event.preventDefault();
 
@@ -147,8 +148,7 @@
             }
           
         });
-
-
+        
         holidayModal();
       });
 
@@ -168,7 +168,7 @@
                 <td class="table-cell">${reason}</td>
                 <td class="table-cell">
                   <div class="edit-dlt">
-                    <div class="edit"><i class="ph ph-eraser" onclick="editHoliday('${holiday.id}', '${holiday.date}', '${reason}')"></i></div>
+                    <div class="edit" onclick="editHoliday('${holiday.id}', '${holiday.date}', '${reason}')"><i class="ph ph-eraser"></i></div>
                     <div class="dlt" onclick="deleteHoliday('${holiday.id}')"><i class="ph ph-trash-simple"></i></div>
                   </div>
                 </td> 
