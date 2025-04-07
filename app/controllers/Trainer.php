@@ -29,25 +29,11 @@
                     $this->view('trainer/trainer-viewMember', $data);
                     break;
         
-                case 'workoutSchedules':
-                    // Fetch member details using member ID from URL
-                    $memberModel = new M_Member;
-                    $member = $memberModel->findByMemberId($_GET['id']);
-            
-                    // Fetch workout schedules related to the member
-                    $workoutScheduleModel = new M_WorkoutSchedule;
-                    // Use the updated method to fetch all schedules for the member
-                    $workoutSchedules = $workoutScheduleModel->findAllSchedulesByMemberId($_GET['id']);
-                
-                    // Prepare data for the view
-                    $data = [
-                        'member' => $member,
-                        'workoutSchedules' => $workoutSchedules // Pass workout schedules
-                    ];
-            
-                    // Load the view with member and workout schedule data
-                    $this->view('trainer/trainer-memberWorkouts', $data);
-                    break;
+                    case 'workoutSchedules':
+                        $this->view('trainer/trainer-memberWorkouts');
+                        break;
+                    
+                    
         
                 case 'createWorkoutSchedule':
                     // Fetch member details if provided via URL
