@@ -1283,3 +1283,36 @@ button:disabled {
   background-color: darkred;
 }
 
+
+.schedule-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.schedule-card {
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  padding: 20px;
+  width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  margin: 10px;
+}
+
+.schedule-card:hover {
+  transform: scale(1.05);
+}
+
+.schedule-card h3 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.schedule-card pre {
+  font-size: 0.9em;
+  background: #eaeaea;
+  padding: 10px;
+  border-radius: 5px;
+}

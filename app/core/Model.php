@@ -70,8 +70,7 @@ trait Model
 
     public function insert($data)
     {
-
-        //remove columns that are not part of the allowed columns
+        // Remove columns that are not part of the allowed columns
         if (!empty($this->allowedColumns)) {
             foreach ($data as $key => $value) {
                 if (!in_array($key, $this->allowedColumns)) {
@@ -80,13 +79,16 @@ trait Model
             }
         }
 
+        // Prepare the insert query
         $keys = array_keys($data);
-        $query = "insert into $this->table (" . implode(",", $keys) . ") values (:" . implode(",:", $keys) . ")";
+        $query = "INSERT INTO $this->table (" . implode(",", $keys) . ") VALUES (:" . implode(",:", $keys) . ")";
 
+        // Execute the query
         $this->query($query, $data);
 
         return true;
     }
+
 
     public function update($id, $data, $id_column = 'id')
     {
