@@ -35,6 +35,7 @@
             <button class="filter active">ALL</button>
             <button class="filter">Booked</button>
             <button class="filter">Pending</button>
+            <button class="filter">Rejected</button>
           </div>
 
           <div class="user-table-header">
@@ -150,6 +151,8 @@
                                 statusClass = "booked";
                             } else if (booking.status === "pending") {
                                 statusClass = "pending";
+                            } else if (booking.status === "rejected") {
+                                statusClass = "rejected";
                             }
 
                             row. innerHTML = `

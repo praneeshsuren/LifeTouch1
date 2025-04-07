@@ -250,10 +250,15 @@
         public function bookings($action = null){
             $bookingModel = new M_Booking();
             $bookings = $bookingModel->bookingsForAdmin();
-        
+            $holidayModal = new M_Holiday();
+            $holidays = $holidayModal->findAll();
+                
             if ($action === 'api'){
                 header('Content-Type: application/json');
-                echo json_encode($bookings);
+                echo json_encode([
+                    'bookings' =>$bookings,
+                    'holidays' => $holidays
+                ]);
                 exit;
             }
             $this->view('admin/admin-booking');

@@ -72,7 +72,9 @@
         document.addEventListener('DOMContentLoaded', () =>{ 
             const tableBody = document.querySelector('.user-table tbody');
             const filterButtons = document.querySelectorAll('.filters .filter');
+            const searchInput = document.querySelector('.search-input'); 
             let allBookings = [];
+            let filterBookings = [];
 
             fetch('<?php echo URLROOT; ?>/admin/bookings/api')
                 .then(response => {
@@ -80,9 +82,11 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Fetched Data:', data);
-                    if (Array.isArray(data) && data.length > 0){
-                        allBookings = data;
+                    console.log("Fetched booking data:", data.bookings);
+                    console.log("Fetched holiday data:", data.holidays);
+
+                    if (Array.isArray(data.bookings) && data.bookings.length > 0){
+                        allBookings = data.bookings;
                         renderTable(allBookings);
                     }
                 })
@@ -101,15 +105,32 @@
                         button.classList.add('active');
 
                         let filterStatus = button.textContent.trim().toLowerCase();
-                        let filterBookings = allBookings;
+                        filterBookings = allBookings;
 
                         if(filterStatus !== 'all'){
                             filterBookings = allBookings.filter(booking => booking.status.toLowerCase() === filterStatus);
                         }
 
-                        renderTable(filterBookings);
+                        applySearchFilter();
                     });
                 });
+
+                searchInput.addEventListener('input', applySearchFilter);
+
+                function applySearchFilter() {
+                    let searchQuery = searchInput.value.toLowerCase();
+
+                    let filteredResults = filterBookings.filter(booking => {
+                        return booking.member_name.toLowerCase().includes(searchQuery) ||
+                            booking.trainer_name.toLowerCase().includes(searchQuery) ||
+                            booking.member_id.toLowerCase().includes(searchQuery) ||
+                            booking.trainer_id.toLowerCase().includes(searchQuery) ||
+                            booking.booking_date.toLowerCase().includes(searchQuery) ||
+                            booking.timeslot.toLowerCase().includes(searchQuery);
+                    });
+
+                    renderTable(filteredResults);
+                }
 
                 function renderTable(bookings){
                     tableBody.innerHTML = '';
@@ -150,7 +171,7 @@
                                     </div>
                                 </td>
                                 <td>${booking.booking_date}</td>
-                                <td>${booking.time_slot}</td>
+                                <td>${booking.timeslot}</td>
                                 <td> 
                                     <div class="status ${statusClass}">
                                         ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase()}
