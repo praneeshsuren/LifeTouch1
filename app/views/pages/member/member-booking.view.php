@@ -168,7 +168,7 @@
 
             buildCalendar();
             buttons(); 
-            modal();
+            bookingModal();
         });
 
         //timeslots
@@ -194,7 +194,7 @@
 
         function markBookings(bookings) {
             bookDiv.innerHTML = ''; // Clear existing content
-
+           
             // Filter bookings for "booked" and "pending" statuses
             const filteredBookings = bookings.filter(
             booking => (booking.status === 'booked' || booking.status === 'pending') && 
@@ -202,9 +202,9 @@
             );
 
             // Group bookings by date
-            const groupedBookings = filteredBookings.reduce((acc, {id, booking_date, slot, status }) => {
+            const groupedBookings = filteredBookings.reduce((acc, {id, booking_date, slot, status, timeslot_id, trainer_id}) => {
                 if (!acc[booking_date]) acc[booking_date] = [];
-                acc[booking_date].push({ id, slot, status });
+                acc[booking_date].push({ id, slot, status, timeslot_id, trainer_id});
                 return acc;
             }, {});
 
@@ -218,7 +218,7 @@
 
                 groupedBookings[date]
                     .sort((a, b) => convertTo24hrs(a.slot.split(' - ')[0]) - convertTo24hrs(b.slot.split(' - ')[0]))
-                    .forEach(({ id, slot, status }) => {
+                    .forEach(({ id, slot, status, timeslot_id, trainer_id}) => {
                         const timeslotItem = document.createElement('div');
                         timeslotItem.classList.add('announcement');
 
@@ -232,10 +232,15 @@
                         const editDtl = document.createElement('div');
                         editDtl.innerHTML = `
                             <div class="edit-dlt">
-                                <div class="edit" onclick="editBooking('${id}')"><i class="ph ph-eraser"></i></div>
-                                <div class="dlt" onclick="dltBooking('${id}')"><i class="ph ph-trash-simple"></i></div>
+                                <div class="edit" onclick="editBooking('${id}', '${date}', '${timeslot_id}', '${slot}', '${trainer_id}')">
+                                    <i class="ph ph-eraser"></i>
+                                </div>
+                                <div class="dlt" onclick="dltBooking('${id}')">
+                                    <i class="ph ph-trash-simple"></i>
+                                </div>
                             </div>
                         `;
+
 
                         timeslotItem.append(statusCircle, slotText, editDtl);
                         bookDiv.appendChild(timeslotItem);
@@ -257,34 +262,14 @@
             return new Date(1970, 0, 1, hr24, min);
         }
 
-        function dltBooking(id){
-            console.log("Deleting booking with ID:", id);
-            if (!confirm("Are you sure you want to delete this booking?")) return;
-
-            fetch('<?php echo URLROOT?>/member/Booking/delete',{
-                method: "POST",
-                headers: {
-                    "Content-Type":  "application/x-www-form-urlencoded",
-                },
-                body: `id=${encodeURIComponent(id)}`,
-            })
-            .then(response => response.json())
-            .then(result => { 
-                if (!result.success) {
-                    alert("Booking deleted successfully!");
-                    location.reload();
-                } else {
-                    alert("Error: " + result.message);
-                }
-            })
-            .catch(error => console.error("Error deleting Booking:", error));
-
+        function formatDateToLong(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
         }
-
-        function editBooking(id){
-            
-        }
-
         // calender
         const calendarBody = document.querySelector('.calendarBody');
         function buildCalendar() {
@@ -407,36 +392,36 @@
             }
         }
 
-        // modal
-        function modal(){
-            const modal = document.getElementById('bookingModal');
-            const closeModal = document.querySelector('.modal .close');
+        const modal = document.getElementById('bookingModal');
+        const closeModal = document.querySelector('.modal .close');
 
+        const modalDate = document.getElementById('modalDate');
+        const selectedDateInput = document.getElementById('selectedDate');
+        const trainerIdInput = document.getElementById('selectedTrainerId');
+        const dateInput = document.getElementById("date");
+        const selectedTimeslotInput = document.getElementById('selectedTimeslot');
+        const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
+              
+        // modal
+        function bookingModal(){
             calendarBody.addEventListener('click', function (event) {
-                const modalDate = document.getElementById('modalDate');
-                const selectedDateInput = document.getElementById('selectedDate');
-                const trainerIdInput = document.getElementById('selectedTrainerId');
-                const date = document.getElementById("date");
-                const selectedTimeslotInput = document.getElementById('selectedTimeslot');
-                const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
-                const clickedElement = event.target;
+                  const clickedElement = event.target;
 
                 // Check if the clicked element is a date box
                 if (clickedElement.classList.contains('day') && !clickedElement.classList.contains('plain')) {
                     const selectedDate = clickedElement.getAttribute('data-date');
-                    console.log(selectedDate);
                     // Only allow selecting present or future dates
                     if (selectedDate < dateToday) {
                         return; 
                     }
-                    const selectedDay = selectedDate.split('-')[2];
-                    const currentMonthYear = document.querySelector('.monthYear').innerText;
+
+                    const formattedDate = formatDateToLong(selectedDate);
 
                     // Set the modal's input
                     trainerIdInput.value= `${trainerId}`;
-                    modalDate.innerText = `${selectedDay} ${currentMonthYear}`;
-                    selectedDateInput.textContent = `${selectedDay} ${currentMonthYear}`;
-                    date.value = selectedDate;
+                    modalDate.innerText = formattedDate;
+                    selectedDateInput.textContent = formattedDate;
+                    dateInput.value = selectedDate;
                     selectedTimeslotInput.textContent = `Select timeslot`;
                     selectedTimeslotIdInput.value = '';
 
@@ -450,6 +435,72 @@
                 modal.style.display = 'none';
             });
         }
+
+        function dltBooking(id){
+            if (!confirm("Are you sure you want to delete this booking?")) return;
+
+            fetch('<?php echo URLROOT?>/member/Booking/delete',{
+                method: "POST",
+                headers: {
+                    "Content-Type":  "application/x-www-form-urlencoded",
+                },
+                body: `id=${encodeURIComponent(id)}`,
+            })
+            .then(response => response.json())
+            .then(result => { 
+                if (!result.success) {
+                    alert("Booking deleted successfully!");
+                    location.reload();
+                } else {
+                    alert("Error: " + result.message);
+                }
+            })
+            .catch(error => console.error("Error deleting Booking:", error));
+
+        }
+
+        function editBooking(id, date, timeslotid, timeslot ,trainerid){
+            modal.style.display = "block";
+
+            trainerIdInput.value= trainerid;
+            const formattedDate = formatDateToLong(date);
+            modalDate.innerText = formattedDate
+            selectedDateInput.textContent = formattedDate;
+            dateInput.value = date;
+            selectedTimeslotInput.textContent = timeslot;
+            selectedTimeslotIdInput.value = timeslotid;
+
+            const editbtn = document.getElementById('btnBook');
+            editbtn.innerText = "Update";  
+
+            editbtn.onclick = function(event) {
+                event.preventDefault(); 
+                const newTimeslot = selectedTimeslotIdInput.value;
+                
+                if (!confirm("Are you sure you want to update this timeslot?")) return;
+                fetch('<?php echo URLROOT; ?>/member/Booking/edit', {
+                    method :'POST',
+                    headers: {
+                    "Content-type": "application/x-www-form-urlencoded",
+                    },
+                    body: `id=${encodeURIComponent(id)}&timeslot_id=${encodeURIComponent(newTimeslot)}`,
+                })
+                .then(response => response.json())
+                .then(result =>{
+                    console.log(result);
+                    if (!result.success) {
+                        alert("Timeslot updated successfully!");
+                        modal.style.display = "none";
+                        location.reload();
+                    } else {
+                        alert("Error: " + result.message);
+                    }
+                })
+                .catch(error => console.error("Error updating timeslot:", error));
+
+            };
+        }
+
     </script>
     </body>
 </html>

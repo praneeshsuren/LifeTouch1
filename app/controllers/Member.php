@@ -89,8 +89,30 @@
                 }
                 echo json_encode(["success" => false, "message" => "Invalid request."]);
                 exit;
-            }
+            } elseif($action === 'edit'){
+                header('Content-type: application/json');
 
+                $id = $_POST['id'] ?? null;
+                $timeslot_id =$_POST['timeslot_id'] ?? null;
+
+                if (!$id && !$timeslot_id) {
+                    echo json_encode(["success" => false, "message" => "Missing required fields"]);
+                    exit;
+                }
+
+                $data = [ 'timeslot_id' => $timeslot_id ];
+
+                $result = $bookingModel->update($id, $data);
+
+                echo json_encode(
+                    [
+                        "success" => $result ? true : false,
+                        "message" => $result ? "Booking timeslot updated successfully!" : "Failed to update timeslot"
+                    ]
+                    );
+                exit;
+
+            }
             $data = ['member_id' => $member_id];
             $this->view('member/member-booking', $data);
         }

@@ -254,7 +254,6 @@
         };
       }
 
-
       function holidayModal(){
         addHolidayBtn.addEventListener('click', function() {
           document.getElementById("holidayForm").reset();
