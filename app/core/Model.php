@@ -20,26 +20,34 @@ trait Model
     }
 
     public function where($data, $data_not = [], $order_column)
-    {
-        $keys = array_keys($data);
-        $keys_not = array_keys($data_not);
-        $query = "select * from $this->table where ";
+{
+    $keys = array_keys($data);
+    $keys_not = array_keys($data_not);
+    $query = "SELECT * FROM $this->table WHERE ";
 
-        foreach ($keys as $key) {
-            $query .= $key . " = :" . $key . "  && ";
-        }
-
-        foreach ($keys_not as $key) {
-            $query .= $key . " != :" . $key . "  && ";
-        }
-
-        $query = trim($query, " && ");
-        //echo $order_column;
-        $query .= " order by $order_column $this->order_type limit $this->limit offset $this->offset";
-        $data = array_merge($data, $data_not);
-
-        return $this->query($query, $data);
+    // Add conditions for "equal" checks
+    foreach ($keys as $key) {
+        $query .= $key . " = :" . $key . " AND ";
     }
+
+    // Add conditions for "not equal" checks
+    foreach ($keys_not as $key) {
+        $query .= $key . " != :" . $key . " AND ";
+    }
+
+    // Trim the trailing "AND"
+    $query = rtrim($query, " AND ");
+
+    // Add ordering if necessary
+    $query .= " ORDER BY $order_column $this->order_type LIMIT $this->limit OFFSET $this->offset";
+
+    // Merge the data for binding parameters
+    $data = array_merge($data, $data_not);
+
+    // Execute the query and return the results
+    return $this->query($query, $data);
+}
+
 
     public function first($data, $data_not = [])
     {

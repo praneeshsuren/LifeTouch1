@@ -6,7 +6,16 @@
         protected $allowedColumns = [
             'schedule_id',
             'member_id',
-            'workout_details'
+            'workout_details',
+            'weight_beginning',
+            'weight_ending',
+            'chest_measurement_beginning',
+            'chest_measurement_ending',
+            'bicep_measurement_beginning',
+            'bicep_measurement_ending',
+            'thigh_measurement_beginning',
+            'thigh_measurement_ending',
+            'schedule_no'
         ];
 
         public function findByMemberId($memberId) {

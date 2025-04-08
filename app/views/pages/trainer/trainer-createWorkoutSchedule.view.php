@@ -78,7 +78,29 @@
                 </tbody>
             </table>
             <button type="button" id="add-row">Add Row</button>
+
+            <div>
+                <label for="weight_beginning">Weight (kg):</label>
+                <input type="number" id="weight_beginning" name="weight_beginning" min="1" required>
+            </div>
+            
+            <div>
+                <label for="chest_measurement_beginning">Chest Measurement (cm):</label>
+                <input type="number" id="chest_measurement_beginning" name="chest_measurement_beginning" min="1" required>
+            </div>
+
+            <div>
+                <label for="bicep_measurement_beginning">Bicep Measurement (cm):</label>
+                <input type="number" id="bicep_measurement_beginning" name="bicep_measurement_beginning" min="1" required>
+            </div>
+
+            <div>
+                <label for="thigh_measurement_beginning">Thigh Measurement (cm):</label>
+                <input type="number" id="thigh_measurement_beginning" name="thigh_measurement_beginning" min="1" required>
+            </div>
+
             <button type="button" id="save-schedule">Save Schedule</button>
+
         </form>
     </div>
 
@@ -201,10 +223,19 @@
                 return;
             }
 
+            const weightBeginning = document.getElementById('weight_beginning').value;
+            const chestMeasurementBeginning = document.getElementById('chest_measurement_beginning').value;
+            const bicepMeasurementBeginning = document.getElementById('bicep_measurement_beginning').value;
+            const thighMeasurementBeginning = document.getElementById('thigh_measurement_beginning').value;
+
             // Prepare the data for submission
             const formData = {
                 member_id: memberId,
-                workout_details: workoutDetails
+                workout_details: workoutDetails,
+                weight_beginning: weightBeginning,
+                chest_measurement_beginning: chestMeasurementBeginning,
+                bicep_measurement_beginning: bicepMeasurementBeginning,
+                thigh_measurement_beginning: thighMeasurementBeginning
             };
 
             // Send the data to the server via fetch (AJAX)

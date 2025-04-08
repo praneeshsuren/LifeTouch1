@@ -4,7 +4,7 @@
         public function createSchedule()
         {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                // Get raw POST data
+
                 $inputData = json_decode(file_get_contents('php://input'), true);
 
                 if (!$inputData) {
@@ -14,6 +14,10 @@
 
                 $memberId = $inputData['member_id'];
                 $workoutDetails = $inputData['workout_details']; // Array of workout details
+                $weightBeginning = $inputData['weight_beginning'];
+                $chestMeasurementBeginning = $inputData['chest_measurement_beginning'];
+                $bicepMeasurementBeginning = $inputData['bicep_measurement_beginning'];
+                $thighMeasurementBeginning = $inputData['thigh_measurement_beginning'];
 
                 // Validate the data
                 if (empty($memberId) || empty($workoutDetails)) {
@@ -21,20 +25,28 @@
                     exit;
                 }
 
-                // Create the workout schedule
+                // Get the number of existing schedules for this member
                 $workoutScheduleModel = new M_WorkoutSchedule;
+                $existingSchedules = $workoutScheduleModel->findAllSchedulesByMemberId($memberId);
+
+                // Generate the next schedule number (schedule_no)
+                $scheduleNo = count($existingSchedules) + 1;
 
                 // Insert schedule into the database
                 $success = $workoutScheduleModel->insert([
                     'member_id' => $memberId,
-                    'workout_details' => json_encode($workoutDetails)
+                    'schedule_no' => $scheduleNo,  // Add the schedule_no
+                    'workout_details' => json_encode($workoutDetails),
+                    'weight_beginning' => $weightBeginning,
+                    'chest_measurement_beginning' => $chestMeasurementBeginning,
+                    'bicep_measurement_beginning' => $bicepMeasurementBeginning,
+                    'thigh_measurement_beginning' => $thighMeasurementBeginning
                 ]);
 
                 if ($success) {
                     // After schedule creation, fetch all schedules for the member
                     $schedules = $workoutScheduleModel->findAllSchedulesByMemberId($memberId);
 
-                    // Check if schedules were fetched successfully
                     if ($schedules !== false) {
                         // Return the schedules data as a JSON response
                         echo json_encode([
