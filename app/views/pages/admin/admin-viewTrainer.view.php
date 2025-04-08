@@ -135,7 +135,7 @@
             <div class="action-buttons">
 
               <button type="button" id="editBtn" class="edit-btn">Edit</button>
-              <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/trainers/deleteTrainer?id=<?php echo $data['trainer']->trainer_id; ?>';">Delete</button>
+              <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/trainer/deleteTrainer?id=<?php echo $data['trainer']->trainer_id; ?>';">Delete</button>
               <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
               <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;">Cancel</button>
 

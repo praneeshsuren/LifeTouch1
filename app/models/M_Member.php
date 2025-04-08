@@ -18,6 +18,8 @@
             'contact_number',
             'gender',
             'email_address',
+            'status',
+            'image',
             'membership_plan'
         ];
 
