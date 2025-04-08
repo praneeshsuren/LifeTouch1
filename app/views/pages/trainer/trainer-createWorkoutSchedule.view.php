@@ -81,22 +81,22 @@
 
             <div>
                 <label for="weight_beginning">Weight (kg):</label>
-                <input type="number" id="weight_beginning" name="weight_beginning" min="1" required>
+                <input type="number" id="weight_beginning" name="weight_beginning" min="1">
             </div>
             
             <div>
                 <label for="chest_measurement_beginning">Chest Measurement (cm):</label>
-                <input type="number" id="chest_measurement_beginning" name="chest_measurement_beginning" min="1" required>
+                <input type="number" id="chest_measurement_beginning" name="chest_measurement_beginning" min="1">
             </div>
 
             <div>
                 <label for="bicep_measurement_beginning">Bicep Measurement (cm):</label>
-                <input type="number" id="bicep_measurement_beginning" name="bicep_measurement_beginning" min="1" required>
+                <input type="number" id="bicep_measurement_beginning" name="bicep_measurement_beginning" min="1">
             </div>
 
             <div>
                 <label for="thigh_measurement_beginning">Thigh Measurement (cm):</label>
-                <input type="number" id="thigh_measurement_beginning" name="thigh_measurement_beginning" min="1" required>
+                <input type="number" id="thigh_measurement_beginning" name="thigh_measurement_beginning" min="1">
             </div>
 
             <button type="button" id="save-schedule">Save Schedule</button>
@@ -223,10 +223,11 @@
                 return;
             }
 
-            const weightBeginning = document.getElementById('weight_beginning').value;
-            const chestMeasurementBeginning = document.getElementById('chest_measurement_beginning').value;
-            const bicepMeasurementBeginning = document.getElementById('bicep_measurement_beginning').value;
-            const thighMeasurementBeginning = document.getElementById('thigh_measurement_beginning').value;
+            // Prepare optional data
+            const weightBeginning = document.getElementById('weight_beginning').value || null;
+            const chestMeasurementBeginning = document.getElementById('chest_measurement_beginning').value || null;
+            const bicepMeasurementBeginning = document.getElementById('bicep_measurement_beginning').value || null;
+            const thighMeasurementBeginning = document.getElementById('thigh_measurement_beginning').value || null;
 
             // Prepare the data for submission
             const formData = {

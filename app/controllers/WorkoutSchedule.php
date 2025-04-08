@@ -14,12 +14,14 @@
 
         $memberId = $inputData['member_id'];
         $workoutDetails = $inputData['workout_details']; // Array of workout details
-        $weightBeginning = $inputData['weight_beginning'];
-        $chestMeasurementBeginning = $inputData['chest_measurement_beginning'];
-        $bicepMeasurementBeginning = $inputData['bicep_measurement_beginning'];
-        $thighMeasurementBeginning = $inputData['thigh_measurement_beginning'];
 
-        // Validate the data
+        // Optional fields
+        $weightBeginning = isset($inputData['weight_beginning']) ? $inputData['weight_beginning'] : null;
+        $chestMeasurementBeginning = isset($inputData['chest_measurement_beginning']) ? $inputData['chest_measurement_beginning'] : null;
+        $bicepMeasurementBeginning = isset($inputData['bicep_measurement_beginning']) ? $inputData['bicep_measurement_beginning'] : null;
+        $thighMeasurementBeginning = isset($inputData['thigh_measurement_beginning']) ? $inputData['thigh_measurement_beginning'] : null;
+
+        // Validate the required fields
         if (empty($memberId) || empty($workoutDetails)) {
             echo json_encode(['success' => false, 'message' => 'Missing required fields']);
             exit;
@@ -29,17 +31,11 @@
         $workoutScheduleModel = new M_WorkoutSchedule;
         $existingSchedules = $workoutScheduleModel->findAllSchedulesByMemberId($memberId);
 
-        // Check if there are any existing schedules
-        if (empty($existingSchedules)) {
-            // If no schedules exist, set schedule_no to 1
-            $scheduleNo = 1;
-        } else {
-            // Generate the next schedule number
-            $scheduleNo = count($existingSchedules) + 1;
-        }
+        // Generate the schedule number (schedule_no)
+        $scheduleNo = empty($existingSchedules) ? 1 : count($existingSchedules) + 1;
 
-        // Insert schedule into the database
-        $success = $workoutScheduleModel->insert([
+        // Prepare the data to insert
+        $dataToInsert = [
             'member_id' => $memberId,
             'schedule_no' => $scheduleNo,  // Add the schedule_no
             'workout_details' => json_encode($workoutDetails),
@@ -47,7 +43,10 @@
             'chest_measurement_beginning' => $chestMeasurementBeginning,
             'bicep_measurement_beginning' => $bicepMeasurementBeginning,
             'thigh_measurement_beginning' => $thighMeasurementBeginning
-        ]);
+        ];
+
+        // Insert schedule into the database
+        $success = $workoutScheduleModel->insert($dataToInsert);
 
         if ($success) {
             // After schedule creation, fetch all schedules for the member
@@ -70,6 +69,7 @@
         echo json_encode(['success' => false, 'message' => 'Invalid request method']);
     }
 }
+
 
 
         public function getMemberWorkouts()
