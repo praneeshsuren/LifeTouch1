@@ -1283,36 +1283,78 @@ button:disabled {
   background-color: darkred;
 }
 
-
+/* Style for the workout schedule cards */
 .schedule-cards {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  justify-content: center;
+  padding: 20px;
+  justify-items: center;
 }
 
 .schedule-card {
-  background-color: #f4f4f4;
-  border-radius: 10px;
-  padding: 20px;
-  width: 250px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-  margin: 10px;
+  padding: 20px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 350px;
 }
 
 .schedule-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .schedule-card h3 {
   font-size: 1.2em;
-  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
 }
 
-.schedule-card pre {
+.schedule-card p {
+  font-size: 1em;
+  color: #555;
+  margin: 5px 0;
+}
+
+.schedule-card strong {
+  font-weight: 600;
+  color: #333;
+}
+
+.schedule-card .status {
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
   font-size: 0.9em;
-  background: #eaeaea;
-  padding: 10px;
-  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.schedule-card .status.ongoing {
+  background-color: #ffcc00;
+  color: #fff;
+}
+
+.schedule-card .status.completed {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .schedule-cards {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .schedule-cards {
+      grid-template-columns: 1fr;
+  }
 }

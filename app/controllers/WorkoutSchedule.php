@@ -2,68 +2,75 @@
     class WorkoutSchedule extends Controller
     {
         public function createSchedule()
-        {
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-                $inputData = json_decode(file_get_contents('php://input'), true);
+        $inputData = json_decode(file_get_contents('php://input'), true);
 
-                if (!$inputData) {
-                    echo json_encode(['success' => false, 'message' => 'Invalid input data']);
-                    exit;
-                }
-
-                $memberId = $inputData['member_id'];
-                $workoutDetails = $inputData['workout_details']; // Array of workout details
-                $weightBeginning = $inputData['weight_beginning'];
-                $chestMeasurementBeginning = $inputData['chest_measurement_beginning'];
-                $bicepMeasurementBeginning = $inputData['bicep_measurement_beginning'];
-                $thighMeasurementBeginning = $inputData['thigh_measurement_beginning'];
-
-                // Validate the data
-                if (empty($memberId) || empty($workoutDetails)) {
-                    echo json_encode(['success' => false, 'message' => 'Missing required fields']);
-                    exit;
-                }
-
-                // Get the number of existing schedules for this member
-                $workoutScheduleModel = new M_WorkoutSchedule;
-                $existingSchedules = $workoutScheduleModel->findAllSchedulesByMemberId($memberId);
-
-                // Generate the next schedule number (schedule_no)
-                $scheduleNo = count($existingSchedules) + 1;
-
-                // Insert schedule into the database
-                $success = $workoutScheduleModel->insert([
-                    'member_id' => $memberId,
-                    'schedule_no' => $scheduleNo,  // Add the schedule_no
-                    'workout_details' => json_encode($workoutDetails),
-                    'weight_beginning' => $weightBeginning,
-                    'chest_measurement_beginning' => $chestMeasurementBeginning,
-                    'bicep_measurement_beginning' => $bicepMeasurementBeginning,
-                    'thigh_measurement_beginning' => $thighMeasurementBeginning
-                ]);
-
-                if ($success) {
-                    // After schedule creation, fetch all schedules for the member
-                    $schedules = $workoutScheduleModel->findAllSchedulesByMemberId($memberId);
-
-                    if ($schedules !== false) {
-                        // Return the schedules data as a JSON response
-                        echo json_encode([
-                            'success' => true,
-                            'message' => 'Workout schedule created successfully.',
-                            'schedules' => $schedules
-                        ]);
-                    } else {
-                        echo json_encode(['success' => false, 'message' => 'Error fetching schedules after creation.']);
-                    }
-                } else {
-                    echo json_encode(['success' => false, 'message' => 'Error creating workout schedule.']);
-                }
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Invalid request method']);
-            }
+        if (!$inputData) {
+            echo json_encode(['success' => false, 'message' => 'Invalid input data']);
+            exit;
         }
+
+        $memberId = $inputData['member_id'];
+        $workoutDetails = $inputData['workout_details']; // Array of workout details
+        $weightBeginning = $inputData['weight_beginning'];
+        $chestMeasurementBeginning = $inputData['chest_measurement_beginning'];
+        $bicepMeasurementBeginning = $inputData['bicep_measurement_beginning'];
+        $thighMeasurementBeginning = $inputData['thigh_measurement_beginning'];
+
+        // Validate the data
+        if (empty($memberId) || empty($workoutDetails)) {
+            echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+            exit;
+        }
+
+        // Get the existing schedules for this member
+        $workoutScheduleModel = new M_WorkoutSchedule;
+        $existingSchedules = $workoutScheduleModel->findAllSchedulesByMemberId($memberId);
+
+        // Check if there are any existing schedules
+        if (empty($existingSchedules)) {
+            // If no schedules exist, set schedule_no to 1
+            $scheduleNo = 1;
+        } else {
+            // Generate the next schedule number
+            $scheduleNo = count($existingSchedules) + 1;
+        }
+
+        // Insert schedule into the database
+        $success = $workoutScheduleModel->insert([
+            'member_id' => $memberId,
+            'schedule_no' => $scheduleNo,  // Add the schedule_no
+            'workout_details' => json_encode($workoutDetails),
+            'weight_beginning' => $weightBeginning,
+            'chest_measurement_beginning' => $chestMeasurementBeginning,
+            'bicep_measurement_beginning' => $bicepMeasurementBeginning,
+            'thigh_measurement_beginning' => $thighMeasurementBeginning
+        ]);
+
+        if ($success) {
+            // After schedule creation, fetch all schedules for the member
+            $schedules = $workoutScheduleModel->findAllSchedulesByMemberId($memberId);
+
+            if ($schedules !== false) {
+                // Return the schedules data as a JSON response
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Workout schedule created successfully.',
+                    'schedules' => $schedules
+                ]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error fetching schedules after creation.']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error creating workout schedule.']);
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    }
+}
+
 
         public function getMemberWorkouts()
         {

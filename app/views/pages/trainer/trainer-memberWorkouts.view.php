@@ -82,83 +82,95 @@
     <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-    // Function to get URL parameter by name
-    function getUrlParameter(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
+document.addEventListener('DOMContentLoaded', function() {
+        // Function to get URL parameter by name
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Get the 'id' parameter (member_id) from the URL
+        const memberId = getUrlParameter('id');
+
+        // Debugging to check if memberId is extracted correctly
+        console.log('Member ID:', memberId);  // Log the member ID to check if it's extracted correctly
+
+        if (memberId) {
+            // Update the Create Workout Schedule button with the member ID dynamically
+            const createWorkoutBtn = document.getElementById('createWorkoutBtn');
+            createWorkoutBtn.addEventListener('click', function() {
+                window.location.href = `<?php echo URLROOT; ?>/trainer/members/createWorkoutSchedule?id=${memberId}`;
+            });
+
+            // Also update the navigation links with the member ID
+            const userDetailsLink = document.getElementById('userDetailsLink');
+            userDetailsLink.href = `<?php echo URLROOT; ?>/trainer/members/userDetails?id=${memberId}`;
+
+            const workoutSchedulesLink = document.getElementById('workoutSchedulesLink');
+            workoutSchedulesLink.href = `<?php echo URLROOT; ?>/trainer/members/workoutSchedules?id=${memberId}`;
+
+            // Call the loadWorkoutSchedules function to populate the workout cards
+            loadWorkoutSchedules(memberId);
+
+        } else {
+            // Handle the case where no member ID is found in the URL
+            alert('No member selected.');
+        }
+    });
+
+    function loadWorkoutSchedules(memberId) {
+        // Debugging to check the URL being used
+        const url = `<?php echo URLROOT; ?>/WorkoutSchedule/getMemberWorkouts?id=${memberId}`;
+        console.log('Fetching data from URL:', url);  // Log the URL to check if it's correct
+
+        // Fetch the workout schedules using the updated fetch API route
+        fetch(url)
+            .then(response => {
+                console.log('Response Status:', response.status);  // Log the response status code
+                return response.json();  // Parse the response as JSON
+            })
+            .then(data => {
+                console.log("Fetched data:", data);  // Log the data to inspect its structure
+
+                const container = document.getElementById('schedule-cards-container');
+                container.innerHTML = ''; // Clear any existing cards
+
+                if (data && Array.isArray(data.schedules) && data.schedules.length > 0) {
+                    // Loop through each schedule and create a card
+                    data.schedules.forEach(schedule => {
+                        const card = document.createElement('div');
+                        card.classList.add('schedule-card');
+                        
+                        // Determine the status of the schedule
+                        let status = 'Ongoing'; // Default status
+                        if (schedule.complete_date) {
+                            status = 'Completed'; // If there's a complete date, the schedule is completed
+                        }
+
+                        // Format the start and complete dates
+                        const startDate = new Date(schedule.created_at).toLocaleDateString();
+                        const completeDate = schedule.complete_date ? new Date(schedule.complete_date).toLocaleDateString() : 'N/A';
+
+                        // Build the content of the card
+                        card.innerHTML = `
+                            <h3>Workout Schedule #${schedule.schedule_no}</h3>
+                            <p><strong>Start Date:</strong> ${startDate}</p>
+                            <p><strong>Complete Date:</strong> ${completeDate}</p>
+                            <p><strong>Status:</strong> <span class="status ${status.toLowerCase()}">${status}</span></p>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    container.innerHTML = '<p>No workout schedules found for this member.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching workout schedules:', error);
+                const container = document.getElementById('schedule-cards-container');
+                container.innerHTML = '<p>Failed to load workout schedules. Please try again later.</p>';
+            });
     }
-
-    // Get the 'id' parameter (member_id) from the URL
-    const memberId = getUrlParameter('id');
-
-    // Debugging to check if memberId is extracted correctly
-    console.log('Member ID:', memberId);  // Log the member ID to check if it's extracted correctly
-
-    if (memberId) {
-        // Update the Create Workout Schedule button with the member ID dynamically
-        const createWorkoutBtn = document.getElementById('createWorkoutBtn');
-        createWorkoutBtn.addEventListener('click', function() {
-            window.location.href = `<?php echo URLROOT; ?>/trainer/members/createWorkoutSchedule?id=${memberId}`;
-        });
-
-        // Also update the navigation links with the member ID
-        const userDetailsLink = document.getElementById('userDetailsLink');
-        userDetailsLink.href = `<?php echo URLROOT; ?>/trainer/members/userDetails?id=${memberId}`;
-
-        const workoutSchedulesLink = document.getElementById('workoutSchedulesLink');
-        workoutSchedulesLink.href = `<?php echo URLROOT; ?>/trainer/members/workoutSchedules?id=${memberId}`;
-
-        // Call the loadWorkoutSchedules function to populate the workout cards
-        loadWorkoutSchedules(memberId);
-
-    } else {
-        // Handle the case where no member ID is found in the URL
-        alert('No member selected.');
-    }
-});
-function loadWorkoutSchedules(memberId) {
-    // Debugging to check the URL being used
-    const url = `<?php echo URLROOT; ?>/WorkoutSchedule/getMemberWorkouts?id=${memberId}`;
-    console.log('Fetching data from URL:', url);  // Log the URL to check if it's correct
-
-    // Fetch the workout schedules using the updated fetch API route
-    fetch(url)
-        .then(response => {
-            console.log('Response Status:', response.status);  // Log the response status code
-            return response.json();  // Parse the response as JSON
-        })
-        .then(data => {
-            console.log("Fetched data:", data);  // Log the data to inspect its structure
-
-            const container = document.getElementById('schedule-cards-container');
-            container.innerHTML = ''; // Clear any existing cards
-
-            if (data && Array.isArray(data.schedules) && data.schedules.length > 0) {
-                // Loop through each schedule and create a card
-                data.schedules.forEach(schedule => {
-                    const card = document.createElement('div');
-                    card.classList.add('schedule-card');
-                    card.innerHTML = `
-                        <h3>Workout</h3>
-                        <p><strong>Details:</strong></p>
-                        <pre>${schedule.workout_details}</pre>
-                    `;
-                    container.appendChild(card);
-                });
-            } else {
-                container.innerHTML = '<p>No workout schedules found for this member.</p>';
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching workout schedules:', error);
-            const container = document.getElementById('schedule-cards-container');
-            container.innerHTML = '<p>Failed to load workout schedules. Please try again later.</p>';
-        });
-}
-
-
-    </script>
+</script>
     
   </body>
 </html>

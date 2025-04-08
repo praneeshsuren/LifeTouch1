@@ -29,9 +29,14 @@
             $data = ['member_id' => $memberId];
             $data_not = [];  // No "not equal" conditions for now
             $order_column = 'created_at';  // Column to order by
-
-            return $this->where($data, $data_not, $order_column);
+        
+            // Get schedules for this member
+            $schedules = $this->where($data, $data_not, $order_column);
+        
+            // Return schedules or an empty array if no schedules found
+            return $schedules ?: [];  // Returns an empty array if no schedules exist
         }
+        
     }
     
 ?>
