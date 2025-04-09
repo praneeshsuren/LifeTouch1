@@ -70,6 +70,7 @@ class Service extends Controller
             // Collect the form data
             $updatedData = [
                 'service_date' => $_POST['date'],
+                'next_service_date' => $_POST['next_date'],
                 'service_cost' => $_POST['cost'],
             ];
 
