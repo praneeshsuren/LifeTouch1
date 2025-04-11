@@ -138,7 +138,15 @@
                   <strong>Email Address:</strong>
                   <input type="email" name="email_address" value="<?php echo $data['member']->email_address; ?>" disabled>
                 </p>
-
+                <p>
+                <strong>Membership Plan:</strong>
+                <select name="membership_plan" id="membership_plan" disabled>
+                  <option value="Monthly" <?php echo $data['member']->membership_plan == 'Monthly' ? 'selected' : ''; ?>>Monthly</option>
+                  <option value="Quarterly" <?php echo $data['member']->membership_plan == 'Quarterly' ? 'selected' : ''; ?>>Quarterly</option>
+                  <option value="Semi-Annually" <?php echo $data['member']->membership_plan == 'Semi-Annually' ? 'selected' : ''; ?>>Semi-Annually</option>
+                  <option value="Annually" <?php echo $data['member']->membership_plan == 'Annually' ? 'selected' : ''; ?>>Annually</option>
+                </select>
+              </p>
               </div>
 
             </div>

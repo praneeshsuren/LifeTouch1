@@ -128,11 +128,60 @@
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                    <h2>No Events are currently ongoing.</h2>
+                <h2>No Events are currently ongoing.</h2>
             <?php endif; ?>
-</div>
+        </div>
 
     </section>
+
+    <!-- Join Event Popup Form -->
+    <div id="joinForm" class="popup-form">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeForm()">&times;</span>
+            <h2>Join Event</h2>
+            <?php if (!empty($_SESSION['join_errors']) && is_array($_SESSION['join_errors'])): ?>
+                <div class="error-container" style="color: red; margin-bottom: 10px;">
+                    <?php foreach ($_SESSION['join_errors'] as $error): ?>
+                        <p><?php echo $error; ?></p>
+                    <?php endforeach; ?>
+                </div>
+                <?php unset($_SESSION['join_errors']); ?>
+            <?php endif; ?>
+
+            <form id="eventForm" method="POST" action="<?php echo URLROOT; ?>/home/joinEvent">
+                <input type="hidden" id="eventIdInput" name="event_id" />
+                <div class="input-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="full_name" required />
+                </div>
+                <div class="input-group">
+                    <label for="nic">NIC</label>
+                    <input type="text" id="nic" name="nic" required />
+                </div>
+                <div class="input-group checkbox-group" style="display: flex; gap: 10px;">
+                    <label for="isMember">Gym Member?</label>
+                    <input type="checkbox" name="is_member" id="isMember" onclick="toggleMembership()">
+                </div>
+
+                <div class="input-group" id="membershipGroup" style="display: none;">
+                    <label for="membershipNumber">Membership Number</label>
+                    <input type="text" id="membershipNumber" name="membership_number"
+                        pattern="^MB\/[MF]\/\d+$"
+                        title="Format: MB/M/0001 or MB/F/0001"
+                        placeholder="MB/M/0001" />
+                    <small id="membershipError" style="color: red;"></small>
+                </div>
+                <div class="input-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="text" id="contact" name="contact_no" required />
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn">Pay Now</button>
+                    <button type="submit" class="btn">Join</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!--Trainer section code-->
     <section class="review" id="review">
         <div class="review-box">
@@ -241,5 +290,52 @@
 
     <script src="<?php echo URLROOT; ?>/assets/js/home-script.js?v=<?php echo time(); ?>"></script>
 </body>
+<script>
+    // Show the popup form when "Join Now" is clicked
+    document.querySelectorAll('.plans-content .box a').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default navigation
+            document.getElementById('joinForm').style.display = 'flex';
+        });
+    });
+
+    function closeForm() {
+        document.getElementById('joinForm').style.display = 'none';
+    }
+
+    function toggleMembership() {
+        const checkbox = document.getElementById('isMember');
+        const memberField = document.getElementById('membershipGroup');
+        memberField.style.display = checkbox.checked ? 'block' : 'none';
+    }
+</script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const scrollTo = urlParams.get('scroll');
+        if (scrollTo) {
+            const section = document.getElementById(scrollTo);
+            if (section) {
+                section.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('.plans-content .box a').forEach((button, index) => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Set event_id based on the position (or use a data attribute instead)
+            const eventId = <?php echo json_encode(array_column($data['events'], 'event_id')); ?>;
+            document.getElementById('eventIdInput').value = eventId[index];
+
+            document.getElementById('joinForm').style.display = 'flex';
+        });
+    });
+</script>
+
 
 </html>
