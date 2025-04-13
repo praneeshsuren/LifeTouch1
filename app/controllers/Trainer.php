@@ -29,10 +29,30 @@
                     $this->view('trainer/trainer-viewMember', $data);
                     break;
         
-                    case 'workoutSchedules':
-                        $this->view('trainer/trainer-memberWorkouts');
-                        break;
+                case 'workoutSchedules':
+                    $this->view('trainer/trainer-memberWorkouts');
+                    break;
+                
+                case 'workoutDetails':
+                    // Fetch specific workout details using workout ID from URL
+                    $scheduleId = $_GET['id']; // Get workout schedule ID from URL
                     
+                    // Fetch workout schedule details
+                    $workoutScheduleModel = new M_WorkoutSchedule;
+                    $schedule = $workoutScheduleModel->findByScheduleId($scheduleId);
+    
+                    if (!$schedule) {
+                        // Handle case where schedule ID is not found
+                        $this->view('404'); // Optionally, redirect to a 404 page
+                        return;
+                    }
+    
+                    // Pass schedule data to the view
+                    $data = [
+                        'schedule' => $schedule
+                    ];
+                    $this->view('trainer/trainer-viewWorkoutSchedule', $data);
+                    break;
                     
         
                 case 'createWorkoutSchedule':

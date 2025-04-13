@@ -119,57 +119,50 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function loadWorkoutSchedules(memberId) {
-        // Debugging to check the URL being used
-        const url = `<?php echo URLROOT; ?>/WorkoutSchedule/getMemberWorkouts?id=${memberId}`;
-        console.log('Fetching data from URL:', url);  // Log the URL to check if it's correct
+    const url = `<?php echo URLROOT; ?>/WorkoutSchedule/getMemberWorkouts?id=${memberId}`;
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('schedule-cards-container');
+            container.innerHTML = ''; // Clear existing cards
 
-        // Fetch the workout schedules using the updated fetch API route
-        fetch(url)
-            .then(response => {
-                console.log('Response Status:', response.status);  // Log the response status code
-                return response.json();  // Parse the response as JSON
-            })
-            .then(data => {
-                console.log("Fetched data:", data);  // Log the data to inspect its structure
+            if (data && Array.isArray(data.schedules) && data.schedules.length > 0) {
+                data.schedules.forEach(schedule => {
+                    const card = document.createElement('div');
+                    card.classList.add('schedule-card');
+                    card.setAttribute('data-schedule-id', schedule.schedule_no); // Set schedule ID as a data attribute
 
-                const container = document.getElementById('schedule-cards-container');
-                container.innerHTML = ''; // Clear any existing cards
+                    let status = schedule.complete_date ? 'Completed' : 'Ongoing';
+                    const startDate = new Date(schedule.created_at).toLocaleDateString();
+                    const completeDate = schedule.complete_date ? new Date(schedule.complete_date).toLocaleDateString() : 'N/A';
+                    const scheduleId = schedule.schedule_id;
 
-                if (data && Array.isArray(data.schedules) && data.schedules.length > 0) {
-                    // Loop through each schedule and create a card
-                    data.schedules.forEach(schedule => {
-                        const card = document.createElement('div');
-                        card.classList.add('schedule-card');
-                        
-                        // Determine the status of the schedule
-                        let status = 'Ongoing'; // Default status
-                        if (schedule.complete_date) {
-                            status = 'Completed'; // If there's a complete date, the schedule is completed
-                        }
+                    card.innerHTML = `
+                        <h3>Workout Schedule #${schedule.schedule_no}</h3>
+                        <p><strong>Start Date:</strong> ${startDate}</p>
+                        <p><strong>Complete Date:</strong> ${completeDate}</p>
+                        <p><strong>Status:</strong> <span class="status ${status.toLowerCase()}">${status}</span></p>
+                    `;
 
-                        // Format the start and complete dates
-                        const startDate = new Date(schedule.created_at).toLocaleDateString();
-                        const completeDate = schedule.complete_date ? new Date(schedule.complete_date).toLocaleDateString() : 'N/A';
-
-                        // Build the content of the card
-                        card.innerHTML = `
-                            <h3>Workout Schedule #${schedule.schedule_no}</h3>
-                            <p><strong>Start Date:</strong> ${startDate}</p>
-                            <p><strong>Complete Date:</strong> ${completeDate}</p>
-                            <p><strong>Status:</strong> <span class="status ${status.toLowerCase()}">${status}</span></p>
-                        `;
-                        container.appendChild(card);
+                    // Add click event to card
+                    card.addEventListener('click', function () {
+                        window.location.href = `<?php echo URLROOT; ?>/trainer/members/workoutDetails?id=${scheduleId}`;
                     });
-                } else {
-                    container.innerHTML = '<p>No workout schedules found for this member.</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching workout schedules:', error);
-                const container = document.getElementById('schedule-cards-container');
-                container.innerHTML = '<p>Failed to load workout schedules. Please try again later.</p>';
-            });
-    }
+
+                    container.appendChild(card);
+                });
+            } else {
+                container.innerHTML = '<p>No workout schedules found for this member.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching workout schedules:', error);
+            const container = document.getElementById('schedule-cards-container');
+            container.innerHTML = '<p>Failed to load workout schedules. Please try again later.</p>';
+        });
+}
+
 </script>
     
   </body>

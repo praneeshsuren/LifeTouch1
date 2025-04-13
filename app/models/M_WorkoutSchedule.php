@@ -5,17 +5,9 @@
         protected $table = 'workout_schedule';
         protected $allowedColumns = [
             'schedule_id',
-            'member_id',
-            'workout_details',
-            'weight_beginning',
-            'weight_ending',
-            'chest_measurement_beginning',
-            'chest_measurement_ending',
-            'bicep_measurement_beginning',
-            'bicep_measurement_ending',
-            'thigh_measurement_beginning',
-            'thigh_measurement_ending',
-            'schedule_no'
+            'workout_id',
+            'sets',
+            'reps'
         ];
 
         public function findByMemberId($memberId) {
@@ -36,7 +28,33 @@
             // Return schedules or an empty array if no schedules found
             return $schedules ?: [];  // Returns an empty array if no schedules exist
         }
+
+        public function findByScheduleId($scheduleId) {
+            $data = ['schedule_id' => $scheduleId];
+            return $this->first($data);  // Use the `first` method to get the first matching record
+        }
         
-    }
+        public function updateSchedule($scheduleId, $workoutDetails, $weightEnd, $chestMeasurementEnd, $bicepMeasurementEnd, $thighMeasurementEnd)
+        {
+            // Prepare the data to update
+            $data = [
+                'workout_details' => json_encode($workoutDetails),
+                'weight_end' => $weightEnd,
+                'chest_measurement_end' => $chestMeasurementEnd,
+                'bicep_measurement_end' => $bicepMeasurementEnd,
+                'thigh_measurement_end' => $thighMeasurementEnd
+            ];
+
+            // Call the update method to update the record
+            return $this->update($scheduleId, $data, 'schedule_id');  // Assuming 'schedule_no' is the column used for unique identification
+        }
+
+        // Delete workout schedule by schedule_id
+        public function deleteSchedule($scheduleId)
+        {
+            // Call the delete method to delete the record
+            return $this->delete($scheduleId, 'schedule_id');  // Assuming 'schedule_no' is the column used for unique identification
+        }
+        }
     
 ?>
