@@ -97,7 +97,6 @@
             let allBookings = [];
             let filterBookings = [];
 
-
             fetch('<?php echo URLROOT; ?>/trainer/bookings/api')
                 .then(response => {
                     console.log('Response Status:', response.status); // Log response status
@@ -151,7 +150,6 @@
                     renderTable(filteredResults);
                 }
 
-
                 function renderTable(bookings){
                     tableBody.innerHTML = '';
 
@@ -161,35 +159,80 @@
                         }
                     });
 
-                    if(bookings.length > 0){
-                        bookings.forEach(booking => {
-                            const row = document.createElement('tr');
+                    const now = new Date();
+                    const dateToday = new Date();
+                    dateToday.setHours(0, 0, 0, 0);
+                    
+                    const futureBookings = [];
+                    const pastBookings = [];
 
-                            row. innerHTML = `
-                                <td>${booking.member_id}</td>
-                                <td>
-                                    <img src="<?php echo URLROOT; ?>/assets/images/member/${booking.member_image || 'default-placeholder.jpg'}" alt="member Picture" class="user-image">
-                                </td>
-                                <td>${booking.member_name}</td>
-                                <td>${booking.booking_date}</td>
-                                <td>${booking.timeslot}</td>
-                                <td> 
-                                    <div class="status open-modal">
-                                        ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase()}
-                                    </div>
-                                </td>
-                            `;
+                    bookings.forEach(booking => {
+                        const bookingDate = new Date(booking.booking_date);
+                        bookingDate.setHours(0, 0, 0, 0);
 
-                            const statusDiv = row.querySelector('.open-modal');
-                            statusDiv.style.cursor = 'pointer';
-                            statusDiv.addEventListener('click', (e) =>{
-                                event.stopPropagation();
-                                openModal(booking);
+                        if (bookingDate < dateToday) {
+                            pastBookings.push(booking); // clearly past
+                        } else if (bookingDate.getTime() === dateToday.getTime()) {
+                            // Booking is for today, now check the end time of the slot
+                            const endTimeStr = booking.timeslot.split(" - ")[1].trim(); // e.g., "11:00 AM"
+                            const endTime = convertTo24hrs(endTimeStr);
+
+                            const bookingEnd = new Date(booking.booking_date + ' ' + endTimeStr);
+                            if (bookingEnd.getTime() < now.getTime()) {
+                                pastBookings.push(booking); // today's timeslot has already passed
+                            } else {
+                                futureBookings.push(booking); // today, but not yet passed
+                            }
+                        } else {
+                            futureBookings.push(booking); // future date
+                        }
+                    });
+
+                    if(bookings.length > 0) {
+                        const appendBookingRows = (bookingList) => {
+                            bookingList.forEach(booking => {
+                                const row = document.createElement('tr');
+
+                                row. innerHTML = `
+                                    <td>${booking.member_id}</td>
+                                    <td>
+                                        <img src="<?php echo URLROOT; ?>/assets/images/member/${booking.member_image || 'default-placeholder.jpg'}" alt="member Picture" class="user-image">
+                                    </td>
+                                    <td>${booking.member_name}</td>
+                                    <td>${booking.booking_date}</td>
+                                    <td>${booking.timeslot}</td>
+                                    <td> 
+                                        <div class="status open-modal">
+                                            ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase()}
+                                        </div>
+                                    </td>
+                                `;
+
+                                const statusDiv = row.querySelector('.open-modal');
+
+                                const isFutureBooking = futureBookings.includes(booking);
+                                if (isFutureBooking) {
+                                    statusDiv.style.cursor = 'pointer';
+                                    statusDiv.addEventListener('click', (e) => {
+                                        e.stopPropagation();
+                                        openModal(booking);
+                                    });
+                                } 
+
+                                tableBody.appendChild(row);
                             });
+                        };
 
-                            tableBody.appendChild(row);
+                        appendBookingRows(futureBookings);
 
-                       });
+                        if (pastBookings.length > 0) {
+                            const pastHeading = document.createElement('tr');
+                            pastHeading.innerHTML = `
+                                <td colspan="11" style="font-weight: bold; background: #f9f9f9;">Past Bookings</td>
+                            `;
+                            tableBody.appendChild(pastHeading);
+                            appendBookingRows(pastBookings);
+                        }
                     } else {
                         console.log('No Bookings found.');
                         tableBody.innerHTML = `
@@ -212,6 +255,7 @@
                     const selectedStatus = statusSelect.value;
                         
                     const formData = new FormData(this);
+                    if (!confirm("Are you sure you want to update ?")) return;
                     fetch('<?php echo URLROOT; ?>/trainer/bookings/edit', {
                         method :'POST',
                         headers: {
@@ -273,5 +317,19 @@
                         modal.style.display = 'none';
                     }
                 });
+
+                function convertTo24hrs(time){
+                    const [hrMin, period] = time.trim().split(' '); //AM,PM
+                    let [hr, min] =hrMin.split(':');
+                    hr = parseInt(hr, 10);
+                    min = parseInt(min, 10);
+                    let hr24 = hr;
+                    if(period === 'PM' && hr24 < 12) {
+                    hr24 +=12;
+                    } else if (period === 'AM' && hr24 ===12) {
+                    hr24 = 0;
+                    }
+                    return new Date(1970, 0, 1, hr24, min);
+                }
         });
     </script>

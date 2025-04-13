@@ -159,7 +159,7 @@
                     return;
                 }
 
-                const isSlotTaken = bookings.some(b =>
+                const isSlotTaken = Array.isArray(bookings) && bookings.some(b =>
                     b.booking_date === date &&
                     b.timeslot_id == timeslotId &&
                     (b.status === "booked" || b.status === "pending")
@@ -171,6 +171,7 @@
                 }
 
                 const formData = new FormData(this);
+                if (!confirm("Are you sure you want to book this timeslot?")) return;
                 fetch('<?php echo URLROOT; ?>/member/Booking/add',{
                     method: "POST",
                     body: formData
@@ -192,14 +193,16 @@
         });
 
         //timeslots
-        function displayTimeSlots(timeSlots, bookings, selectedDate, selectedTimeslotId = null) {
+        function displayTimeSlots(timeSlots, bookings = [], selectedDate, selectedTimeslotId = null) {
             const timeSlotsContainer = document.querySelector('.timeslots');
             timeSlotsContainer.innerHTML = '';
 
-            const bookedForDate = bookings.filter(b => 
+            const bookedForDate = (bookings || []).filter(b => 
                 b.booking_date === selectedDate && b.status === 'booked'
             );
             let availableSlotCount = 0;
+
+            const isToday = new Date(selectedDate).toDateString() === new Date().toDateString();
 
             timeSlots.forEach(timeSlot => {
                 let timeSlotBtn = document.createElement('button');
@@ -211,8 +214,9 @@
                 // Check if current timeslot is in the booked list
                 const isBooked = bookedForDate.some(b => parseInt(b.timeslot_id) === parseInt(timeSlot.id));
                 const isSelected = selectedTimeslotId && parseInt(timeSlot.id) === parseInt(selectedTimeslotId);
+                const isPast = isToday && isTimeSlotInPast(timeSlot.slot.split(' - ')[0]);
 
-                if (isBooked && !isSelected)   {
+                if ((isBooked && !isSelected)  || isPast )  {
                     timeSlotBtn.disabled = true;
                     timeSlotBtn.style.backgroundColor = 'grey';
                     timeSlotBtn.style.cursor = 'not-allowed';
@@ -263,9 +267,29 @@
                 return acc;
             }, {});
 
-            const todayFutureBookings = Object.keys(groupedBookings).sort((a, b) => new Date(a) - new Date(b));
+            const filteredFutureBookings = {};
 
-            todayFutureBookings.forEach(date => {
+            // Go through each date in groupedBookings
+            Object.keys(groupedBookings)
+                .sort((a, b) => new Date(a) - new Date(b))
+                .forEach(date => {
+                    const isToday = new Date(date).toDateString() === new Date().toDateString();
+
+                    // Filter slots: keep all if not today, or future timeslots if today
+                    const futureSlots = groupedBookings[date].filter(booking => {
+                        if (!isToday) return true;
+                        return !isTimeSlotInPast(booking.slot.split(' - ')[0]);
+                    });
+
+                    // Only add if there are future slots remaining
+                    if (futureSlots.length > 0) {
+                        filteredFutureBookings[date] = futureSlots;
+                    }
+                });
+
+            const futureBookings = Object.keys(filteredFutureBookings).sort((a, b) => new Date(a) - new Date(b));
+
+            futureBookings.forEach(date => {
                 const dateHeading = document.createElement('div');
                 dateHeading.classList.add('date-heading');
                 dateHeading.innerText = date;
@@ -274,6 +298,11 @@
                 groupedBookings[date]
                     .sort((a, b) => convertTo24hrs(a.slot.split(' - ')[0]) - convertTo24hrs(b.slot.split(' - ')[0]))
                     .forEach(({ id, slot, status, timeslot_id, trainer_id}) => {
+                        const isPast = (new Date(date).toDateString() === new Date().toDateString()) && isTimeSlotInPast(slot.split(' - ')[0]);
+
+                        // Skip if it's a past time slot
+                        if (isPast) return;
+
                         const timeslotItem = document.createElement('div');
                         timeslotItem.classList.add('announcement');
 
@@ -296,7 +325,6 @@
                             </div>
                         `;
 
-
                         timeslotItem.append(statusCircle, slotText, editDtl);
                         bookDiv.appendChild(timeslotItem);
                     });
@@ -315,6 +343,16 @@
                 hr24 = 0;
             }
             return new Date(1970, 0, 1, hr24, min);
+        }
+
+        function isTimeSlotInPast(timeSlot) {
+            const now = new Date();
+
+            // Convert timeSlot to today's date but with the given time
+            const slotTime = convertTo24hrs(timeSlot);
+            const slotDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), slotTime.getHours(), slotTime.getMinutes());
+
+            return slotDateTime < now;
         }
 
         function formatDateToLong(dateString) {
@@ -566,6 +604,7 @@
                 const isSlotTaken = bookings.some(b =>
                     b.booking_date === date &&
                     b.timeslot_id == timeslotid &&
+                    b.timeslot_id == newTimeslot &&
                     (b.status === "booked" || b.status === "pending")
                 );
                 console.log(isSlotTaken);
@@ -623,7 +662,6 @@
             document.querySelector(".bookingForm").style.display = "block";
             document.querySelector(".timeslots").style.display = "block";
         }
-
 
     </script>
     </body>

@@ -192,7 +192,7 @@
 
           return timeA.getTime() - timeB.getTime(); 
         });
-        console.log(filteredBookings);
+
         filteredBookings.forEach(booking => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
