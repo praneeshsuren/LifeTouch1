@@ -1096,6 +1096,11 @@ main .calendarContainer {
     border: 2px solid var(--primary-color)
 }
 
+.calendar td.holiday {
+    background-color:rgb(224, 224, 224, 0.5);
+    color: var(--text-color);
+}
+
 .calendar td.active{
     background-color: var(--primary-color);
     color: var(--sidebar-color);

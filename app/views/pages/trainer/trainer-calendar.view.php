@@ -268,7 +268,7 @@
                                     <tr>
                                         <td>${book.member_id}</td>
                                         <td>${book.member_name}</td>
-                                        <td>${book.time_slot}</td>
+                                        <td>${book.timeslot}</td>
                                     </tr>
                                 </table>
                             </div>`;

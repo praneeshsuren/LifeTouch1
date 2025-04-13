@@ -46,7 +46,6 @@
               <tbody></tbody>
             </table>
           </div>
-
           <div id="bookingModal" class="bookingModal">
             <div class="bookingModal-content" >
                 <div class="bookingModalClose">&times;</div>
@@ -67,7 +66,6 @@
                 </div>
             </div>
           </div>
-
       </div>
       </main>
 

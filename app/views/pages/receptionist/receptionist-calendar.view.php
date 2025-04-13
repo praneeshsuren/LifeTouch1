@@ -68,7 +68,6 @@
                     <h3>Bookings : <span id="modalDate"></span></h3>
                 </div>
                 <div class="bookingModal-body" style = "color:black"></div>
-
             </div>
         </div>
     </main>
@@ -85,7 +84,6 @@
         let holidays = [];
         
         document.addEventListener("DOMContentLoaded", () =>{
-
             fetch('<?php echo URLROOT; ?>/receptionist/bookings/api')
                 .then(response => {
                     console.log('Response Status:', response.status); // Log response status

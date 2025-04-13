@@ -1971,11 +1971,12 @@ main .event-detail-container .form-container{
     justify-content: center;
     color: white; /* Ensure text is readable */
     text-align: center;
+    background-color: #007bff;
 }
 
-.pending{ background: linear-gradient(45deg, #FFA500, #FF4500);}
-.booked { background: linear-gradient(45deg, #32CD32, #006400);}
-.rejected{ background: linear-gradient(45deg, #FF0000, #8B0000);}
+/* .pending{ background: linear-gradient(45deg, #FFA500, #FF4500);}
+.booked { background: linear-gradient(45deg, #32CD32, #006400);} */
+/* .rejected{ background: linear-gradient(45deg, #FF0000, #8B0000);} */
 
 /* calendar */
 main .calendarContainer {
@@ -2084,8 +2085,7 @@ main .calendarContainer {
 }
 
 .booked-count {
-    background: linear-gradient(45deg, #32CD32, #006400) !important;
-    color: #fff;
+    background-color: #007bff;
     width: 40px;
     height: 20px;
     font-size: 15px;

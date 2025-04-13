@@ -60,6 +60,28 @@
               <tbody></tbody>
             </table>
           </div>
+          <div id="bookingModal" class="bookingModal">
+            <div class="bookingModal-content" >
+                <div class="bookingModalClose">&times;</div>
+                <div class="bookingModal-body" style = "color:black">
+                    <form id="bookingForm">
+                        <p><strong>Member Name:</strong> <span id="modalMemberName"></span></p>
+                        <p><strong>Booking Date:</strong> <span id="modalBookingDate"></span></p>
+                        <p><strong>Timeslot:</strong> <span id="modalTimeslot"></span></p>
+                        <p><strong>Status:</strong>
+                            <select id="modalStatusSelect">
+                                <option value="pending">Pending</option>
+                                <option value="booked">Booked</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </p>
+                        <div class="book-btn">
+                            <button type="submit" id="submitBtn" name="submit">Confirm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </div>
 
       </div>
       
@@ -71,7 +93,10 @@
         document.addEventListener('DOMContentLoaded', () =>{ 
             const tableBody = document.querySelector('.user-table tbody');
             const filterButtons = document.querySelectorAll('.filters .filter');
+            const searchInput = document.querySelector('.search-input'); 
             let allBookings = [];
+            let filterBookings = [];
+
 
             fetch('<?php echo URLROOT; ?>/trainer/bookings/api')
                 .then(response => {
@@ -94,21 +119,38 @@
                     `;
                 });
 
+
                 filterButtons.forEach(button => {
                     button.addEventListener('click', () =>{
                         filterButtons.forEach(btn => btn.classList.remove('active'));
                         button.classList.add('active');
 
                         let filterStatus = button.textContent.trim().toLowerCase();
-                        let filterBookings = allBookings;
+                        filterBookings = allBookings;
 
                         if(filterStatus !== 'all'){
                             filterBookings = allBookings.filter(booking => booking.status.toLowerCase() === filterStatus);
                         }
 
-                        renderTable(filterBookings);
+                        applySearchFilter();
                     });
                 });
+
+                searchInput.addEventListener('input', applySearchFilter);
+
+                function applySearchFilter() {
+                    let searchQuery = searchInput.value.toLowerCase();
+
+                    let filteredResults = filterBookings.filter(booking => {
+                        return booking.member_name.toLowerCase().includes(searchQuery) ||
+                            booking.member_id.toLowerCase().includes(searchQuery) ||
+                            booking.booking_date.toLowerCase().includes(searchQuery) ||
+                            booking.timeslot.toLowerCase().includes(searchQuery);
+                    });
+
+                    renderTable(filteredResults);
+                }
+
 
                 function renderTable(bookings){
                     tableBody.innerHTML = '';
@@ -122,17 +164,7 @@
                     if(bookings.length > 0){
                         bookings.forEach(booking => {
                             const row = document.createElement('tr');
-                            row.style.cursor = 'pointer';
 
-                            let statusClass = "";
-                            if (booking.status === "booked") {
-                                statusClass = "booked";
-                            } else if (booking.status === "pending") {
-                                statusClass = "pending";
-                            } else if (booking.status === "rejected") {
-                                statusClass = "rejected";
-                            }
-                            
                             row. innerHTML = `
                                 <td>${booking.member_id}</td>
                                 <td>
@@ -140,13 +172,20 @@
                                 </td>
                                 <td>${booking.member_name}</td>
                                 <td>${booking.booking_date}</td>
-                                <td>${booking.time_slot}</td>
+                                <td>${booking.timeslot}</td>
                                 <td> 
-                                    <div class="status ${statusClass}">
+                                    <div class="status open-modal">
                                         ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase()}
                                     </div>
                                 </td>
                             `;
+
+                            const statusDiv = row.querySelector('.open-modal');
+                            statusDiv.style.cursor = 'pointer';
+                            statusDiv.addEventListener('click', (e) =>{
+                                event.stopPropagation();
+                                openModal(booking);
+                            });
 
                             tableBody.appendChild(row);
 
@@ -160,5 +199,79 @@
                         `;
                     }
                 }
+
+                const modal = document.getElementById("bookingModal");
+                const closeModal = document.querySelector(".bookingModalClose");
+                let currentBooking = null;
+
+                document.getElementById("bookingForm").addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    console.log(currentBooking.id);
+
+                    const statusSelect = document.getElementById("modalStatusSelect");
+                    const selectedStatus = statusSelect.value;
+                        
+                    const formData = new FormData(this);
+                    fetch('<?php echo URLROOT; ?>/trainer/bookings/edit', {
+                        method :'POST',
+                        headers: {
+                            "Content-type": "application/x-www-form-urlencoded",
+                        },
+                        body: `id=${encodeURIComponent(currentBooking.id)}&status=${encodeURIComponent(selectedStatus)}`,
+                    })
+                    .then(response => response.json())
+                    .then(result =>{
+                        console.log(result);
+                        if (!result.success) {
+                            alert("booking updated successfully!");
+                            modal.style.display = "none";
+                            location.reload();
+                        } else {
+                            alert("Error: " + result.message);
+                        }
+                    })
+                    .catch(error => console.error("Error updating booking:", error));
+                });
+
+                function openModal(booking){
+                    modal.style.display = "block";
+
+                    document.getElementById('modalMemberName').textContent = booking.member_name;
+                    document.getElementById('modalBookingDate').textContent = booking.booking_date;
+                    document.getElementById('modalTimeslot').textContent = booking.timeslot;
+
+                    const statusSelect = document.getElementById('modalStatusSelect');
+                    if (statusSelect) {
+                        console.log("statusSelect exists", statusSelect);
+                        // Set status value if it's a valid option
+                        const statusValue = booking.status.toLowerCase();
+                        if (["pending", "booked", "rejected"].includes(statusValue)) {
+                            statusSelect.value = statusValue;
+                        } else {
+                            console.error("Invalid status value:", booking.status);
+                        }
+                        console.log(statusSelect.value);
+                    } else {
+                        console.error("modalStatusSelect element not found");
+                    }
+                    currentBooking = booking;
+                }
+
+                document.getElementById('modalStatusSelect').addEventListener('change', function () {
+                    if (currentBooking) {
+                        currentBooking.status = this.value;
+                    }
+                });
+
+                    
+                closeModal.addEventListener('click',function() {
+                    modal.style.display = 'none';
+                });
+
+                window.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
         });
     </script>

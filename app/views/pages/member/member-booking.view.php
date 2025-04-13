@@ -67,28 +67,31 @@
                 <div class="title">
                     <h3>Booking : <span id="modalDate"></span></h3>
                 </div>
-                <div class="timeslots"></div>
-                <div class="bookingForm">
-                    <form id="bookingForm">
-                        <div class="input">
-                            <input type="text" value="<?php echo htmlspecialchars($member_id); ?>" name="memberId" required>
-                            <input type="text" id="selectedTrainerId"  name="trainerId" required>
-                            <input type="text" id="selectedTimeslotId" name="timeslotId" required> 
-                            <input type="text" id="date" name="date" required> 
-                            <div class="input-container">
-                                <div  class="label"><i class="ph ph-calendar"></i>Date</div>
-                                <div id="selectedDate"></div>
+                <div class="bookingModal-body" style = "color:black">    </div>
+                    <div class="timeslots"></div>
+                    <div class="bookingForm">
+                        <form id="bookingForm">
+                            <div class="input">
+                                <input type="hidden" value="<?php echo htmlspecialchars($member_id); ?>" name="memberId" required>
+                                <input type="hidden" id="selectedTrainerId"  name="trainerId" required>
+                                <input type="hidden" id="selectedTimeslotId" name="timeslotId" required> 
+                                <input type="hidden" id="date" name="date" required> 
+                                <div class="input-container">
+                                    <div  class="label"><i class="ph ph-calendar"></i>Date</div>
+                                    <div id="selectedDate"></div>
+                                </div>
+                                <div class="input-container">
+                                    <div class="label"><i class="ph ph-clock-countdown"></i>Time</div>
+                                    <div id="selectedTimeslot"></div>
+                                </div>
                             </div>
-                            <div class="input-container">
-                                <div class="label"><i class="ph ph-clock-countdown"></i>Time</div>
-                                <div id="selectedTimeslot"></div>
+                            <div class="book-btn">
+                                <button type="submit" id="btnBook" name="submit">Book</button>
                             </div>
-                        </div>
-                        <div class="book-btn">
-                            <button type="submit" id="btnBook" name="submit">Book</button>
-                        </div>
-                    </form>
-                </div> 
+                        </form>
+                    </div> 
+            
+                
             </div>
         </div>
     </main>
@@ -102,35 +105,42 @@
         let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
         const dateToday = new Date().toISOString().split('T')[0];
         const bookDiv = document.querySelector('.announcement-list');
+        let holidays = [];
+        let timeSlots = [];
+        let bookings = [];
 
         document.addEventListener("DOMContentLoaded", () =>{ 
             if (trainerId) {
-                if(currentYear >= new Date().getFullYear() && currentMonth >= (new Date().getMonth() + 1)){
-                    fetch(`<?php echo URLROOT; ?>/member/Booking/api?id=${trainerId}&month=${currentMonth}&year=${currentYear}`)
-                        .then(response => {
-                            console.log('Response Status:', response.status); // Log response status
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log('Bookings:', data.bookings);
-                            // Mark bookings in the calendar
-                            if (Array.isArray(data.bookings) && data.bookings.length > 0) {
-                                markBookings(data.bookings);
-                            } else {
-                                bookDiv.innerHTML = `<div style="text-align: center; color: gray;">No bookings available.</div>`;
-                                console.log('No bookings found.');
-                            }
-                            console.log('Time Slots:', data.timeSlots);
-                            if(Array.isArray(data.timeSlots) && data.timeSlots.length > 0){
-                                displayTimeSlots(data.timeSlots);
-                            } else {
-                                console.log('No timeslots found.');
-                            }
-                        })
-                        .catch(error => console.error('Error fetching bookings details:', error));
-                } else {
-                    bookDiv.innerHTML = `<div style="text-align: center; color: gray;">Bookings are not available for past months.</div>`;
-                }
+                fetch(`<?php echo URLROOT; ?>/member/Booking/api?id=${trainerId}&month=${currentMonth}&year=${currentYear}`)
+                    .then(response => {
+                        console.log('Response Status:', response.status);
+                        return response.json();
+                    })
+                    .then(data => {
+                        bookings = data.bookings;
+                        timeSlots = data.timeSlots;
+                        console.log('Bookings:', bookings);
+                        if (currentYear >= new Date().getFullYear() &&
+                            currentMonth >= (new Date().getMonth() + 1) && Array.isArray(bookings) && bookings.length > 0) {
+                            markBookings(bookings);
+                        } else if (currentYear < new Date().getFullYear() || currentMonth < (new Date().getMonth() + 1)) {
+                            bookDiv.innerHTML = `<div style="text-align: center; color: gray;">Bookings are not available for past months.</div>`;
+                        } else {
+                            bookDiv.innerHTML = `<div style="text-align: center; color: gray;">No bookings available.</div>`;
+                        }
+
+                        console.log('isbooked:', data.isBooked);
+                        console.log('Time Slots:', timeSlots);
+
+                        holidays = data.holidays.reduce((acc, holiday) => {
+                            acc[holiday.date] = holiday.reason;
+                            return acc;
+                        }, {});
+                        console.log("holidays:",holidays);
+
+                        buildCalendar(holidays); // Always build calendar
+                    })
+                    .catch(error => console.error('Error fetching bookings details:', error));
             }
 
             //submit
@@ -146,6 +156,17 @@
                 }
                 if(date < dateToday){
                     alert("You cannot add booking for a past date.");
+                    return;
+                }
+
+                const isSlotTaken = bookings.some(b =>
+                    b.booking_date === date &&
+                    b.timeslot_id == timeslotId &&
+                    (b.status === "booked" || b.status === "pending")
+                );
+
+                if (isSlotTaken) {
+                    alert("This timeslot is already taken (booked or pending). Please choose another one.");
                     return;
                 }
 
@@ -166,15 +187,20 @@
                 .catch(error => console.error("Error inserting booking:", error));
             });
 
-            buildCalendar();
             buttons(); 
             bookingModal();
         });
 
         //timeslots
-        function displayTimeSlots(timeSlots){
+        function displayTimeSlots(timeSlots, bookings, selectedDate, selectedTimeslotId = null) {
             const timeSlotsContainer = document.querySelector('.timeslots');
             timeSlotsContainer.innerHTML = '';
+
+            const bookedForDate = bookings.filter(b => 
+                b.booking_date === selectedDate && b.status === 'booked'
+            );
+            let availableSlotCount = 0;
+
             timeSlots.forEach(timeSlot => {
                 let timeSlotBtn = document.createElement('button');
                 timeSlotBtn.classList.add('timeslot');
@@ -182,14 +208,43 @@
                 timeSlotBtn.dataset.timeslotId = timeSlot.id;
                 timeSlotBtn.textContent = timeSlot.slot;
 
-                timeSlotBtn.addEventListener('click', () => {
-                    const selectedTimeslotInput = document.getElementById('selectedTimeslot');
-                    const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
-                    selectedTimeslotInput.textContent = timeSlot.slot;
-                    selectedTimeslotIdInput.value = timeSlot.id;
-                });
+                // Check if current timeslot is in the booked list
+                const isBooked = bookedForDate.some(b => parseInt(b.timeslot_id) === parseInt(timeSlot.id));
+                const isSelected = selectedTimeslotId && parseInt(timeSlot.id) === parseInt(selectedTimeslotId);
+
+                if (isBooked && !isSelected)   {
+                    timeSlotBtn.disabled = true;
+                    timeSlotBtn.style.backgroundColor = 'grey';
+                    timeSlotBtn.style.cursor = 'not-allowed';
+                } else {
+                    availableSlotCount++;
+
+                    if (isSelected) {
+                        timeSlotBtn.style.backgroundColor = 'green';
+                    }
+
+                    timeSlotBtn.addEventListener('click', () => {
+                        const selectedTimeslotInput = document.getElementById('selectedTimeslot');
+                        const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
+                        
+                        document.querySelectorAll('.timeslot').forEach(btn => {
+                            if (!btn.disabled) {
+                                btn.style.backgroundColor = ''; // reset color
+                            }
+                        });
+
+                        // Add green background to selected button
+                        timeSlotBtn.style.backgroundColor = 'green';
+
+                        selectedTimeslotInput.textContent = timeSlot.slot;
+                        selectedTimeslotIdInput.value = timeSlot.id;
+                    });
+                }
                 timeSlotsContainer.appendChild(timeSlotBtn);
             });
+            console.log(`Available slots count: ${availableSlotCount}`);
+
+            return availableSlotCount; 
         }
 
         function markBookings(bookings) {
@@ -272,7 +327,7 @@
         }
         // calender
         const calendarBody = document.querySelector('.calendarBody');
-        function buildCalendar() {
+        function buildCalendar(holidayData = {}) {
             const calendarHeader = document.querySelector('.calendar-header');
             const monthYear = document.querySelector(".monthYear");
             const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; 
@@ -329,6 +384,10 @@
 
                 if (date === dateToday) {
                     dayCell.classList.add("today");
+                }
+
+                if(date in holidayData || date < dateToday){
+                    dayCell.classList.add("holiday");
                 }
 
                 row.appendChild(dayCell);
@@ -409,21 +468,45 @@
 
                 // Check if the clicked element is a date box
                 if (clickedElement.classList.contains('day') && !clickedElement.classList.contains('plain')) {
+                    resetBookingModal();
                     const selectedDate = clickedElement.getAttribute('data-date');
+                    const availableSlotCount = displayTimeSlots(timeSlots, bookings, selectedDate);
+
                     // Only allow selecting present or future dates
                     if (selectedDate < dateToday) {
                         return; 
                     }
 
+                    const modalBody = document.querySelector('.bookingModal-body');
                     const formattedDate = formatDateToLong(selectedDate);
-
-                    // Set the modal's input
-                    trainerIdInput.value= `${trainerId}`;
                     modalDate.innerText = formattedDate;
-                    selectedDateInput.textContent = formattedDate;
-                    dateInput.value = selectedDate;
-                    selectedTimeslotInput.textContent = `Select timeslot`;
-                    selectedTimeslotIdInput.value = '';
+                    
+                    if (holidays[selectedDate]) {
+                        modalBody.innerHTML = `
+                            <div style="padding: 80px 0; text-align: center;">
+                                <strong>Holiday:</strong> ${holidays[selectedDate]}
+                            </div>`;
+                        document.querySelector(".bookingForm").style.display = "none";
+                        document.querySelector(".timeslots").style.display = "none";  
+                    } else if( availableSlotCount === 0){
+                        modalBody.innerHTML = `
+                            <div style="padding: 80px 0; text-align: center;">
+                                <strong>All time slots are booked for this date.</strong>
+                            </div>`;
+                        document.querySelector(".bookingForm").style.display = "none";
+                        document.querySelector(".timeslots").style.display = "none";
+                    } else {
+                        modalBody.innerHTML = "";
+                        document.querySelector(".bookingForm").style.display = "block";
+                        document.querySelector(".timeslots").style.display = "block";
+
+                        // Fill form values
+                        trainerIdInput.value = trainerId;
+                        selectedDateInput.textContent = formattedDate;
+                        dateInput.value = selectedDate;
+                        selectedTimeslotInput.textContent = "Select timeslot";
+                        selectedTimeslotIdInput.value = "";
+                    }
 
                     // Show the modal
                     modal.style.display = 'block';
@@ -460,6 +543,7 @@
         }
 
         function editBooking(id, date, timeslotid, timeslot ,trainerid){
+            resetBookingModal();
             modal.style.display = "block";
 
             trainerIdInput.value= trainerid;
@@ -473,10 +557,24 @@
             const editbtn = document.getElementById('btnBook');
             editbtn.innerText = "Update";  
 
+            displayTimeSlots(timeSlots, bookings, date, timeslotid);
+            
             editbtn.onclick = function(event) {
                 event.preventDefault(); 
                 const newTimeslot = selectedTimeslotIdInput.value;
-                
+
+                const isSlotTaken = bookings.some(b =>
+                    b.booking_date === date &&
+                    b.timeslot_id == timeslotid &&
+                    (b.status === "booked" || b.status === "pending")
+                );
+                console.log(isSlotTaken);
+
+                if (isSlotTaken) {
+                    alert("This timeslot is already taken (booked or pending). Please choose another one.");
+                    return;
+                }
+
                 if (!confirm("Are you sure you want to update this timeslot?")) return;
                 fetch('<?php echo URLROOT; ?>/member/Booking/edit', {
                     method :'POST',
@@ -500,6 +598,32 @@
 
             };
         }
+
+        function resetBookingModal() {
+            const modalBody = document.querySelector('.bookingModal-body');
+            modalBody.innerHTML = "";
+
+            const selectedTimeslotInput = document.getElementById('selectedTimeslot');
+            const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
+            const dateInput = document.getElementById('date');
+            const selectedDateInput = document.getElementById('selectedDate');
+            const trainerIdInput = document.getElementById('selectedTrainerId');
+            const editbtn = document.getElementById('btnBook');
+
+            selectedTimeslotInput.textContent = "";
+            selectedTimeslotIdInput.value = "";
+            selectedDateInput.textContent = "";
+            dateInput.value = "";
+            trainerIdInput.value = "";
+
+            // Reset button text
+            editbtn.innerText = "Book";
+
+            // Show all booking parts by default
+            document.querySelector(".bookingForm").style.display = "block";
+            document.querySelector(".timeslots").style.display = "block";
+        }
+
 
     </script>
     </body>

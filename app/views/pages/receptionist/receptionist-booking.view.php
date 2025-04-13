@@ -146,15 +146,6 @@
                             const row = document.createElement('tr');
                             row.style.cursor = 'pointer';
 
-                            let statusClass = "";
-                            if (booking.status === "booked") {
-                                statusClass = "booked";
-                            } else if (booking.status === "pending") {
-                                statusClass = "pending";
-                            } else if (booking.status === "rejected") {
-                                statusClass = "rejected";
-                            }
-
                             row. innerHTML = `
                                 <td>${booking.member_id}</td>
                                 <td>
@@ -173,7 +164,7 @@
                                 <td>${booking.booking_date}</td>
                                 <td>${booking.timeslot}</td>
                                 <td> 
-                                    <div class="status ${statusClass}">
+                                    <div class="status">
                                         ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1).toLowerCase()}
                                     </div>
                                 </td>

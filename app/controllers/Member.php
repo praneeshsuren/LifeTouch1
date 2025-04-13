@@ -5,8 +5,18 @@
             // Check if the user is logged in as a member
             $this->checkAuth('member');
         }
-        public function index(){
-            $this->view(('member/member-dashboard'));
+        public function index($action = null){
+            $member_id = $_SESSION['member_id'] ?? null;
+            $bookingModel = new M_Booking();
+            $bookings = $bookingModel->bookingsForMember($member_id);
+            if ($action === 'api') {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'bookings' => $bookings
+                ]);
+                exit;
+            }
+            $this->view('member/member-dashboard');
         }
         public function Trainer($action = null){
             switch($action){
@@ -45,11 +55,16 @@
                 $timeslotModel = new M_Timeslot();
                 $timeSlots = $timeslotModel->findAll();
                 $bookings = $bookingModel->getBookingsByMonthAndYear($member_id, $trainer_id, $month, $year);
+                $isBooked = $bookingModel->isBooked($trainer_id);
+                $holidayModal = new M_Holiday();
+                $holidays = $holidayModal->findAll();
         
                 header('Content-Type: application/json');
                 echo json_encode([
                     'bookings' => $bookings,
-                    'timeSlots' => $timeSlots
+                    'timeSlots' => $timeSlots,
+                    'holidays' => $holidays,
+                    'isBooked' => $isBooked
                 ]);
                 exit;
             } elseif($action === 'add'){
