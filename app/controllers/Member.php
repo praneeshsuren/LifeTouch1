@@ -140,9 +140,81 @@
         public function Workoutschedules(){
             $this->view('member/member-workoutschedules');
         } 
-        public function Payment(){
-            $this->view('member/member-payment');
+
+        public function Payment($action = null) {
+            $member_id = $_SESSION['member_id'] ?? null;
+            $payment_Model = new M_Payment();
+            $payment = $payment_Model->paymentMember($member_id);
+
+            if (!$payment) {
+                echo json_encode(['error' => 'No payments found']);
+                exit;
+            }
+            if ($action === 'api') {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'payment' => $payment
+                ]);
+                exit;
+            } elseif($action === 'add'){
+                if($_SERVER['REQUEST_METHOD'] === 'POST'){
+                    header('Content-Type: application/json');
+
+                    $date = $_POST['paymentDate'] ?? null;
+                    $member_id = $_POST['member_id'] ?? null;
+                    $package = $_POST['packageName'] ?? null;
+                    $email = $_POST['email'] ?? null;
+                    $amount = $_POST['amount'] ?? null;
+                    $payment_intent_id = $_POST['payment_intent_id'] ?? null;
+                    $status = $_POST['status'] ?? null;
+
+                    $data = [
+                        'email' => $email,
+                        'package_name' => $package,
+                        'amount' => $amount,
+                        'member_id' => $member_id,
+                        'created_at' => $date,
+                        'payment_intent_id' => $payment_intent_id,
+                        'status' => $status,
+                    ];
+                    
+                    $result = $payment_Model->insert($data);
+                    echo json_encode(['success' => $result]);
+                    exit;
+
+                }
+            }
+            $data = ['member_id' => $member_id];
+            $this->view('member/member-payment',$data); 
+        }
+        public function createPayment(){
+            \Stripe\Stripe::setApiKey('sk_test_51RE1fRQm7OGeuaUjvHNYOt94DQnEOLBVrTsqIUvxlaXymLZkpMN6Kl1YjpWDGfoPUSDAZDFwFgUjqzHHR4e5swnS00GaB0i6iF');
+
+             // Read the incoming JSON from the frontend
+            $jsonStr = file_get_contents('php://input');
+            $jsonObj = json_decode($jsonStr);
+
+            $amount = isset($jsonObj->amount) ? intval($jsonObj->amount) * 100 : 300000;
+            $currency = 'lkr';
+
+            try {
+                // Create a Payment Intent using Stripe's API
+                $paymentIntent = \Stripe\PaymentIntent::create([
+                    'amount' => $amount,
+                    'currency' => $currency,
+                    'payment_method_types' => ['card'],
+                ]);
+
+                // Respond with the client secret for the frontend to handle
+                echo json_encode([
+                    'clientSecret' => $paymentIntent->client_secret,
+                ]);
+            } catch (\Stripe\Exception\ApiErrorException $e) {
+                http_response_code(500);
+                echo json_encode(['error' => $e->getMessage()]);
+            }
         } 
+
         public function Settings(){
             $this->view('member/member-settings');
         }   

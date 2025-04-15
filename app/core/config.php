@@ -22,3 +22,6 @@
 
     //True means show errors
     define('DEBUG', true);
+
+    // payment
+    define('STRIPE_SECRET_KEY', 'sk_test_51RE1fRQm7OGeuaUjvHNYOt94DQnEOLBVrTsqIUvxlaXymLZkpMN6Kl1YjpWDGfoPUSDAZDFwFgUjqzHHR4e5swnS00GaB0i6iF');

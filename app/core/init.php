@@ -6,7 +6,8 @@ spl_autoload_register(function ($className) {
 });
 
 require 'config.php';
-//require 'config_session.php';
+require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
+require 'config_session.php';
 require 'functions.php';
 require 'Database.php';
 require 'Model.php';

@@ -1321,56 +1321,6 @@ main .calendarContainer {
     margin-bottom: 1rem;
 }
 
-.payment-method {
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-    padding: 6px 0;
-    margin-bottom: 12px;
-    width: 100%;
-}
-
-.payment-method input {
-    display: none;
-}
-
-.payment-method-item {
-    width: 80px;
-    height: 80px;
-    padding: 8px;
-    border: 1px solid var(--text-color);
-    border-radius: 8px;
-    margin-right: 12px;
-    cursor: pointer;
-    position: relative;
-    flex-shrink: 0;
-}
-
-input:checked + .payment-method-item {
-    border-color:var(--primary-color)
-}
-
-input:checked + .payment-method-item::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background-color:var(--primary-color);
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEwLjAwMDcgMTUuMTcwOUwxOS4xOTMxIDUuOTc4NTJMMjAuNjA3MyA3LjM5MjczTDEwLjAwMDcgMTcuOTk5M0wzLjYzNjcyIDExLjYzNTRMNS4wNTA5MyAxMC4yMjEyTDEwLjAwMDcgMTUuMTcwOVoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMSkiPjwvcGF0aD48L3N2Zz4=");
-    background-size: 12px;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.payment-method-item > img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
 .payment-form-group {
     position: relative;
     margin-bottom: 5px;
@@ -1381,7 +1331,7 @@ input:checked + .payment-method-item::before {
     border: 1px solid var(--text-color);
     border-radius: 8px;
     padding: 24px 16px 8px 16px;
-    width: 50%;
+    width: 100%;
     transition: var(--tran-02);
     background-color: var(--sidebar-color);
 }
@@ -1413,29 +1363,6 @@ input:checked + .payment-method-item::before {
     color: red;
 }
 
-.payment-form-group-flex1 {
-    display: flex;
-    flex-direction: column;
-}
-
-.payment-form-group-flex2 {
-    display: flex;
-    gap:5rem;
-    margin-left: 1rem;
-    color: var(--text-color);
-}
-
-.payment-form-group-flex2 select{
-    background-color: var(--sidebar-color);
-    color: var(--text-color);
-    border-radius: 0.5rem;
-}
-
-#cvv{
-    width:100px;
-    margin: 5px 0;
-}
-
 .payment-form-submit-button {
     background-color: var(--primary-color);
     border-radius: 8px;
@@ -1443,12 +1370,12 @@ input:checked + .payment-method-item::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50%;
+    width: 100%;
     border: none;
     cursor: pointer;
     color: white;
     font-size: 1rem;
-    padding: 16px;
+    padding: 10px;
     transition: var(--tran-02);
 }
 
@@ -1466,7 +1393,7 @@ input:checked + .payment-method-item::before {
 
 .paymentHistoryTable{
     width: 700px;
-    margin-left: 75px;
+    margin-left: 100px;
 }
 
 .paymentHistoryTable td{

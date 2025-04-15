@@ -67,7 +67,7 @@
                 <div class="title">
                     <h3>Booking : <span id="modalDate"></span></h3>
                 </div>
-                <div class="bookingModal-body" style = "color:black">    </div>
+                <div class="bookingModal-body" style = "color:black"></div>
                     <div class="timeslots"></div>
                     <div class="bookingForm">
                         <form id="bookingForm">
@@ -90,8 +90,6 @@
                             </div>
                         </form>
                     </div> 
-            
-                
             </div>
         </div>
     </main>
