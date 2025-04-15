@@ -29,23 +29,23 @@ class Home extends Controller
                 
             ];
            
-           if (empty($errors)) {
-               if ($joinModel->insert($data)) {
-                   // success
-                   redirect('home?scroll=plans');
-               } else {
-                   die('Database insert failed.');
-               }
-           } else {
-               // you can store errors in session and display on page
-               $_SESSION['join_errors'] = $errors;
-               $_SESSION['form_data'] = $data;
-               redirect('home');
-
-           }
-       } else {
-           redirect('home');
-
-       }
-   }
-}
+           // ACTUALLY PERFORM VALIDATION
+        if ($joinModel->validate($data)) {
+            if ($joinModel->insert($data)) {
+                // success
+                redirect('home?scroll=plans');
+            } else {
+                $_SESSION['join_errors'] = ['database' => 'Failed to save registration'];
+                $_SESSION['form_data'] = $data;
+                redirect('home?scroll=plans');
+            }
+        } else {
+            // Store validation errors from model
+            $_SESSION['join_errors'] = $joinModel->getErrors();
+            $_SESSION['form_data'] = $data;
+            redirect('home?scroll=plans');
+        }
+    } else {
+        redirect('home?scroll=plans');
+    }
+}}

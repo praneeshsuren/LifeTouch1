@@ -57,9 +57,11 @@
                 <div class="card-details">
                     <i class="ph ph-calendar-dots" style="font-size: 50px;"></i>
                     <p class="text-title">Event Report</p>
-                    <p class="text-body">Details of card 3</p>
+                    <p class="text-body">Total Revenue | Participants</p>
                 </div>
-                <button class="card-button">More info</button>
+                <a href="<?php echo URLROOT; ?>/report/event_report">
+                    <button class="card-button">More info</button>
+                </a>
             </div>
         </div>
 

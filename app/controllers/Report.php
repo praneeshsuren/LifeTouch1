@@ -55,7 +55,7 @@ public function equipment_overdue_services()
     // Get today's date
     $today = date('Y-m-d');
 
-    // Fetch only upcoming services (you’ll write this method in M_Service)
+    // Fetch only upcoming services 
     $upcomingServices = $service->getOverdueServices($today);
 
     $data = [
@@ -65,7 +65,31 @@ public function equipment_overdue_services()
     $this->view('manager/equipment_overdue_services', $data);
 }
 
-    
+public function event_report()
+{
+    $eventModel = new M_JoinEvent(); 
+    $data['event_participants'] = $eventModel->getEventParticipantSummary();
+
+    $this->view('manager/event_report', $data);
+}
+
+public function participant_details($event_id)
+{
+    $model = new M_JoinEvent();
+
+    $data = [
+        'event_id' => $event_id,
+        'event_participants' => $model->where(
+            ['event_id' => $event_id],
+            [],
+            'id'
+        )
+    ];
+
+    $this->view('manager/participant_details', $data);
+}
+
+
 
     
 }

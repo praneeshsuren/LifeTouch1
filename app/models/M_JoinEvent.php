@@ -18,6 +18,20 @@ class M_JoinEvent
         'contact_no'
     ];
 
+    public function getEventParticipantSummary()
+    {
+        $query = "
+        SELECT 
+            e.name,
+            e.event_id,
+            COUNT(ep.id) AS participant_count,
+            COUNT(ep.id) * e.price AS total_revenue 
+        FROM event e
+        LEFT JOIN event_participants ep ON e.event_id = ep.event_id
+        GROUP BY e.event_id, e.name, e.price";
+
+        return $this->query($query);
+    }
 
     // Validate input data
     public function validate($data)
@@ -29,29 +43,39 @@ class M_JoinEvent
             $this->errors['full_name'] = "Name is required.";
         }
 
-        // Description validation
-        if (empty($data['nic'])) {
-            $this->errors['nic'] = "Nic content is required.";
+        // Validate NIC (Sri Lankan National Identity Card)
+        $nic = strtoupper(trim($data['nic'])); // Normalize to uppercase
+
+        if (empty($nic)) {
+            $this->errors['nic'] = "NIC is required.";
+        } elseif (!preg_match('/^(?:\d{9}[V]|\d{12})$/', $nic)) {
+            $this->errors['nic'] = "Invalid NIC format. Must be either:
+        - 9 digits ending with V  (e.g., 123456789V)
+        - 12 digits (e.g., 200123456789)";
         }
+
+
 
         // Date validation
         if (!empty($data['is_member']) && empty($data['membership_number'])) {
             $this->errors['membership_number'] = "Membership number is required for gym members.";
         } elseif (!empty($data['membership_number'])) {
             $memberExists = $this->query("SELECT * FROM member WHERE member_id = :membership_number", [
-            'membership_number' => $data['membership_number']
+                'membership_number' => $data['membership_number']
             ]);
             if (empty($memberExists)) {
-            $this->errors['membership_number'] = "Invalid membership number. Please provide a valid one.";
+                $this->errors['membership_number'] = "Invalid membership number. Please provide a valid one.";
+            }
+        } else {
+            if (empty($data['is_member']) && !empty($data['membership_number'])) {
+                $this->errors['membership_number'] = "Only gym members should provide a membership number.";
             }
         }
-        else{
-        if (empty($data['is_member']) && empty($data['membership_number'])) {
-            $this->errors['membership_number'] = "Only gym members should provide a membership number.";
-        }
-    }
         if (empty($data['contact_no'])) {
             $this->errors['contact_no'] = "Contact no is required.";
+        } elseif (strlen($data['contact_no']) != 10) {
+            $this->errors['contact_no'] = "Contact no should be 10 digits.";
+
         }
 
         // Return true if no errors; otherwise, false
@@ -64,4 +88,5 @@ class M_JoinEvent
     {
         return $this->errors;
     }
+    
 }
