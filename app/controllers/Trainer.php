@@ -30,19 +30,55 @@
                     $this->view('trainer/trainer-viewMember', $data);
                     break;
                 
-                default:
-                    // Fetch all members and pass to the view
+                case 'workoutSchedules':
+        
+                    $this->view('trainer/trainer-memberWorkouts');
+                    break;
+
+                case 'createWorkoutSchedule':
+                    $this->view('trainer/trainer-createWorkoutSchedule');
+                    break;    
+                
+                case 'api':
+                    // Load the view to view a trainer
                     $memberModel = new M_Member;
                     $members = $memberModel->findAll();
+        
+                    header('Content-Type: application/json');
+                    echo json_encode($members);
+                    exit;
+                    break;
 
-                    $data = [
-                        'members' => $members
-                    ];
+                default:
 
-                    $this->view('trainer/trainer-members', $data);
+                    $this->view('trainer/trainer-members');
                     break;
 
             }
+        }
+
+        public function bookings($action = null) {
+            $trainer_id = $_SESSION['trainer_id'] ?? null;
+        
+            $bookingModel = new M_Booking();
+            $bookings = $bookingModel->bookingsForTrainer($trainer_id);
+        
+            if ($action === 'api') {
+                header('Content-Type: application/json');
+                echo json_encode($bookings);
+                exit;
+            }
+        
+            $this->view('trainer/trainer-booking');
+        }
+        
+
+        public function calendar(){
+            $this->view('trainer/trainer-calendar');
+        }
+
+        public function workouts(){
+            $this->view('trainer/trainer-workouts');
         }
 
     }

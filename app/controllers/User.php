@@ -360,7 +360,7 @@
                             $receptionist->insert($temp);
             
                             // Set a session message or flag for success
-                            $_SESSION['success'] = "receptionist has been successfully registered!";
+                            $_SESSION['success'] = "Receptionist has been successfully registered!";
             
                             // Redirect to receptionists list with success message
                             redirect('admin/receptionists');

@@ -1,77 +1,135 @@
-// Helper to get query params
-document.addEventListener('DOMContentLoaded', function () {
-function updateCalendarParams(month, year) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('month', month);
-    url.searchParams.set('year', year);
-    window.location.href = url.toString();
+document.addEventListener("DOMContentLoaded", () => {
+    buildCalendar();
+    buttons();
+});
+
+// Extract query parameters from the URL
+const urlParams = new URLSearchParams(window.location.search);
+console.log(urlParams);
+const trainerId = urlParams.get('id'); 
+let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; // Default to the current month
+let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
+
+const calendarBody = document.querySelector('.calendarBody');
+const calendarHeader = document.querySelector('.calendar-header');
+const monthYear = document.querySelector(".monthYear");
+const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const gotoBtn = document.querySelector(".gotoBtn");
+const todayBtn = document.querySelector(".todayBtn");
+const dateInput = document.querySelector(".date-input");
+
+// Function to build the calendar body
+function buildCalendar() {
+    const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1);
+    const dayInMonth = new Date(currentYear, currentMonth, 0).getDate(); // Number of days in the month
+    const emptyDays = firstDayOfMonth.getDay(); // Day index of the first day (0-6)
+    const dateToday = new Date().toISOString().split('T')[0];
+    const monthYear = firstDayOfMonth.toLocaleDateString("en-us", { month: "long", year: "numeric" });
+
+    // Calculate previous and next month/year
+    let prevMonth = currentMonth - 1;
+    let nextMonth = currentMonth + 1;
+    let prevYear = currentYear;
+    let nextYear = currentYear;
+
+    if (prevMonth < 1) {
+        prevMonth = 12;
+        prevYear--;
+    }
+    if (nextMonth > 12) {
+        nextMonth = 1;
+        nextYear++;
+    }
+
+    // Update header
+    calendarHeader.innerHTML = `
+        <a class='prevMonth' href='?id=${trainerId}&month=${prevMonth}&year=${prevYear}' aria-label='Previous Month'><i class='ph ph-caret-circle-left'></i></a>
+        <div class='monthYear'>${monthYear}</div>
+        <a class='nextMonth' href='?id=${trainerId}&month=${nextMonth}&year=${nextYear}' aria-label='Next Month'><i class='ph ph-caret-circle-right'></i></a>
+    `;
+
+    // Build calendar table
+    calendarBody.innerHTML = "";
+    let row = document.createElement("tr");
+
+    // Empty days before the first day of the month
+    for (let i = 0; i < emptyDays; i++) {
+        const emptyCell = document.createElement("td");
+        emptyCell.classList.add("plain");
+        row.appendChild(emptyCell);
+    }
+
+    // Calendar days
+    for (let day = 1; day <= dayInMonth; day++) {
+        if ((emptyDays + day - 1) % 7 === 0) {
+            calendarBody.appendChild(row);
+            row = document.createElement("tr");
+        }
+
+        const date = `${currentYear}-${String(currentMonth).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const dayCell = document.createElement("td");
+        dayCell.classList.add("day");
+        dayCell.dataset.date = date;
+        dayCell.innerText = day;
+
+        if (date === dateToday) {
+            dayCell.classList.add("today");
+        }
+
+        row.appendChild(dayCell);
+    }
+
+    // Add remaining empty cells for the last week
+    while (row.children.length < 7) {
+        const emptyCell = document.createElement("td");
+        emptyCell.classList.add("plain");
+        row.appendChild(emptyCell);
+    }
+    calendarBody.appendChild(row);
 }
 
-// Handle Today button
-document.querySelector('.todayBtn').addEventListener('click', () => {
-    const today = new Date();
-    const currentMonth = today.getMonth() + 1; // Months are 0-based
-    const currentYear = today.getFullYear();
-    updateCalendarParams(currentMonth, currentYear);
-});
+function buttons(){
+    if(todayBtn){
+        todayBtn.addEventListener("click", ()=>{
+            const today = new Date();
+            currentMonth = today.getMonth() + 1;
+            currentYear = today.getFullYear();
 
-// Handle Go button
-document.querySelector('.gotoBtn').addEventListener('click', () => {
-    const dateInput = document.querySelector('.date-input').value.trim();
-    const [month, year] = dateInput.split('/').map(Number);
-
-    if (
-        !isNaN(month) &&
-        !isNaN(year) &&
-        month >= 1 &&
-        month <= 12 &&
-        year >= 1000 &&
-        year <= 9999
-    ) {
-        updateCalendarParams(month, year);
-    } else {
-        alert('Invalid date format. Please enter in mm/yyyy format.');
+            window.location.href =`<?php echo URLROOT; ?>/member/Booking?id=${trainerId}&month=${currentMonth}&year=${currentYear}`;
+            buildCalendar();
+        });
     }
-});
 
-    const modal = document.getElementById('bookingModal');
-    const modalDate = document.getElementById('modalDate');
-    const closeBtn = document.querySelector('.close');
-    const selectedDateInput = document.getElementById('selectedDate');
-    const selectedTimeslotInput = document.getElementById('selectedTimeslot');
+    if(dateInput){
+        dateInput.addEventListener("input", (e) => {
+            // Allow only numbers and slash
+            dateInput.value = dateInput.value.replace(/[^0-9/]/g, "");
         
-    // // Add event listener to all clickable calendar cells
-    document.querySelectorAll('.calendar .clickable').forEach(cell => {cell.addEventListener('click', function () {
-            const selectedDate = this.getAttribute('data-date');
-            modalDate.textContent = selectedDate;
-            selectedDateInput.value = selectedDate;
-            selectedTimeslotInput.value = ''; 
-            selectedTimeslotInput.placeholder = 'Select the Timeslot';
-
-            modal.style.display = 'block';
+            // Limit the input to 7 characters (MM/YYYY)
+            if (dateInput.value.length > 7) {
+                dateInput.value = dateInput.value.slice(0, 7);
+            }
         });
-    });
+    }
 
-    // Add event listener to all timeslot buttons
-    document.querySelectorAll('.timeslot').forEach(button => {
-        button.addEventListener('click', function () {
-            const timeslot = this.getAttribute('data-timeslot'); // Get timeslot from clicked button
-            const timeslotId = this.getAttribute('data-timeslot-id'); 
-            selectedTimeslotInput.value = timeslot; // Update input field with selected timeslot
-            document.getElementById('selectedTimeslotId').value = timeslotId;
-
-            document.querySelectorAll('.timeslot').forEach(btn => btn.classList.remove('selectedTimeslot'));
-            // Add 'selected' class to the clicked button
-            this.classList.add('selectedTimeslot');
+    if(gotoBtn){
+        gotoBtn.addEventListener("click", ()=>{
+            const input = dateInput.value.trim();
+            const [inputMonth, inputYear] = input.split("/").map(Number);// Split MM/YYYY and convert to numbers
+             
+            if (
+                inputMonth >= 1 && 
+                inputMonth <= 12 && 
+                inputYear >= 1900 && 
+                inputYear <= 2100
+            ) {
+                currentMonth = inputMonth;
+                currentYear = inputYear;
+                buildCalendar(); // Build calendar for the new date
+            } else {
+                alert("Please enter a valid date in MM/YYYY format.");
+            }
         });
-    });
-
-
-    // Close the modal when clicking on the 'x' button
-    closeBtn.addEventListener('click', function () {
-        modal.style.display = 'none';
-    });
-
-});
-
-
+    }
+}
