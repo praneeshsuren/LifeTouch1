@@ -93,12 +93,16 @@
 </script>
 
 <script>
-        // Ensure the event ID is properly passed to the PDF controller
-document.getElementById("downloadPDF").addEventListener("click", function(event) {
-    event.preventDefault();
-    const eventId = <?php echo json_encode($data['event_id']); ?>;
-    window.location.href = `<?php echo URLROOT; ?>/EventParticipant_pdf/index/${eventId}`;
-});
-    </script>
+    document.getElementById("downloadPDF").addEventListener("click", function(event) {
+        event.preventDefault();
+        const eventId = <?php echo json_encode($data['event_id']); ?>;
+        
+        // Open in new tab/window
+        window.open(
+            `<?php echo URLROOT; ?>/EventParticipant_pdf/index/${eventId}`,
+            '_blank' // This makes it open in a new tab
+        );
+    });
+</script>
 </body>
 </html>

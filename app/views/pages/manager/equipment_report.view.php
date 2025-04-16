@@ -46,9 +46,11 @@
 
             <div class="date-filter-container">
                 <div class="left">
+                    <label for="startDate">Start Date: </label>
                     <input type="date" class="date-input" id="startDate" placeholder="Start Date">
                 </div>
                 <div class="right">
+                    <label for="endDate">End Date: </label>
                     <input type="date" class="date-input" id="endDate" placeholder="End Date">
                 </div>
                 <button id="clearDateFilter" class="filter">Clear Date Filter</button>

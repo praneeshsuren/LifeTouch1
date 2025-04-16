@@ -53,44 +53,48 @@ class Service extends Controller
     }
 
     public function updateService($id)
-    {
-        $serviceModel = new M_Service();
+{
+    $serviceModel = new M_Service();
 
-        // Fetch the existing service details by ID
-        
-        $service = $serviceModel->where(['service_id' => $id], [], 1);
+    // First handle form submission if POST
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $updatedData = [
+            'service_date' => $_POST['service_date'],
+            'next_service_date' => $_POST['next_service_date'],
+            'service_cost' => $_POST['service_cost'],
+        ];
 
-        if (!$service) {
-            // If no service found, redirect to the equipment list
+        if ($serviceModel->update($id, $updatedData, 'service_id')) {
+            $_SESSION['success'] = "Service updated successfully";
+            
+            // Get the equipment_id from the updated service
+            $service = $serviceModel->where(['service_id' => $id], [], 'service_id');
+            redirect('manager/equipment_view/'.$service[0]->equipment_id);
+        } else {
+            $_SESSION['error'] = "Failed to update service";
             redirect('manager/equipment');
         }
-
-        // Process form submission when the request is POST
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Collect the form data
-            $updatedData = [
-                'service_date' => $_POST['date'],
-                'next_service_date' => $_POST['next_date'],
-                'service_cost' => $_POST['cost'],
-            ];
-
-            // Update the service in the database
-            $updateResult = $serviceModel->update($id, $updatedData, 'service_id');
-
-            if ($updateResult === false) {
-                $_SESSION['message'] = "Failed to update service.";
-            } else {
-                $_SESSION['message'] = "Service updated successfully.";
-            }
-
-            // Redirect to the equipment list page after updating
-            redirect('manager/equipment');
-        }
-
-        // Pass the service data to the view for editing
-        $this->view('manager/service_edit', ['service' => $service]);
+        return;
     }
 
+    // For GET requests - fetch and display the service
+    $service = $serviceModel->where(['service_id' => $id], [], 'service_id');
+
+    // Debug output - remove after testing
+    echo '<pre>Service Data: '; print_r($service); echo '</pre>';
+
+    if (empty($service)) {
+        $_SESSION['error'] = "Service not found";
+        redirect('manager/equipment');
+        return;
+    }
+
+    // Pass to view - ensure we're using the first result
+    $this->view('manager/service_edit', [
+        'service' => $service[0],  // Use the first item from the array
+        'equipment_id' => $service[0]->equipment_id
+    ]);
+}
 public function deleteService($id)
 {
     $serviceModel = new M_Service();  // Create an instance of the M_Equipment model
