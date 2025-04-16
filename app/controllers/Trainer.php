@@ -8,11 +8,29 @@
         }
         
         public function index(){
-            $this->view('trainer/trainer-dashboard');
+            $announcementModel = new M_Announcement;
+        
+            // Fetch the latest 4 announcements with admin names
+            $announcements = $announcementModel->findAllWithAdminNames(4);
+        
+            $data = [
+                'announcements' => $announcements
+            ];
+        
+            $this->view('trainer/trainer-dashboard', $data);
         }
 
         public function announcements(){
-            $this->view('trainer/trainer-announcements');
+
+            $announcementModel = new M_Announcement;
+            $announcements = $announcementModel->findAllWithAdminDetails();
+            $data = [
+                'announcements' => $announcements
+            ];
+
+
+            $this->view('trainer/trainer-announcements', $data);
+            
         }
 
         public function members($action = null) {
@@ -106,6 +124,122 @@
 
         public function workouts(){
             $this->view('trainer/trainer-workouts');
+        }
+
+        public function settings(){
+            
+            $user_id = $_SESSION['user_id'];
+            $trainerModel = new M_Trainer;
+            $userModel = new M_User;
+            $user = $userModel->findByUserId($user_id);
+            $trainer = $trainerModel->findByTrainerId($user_id);
+            $data = [
+                'trainer' => $trainer,
+                'user' => $user
+            ];
+
+            $this->view('trainer/trainer-settings', $data);
+        }
+
+        public function updateSettings() {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $trainerModel = new M_Trainer;
+                $userModel = new M_User;
+        
+                // Sanitize inputs
+                $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
+                // Retrieve existing trainer data to compare
+                $trainer_id = $_POST['user_id'];
+                $existingTrainer = $trainerModel->findByTrainerId($trainer_id);
+        
+                // Retrieve existing user data to compare (for username check)
+                $existingUser = $userModel->findByUserId($trainer_id); // Assuming findByUserId exists for users table
+        
+                // Initialize data array to track changes
+                $data = [];
+        
+                // Only include fields that have been updated
+                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address'];
+        
+                // Check for changes and add them to the data array
+                foreach ($fields as $field) {
+                    if (isset($_POST[$field]) && $_POST[$field] !== $existingTrainer->$field) {
+                        $data[$field] = $_POST[$field];
+                    }
+                }
+        
+                // Handle email uniqueness check manually if it's updated
+                if (isset($_POST['email_address']) && $_POST['email_address'] !== $existingTrainer->email_address) {
+                    if ($trainerModel->emailExists($_POST['email_address'], $trainer_id)) {
+                        $_SESSION['error'] = "Email is already in use.";
+                        $data = [
+                            'errors' => ['email_address' => 'Email is already in use.'],
+                            'trainer' => $_POST
+                        ];
+                        $this->view('trainer/trainer-settings', $data);
+                        return; // Prevent further execution if email is already in use
+                    }
+                }
+        
+                // Check if the username has changed
+                if (isset($_POST['username']) && $_POST['username'] !== $existingUser->username) {
+                    if ($userModel->usernameExists($_POST['username'])) {
+                        $_SESSION['error'] = "Username is already taken.";
+                        $data = [
+                            'errors' => ['username' => 'Username is already in use.'],
+                            'trainer' => $_POST
+                        ];
+                        $this->view('trainer/trainer-settings', $data);
+                        return; // Prevent further execution if username is already in use
+                    } else {
+                        $data['username'] = $_POST['username'];
+                    }
+                }
+        
+                // Handle profile picture upload
+                if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == UPLOAD_ERR_OK) {
+                    $fileTmp = $_FILES['profile_picture']['tmp_name'];
+                    $fileName = basename($_FILES['profile_picture']['name']);
+                    $targetPath = 'public/assets/images/Member/' . $fileName;
+        
+                    if (move_uploaded_file($fileTmp, $targetPath)) {
+                        $data['image'] = $fileName;
+                    } else {
+                        $_SESSION['error'] = "Failed to upload profile picture.";
+                        redirect('trainer/settings');
+                        return;
+                    }
+                }
+        
+                // Only proceed with the update if data exists
+                if (!empty($data)) {
+
+
+                    // Update trainer data with the updated values
+                    $updatedTrainer = $trainerModel->update($trainer_id, $data, 'trainer_id');
+        
+                    // Update user data (if username was changed)
+                    if (isset($data['username'])) {
+                        $updatedUser = $userModel->update($trainer_id, ['username' => $data['username']], 'user_id');
+                    }
+        
+                    // Check if the updates were successful
+                    if (!$updatedTrainer && (isset($updatedUser) ? !$updatedUser : true)) {
+                        $_SESSION['success'] = "Settings have been successfully updated!";
+                    } else {
+                        $_SESSION['error'] = "No changes detected or update failed.";
+                    }
+        
+                    redirect('trainer/settings');
+                } else {
+                    // If no changes, redirect back
+                    $_SESSION['error'] = "No changes were made.";
+                    redirect('trainer/settings');
+                }
+            } else {
+                redirect('trainer/settings');
+            }
         }
 
     }
