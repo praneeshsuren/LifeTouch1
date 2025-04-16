@@ -10,8 +10,7 @@ class M_Announcement
     protected $allowedColumns = [
         'announcement_id',
         'subject',
-        'description',
-        'created_by',
+        'announcement',
         'created_date',
         'created_time'
     ];
@@ -25,8 +24,8 @@ class M_Announcement
             $this->errors['subject'] = "Subject is required";
         }
 
-        if (empty($data['description'])) {
-            $this->errors['description'] = "Announcement description is required";
+        if (empty($data['announcement'])) {
+            $this->errors['announcement'] = "Announcement description is required";
         }
 
         return empty($this->errors);

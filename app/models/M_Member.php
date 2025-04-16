@@ -17,7 +17,8 @@
             'weight',
             'contact_number',
             'gender',
-            'email_address'
+            'email_address',
+            'membership_plan'
         ];
 
         public function findByMemberId($memberId) {
@@ -58,6 +59,9 @@
 
             if (empty($data['gender'])) {
                 $this->errors['gender'] = 'Gender is required';
+            }
+            if (empty($data['membership_plan'])) {
+                $this->errors['membership_plan'] = 'Membership Plan is required';
             }
 
             if (empty($data['height'])) {

@@ -33,7 +33,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/trainer/workouts">
                     <i class='icon ph-bold ph-barbell'></i>
                     <span class="text">Workouts</span>
                 </a>
@@ -42,6 +42,12 @@
                 <a href="<?php echo URLROOT; ?>/trainer/announcements">
                     <i class='icon ph-bold ph-newspaper'></i>
                     <span class="text">View Announcements</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='icon ph-bold ph-calendar-dots'></i>
+                    <span class="text">View Calendar</span>
                 </a>
             </li>
         </ul>
