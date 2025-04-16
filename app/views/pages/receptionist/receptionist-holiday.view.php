@@ -153,27 +153,54 @@
       function renderTable(holidays) {
         tableBody.innerHTML = '';
 
+        const dateToday = new Date();
+
+        const future =[];
+        const past =[];
+
+        holidays.forEach(holiday => {
+          const holidayDate = new Date(holiday.date);
+
+          if (holidayDate < dateToday){
+            past.push(holiday);
+          } else{
+            future.push(holiday);
+          }
+        });
+
         if(holidays.length > 0){
-          holidays.forEach(holiday => {
-            const row = document.createElement('tr');
-            row.style.cursor = 'pointer';
+          const append = (holidayList) => {
+            holidayList.forEach(holiday => {
+              const row = document.createElement('tr');
+              row.style.cursor = 'pointer';
 
-            let reason = "N/A";
-            reason = holiday.reason === null ? reason : holiday.reason;
+              let reason = "N/A";
+              reason = holiday.reason === null ? reason : holiday.reason;
 
-            row.innerHTML = `
-                <td class="table-cell">${holiday.date}</td>
-                <td class="table-cell">${reason}</td>
-                <td class="table-cell">
-                  <div class="edit-dlt">
-                    <div class="edit" onclick="editHoliday('${holiday.id}', '${holiday.date}', '${reason}')"><i class="ph ph-eraser"></i></div>
-                    <div class="dlt" onclick="deleteHoliday('${holiday.id}')"><i class="ph ph-trash-simple"></i></div>
-                  </div>
-                </td> 
-            `;
+              row.innerHTML = `
+                  <td class="table-cell">${holiday.date}</td>
+                  <td class="table-cell">${reason}</td>
+                  <td class="table-cell">
+                    <div class="edit-dlt">
+                      <div class="edit" onclick="editHoliday('${holiday.id}', '${holiday.date}', '${reason}')"><i class="ph ph-eraser"></i></div>
+                      <div class="dlt" onclick="deleteHoliday('${holiday.id}')"><i class="ph ph-trash-simple"></i></div>
+                    </div>
+                  </td> 
+              `;
 
-            tableBody.appendChild(row);
-          });
+              tableBody.appendChild(row);
+            });
+          };
+          append(future);
+
+          if(past.length > 0){
+            const pastHeading = document.createElement('tr');
+            pastHeading.innerHTML = `
+              <td colspan="11" style="font-weight: bold; background: #f9f9f9;">Past Holidays</td>
+            `; 
+            tableBody.append(pastHeading);
+            append(past);
+          }
         } else {
           console.log('No holidays found.');
           tableBody.innerHTML = `

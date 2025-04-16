@@ -465,4 +465,17 @@
             }
             $this->view('receptionist/receptionist-holiday'); 
         }
+
+        public function payment($action = null){
+            $paymentModel = new M_Payment();
+            $payment = $paymentModel->paymentAdmin();
+
+            if($action === 'api'){
+                header('Content-Type: application/json');
+                echo json_encode(['payment' => $payment]);
+                exit;
+            }
+            $this->view('receptionist/receptionist-payment');
+        }
+
     }

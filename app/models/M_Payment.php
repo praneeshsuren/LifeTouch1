@@ -16,26 +16,24 @@
             'created_at',
             'payment_intent_id'
         ];
-        public function bookingsForTrainer($trainer_id){
-            $query = "SELECT 
-                b.*, 
-                m.member_id AS member_id, 
-                CONCAT(m.first_name, ' ', m.last_name) AS member_name, 
-                ts.slot AS timeslot
-                FROM booking AS b
-                JOIN timeslot ts ON b.timeslot_id = ts.id
-                JOIN member m ON b.member_id = m.member_id
-                WHERE b.trainer_id = :trainer_id 
-            ";
 
-            return $this->query($query, ['trainer_id' => $trainer_id]);
-        }
 
         public function paymentMember($member_id){
             $query = "Select * from payment AS p
             WHERE p.member_id = :member_id";
 
             return $this->query($query, ['member_id' => $member_id]);
+        }
+
+        public function paymentAdmin(){
+            $query = "SELECT
+                p.*,
+                m.member_id AS member_id, 
+                CONCAT(m.first_name, ' ', m.last_name) AS member_name
+             FROM payment AS p
+             JOIN member m ON p.member_id = m.member_id";
+
+            return $this->query($query);
         }
 
         public function validate($data) {

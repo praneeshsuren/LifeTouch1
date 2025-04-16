@@ -36,11 +36,6 @@
             </div>
         </div>
         <div class="calendarContainer">
-            <div class="holiday-header">
-                <button class="add-holiday-btn" onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/holiday'">
-                    Holidays
-                </button>
-            </div>
             <div class="calendar-header"></div>
             <table class="calendar">
                 <th>Sun</th>

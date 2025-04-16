@@ -140,7 +140,7 @@
                             button.classList.add('active');
                         }
                     });
-
+                    
                     if(bookings.length > 0){
                         bookings.forEach(booking => {
                             const row = document.createElement('tr');
