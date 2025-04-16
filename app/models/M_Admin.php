@@ -87,5 +87,22 @@
             // If there are no errors, return true; otherwise, return false.
             return empty($this->errors);
         }
+
+        public function emailExists($email, $excludeId = null) {
+            $data = ['email_address' => $email];
+        
+            // Prepare conditions for excluding the current admin
+            $data_not = [];
+            if ($excludeId) {
+                $data_not['admin_id'] = $excludeId;
+            }
+        
+            // Use the where function to query the database
+            $result = $this->where($data, $data_not, 'email_address');
+        
+            // If we found any result, it means the email exists and is used by another admin
+            return !empty($result);
+        }
+
       
     }
