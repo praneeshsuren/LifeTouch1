@@ -24,4 +24,6 @@
     define('DEBUG', true);
 
     // payment
-    define('STRIPE_SECRET_KEY', 'sk_test_51RE1fRQm7OGeuaUjvHNYOt94DQnEOLBVrTsqIUvxlaXymLZkpMN6Kl1YjpWDGfoPUSDAZDFwFgUjqzHHR4e5swnS00GaB0i6iF');
+    define('STRIPE_SECRET_KEY', getenv('STRIPE_SECRET_KEY'));
+    define('STRIPE_PUBLISHABLE_KEY', getenv('STRIPE_PUBLISHABLE_KEY'));
+    

@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
     // 1. Initialize Stripe with your publishable key (replace with your actual key if not embedded in HTML)
-    const stripePublicKey = 'pk_test_51RE1fRQm7OGeuaUjA3Y0yMX98oTQdoh73ZNaSfwSBYZ0SSwaHCThmi2YXQhyiUCeo2ptsabYaxVz9B5d8gRV4p9P00z95pq2se';
+    const stripePublicKey = window.STRIPE_PUBLIC_KEY;
+    console.log("Using Stripe public key:", STRIPE_PUBLIC_KEY);
+
     const stripe = Stripe(stripePublicKey);
     const elements = stripe.elements();
   
@@ -116,6 +118,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (result.success) {
             console.log("success");
             alert("Payment successful and saved!");
+            const modal = document.getElementById('paymentModal');
+            if (modal) {
+              modal.style.display = 'none';
+            }
+            location.reload();
             form.reset();
             card.clear();
           } else {

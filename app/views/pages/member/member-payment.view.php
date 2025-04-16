@@ -88,7 +88,7 @@
     <script>
       const createPaymentURL = "<?php echo URLROOT; ?>/member/createPayment";
       const savePayment = "<?php echo URLROOT; ?>/member/payment/add";
-      const STRIPE_PUBLIC_KEY = "<?php echo 'pk_test_51RE1fRQm7OGeuaUjA3Y0yMX98oTQdoh73ZNaSfwSBYZ0SSwaHCThmi2YXQhyiUCeo2ptsabYaxVz9B5d8gRV4p9P00z95pq2se' ?>";
+      window.STRIPE_PUBLIC_KEY = "<?php echo STRIPE_PUBLISHABLE_KEY; ?>";
       document.addEventListener("DOMContentLoaded", () =>{ 
         fetch(`<?php echo URLROOT; ?>/member/payment/api`)
           .then(response => {

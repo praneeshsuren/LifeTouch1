@@ -188,7 +188,7 @@
             $this->view('member/member-payment',$data); 
         }
         public function createPayment(){
-            \Stripe\Stripe::setApiKey('sk_test_51RE1fRQm7OGeuaUjvHNYOt94DQnEOLBVrTsqIUvxlaXymLZkpMN6Kl1YjpWDGfoPUSDAZDFwFgUjqzHHR4e5swnS00GaB0i6iF');
+            \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
              // Read the incoming JSON from the frontend
             $jsonStr = file_get_contents('php://input');
