@@ -125,8 +125,51 @@
               if (!userConfirmed) {
                   return; // If user cancels, do not proceed
               }
-              // Delete the bookings for the given date before adding the holiday
-              
+              // update the bookings status rejected for the given date before adding the holiday
+              const conflictingBookings = bookings.filter(b =>b.booking_date === holidayDateInput);
+              const reject = "rejected";
+
+              const rejectPromises = conflictingBookings.map(b => {
+                return fetch('<?php echo URLROOT; ?>/receptionist/holiday/conflict',{
+                  method :'POST',
+                  headers: {
+                    "Content-type": "application/x-www-form-urlencoded",
+                  },
+                  body: `id=${encodeURIComponent(b.id)}&status=${encodeURIComponent(reject)}`,
+                });
+                console.log("do");
+              });
+
+               // Wait for all rejections to complete before adding the holiday
+              Promise.all(rejectPromises)
+                  .then(responses => 
+                    Promise.all(responses.map(async r => {
+                      const text = await r.text(); // Get raw text
+                      try {
+                        return JSON.parse(text);   // Try to parse JSON
+                      } catch (e) {
+                        console.error("Invalid JSON response (probably HTML):", text);
+                        throw new Error("Invalid response format");
+                      }
+                    }))
+                  )
+                  .then(() => {
+                    const formData = new FormData(document.getElementById("holidayForm"));
+                    return fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
+                      method: "POST",
+                      body: formData
+                    });
+                  })
+                  .then(response => response.json())
+                  .then(result => {
+                    if (result.success) {
+                      alert("Holiday added successfully!");
+                      location.reload();
+                    } else {
+                      alert("Error: " + result.message);
+                    }
+                  })
+                  .catch(error => console.error("Error processing:", error));
               } else {
               const formData = new FormData(this);
               fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
@@ -144,8 +187,7 @@
               })
               .catch(error => console.error("Error inserting holiday:", error));
             }
-          
-        });
+          });
         
         holidayModal();
       });

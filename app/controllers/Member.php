@@ -126,8 +126,8 @@
                     ]
                     );
                 exit;
-
             }
+            
             $data = ['member_id' => $member_id];
             $this->view('member/member-booking', $data);
         }
@@ -146,10 +146,6 @@
             $payment_Model = new M_Payment();
             $payment = $payment_Model->paymentMember($member_id);
 
-            if (!$payment) {
-                echo json_encode(['error' => 'No payments found']);
-                exit;
-            }
             if ($action === 'api') {
                 header('Content-Type: application/json');
                 echo json_encode([
@@ -187,6 +183,7 @@
             $data = ['member_id' => $member_id];
             $this->view('member/member-payment',$data); 
         }
+        
         public function createPayment(){
             \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 

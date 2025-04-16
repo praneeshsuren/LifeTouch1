@@ -77,6 +77,7 @@
         let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
         const dateToday = new Date().toISOString().split('T')[0];
         let bookedBookings = [];
+        let holidays = [];
         
         document.addEventListener("DOMContentLoaded", () =>{
 
@@ -86,16 +87,25 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Fetched data:", data);
-                    if (Array.isArray(data) && data.length > 0){
-                        bookedBookings = data.filter(booking => booking.status === 'booked');
+                    console.log("Fetched booking data:", data.bookings);
+                    console.log("Fetched holiday data:", data.holidays);
+                     
+                    holidays = data.holidays.reduce((acc, holiday) => {
+                        acc[holiday.date] = holiday.reason;
+                        return acc;
+                    }, {});
+        
+                    if (Array.isArray(data.bookings) && data.bookings.length > 0){
+                        bookedBookings = data.bookings.filter(booking => booking.status === 'booked');
                         let bookedBookingsbyDate = bookedBookings.reduce((acc, booking) => {
                             let date = booking.booking_date;
                             if(!acc[date]) acc[date] = 0;
                             acc[date]++;
                             return acc;
                         }, {});
-                        buildCalendar(bookedBookingsbyDate);
+                        buildCalendar(bookedBookingsbyDate, holidays);
+                    } else{
+                        buildCalendar({}, holidays);
                     }
                     bookingModal();
                 })
@@ -112,7 +122,7 @@
 
         // calender
         const calendarBody = document.querySelector('.calendarBody');
-        function buildCalendar(bookedBookingsbyDate = {}) {
+        function buildCalendar(bookedBookingsbyDate = {}, holidayData = {}) {
             const calendarHeader = document.querySelector('.calendar-header');
             const monthYear = document.querySelector(".monthYear");
             const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; 
@@ -176,6 +186,10 @@
                     bookingCount.classList.add('booked-count');
                     bookingCount.innerText = `${bookedBookingsbyDate[date]}`;
                     dayCell.appendChild(bookingCount);
+                }
+
+                if(date in holidayData){
+                    dayCell.classList.add("holiday");
                 }
 
                 row.appendChild(dayCell);
@@ -260,7 +274,14 @@
                     // booked booking details
                     const bookedBody = document.querySelector('.bookingModal-body');
                     const selectedBookings = bookedBookings.filter(booking => booking.booking_date === selectedDate);
-                    if(selectedBookings.length > 0){
+                    let selectedHoliday = holidays[selectedDate] === null ? "N/A" : holidays[selectedDate];
+                    
+                    bookedBody.innerHTML = "";
+                    if (selectedHoliday) {
+                       bookedBody.innerHTML = `<div style="padding-top: 80px; padding-bottom:75px; text-align: center;">
+                            Holiday: ${selectedHoliday}
+                        </div>`;
+                    } else if (selectedBookings.length > 0) {
                         bookedBody.innerHTML = "";
                         selectedBookings.forEach(book => {
                         bookedBody.innerHTML += `

@@ -97,6 +97,7 @@
             const searchInput = document.querySelector('.search-input'); 
             let allBookings = [];
             let filterBookings = [];
+            let holidays = [];
 
             fetch('<?php echo URLROOT; ?>/trainer/bookings/api')
                 .then(response => {
@@ -104,9 +105,13 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Fetched Data:', data);
-                    if (Array.isArray(data) && data.length > 0){
-                        allBookings = data;
+                    console.log("Fetched booking data:", data.bookings);
+                    console.log("Fetched holiday data:", data.holidays);
+
+                    holidays = data.holidays;
+
+                    if (Array.isArray(data.bookings) && data.bookings.length > 0){
+                        allBookings = data.bookings;
                         renderTable(allBookings);
                     }
                 })
@@ -248,36 +253,6 @@
                 const closeModal = document.querySelector(".bookingModalClose");
                 let currentBooking = null;
 
-                document.getElementById("bookingForm").addEventListener("submit", function (event) {
-                    event.preventDefault();
-                    console.log(currentBooking.id);
-
-                    const statusSelect = document.getElementById("modalStatusSelect");
-                    const selectedStatus = statusSelect.value;
-                        
-                    const formData = new FormData(this);
-                    if (!confirm("Are you sure you want to update ?")) return;
-                    fetch('<?php echo URLROOT; ?>/trainer/bookings/edit', {
-                        method :'POST',
-                        headers: {
-                            "Content-type": "application/x-www-form-urlencoded",
-                        },
-                        body: `id=${encodeURIComponent(currentBooking.id)}&status=${encodeURIComponent(selectedStatus)}`,
-                    })
-                    .then(response => response.json())
-                    .then(result =>{
-                        console.log(result);
-                        if (!result.success) {
-                            alert("booking updated successfully!");
-                            modal.style.display = "none";
-                            location.reload();
-                        } else {
-                            alert("Error: " + result.message);
-                        }
-                    })
-                    .catch(error => console.error("Error updating booking:", error));
-                });
-
                 function openModal(booking){
                     modal.style.display = "block";
 
@@ -308,7 +283,43 @@
                     }
                 });
 
-                    
+                document.getElementById("bookingForm").addEventListener("submit", function (event) {
+                    event.preventDefault();
+
+                    const statusSelect = document.getElementById("modalStatusSelect");
+                    const selectedStatus = statusSelect.value;
+
+                    const isHoliday = holidays.some(h => h.date === currentBooking.booking_date);
+                    if (isHoliday && selectedStatus === "booked") {
+                        alert("You cannot book on a holiday. Please choose 'pending' or 'rejected'.");
+                        return;
+                    }
+                        
+                    const formData = new FormData(this);
+                    if (!confirm("Are you sure you want to update ?")) return;
+                    fetch('<?php echo URLROOT; ?>/trainer/bookings/edit', {
+                        method :'POST',
+                        headers: {
+                            "Content-type": "application/x-www-form-urlencoded",
+                        },
+                        body: `id=${encodeURIComponent(currentBooking.id)}&status=${encodeURIComponent(selectedStatus)}`,
+                    })
+                    .then(response => response.json())
+                    .then(result =>{
+                        console.log(result);
+                        if (!result.success) {
+                            alert("booking updated successfully!");
+                            modal.style.display = "none";
+                            location.reload();
+                        } else {
+                            alert("Error: " + result.message);
+                        }
+                    })
+                    .catch(error => console.error("Error updating booking:", error));
+                });
+
+              
+
                 closeModal.addEventListener('click',function() {
                     modal.style.display = 'none';
                 });

@@ -63,10 +63,15 @@
         
             $bookingModel = new M_Booking();
             $bookings = $bookingModel->bookingsForTrainer($trainer_id);
+            $holidayModal = new M_Holiday();
+            $holidays = $holidayModal->findAll();
         
             if ($action === 'api') {
                 header('Content-Type: application/json');
-                echo json_encode($bookings);
+                echo json_encode([
+                    'bookings' =>$bookings,
+                    'holidays' => $holidays
+                ]);
                 exit;
             } elseif($action === 'edit'){
                 header('Content-type: application/json');
@@ -79,7 +84,7 @@
                     exit;
                 }
 
-                $data = [ 'status' => $status];
+                $data = ['status' => $status];
 
                 $result = $bookingModel->update($id, $data);
 
@@ -96,7 +101,6 @@
             $this->view('trainer/trainer-booking');
         }
         
-
         public function calendar(){
             $this->view('trainer/trainer-calendar');
         }

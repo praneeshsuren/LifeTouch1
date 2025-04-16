@@ -56,8 +56,8 @@
           <div class="bookingModal-body">
             <form id="payment-form" class="payment-form">
               <h1 class="payment-title">Payment Details</h1>
-              <input type="text" id="member_id" value="<?php echo htmlspecialchars($member_id); ?>" name="member_id" required>
-              <input type="date" id="paymentDate" required>
+              <input type="hidden" id="member_id" value="<?php echo htmlspecialchars($member_id); ?>" name="member_id" required>
+              <input type="hidden" id="paymentDate" required>
               <div class="payment-form-group">
               <div class="payment-form-group">
                 <input type="text" id="package" placeholder=" " class="payment-form-control" required />

@@ -20,8 +20,7 @@ class Receptionist extends Controller
         $this->view('receptionist/receptionist-announcements');
     }
 
-    public function trainers($action = null)
-    {
+    public function trainers($action = null) {
         switch ($action) {
             case 'createTrainer':
                 // Load the form view to create a trainer
@@ -217,8 +216,7 @@ class Receptionist extends Controller
         // Generate a random number and pad it to ensure it has 4 digits
         return $prefix . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
     }
-    public function members($action = null)
-    {
+    public function members($action = null){
         switch ($action) {
             case 'createMember':
                 // Load the form view to create a member
@@ -380,7 +378,143 @@ class Receptionist extends Controller
                     $this->view('receptionist/receptionist-members', $data);
                     break;
             }
-        }
-        
-
     }
+
+    public function bookings($action = null){
+        $bookingModel = new M_Booking();
+        $bookings = $bookingModel->bookingsForAdmin();
+        $holidayModal = new M_Holiday();
+        $holidays = $holidayModal->findAll();
+                
+        if ($action === 'api'){
+            header('Content-Type: application/json');
+            echo json_encode([
+                'bookings' =>$bookings,
+                'holidays' => $holidays
+            ]);
+            exit;
+        }
+        $this->view('receptionist/receptionist-booking');
+    }
+
+    public function calendar(){
+        $this->view('receptionist/receptionist-calendar');
+    }
+
+    public function holiday($action = null){
+        $holidayModal = new M_Holiday();
+        $holidays = $holidayModal->findAll();
+        $bookingModel = new M_Booking();
+        $bookings = $bookingModel->findAll();
+    
+        if($action === 'api'){
+            header('Content-Type: application/json');
+            echo json_encode([
+                'holidays' => $holidays,
+                'bookings' => $bookings
+            ]);
+            exit;
+        } elseif ($action === 'add') {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                header('Content-Type: application/json');
+        
+                $date = $_POST['holidayDate'] ?? null;
+                $reason = isset($_POST['holidayReason']) && $_POST['holidayReason'] !== '' ? $_POST['holidayReason'] : null;
+
+                $existingHoliday = $holidayModal->first(['date' => $date]);
+                if($existingHoliday){
+                    echo json_encode(["success" => false, "message" => "A holiday already exists for this date"]);
+                    exit;
+                }
+     
+                $data = [
+                    'date' => $date,
+                    'reason' => $reason
+                ];
+                
+                $result = $holidayModal->insert($data);
+                
+                echo json_encode([
+                    "success" => $result ? true : false, 
+                    "message" => $result ? "Holiday added successfully!" : "Failed to add holiday"
+                ]);
+                exit;
+            }
+        
+            // Ensure a response is always sent
+            echo json_encode(["success" => false, "message" => "Invalid request"]);
+            exit;
+        } elseif($action === "delete"){
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $id = $_POST['id'];
+        
+                if ($holidayModal->delete($id)) {
+                    echo json_encode(["success" => true, "message" => "Holiday deleted successfully!"]);
+                    exit;
+                } else {
+                    echo json_encode(["success" => false, "message" => "Error deleting holiday."]);
+                    exit;
+                }
+            }
+            echo json_encode(["success" => false, "message" => "Invalid request."]);
+            exit;
+        } elseif ($action === 'edit'){
+            header('Content-type: application/json');
+
+            $id = $_POST['id'] ?? null;
+            $reason = isset($_POST['reason']) && $_POST['reason'] !== '' ? $_POST['reason'] : null;
+
+            if (!$id) {
+                echo json_encode(["success" => false, "message" => "Missing required fields"]);
+                exit;
+            }
+
+            $data = ['reason' => $reason];
+            $result = $holidayModal->update($id, $data);
+
+            echo json_encode(
+                [
+                    "success" => $result ? true : false,
+                    "message" => $result ? "Holiday reason updated successfully!" : "Failed to update reason"
+                ]
+                );
+            exit;
+        } elseif($action === 'conflict'){
+            header('Content-type: application/json');
+
+                $id = $_POST['id'] ?? null;
+                $status = $_POST['status']?? null;
+
+                if (!$id && !$status) {
+                    echo json_encode(["success" => false, "message" => "Missing required fields"]);
+                    exit;
+                }
+
+                $data = ['status' => $status];
+
+                $result = $bookingModel->update($id, $data);
+
+                echo json_encode(
+                    [
+                        "success" => $result ? true : false,
+                        "message" => $result ? "Booking  updated successfully!" : "Failed to update "
+                    ]
+                    );
+                exit;
+        }
+        $this->view('receptionist/receptionist-holiday'); 
+    }
+
+    public function payment($action = null){
+        $paymentModel = new M_Payment();
+        $payment = $paymentModel->paymentAdmin();
+
+        if($action === 'api'){
+            header('Content-Type: application/json');
+            echo json_encode(['payment' => $payment]);
+            exit;
+        }
+        $this->view('receptionist/receptionist-payment');
+    }
+}
+    
