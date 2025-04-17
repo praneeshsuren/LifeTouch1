@@ -77,16 +77,17 @@
                                     <tr onclick="openModal(
                                         '<?php echo $announcement->subject; ?>',
                                         '<?php echo $announcement->description; ?>',
+                                        '<?php echo $announcement->announcement_id; ?>',
                                         '<?php echo $announcement->created_date; ?>',
                                         '<?php echo $announcement->created_time; ?>',
-                                        '<?php echo $announcement->created_by; ?>',
+                                        '<?php echo $announcement->first_name; ?> <?php echo $announcement->last_name; ?>'
                                     )">
                                         <td>
                                             <div class="profile-pic">
                                                 <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                                                 <div class="person-info">
-                                                    <h4>John Doe</h4>
-                                                    <small class="email">john@gmail.com</small>
+                                                    <h4><?php echo $announcement->first_name; ?></h4>
+                                                    <small class="email"><?php echo $announcement->email_address; ?></small>
                                                 </div>
                                             </div>
                                         </td>
@@ -108,24 +109,42 @@
 
         <!-- Modal Content -->
         <div id="announcementModal" class="modal">
+
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
-                <div class="modal-body">
-                    <img id="profilePicture" src="" alt="Profile Picture" class="profile-modal-pic">
-                    <h3 id="modalSubject"></h3>
-                    <p id="modalDescription"></p>
-                    <p><strong>Created Date:</strong> <span id="modalDate"></span></p>
-                    <p><strong>Created Time:</strong> <span id="modalTime"></span></p>
-                    <p><strong>Created By:</strong> <span id="modalCreatedBy"></span></p>
+                <form id="announcementForm" method="POST" action="<?php echo URLROOT; ?>/announcement/updateAnnouncement">
+                    <div class="modal-body">
+                        <div class="details">
+                            <div class="profile-img">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                            </div>
+                            <div class="name-and-title">
+                                <h3 id="modalCreatedBy"></h3>
+                                <input id="modalSubject" name="subject" type="text" class="modal-input" placeholder="Announcement Subject" disabled />
+                            </div>
+                        </div>
+                        <input id="modalId" name="announcement_id" style="display: none;"/>
+                        <textarea id="modalDescription" name="description" class="modal-input" rows="5" placeholder="Announcement Description" disabled></textarea>
+                        <div class="date-time">
+                            <div class="announcement-date">
+                                <i class="ph ph-calendar"></i>
+                                <p><span id="modalDate"></span></p>
+                            </div>
+                            <div class="announcement-time">
+                                <i class="ph ph-clock"></i>
+                                <p><span id="modalTime"></span></p>
+                            </div>
+                        </div>
 
-                    <!-- Action buttons -->
-                    <div class="modal-actions">
-                        <button class="btn edit-btn" onclick="editAnnouncement()">Edit</button>
-                        <button class="btn delete-btn" onclick="deleteAnnouncement()">Delete</button>
-                        <button class="btn save-btn" onclick="saveAnnouncement()" style="display:none;">Save</button>
-                        <button class="btn cancel-btn" onclick="cancelEdit()" style="display:none;">Cancel</button>
+                        <!-- Action buttons -->
+                        <div class="modal-actions">
+                            <button type="button" class="btn edit-btn" onclick="editAnnouncement()">Edit</button>
+                            <button type="button" class="btn delete-btn" onclick="deleteAnnouncement()">Delete</button>
+                            <button type="submit" class="btn save-btn" style="display:none;">Save</button>
+                            <button type="button" class="btn cancel-btn" onclick="cancelEdit()" style="display:none;">Cancel</button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
 
@@ -139,16 +158,19 @@
         let isEditing = false; // Track whether we are in edit mode or not
         let currentAnnouncement = {}; // Store the current announcement data for editing
 
-        function openModal(subject, description, date, time, createdBy) {
+        function openModal(subject, description, ann_id, date, time, createdBy) {
+
+            console.log(description);
             // Populate modal content
-            document.getElementById('modalSubject').textContent = subject;
-            document.getElementById('modalDescription').textContent = description;
+            document.getElementById('modalSubject').value = subject;
+            document.getElementById('modalDescription').value = description;
+            document.getElementById('modalId').value = ann_id
             document.getElementById('modalDate').textContent = date;
             document.getElementById('modalTime').textContent = time;
             document.getElementById('modalCreatedBy').textContent = createdBy;
 
             // Store the current announcement data
-            currentAnnouncement = { subject, description, date, time, createdBy };
+            currentAnnouncement = { subject, description, ann_id, date, time, createdBy };
 
             // Show the Edit and Delete buttons, and hide Save and Cancel buttons initially
             toggleActionButtons(true);
@@ -156,6 +178,8 @@
             // Display the modal
             const modal = document.getElementById('announcementModal');
             modal.style.display = 'flex';
+
+            document.body.style.overflow = 'hidden';
 
             // Close the modal when clicked outside the content area
             modal.addEventListener('click', function(event) {
@@ -166,6 +190,13 @@
         }
 
         function closeModal() {
+
+            // Disable editing
+            document.getElementById('modalSubject').disabled = true;
+            document.getElementById('modalDescription').disabled = true;
+
+            document.body.style.overflow = 'auto';
+
             // Hide the modal
             document.getElementById('announcementModal').style.display = 'none';
         }
@@ -180,8 +211,8 @@
 
         function editAnnouncement() {
             // Enable editing by making the subject and description editable
-            document.getElementById('modalSubject').contentEditable = true;
-            document.getElementById('modalDescription').contentEditable = true;
+            document.getElementById('modalSubject').disabled = false;
+            document.getElementById('modalDescription').disabled = false;
 
             // Change button states
             toggleActionButtons(false);
@@ -189,34 +220,17 @@
         }
 
         function saveAnnouncement() {
-            // Save the edited announcement data
-            const newSubject = document.getElementById('modalSubject').textContent;
-            const newDescription = document.getElementById('modalDescription').textContent;
-
-            // Simulate saving the data (replace with actual AJAX call or form submission)
-            currentAnnouncement.subject = newSubject;
-            currentAnnouncement.description = newDescription;
-
-            // Show success message (optional)
-            alert('Announcement updated successfully!');
-
-            // Disable editing
-            document.getElementById('modalSubject').contentEditable = false;
-            document.getElementById('modalDescription').contentEditable = false;
-
-            // Close edit mode and update button visibility
-            toggleActionButtons(true);
-            isEditing = false;
+            document.getElementById('announcementForm').submit();
         }
 
         function cancelEdit() {
             // Restore the original data and disable editing
-            document.getElementById('modalSubject').textContent = currentAnnouncement.subject;
-            document.getElementById('modalDescription').textContent = currentAnnouncement.description;
+            document.getElementById('modalSubject').value = currentAnnouncement.subject;
+            document.getElementById('modalDescription').value = currentAnnouncement.description;
 
             // Disable editing
-            document.getElementById('modalSubject').contentEditable = false;
-            document.getElementById('modalDescription').contentEditable = false;
+            document.getElementById('modalSubject').disabled = true;
+            document.getElementById('modalDescription').disabled = true;
 
             // Show the original action buttons
             toggleActionButtons(true);
@@ -226,11 +240,12 @@
         function deleteAnnouncement() {
             // Confirm before deleting
             if (confirm('Are you sure you want to delete this announcement?')) {
-                // Simulate deleting the announcement (replace with actual delete logic)
-                alert('Announcement deleted!');
+                // Set the form action to the delete endpoint
+                const form = document.getElementById('announcementForm');
+                form.action = "<?php echo URLROOT; ?>/announcement/deleteAnnouncement";
 
-                // Close the modal
-                closeModal();
+                // Submit the form to delete the announcement
+                form.submit();
             }
         }
 

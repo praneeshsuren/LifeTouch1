@@ -25,175 +25,67 @@
     </section>
 
     <main>
+        <h1 class="title">Reports</h1>
 
-        <div class="top">
-            <h1 class="title">Reports Summary</h1>
-            <div class="bell">
-                <i class="ph ph-bell"></i>
-                <p>Hi, John!</p>
-            </div>
+        <div class="ann">
+            <section class="container">
+                <form method="post" class="form">
+
+                    <div class="input-box">
+                        <label>Start Date</label>
+                        <input type="date" placeholder="MM/DD/YY" name="date" />
+                    </div>
+
+                    <div class="input-box">
+                        <label>End Date</label>
+                        <input type="date" placeholder="MM/DD/YY" name="date" />
+                    </div>
+
+                    <div class="row">
+                        <label for="type-list">Report Type</label><br>
+                        <div class="select">
+                            <div
+                                class="selected"
+                                data-default="Type 01"
+                                data-one="Type 02"
+                                data-two="Type 03"
+                                data-three="Type 04">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="1em"
+                                    viewBox="0 0 512 512"
+                                    class="arrow">
+                                    <path
+                                        d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                                </svg>
+                            </div>
+                            <div class="options">
+                                <div title="all">
+                                    <input id="all" name="option" type="radio" checked="" />
+                                    <label class="option" for="all" data-txt="Type 01"></label>
+                                </div>
+                                <div title="option-1">
+                                    <input id="option-1" name="option" type="radio" />
+                                    <label class="option" for="option-1" data-txt="Type 02"></label>
+                                </div>
+                                <div title="option-2">
+                                    <input id="option-2" name="option" type="radio" />
+                                    <label class="option" for="option-2" data-txt="Type 03"></label>
+                                </div>
+                                <div title="option-3">
+                                    <input id="option-3" name="option" type="radio" />
+                                    <label class="option" for="option-3" data-txt="Type 04"></label>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <button type="submit" style="margin-top: 100px;">Generate Reprot</button>
+
+                </form>
+            </section>
         </div>
-
-        <div class="dropdown-container">
-            <div class="heading">
-                <h2>View Report</h2>
-
-            </div>
-
-            <div class="row">
-                <label for="type-list">Report Type</label><br>
-                <div class="select">
-                    <div
-                        class="selected"
-                        data-default="Type 01"
-                        data-one="Type 02"
-                        data-two="Type 03"
-                        data-three="Type 04">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            height="1em"
-                            viewBox="0 0 512 512"
-                            class="arrow">
-                            <path
-                                d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
-                        </svg>
-                    </div>
-                    <div class="options">
-                        <div title="all">
-                            <input id="all" name="option" type="radio" checked="" />
-                            <label class="option" for="all" data-txt="Type 01"></label>
-                        </div>
-                        <div title="option-1">
-                            <input id="option-1" name="option" type="radio" />
-                            <label class="option" for="option-1" data-txt="Type 02"></label>
-                        </div>
-                        <div title="option-2">
-                            <input id="option-2" name="option" type="radio" />
-                            <label class="option" for="option-2" data-txt="Type 03"></label>
-                        </div>
-                        <div title="option-3">
-                            <input id="option-3" name="option" type="radio" />
-                            <label class="option" for="option-3" data-txt="Type 04"></label>
-                        </div>
-                    </div>
-                </div>
-
-                <br>
-
-            </div>
-            <div class="row">
-                <label for="type-list">Data Range</label><br>
-                <select name="type" id="type-list" class="input-boxes">
-                    <option value disabled selected>Select a data range</option>
-                    <?php foreach ($dataRange as $type): ?>
-                        <option value="<?php echo $type; ?>"><?php echo $type; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <br>
-            <div class="heading">
-                <h3>Revenue by membership type</h3>
-            </div>
-            <br>
-            <!--chart-->
-            <div class="chart">
-                <ul class="numbers">
-                    <li><span>100%</span></li>
-                    <li><span>50%</span></li>
-                    <li><span>0%</span></li>
-                </ul>
-                <ul class="bars">
-                    <li>
-                        <div class="bar" data-percentage="60"><span>Monthly</span></div>
-                    </li>
-                    <li>
-                        <div class="bar" data-percentage="80"><span>Drop-In</span></div>
-                    </li>
-                    <li>
-                        <div class="bar" data-percentage="30"><span>Annual</span></div>
-                    </li>
-                </ul>
-            </div>
-            <br>
-            <div class="heading">
-                <h3>Members age category</h3>
-            </div>
-            <br>
-            <!--chart-->
-            <div class="chart">
-                <ul class="numbers">
-                    <li><span>100%</span></li>
-                    <li><span>50%</span></li>
-                    <li><span>0%</span></li>
-                </ul>
-                <ul class="bars">
-                    <li>
-                        <div class="bar" data-percentage="20"><span>Adult</span></div>
-                    </li>
-                    <li>
-                        <div class="bar" data-percentage="60"><span>Kids</span></div>
-                    </li>
-                    <li>
-                        <div class="bar" data-percentage="80"><span>Elder</span></div>
-                    </li>
-                </ul>
-
-            </div>
-            <div class="inventory-container">
-                <div class="heading">
-                    <h3>Gym Equipment Inventory</h3>
-                </div>
-                <div class="inventory-grid">
-                    <div class="inventory-item">
-                        <div class="item-icon">
-                            <i class="ph ph-dumbbell"></i>
-                        </div>
-                        <div class="item-details">
-                            <h4>Dumbbells</h4>
-                            <p>50 sets</p>
-                        </div>
-                    </div>
-                    <div class="inventory-item">
-                        <div class="item-icon">
-                            <i class="ph ph-treadmill"></i>
-                        </div>
-                        <div class="item-details">
-                            <h4>Treadmills</h4>
-                            <p>10 units</p>
-                        </div>
-                    </div>
-                    <div class="inventory-item">
-                        <div class="item-icon">
-                            <i class="ph ph-elliptical"></i>
-                        </div>
-                        <div class="item-details">
-                            <h4>Ellipticals</h4>
-                            <p>8 units</p>
-                        </div>
-                    </div>
-                    <div class="inventory-item">
-                        <div class="item-icon">
-                            <i class="ph ph-weight-lifter"></i>
-                        </div>
-                        <div class="item-details">
-                            <h4>Weight Benches</h4>
-                            <p>5 units</p>
-                        </div>
-                    </div>
-                    <div class="inventory-item">
-                        <div class="item-icon">
-                            <i class="ph ph-mat"></i>
-                        </div>
-                        <div class="item-details">
-                            <h4>Yoga Mats</h4>
-                            <p>20 mats</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <br>
 
 
     </main>

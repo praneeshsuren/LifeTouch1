@@ -38,50 +38,73 @@
         </div>
       </div>
       <div class="searchbar">
-      <form class="search">
-                <button>
-                    <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
-                        <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                </button>
-                <div class="search-input">
-                    <input class="input" placeholder="Search" required="" type="text">
-                </div>
-                <button class="reset" type="reset">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </form>
+        <div class="search-input">
+          <input class="input" placeholder="Search" required="" type="text">
+      </div>
       </div>
 
       <!-- View-supplements-section-->
         <?php
           $supplements=[
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
-            ['name' => 'Dumbell', 'image' => 'image.png'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
+            ['name' => 'Mass Tech', 'image' => 'supplement.jpg', 'price' => 'Rs 1000.00'],
           ];
           ?>
       <div class="member-supplements-grid-container">
       <div class="member-supplements">
         <?php foreach($supplements as $supplement):?>
         <div class="supplement">
-          <img src="<?php echo URLROOT; ?>/public/images/<?php echo $supplement['image']; ?>" alt="" class="supplement-image"/>
+          <img src="<?php echo URLROOT; ?>/assets/images/<?php echo $supplement['image']; ?>" alt="" class="supplement-image"/>
            <h3><?php echo $supplement['name']; ?></h3>
-           <button class="member-supplements-btn">View</button>
+           <p><?php echo $supplement['price']; ?></p>
+           <div class="quantity-counter">
+              <p>Quantity</p>
+              <div class="quantity-counter-btn">
+                <button class="btn-decrease"><i class="ph ph-minus"></i></button>
+                <input type="number" class="quantity-input" value="1" min="1" />
+                <button class="btn-increase"><i class="ph ph-plus"></i></button>
+              </div>
+          </div>
+           <button class="member-supplements-btn">Add</button>
         </div>
         <?php endforeach; ?>
       </div>
         </div>
     </main>
+    <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const decreaseBtn = document.querySelector(".btn-decrease");
+        const increaseBtn = document.querySelector(".btn-increase");
+        const quantityInput = document.querySelector(".quantity-input");
 
-    <script src="<?php echo URLROOT; ?>/assets/js/member-script.js?v=<?php echo time();?>"></script>
+        // Decrease quantity
+        decreaseBtn.addEventListener("click", () => {
+          let currentValue = parseInt(quantityInput.value);
+          if (currentValue > parseInt(quantityInput.min)) {
+            quantityInput.value = currentValue - 1;
+          }
+        });
 
+        // Increase quantity
+        increaseBtn.addEventListener("click", () => {
+          let currentValue = parseInt(quantityInput.value);
+          quantityInput.value = currentValue + 1;
+        });
+
+        // Prevent invalid values
+        quantityInput.addEventListener("input", () => {
+          let currentValue = parseInt(quantityInput.value);
+          if (isNaN(currentValue) || currentValue < parseInt(quantityInput.min)) {
+            quantityInput.value = quantityInput.min;
+          }
+        });
+      });
+    </script>
   </body>
 </html>
 

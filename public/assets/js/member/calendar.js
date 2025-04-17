@@ -1,188 +1,110 @@
-// Select all menu items
-const body = document.querySelector('body');
-const menuItems = document.querySelectorAll('.menu ul li a');
-const menuButton = document.querySelector('.menu-btn');
-const modeSwitch = document.querySelector('.toggle-switch');
-const modeText = document.querySelector('.mode-text');
-// Function to remove the active class from all items
-function removeActiveClass() {
-    menuItems.forEach(item => {
-        item.parentElement.classList.remove('active');
-    });
-}
-
-// Add click event listener to each menu item
-if(menuItems.length>0){
-menuItems.forEach(item => {
-    item.addEventListener('click', function() {
-        // Remove the active class from all items
-        removeActiveClass();
-
-        // Add the active class to the clicked item
-        item.parentElement.classList.add('active');
-        
-        // Toggle sub-menu if it exists
-        const subMenu = item.nextElementSibling;
-        if (subMenu && subMenu.classList.contains('sub-menu')) {
-            subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
-        }
-        const arrow = item.querySelector('.arrow');
-        if (arrow) {
-            arrow.classList.toggle('active');
-        }
-    });
-});
-}
-
-menuButton.addEventListener('click', function() {
-    const sidebar = document.querySelector('.sidebar');
-    const main = document.querySelector('.main');
-
-    sidebar.classList.toggle('active');
-    main.classList.toggle('active');
-});
-
-
-let mode = localStorage.getItem('mode');
-if (mode === 'dark') {
-    body.classList.add('dark');
-    modeText.innerText = 'Light Mode';
-}
-
-// Toggle Dark/Light Mode
-modeSwitch.addEventListener('click', () => {
-    body.classList.toggle('dark');
-    const isDarkMode = body.classList.contains('dark');
-    
-    modeText.innerText = isDarkMode ? 'Light Mode' : 'Dark Mode';
-    localStorage.setItem('mode', isDarkMode ? 'dark' : 'light');
-
-});
-
-
-// calendar
-let bookings = [
-    { bdate: "01-11-2024", bookingday: "Dani" },
-    { bdate: "15-11-2024", bookingday: "Alex" },
-    { bdate: "15-12-2024", bookingday: "Aex" },
-];
-
-document.addEventListener("DOMContentLoaded", () =>{
-    generateCalendar();
+document.addEventListener("DOMContentLoaded", () => {
+    buildCalendar();
     buttons();
 });
 
+// Extract query parameters from the URL
+const urlParams = new URLSearchParams(window.location.search);
+console.log(urlParams);
+const trainerId = urlParams.get('id'); 
+let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; // Default to the current month
+let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
+
 const calendarBody = document.querySelector('.calendarBody');
-const monthYear = document.querySelector(".monthYear"); 
-const prevMonth = document.querySelector(".prevMonth");
-const nextMonth = document.querySelector(".nextMonth");
-const weekDays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const calendarHeader = document.querySelector('.calendar-header');
+const monthYear = document.querySelector(".monthYear");
+const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 const gotoBtn = document.querySelector(".gotoBtn");
 const todayBtn = document.querySelector(".todayBtn");
 const dateInput = document.querySelector(".date-input");
-var navigation = 0;
 
+// Function to build the calendar body
+function buildCalendar() {
+    const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1);
+    const dayInMonth = new Date(currentYear, currentMonth, 0).getDate(); // Number of days in the month
+    const emptyDays = firstDayOfMonth.getDay(); // Day index of the first day (0-6)
+    const dateToday = new Date().toISOString().split('T')[0];
+    const monthYear = firstDayOfMonth.toLocaleDateString("en-us", { month: "long", year: "numeric" });
 
-function generateCalendar(inputMonth = null, inputYear = null) {
-    const date = new Date();
-        if(navigation !=0){
-            date.setMonth(date.getMonth() + navigation);
-        }
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
+    // Calculate previous and next month/year
+    let prevMonth = currentMonth - 1;
+    let nextMonth = currentMonth + 1;
+    let prevYear = currentYear;
+    let nextYear = currentYear;
 
-    // If specific month/year is provided (from the date input), use that
-    if (inputYear !== null && inputMonth !== null) {
-        date.setFullYear(inputYear);
-        date.setMonth(inputMonth - 1); // Month is zero-indexed, so subtract 1
+    if (prevMonth < 1) {
+        prevMonth = 12;
+        prevYear--;
     }
-    
-    monthYear.innerText = `${date.toLocaleDateString
-        ("en-us", 
-            {month: "long",})} ${year}`;
+    if (nextMonth > 12) {
+        nextMonth = 1;
+        nextYear++;
+    }
 
-    const dayInMonth = new Date(year,month + 1, 0).getDate();//no.of days in current month
-    const firstDayofMonth = new Date(year, month, 1);
-    const emptyDays = firstDayofMonth.getDay();//get first day index
+    // Update header
+    calendarHeader.innerHTML = `
+        <a class='prevMonth' href='?id=${trainerId}&month=${prevMonth}&year=${prevYear}' aria-label='Previous Month'><i class='ph ph-caret-circle-left'></i></a>
+        <div class='monthYear'>${monthYear}</div>
+        <a class='nextMonth' href='?id=${trainerId}&month=${nextMonth}&year=${nextYear}' aria-label='Next Month'><i class='ph ph-caret-circle-right'></i></a>
+    `;
 
-    //clr the calendar brdore regenrating
+    // Build calendar table
     calendarBody.innerHTML = "";
+    let row = document.createElement("tr");
 
-    for(let i=1; i <= dayInMonth + emptyDays; i++){
-        if((i-1)%7 === 0){
-            // create new row every 7 days
-            var row = document.createElement("tr");
+    // Empty days before the first day of the month
+    for (let i = 0; i < emptyDays; i++) {
+        const emptyCell = document.createElement("td");
+        emptyCell.classList.add("plain");
+        row.appendChild(emptyCell);
+    }
+
+    // Calendar days
+    for (let day = 1; day <= dayInMonth; day++) {
+        if ((emptyDays + day - 1) % 7 === 0) {
             calendarBody.appendChild(row);
+            row = document.createElement("tr");
         }
-        const dayBox = document.createElement("td");
-        dayBox.classList.add("day");
-        if(i > emptyDays){
-            const currentDay = i - emptyDays;
-            dayBox.innerText = currentDay;
 
-            const dateValue = `${currentDay.toString().padStart(2, '0')}-${(month + 1).toString().padStart(2, '0')}-${year}`;
+        const date = `${currentYear}-${String(currentMonth).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const dayCell = document.createElement("td");
+        dayCell.classList.add("day");
+        dayCell.dataset.date = date;
+        dayCell.innerText = day;
 
-            const bookingoftheDay = bookings.find((e) => e.bdate === dateValue);
-                //highlight today
-                if (currentDay === day && navigation === 0) {
-                    dayBox.classList.add("today"); // Add class to today's date cell
-                }
-                // booking day
-                if(bookingoftheDay){
-                    const bookingBox = document.createElement("td");
-                    bookingBox.classList.add("booked");
-                    bookingBox.innerText = bookingoftheDay.bookingday;
-                    dayBox.appendChild(bookingBox);
-                }
-                //bookingform
-                dayBox.addEventListener("click", () =>{
-                    // Remove `active` class from all cells
-                    document.querySelectorAll(".day.active").forEach((e) => {
-                    e.classList.remove("active");
-                    });
-
-                    // Add `active` class to the clicked cell
-                    dayBox.classList.add("active");
-                    showbookingForm(dateValue);
-                });
-        } else{
-            dayBox.classList.add("plain");
+        if (date === dateToday) {
+            dayCell.classList.add("today");
         }
-        row.append(dayBox);
-    }  
+
+        row.appendChild(dayCell);
+    }
+
+    // Add remaining empty cells for the last week
+    while (row.children.length < 7) {
+        const emptyCell = document.createElement("td");
+        emptyCell.classList.add("plain");
+        row.appendChild(emptyCell);
+    }
+    calendarBody.appendChild(row);
 }
 
 function buttons(){
-   
-    if(prevMonth){
-        prevMonth.addEventListener("click", ()=>{
-            navigation--;
-            generateCalendar();
-        });
-    }
-    if(nextMonth){
-        nextMonth.addEventListener("click", ()=>{
-            navigation++;
-            generateCalendar();
-        });
-    }
-        
-    if(todayBtn){ 
+    if(todayBtn){
         todayBtn.addEventListener("click", ()=>{
-        navigation = 0;
-        generateCalendar();
+            const today = new Date();
+            currentMonth = today.getMonth() + 1;
+            currentYear = today.getFullYear();
+
+            window.location.href =`<?php echo URLROOT; ?>/member/Booking?id=${trainerId}&month=${currentMonth}&year=${currentYear}`;
+            buildCalendar();
         });
     }
+
     if(dateInput){
         dateInput.addEventListener("input", (e) => {
             // Allow only numbers and slash
             dateInput.value = dateInput.value.replace(/[^0-9/]/g, "");
-        
-            // Add a slash automatically after two digits
-            if (dateInput.value.length === 2 && e.inputType !== "deleteContentBackward") {
-                dateInput.value += "/";
-            }
         
             // Limit the input to 7 characters (MM/YYYY)
             if (dateInput.value.length > 7) {
@@ -190,87 +112,24 @@ function buttons(){
             }
         });
     }
+
     if(gotoBtn){
-        gotoBtn.addEventListener("click", () => {
-            const dateArr = dateInput.value.split("/");
-            if (dateArr.length === 2) {
-                const inputMonth = parseInt(dateArr[0], 10);
-                const inputYear = parseInt(dateArr[1], 10);
-         
-                // Validate month and year
-                if (
-                    inputMonth >= 1 && inputMonth <= 12 && // Month between 1 and 12
-                    inputYear >= 1900 && inputYear <= 2100 && // Year in valid range
-                    dateArr[1].length === 4 // Year has 4 digits
-                ) {
-                    // Calculate navigation based on input month/year
-                    const currentDate = new Date();
-                    navigation = (inputYear - currentDate.getFullYear()) * 12 + (inputMonth - 1) - currentDate.getMonth();
-                    generateCalendar(inputMonth, inputYear);
-                } else {
-                    alert("Invalid date.");
-                }
+        gotoBtn.addEventListener("click", ()=>{
+            const input = dateInput.value.trim();
+            const [inputMonth, inputYear] = input.split("/").map(Number);// Split MM/YYYY and convert to numbers
+             
+            if (
+                inputMonth >= 1 && 
+                inputMonth <= 12 && 
+                inputYear >= 1900 && 
+                inputYear <= 2100
+            ) {
+                currentMonth = inputMonth;
+                currentYear = inputYear;
+                buildCalendar(); // Build calendar for the new date
             } else {
-                alert("Invalid date format. Please use MM/YYYY.");
+                alert("Please enter a valid date in MM/YYYY format.");
             }
         });
     }
-    
 }
-
-// bookingForm
-let clicked = null;
-const bookingForm = document.getElementById("bookingForm");
-const viewbookingForm = document.getElementById("viewBooking");
-const addbookingForm = document.getElementById("addBooking");
-
-// showbookingform
-function showbookingForm(dateValue){
-    clicked = dateValue;
-    const bookingoftheDay = bookings.find((e) => e.bdate === dateValue);
-    if(bookingoftheDay){
-        // already booked
-        document.querySelector("#bookingText").innerText=bookingoftheDay.bookingday;
-        viewbookingForm.style.display = "block";
-    } else{
-        // add new
-        addbookingForm.style.display = "block";
-    }
-    bookingForm.style.display="block";
-}
-// closeform
-function closeBookingForm(){
-    viewbookingForm.style.display = "none";
-    addbookingForm.style.display = "none";
-    bookingForm.style.display="none";
-    clicked = null;
-    generateCalendar();
-}
-const closebtn = document.querySelectorAll(".btnClose");
-const deletebtn = document.querySelector("#btnDelete");
-const bookbtn = document.querySelector("#btnBook");
-const bookingtitle =document.querySelector("#bookingtitle");
-
-closebtn.forEach((btn) =>{
-    btn.addEventListener("click", closeBookingForm);
-});
-deletebtn.addEventListener("click", function(){
-    bookings = bookings.filter((e) => e.bdate !== clicked);
-    closeBookingForm();
-});
-bookbtn.addEventListener("click", function(){
-    if(bookingtitle.value){
-        bookingtitle.classList.remove("error");
-        bookings.push({
-            bdate : clicked,
-            bookingday : bookingtitle.value.trim(),
-        });
-        bookingtitle.value = "";
-        closeBookingForm();
-    } else{
-        bookingtitle.classList.add("error");
-    }
-});
-
-
-

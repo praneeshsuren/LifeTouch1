@@ -40,7 +40,7 @@
                 </ul> 
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/receptionist">
+                <a href="<?php echo URLROOT; ?>/receptionist/announcements">
                     <i class='icon ph-bold ph-newspaper'></i>
                     <span class="text">Announcements</span>
                 </a>

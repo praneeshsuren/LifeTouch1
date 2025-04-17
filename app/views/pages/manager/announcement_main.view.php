@@ -17,6 +17,18 @@
 </head>
 
 <body>
+    <!-- PHP Alerts for Success/Error Messages -->
+    <?php
+    if (isset($_SESSION['success'])) {
+        echo "<script>alert('" . $_SESSION['success'] . "');</script>";
+        unset($_SESSION['success']); // Clear the message after showing it
+    }
+
+    if (isset($_SESSION['error'])) {
+        echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+        unset($_SESSION['error']); // Clear the message after showing it
+    }
+    ?>
 
     <section class="sidebar">
         <?php require APPROOT . '/views/components/manager_sidebar.view.php' ?>
@@ -24,76 +36,63 @@
 
     <main>
 
-        <div class="top">
-            <h1 class="title">Announcement Summary</h1>
-            <div class="bell">
-                <i class="ph ph-bell"></i>
-                <p>Hi, John!</p>
+        <div class="title">
+            <h1>Create Announcement</h1>
+            <div class="greeting">
+                <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
             </div>
         </div>
-        <form class="search">
-            <button>
-                <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
-                    <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>
-            </button>
-            <div class="search-input">
-                <input class="input" placeholder="Search here..." required="" type="text">
+
+        <div class="announcements-container">
+            <div class="searchBar">
+                <input
+                    type="text"
+                    id="announcementSearch"
+                    placeholder="Search here.."
+                    onkeyup="filterTable()" />
             </div>
-            <button class="reset" type="reset">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </form>
 
-        <div class="dropdown-container">
+            <div class="table-container">
+                <div class="heading">
+                    <h2>Announcements</h2>
+                    <a href="announcement" class="btn"> + New Announcement</a>
 
-            <div class="tables">
-                <div class="last-announcement">
-                    <div class="heading">
-                        <h2>Announcements</h2>
-                        <a href="announcement" class="btn"><i class="ph ph-plus"></i> New Announcement</a>
-                    </div>
-                    <br>
+                </div>
 
-                    <table class="list">
+                <!-- Table with scrolling -->
+                <div class="table-scroll">
+                    <table>
                         <thead>
                             <tr>
-                                <td>Person</td>
-                                <td>Title</td>
+                                <td>Posted By</td>
+                                <td>Announcement ID</td>
+                                <td>Subject</td>
                                 <td>Date</td>
-                                <td>Actions</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php if (!empty($data)): ?>
-                                <?php foreach ($data as $announcement): ?>
-                                    <tr>
+                        <tbody id="announcementTableBody">
+                            <?php if (!empty($data['announcements'])): ?>
+                                <?php foreach ($data['announcements'] as $announcement): ?>
+                                    <tr onclick="openModal(
+                                        '<?php echo $announcement->subject; ?>',
+                                        '<?php echo $announcement->description; ?>',
+                                        '<?php echo $announcement->announcement_id; ?>',
+                                        '<?php echo $announcement->created_date; ?>',
+                                        '<?php echo $announcement->created_time; ?>',
+                                        '<?php echo $announcement->created_by; ?>'
+                                    )">
                                         <td>
-                                            <div class="person">
+                                            <div class="profile-pic">
                                                 <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                                                 <div class="person-info">
-                                                    <h4>John Doe</h4>
-                                                    <small class="email">john@gmail.com</small>
+                                                    <h4>Kavishka</h4>
+                                                    <small class="email">kavishka@gmail.com</small>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><?php echo htmlspecialchars($announcement->subject); ?></td>
-                                        <td><?php echo htmlspecialchars($announcement->date); ?></td>
-                                        <td>
-
-                                            <!-- Pass the subject, date, and time as parameters to the openModal() function -->
-                                            <a href="announcement_read/<?php echo $announcement->announcement_id; ?>"><i class="ph ph-eye"></i></a>
-
-
-                                            <a href="announcement_update"><i class="ph ph-pen"></i></a>
-                                            <a href="<?php echo URLROOT; ?>/manager/delete_announcement/<?php echo $announcement->announcement_id; ?>"
-                                                onclick="return confirm('Are you sure you want to delete this announcement?');">
-                                                <i class="ph ph-trash"></i>
-                                            </a>
-
-                                        </td>
+                                        <td><?php echo $announcement->announcement_id; ?></td>
+                                        <td><?php echo $announcement->subject; ?></td>
+                                        <td><?php echo $announcement->time; ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
@@ -105,13 +104,224 @@
                     </table>
                 </div>
             </div>
-
         </div>
+
+        <!-- Modal Content -->
+        <div id="announcementModal" class="modal">
+
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <form id="announcementForm" method="POST" action="<?php echo URLROOT; ?>/announcement/updateAnnouncement">
+                    <div class="modal-body">
+                        <div class="details">
+                            <div class="profile-img">
+                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                            </div>
+                            <div class="name-and-title">
+                                <h3 id="modalCreatedBy"></h3>
+                                <input id="modalSubject" name="subject" type="text" class="modal-input" placeholder="Announcement Subject" disabled />
+                            </div>
+                        </div>
+                        <input id="modalId" name="announcement_id" style="display: none;" />
+                        <textarea id="modalDescription" name="description" class="modal-input" rows="5" placeholder="Announcement Description" disabled></textarea>
+                        <div class="date-time">
+                            <div class="announcement-date">
+                                <i class="ph ph-calendar"></i>
+                                <p><span id="modalDate"></span></p>
+                            </div>
+                            <div class="announcement-time">
+                                <i class="ph ph-clock"></i>
+                                <p><span id="modalTime"></span></p>
+                            </div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="modal-actions">
+                            <button type="button" class="btn edit-btn" onclick="editAnnouncement()">Edit</button>
+                            <button type="button" class="btn delete-btn" onclick="deleteAnnouncement()">Delete</button>
+                            <button type="submit" class="btn save-btn" style="display:none;">Save</button>
+                            <button type="button" class="btn cancel-btn" onclick="cancelEdit()" style="display:none;">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
 
     </main>
 
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
+    <script>
+        let isEditing = false; // Track whether we are in edit mode or not
+        let currentAnnouncement = {}; // Store the current announcement data for editing
 
+        function openModal(subject, description, ann_id, date, time, createdBy) {
+
+            console.log(description);
+            // Populate modal content
+            document.getElementById('modalSubject').value = subject;
+            document.getElementById('modalDescription').value = description;
+            document.getElementById('modalId').value = ann_id
+            document.getElementById('modalDate').textContent = date;
+            document.getElementById('modalTime').textContent = time;
+            document.getElementById('modalCreatedBy').textContent = createdBy;
+
+            // Store the current announcement data
+            currentAnnouncement = {
+                subject,
+                description,
+                ann_id,
+                date,
+                time,
+                createdBy
+            };
+
+            // Show the Edit and Delete buttons, and hide Save and Cancel buttons initially
+            toggleActionButtons(true);
+
+            // Display the modal
+            const modal = document.getElementById('announcementModal');
+            modal.style.display = 'flex';
+
+            document.body.style.overflow = 'hidden';
+
+            // Close the modal when clicked outside the content area
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+
+        function closeModal() {
+
+            // Disable editing
+            document.getElementById('modalSubject').disabled = true;
+            document.getElementById('modalDescription').disabled = true;
+
+            document.body.style.overflow = 'auto';
+
+            // Hide the modal
+            document.getElementById('announcementModal').style.display = 'none';
+        }
+
+        function toggleActionButtons(isEditMode) {
+            // Toggle visibility of the action buttons based on whether the modal is in edit mode
+            document.querySelector('.edit-btn').style.display = isEditMode ? 'inline-block' : 'none';
+            document.querySelector('.delete-btn').style.display = isEditMode ? 'inline-block' : 'none';
+            document.querySelector('.save-btn').style.display = isEditMode ? 'none' : 'inline-block';
+            document.querySelector('.cancel-btn').style.display = isEditMode ? 'none' : 'inline-block';
+        }
+
+        function editAnnouncement() {
+            // Enable editing by making the subject and description editable
+            document.getElementById('modalSubject').disabled = false;
+            document.getElementById('modalDescription').disabled = false;
+
+            // Change button states
+            toggleActionButtons(false);
+            isEditing = true;
+        }
+
+        function saveAnnouncement() {
+            document.getElementById('announcementForm').submit();
+        }
+
+        function cancelEdit() {
+            // Restore the original data and disable editing
+            document.getElementById('modalSubject').value = currentAnnouncement.subject;
+            document.getElementById('modalDescription').value = currentAnnouncement.description;
+
+            // Disable editing
+            document.getElementById('modalSubject').disabled = true;
+            document.getElementById('modalDescription').disabled = true;
+
+            // Show the original action buttons
+            toggleActionButtons(true);
+            isEditing = false;
+        }
+
+        function deleteAnnouncement() {
+            // Confirm before deleting
+            if (confirm('Are you sure you want to delete this announcement?')) {
+                // Set the form action to the delete endpoint
+                const form = document.getElementById('announcementForm');
+                form.action = "<?php echo URLROOT; ?>/announcement/deleteAnnouncement";
+
+                // Submit the form to delete the announcement
+                form.submit();
+            }
+        }
+
+        function filterTable() {
+            // Get the input field and its value
+            const input = document.getElementById("announcementSearch");
+            const filter = input.value.toLowerCase(); // Convert input to lowercase for case-insensitive matching
+            const tableBody = document.getElementById("announcementTableBody"); // Get the correct table body
+            const rows = tableBody.getElementsByTagName("tr"); // Get all rows in the table body
+
+            // Loop through all table rows and hide those that don't match the search query
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName("td"); // Get all cells in the current row
+                let match = false;
+
+                // Check each cell in the row for a match
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j]) {
+                        if (cells[j].textContent.toLowerCase().includes(filter)) {
+                            match = true; // Found a match
+                            break;
+                        }
+                    }
+                }
+
+                // Show or hide the row based on whether there was a match
+                rows[i].style.display = match ? "" : "none";
+            }
+        }
+    </script>
+
+    <script>
+            const unReadAnnouncements = document.querySelectorAll('.unread');
+            const unReadAnnouncementsCount = document.getElementById('num-of-announcements');
+            const markAllAsReadButton = document.getElementById('mark-as-read');
+
+            updateUnreadCount();
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.remove('unread');
+                        updateUnreadCount();
+                        // Once the announcement is marked as read, we don't need to observe it anymore
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null, // Use the viewport as the root
+                rootMargin: '0px',
+                threshold: 0.5 // Trigger when 50% of the element is visible
+            });
+
+            // Start observing each unread announcement
+            unReadAnnouncements.forEach((announcement) => {
+                observer.observe(announcement);
+            });
+
+            markAllAsReadButton.addEventListener('click', function() {
+                unReadAnnouncements.forEach((announcement) => {
+                    announcement.classList.remove('unread');
+                });
+                updateUnreadCount();
+            });
+
+            function updateUnreadCount() {
+                const currentUnreadCount = document.querySelectorAll('.unread').length;
+                unReadAnnouncementsCount.textContent = currentUnreadCount + ' Unread!';
+                unReadAnnouncementsCount.style.display = currentUnreadCount === 0 ? 'none' : 'flex';
+            }
+        </script>
+        
 </body>
 
 </html>

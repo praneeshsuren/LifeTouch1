@@ -27,7 +27,13 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/trainer/bookings">
+                    <i class="ph ph-notebook"></i>
+                    <span class="text">Bookings</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo URLROOT; ?>/trainer/workouts">
                     <i class='icon ph-bold ph-barbell'></i>
                     <span class="text">Workouts</span>
                 </a>
@@ -39,7 +45,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/trainer/calendar">
                     <i class='icon ph-bold ph-calendar-dots'></i>
                     <span class="text">View Calendar</span>
                 </a>
@@ -50,7 +56,7 @@
         <p class="title">Settings</p>
         <ul>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/trainer/settings">
                     <i class='icon ph-bold ph-gear'></i>
                     <span class="text">Settings</span>
                 </a>

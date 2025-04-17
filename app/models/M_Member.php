@@ -17,7 +17,10 @@
             'weight',
             'contact_number',
             'gender',
-            'email_address'
+            'email_address',
+            'status',
+            'image',
+            'membership_plan'
         ];
 
         public function findByMemberId($memberId) {
@@ -59,18 +62,48 @@
             if (empty($data['gender'])) {
                 $this->errors['gender'] = 'Gender is required';
             }
+            if (empty($data['membership_plan'])) {
+                $this->errors['membership_plan'] = 'Membership Plan is required';
+            }
 
             if (empty($data['height'])) {
                 $this->errors['height'] = 'Height is required';
+            } elseif ($data['height'] < 0) {
+                $this->errors['height'] = 'Height cannot be negative';
             }
-
+            
             if (empty($data['weight'])) {
                 $this->errors['weight'] = 'Weight is required';
+            } elseif ($data['weight'] < 0) {
+                $this->errors['weight'] = 'Weight cannot be negative';
+            }
+            
+
+            if (empty($data['NIC_no'])) {
+                $this->errors['NIC_no'] = 'NIC number is required';
+            } elseif (strlen($data['NIC_no']) > 12) {
+                $this->errors['NIC_no'] = 'NIC number cannot exceed 12 characters';
             }
 
             // If there are no errors, return true; otherwise, return false.
             return empty($this->errors);
             
+        }
+
+        public function emailExists($email, $excludeId = null) {
+            $data = ['email_address' => $email];
+        
+            // Prepare conditions for excluding the current member
+            $data_not = [];
+            if ($excludeId) {
+                $data_not['member_id'] = $excludeId;
+            }
+        
+            // Use the where function to query the database
+            $result = $this->where($data, $data_not, 'email_address');
+        
+            // If we found any result, it means the email exists and is used by another member
+            return !empty($result);
         }
 
     }

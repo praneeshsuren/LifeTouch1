@@ -22,7 +22,7 @@
             </li>
             <li>
                 <a href="#">
-                    <i class='icon ph-bold ph-user'></i>
+                    <i class='icon ph-bold ph-users'></i>
                     <span class="text">Users</span>
                     <i class='arrow ph-bold ph-caret-down'></i>
                 </a>
@@ -58,6 +58,12 @@
                 <a href="<?php echo URLROOT; ?>/admin/announcements">
                     <i class='icon ph-bold ph-newspaper'></i>
                     <span class="text">Announcements</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo URLROOT; ?>/admin/bookings">
+                    <i class="ph ph-notebook"></i>
+                    <span class="text">Bookings</span>
                 </a>
             </li>
             <li>

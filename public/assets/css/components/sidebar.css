@@ -8,6 +8,8 @@
     background: var(--sidebar-color);
     padding: 24px;
     z-index: 100;
+    border-radius: 20px;
+    transition: var(--tran-05);
 }
 
 .sidebar .head{
@@ -68,7 +70,6 @@
     padding: 12px 8px;
     text-decoration: none;
     color: var(--text-color);
-    transition: var(--tran-03);
 }
 
 .menu ul li > a:hover{

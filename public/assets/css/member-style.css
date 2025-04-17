@@ -16,11 +16,60 @@
     --alert-color: red;
     --hover-btn: #000;
     --box-shadow-color: 0px 10px 8px rgba(0, 0, 0, 0.1);
-
+    --modalbg-colour:rgba(0, 0, 0, 0.4);
+    
     --tran-02: all 0.2s ease;
     --tran-03: all 0.3s ease;
     --tran-04: all 0.4s ease;
     --tran-05: all 0.5s ease; 
+}
+
+/******Buttons*******/
+.edit-btn,
+.delete-btn,
+.save-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background-color: #007bff;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #b02a37;
+}
+
+.save-btn {
+  background-color: #28a745;
+  display: none;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  display: none;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
 }
 
 body{
@@ -39,6 +88,7 @@ body.dark{
     --text-color: #CCC;
     --hover-btn: #FFF;
     --box-shadow-color: 0px 10px 8px rgba(255, 255, 255, 0.1);
+    --modalbg-colour:rgba(255,255,255,0.4);
 }
 /* sidebar */
 .sidebar{ 
@@ -49,9 +99,11 @@ body.dark{
     flex-direction: column;
     gap: 20px;
     background: var(--sidebar-color);
-    transition: var(--tran-05);
     padding: 24px;
     z-index: 100;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    transition: var(--tran-05);
 }
 
 .sidebar .head{
@@ -112,7 +164,6 @@ body.dark{
     padding: 12px 8px;
     text-decoration: none;
     color: var(--text-color);
-    transition: var(--tran-03);
 }
 
 .menu ul li > a:hover{
@@ -380,26 +431,23 @@ body.dark .switch::before{
 }
 
 /* Dashboard */
-
 main{
     position: absolute;
     top: 0;
     left: 250px;
-    height: 100vh;
+    height: auto;
     width: calc(100% - 250px);
     background: var(--body-color);
-    transition: var(--tran-05);
     z-index: 1;
     padding: 1.5rem 2rem;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 3rem 1fr 2fr;
-    gap: 1.6rem;
+    transition: var(--tran-05);
+}
+
+main.active{
+    transition: var(--tran-05);
 }
 
 main > .title{
-    grid-column: 1 / -1;
-    grid-row: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -461,168 +509,13 @@ main > .title > .greeting > .bell-container:hover .notification {
     100% { transform: translateX(0); }
 }
 
-/* Insight Cards */
-main .insights{
-    grid-column: 1;
-    grid-row: 2;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.6rem;
-}
-
-main .insights > div{
-    color: var(--hover-btn);
-    background: var(--sidebar-color);
-    padding: 2rem;
-    border-radius: 40px;
+main .chart-container{
+    background-color: var(--sidebar-color);
+    border-radius: 2rem;
+    padding: 1rem;
     box-shadow: var(--box-shadow-color);
-    transition: var(--tran-03);
+    margin-top: 1rem;
 }
-
-main .insights > div:hover{
-    background: var(--separator-color);
-}
-
-main .insights > div i{
-    background-color: #695CFE;
-    padding: 0.5rem;
-    border-radius: 50%;
-    color: var(--sidebar-color);
-    font-size: 2rem;
-}
-
-main .insights > .bookings  i{
-    background-color: coral;
-}
-
-main .insights > .workouts  i{
-    background-color: lightgreen;
-}
-
-main .insights > div .middle{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-main .insights h3{
-    margin: 1rem 0 0.6rem;
-    font-size: 1rem;
-}
-
-main .insights .progress{
-    position: relative;
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-    margin-left: 2rem;
-}
-
-main .insights svg{
-    width: 7rem;
-    height: 7rem;
-}
-
-@keyframes progress-animation {
-    0% {
-        stroke-dashoffset: 0;
-    }
-    100% {
-        stroke-dashoffset: 92;
-    }
-}
-
-main .insights svg circle {
-    fill: none;
-    stroke-width: 14;
-    stroke: #695CFE;
-    stroke-linecap: round;
-    transform: translate(8px, 8px);
-    stroke-dasharray: 110;
-    animation: progress-animation 0.8s ease-out forwards;
-}
-
-main .insights .progress .number{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-main .insights .progress .number {
-    position: absolute;
-    top: 2.75rem;
-    left: 2.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-color);
-    font-size: 1rem;
-}
-
-/* Announcements Section */
-
-main .recent-announcements{
-    grid-column: 2;
-    grid-row: 2 / span 2;
-}
-
-main .recent-announcements h2{
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-}
-
-main .recent-announcements .announcements{
-    background: var(--sidebar-color);
-    border-radius: 30px;
-    padding-top: 15px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-shadow: var(--box-shadow-color);
-}
-
-main .recent-announcements .announcement{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--separator-color);
-    color: var(--hover-btn);
-    padding-top: 10px;
-    padding-bottom: 15px;
-    cursor: pointer;
-    margin-bottom: 1rem;
-    transition: var(--tran-03);
-}
-
-main .recent-announcements .announcement:hover{
-    transform: translateY(-10px);
-}
-
-main .recent-announcements .announcement .profile-img{
-    display: flex;
-    margin-bottom: 3rem;
-    margin-left: 0.5rem;
-    width: 4.5rem;
-}
-
-main .recent-announcements .announcement .profile-img img{
-    border-radius: 50%;
-    width: 100%;
-    object-fit: cover;
-}
-
-main .recent-announcements .announcement .message{
-margin-left: 1rem;
-}
-
-/* CHARTS */
 
 main .chart-header {
     display: flex;
@@ -631,83 +524,21 @@ main .chart-header {
     height: 2.5rem;
 }
 
-main .chart-header i{
-    font-size: 1.6rem;
-    color: var(--text-color);
-    border-radius: 50%;
-    margin-right: 1rem;
-    cursor: pointer;
-}
-
-main .chart-header i:hover {
-    color: var(--hover-btn);
-}
-
 main .chart-header h2 {
     font-size: 1.5rem;
     color: var(--text-color);
 }
 
-main #areaChart{
-    margin-bottom: 6rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 /* Announcements Page */
 main .announcementsContainer{
-    grid-column: 1 / -1;
-    height: 100vh;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
     display: flex;
     align-items: center;
     flex-direction: column;
     gap: 2rem;
     width: 100%;
-}
-
-main .announcementsContainer .announcementHeader{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-
-main .announcementsContainer .announcementHeader .aHeading{
-    display: flex;
-    align-items: center;
-}
-
-main .announcementsContainer .announcementHeader .aHeading h2{
-    font-size: 1.5rem;
-    color: var(--text-color);
-}
-
-main .announcementsContainer .announcementHeader .aHeading #num-of-announcements{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--alert-color);
-    border: 2px solid var(--alert-color);
-    border-radius: 20px;
-    padding: 0.2rem 0.5rem;
-    margin-left: 10px;
-}
-
-main .announcementsContainer .announcementHeader #mark-as-read{
-    color: var(--text-color);
-    cursor: pointer;
-    transition: var(--tran-05);
-    padding: 0.2rem 0.5rem;
-    border-radius: 20px;
-    border: 1px solid var(--text-color);
-}
-
-main .announcementsContainer .announcementHeader #mark-as-read:hover{
-    color: var(--hover-btn);
-    border: 1px solid var(--hover-btn);
-    box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.1);
 }
 
 main .announcementsContainer .announcement-card{
@@ -752,18 +583,6 @@ main .announcementsContainer .announcement-card .announcementCard-Header .detail
 
 main .announcementsContainer .announcement-card .announcementCard-Header .details .name-and-title h3{
     margin-bottom: 5px
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .unread-marker{
-    display: none;
-    border-radius: 20px;
-    border: 1px solid var(--alert-color);
-    padding: 0.2rem 0.5rem;
-    color: var(--alert-color);
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .unread-marker.unread{
-    display: block;
 }
 
 main .announcementsContainer .announcement-card .description{
@@ -820,98 +639,10 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
     main .insights {
         grid-template-columns: 1fr;
     }
-
-    main .member-view-trainer{
-        grid-template-columns: repeat(2,1fr);
-    }
-
-    main .trainer-image{
-        width: 100px;
-        height: 100px;
-    }
-
-    main.member-view-trainer .member-view-trainer-btn{
-        padding: 8px 16px;
-        font-size: 0.8rem;
-    }
-
-    main .member-supplements{
-        grid-template-columns: repeat(2,1fr);
-    }
-
-    main .supplement-image{
-        width: 100px;
-        height: 100px;
-    }
-
-    main.member-supplements .member-supplements-btn{
-        padding: 8px 16px;
-        font-size: 0.8rem;
-    }    
-
-    
 }
 
 /*member-view trainer-section*/
-
-.member-view-trainer-grid-container{
-    grid-column: 1 / 3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-.member-view-trainer{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    width: 100%;
-}
-.trainer{
-    color: var(--hover-btn);
-    background: var(--sidebar-color);
-    padding: 2rem;
-    border-radius: 40px;
-    box-shadow: var(--box-shadow-color);
-    transition: var(--tran-03);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.trainer:hover{
-    background: var(--separator-color);
-}
-  
-.trainer-image {
-    border-radius: 50%;
-    width: 120px; /* Increased width */
-    height: 120px; /* Increased height */
-    object-fit: cover;
-    margin-bottom: 1rem; /* Adds space between the image and the button */
-}
-  
-.member-view-trainer .member-view-trainer-btn {
-    background-color: var(--primary-color);
-    color:white;
-    padding: 12px 20px; /* Increased padding for a larger button */
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    margin-top: 1rem;
-    font-size: 1rem; 
-    transition: background-color 0.3s ease;
-}
-  
-.member-view-trainer .member-view-trainer-btn:hover {
-    color:var(--text-color);
-    background: var(--primary-color-light);
-}
-
-/*member-supplements-section*/
-
+.member-view-trainer-grid-container,
 .member-supplements-grid-container{
     grid-column: 1 / 3;
     display: flex;
@@ -919,12 +650,16 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
     align-items: center;
     width: 100%;
 }
+
+.member-view-trainer,
 .member-supplements{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     width: 100%;
 }
+
+.trainer,
 .supplement{
     color: var(--hover-btn);
     background: var(--sidebar-color);
@@ -939,11 +674,13 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
     text-align: center;
 }
 
+.trainer:hover,
 .supplement:hover{
     background: var(--separator-color);
 }
   
-.supplement-image {
+.trainer-image,
+.supplement-image{
     border-radius: 50%;
     width: 120px; /* Increased width */
     height: 120px; /* Increased height */
@@ -951,6 +688,7 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
     margin-bottom: 1rem; /* Adds space between the image and the button */
 }
   
+.member-view-trainer .member-view-trainer-btn,
 .member-supplements .member-supplements-btn {
     background-color: var(--primary-color);
     color:white;
@@ -960,109 +698,76 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
     cursor: pointer;
     margin-top: 1rem;
     font-size: 1rem; 
-    transition: background-color 0.3s ease;
+    transition: var(--tran-03);
 }
   
-.member-supplements .member-supplements-btn:hover {
-    color:var(--text-color);
-    background: var(--primary-color-light);
+.member-view-trainer .member-view-trainer-btn:hover,
+.member-supplements .member-supplements-btn:hover{
+    color:white;
+    background: var(--primary-color);
+    transform: scale(1.05);
 }
+
+/*member-supplements-section*/
+.quantity-counter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+}
+
+.quantity-counter-btn{
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    padding: 5px;
+    border-radius: 2rem;
+    border: 1px solid var(--text-color);
+}
+
+.quantity-counter button {
+    all: unset; /* Remove default button styles */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Circular buttons */
+    background-color: transparent;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.quantity-counter input {
+    color: var(--hover-btn);
+    width: 50px;
+    height: 30px;
+    text-align: center;
+    border: none;
+    font-size: 18px;
+    outline: none; /* Remove focus outline */
+    border-radius: 50%; /* Fully rounded input */
+    background-color: var(--sidebar-color);
+}
+
+.quantity-counter i {
+    font-size: 15px; /* Adjust icon size */
+}
+  
+
 /* search bar */
 main > .searchbar {
     grid-column: 1 / -1;
     display: flex;
-    justify-content: space-between;
-    /* Space out child elements */
-    align-items: center;
-    /* Align items vertically center */
-}
-.search button {
-    border: none;
-    background: none;
-    color: #8b8ba7;
-}
-.search {
-    --timing: 0.3s;
-    --width-of-input: 200px;
-    --height-of-input: 40px;
-    --border-height: 2px;
-    --border-weight: 175px;
-    --input-bg: #fff;
-    --border-color: #2f2ee9;
-    --border-radius: 30px;
-    --after-border-radius: 30px;
-    position: relative;
-    width: var(--width-of-input);
-    height: var(--height-of-input);
-    display: flex;
-    align-items: center;
-    padding-inline: 0.8em;
-    border-radius: var(--border-radius);
-    transition: border-radius 0.5s ease;
-    background: var(--input-bg, #fff);
 }
 
-/* styling of Input */
-.search-input .input {
-    font-size: 0.9rem;
-    background-color: transparent;
-    width: 100%;
-    height: 100%;
-    padding-inline: 0.5em;
-    padding-block: 0.7em;
-    border: none;
+.search-input .input{
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    width: 250px;
 }
 
-/* styling of animated border */
-.search:before {
-    content: "";
-    position: absolute;
-    background: var(--border-color);
-    transform: scaleX(0);
-    transform-origin: left;
-    width: var(--border-weight);
-    height: var(--border-height);
-    left: 0.8;
-    bottom: 0;
-    border-bottom-left-radius: 1px;
-    border-bottom-right-radius: 1px;
-    transition: transform var(--timing) ease;
-}
-
-/* Hover on Input */
-.search:focus-within {
-    border-radius: var(--after-border-radius);
-}
-
-.search-input input:focus {
-    outline: none;
-}
-
-/* here is code of animated border */
-.search:focus-within:before {
-    transform: scale(1);
-}
-
-/* styling of close button */
-/* == you can click the close button to remove text == */
-.reset {
-    border: none;
-    background: none;
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* close button shown when typing */
-.search-input input:not(:placeholder-shown)~.reset {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* sizing svg icons */
-.search svg {
-    width: 17px;
-    margin-top: 3px;
-}
 /* trainer view details page */
 .trainerviewbtnBox {
     background: var(--sidebar-color);
@@ -1078,19 +783,22 @@ main > .searchbar {
     color: var(--text-color);
     margin-left: 200px;
 }
+
 .trainerviewbtn-profile{
     display: flex;
 }
+
 .trainerviewbtn-profile-img img{
     width: 180px;
     height: 180px;
     object-fit: cover;
-    border-radius: 50%;
-    
+    border-radius: 50%;  
 }
+
 .trainerviewbtn-profile-detail{
     padding: 55px 20px;
 }
+
 .trainerviewbtn-profileTable-container{
     margin-top:4rem;
     table{
@@ -1115,44 +823,49 @@ main > .searchbar {
         }
     }
 }
-.trianerviewbtn-Bookreservationbtn{
+
+.trainerviewbtn-Bookreservationbtn{
     background-color: var(--primary-color);
     color:white;
     padding: 10px; /* Increased padding for a larger button */
     border: none;
     border-radius: 2rem;
     cursor: pointer;
-    margin-top: 0.5rem;
+    margin-top: 2rem;
     font-size: 1rem; 
     transition: var(--tran-03);
 }
-.trianerviewbtn-Bookreservationbtn:hover{
-    color:var(--text-color);
-    background: var(--primary-color-light);
+
+.trainerviewbtn-Bookreservationbtn:hover{
+    color:white;
+    background: var(--primary-color);
+    transform: scale(1.05);
 }
 
 /* book reservations */
-.bookingBox {
-    background: var(--sidebar-color);
+main .calendarContainer {
+    grid-column: 1;
+    background-color: var(--sidebar-color);
     display: flex;
     flex-direction: column;
-    width: 1000px;
-    height: 700px;
+    overflow: hidden; /* Prevent overflow issues */
+    width: 750px;
+    height: 650px;
     padding: 2rem;
     border-radius: 1.5rem;
     box-shadow: var(--box-shadow-color);
     transition: var(--tran-03);
     position: relative; 
-    margin-left:75px;
     color: var(--text-color);
-    padding-top: 100px;
+    padding-top: 50px;
 }
+
 .calendar-header {
     position:absolute;
     top:0;
     left: 0;
     width: 100%;
-    height: 150px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1163,6 +876,7 @@ main > .searchbar {
     color: var(--text-color); 
     margin-bottom: 1rem;
 }
+
 .calendar-header .prevMonth,
 .calendar-header .nextMonth {
     cursor: pointer;
@@ -1172,56 +886,76 @@ main > .searchbar {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
+    color: inherit; 
+    background: none;      
+    border: none; 
 }
+
 .calendar-header .prevMonth:hover,
 .calendar-header .nextMonth:hover {
     box-shadow: var(--box-shadow-color);
 }
-.calendar {
+
+.calendar{
     width: 100%;
     margin:1rem 0;
+    margin-top: 2rem;
     border-collapse: collapse;
 } 
+
 .calendar th {
+    color: black;
+    font-weight: bold;
     text-align: center;
     padding: 10px;
-    border: 1px solid #ddd; 
+    border: 1px solid #ddd;
 } 
+
 .calendar td {
     text-align: left;
+    vertical-align: top;
     cursor: pointer;
     width: calc(100%/7);
     height: 75px;
     font-size: 20px;
     padding: 5px;
     border: 1px solid #ddd; 
-   
 }
+
 .calendar td:hover {
     background-color: var(--primary-color);
     color: var(--sidebar-color);
 }
+
 .calendar td.plain {
     pointer-events: none; /* Disable interaction */
     cursor: default; 
 }
+
 .calendar td.today {
     border: 2px solid var(--primary-color)
 }
+
 .calendar td.active{
     background-color: var(--primary-color);
     color: var(--sidebar-color);
 }
-.calendar td.booked{
-    font-size: 10px;
-    padding: 3px;
-    background-color: black;
-    color: white;
-    border-radius: 5px;
-    height:10px;
-    max-height: 50px;
-    overflow: hidden;
+
+.pending {
+    background: linear-gradient(45deg, #FFA500, #FF4500);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
 }
+
+.booked {
+    background: linear-gradient(45deg, #32CD32, #006400) !important;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
 .gotoToday {
     width: 100%;
     height: 50px;
@@ -1234,6 +968,7 @@ main > .searchbar {
     color: var(--primary-color);
     margin-top: 1rem;
 }
+
 .gotoToday .goto{
     display: flex;
     align-items: center;
@@ -1241,6 +976,7 @@ main > .searchbar {
     overflow: hidden;
     border: 1px solid var(--text-color);
 }
+
 .gotoToday .goto input {
     background-color: var(--sidebar-color);
     width: 100%;
@@ -1251,6 +987,7 @@ main > .searchbar {
     padding: 0 20px;
     color: var(--text-color);
 }
+
 .gotoToday button {
     padding: 5px 10px;
     border: 1px solid var(--text-color);
@@ -1259,40 +996,139 @@ main > .searchbar {
     cursor: pointer;
     color: var(--text-color);
 }
+
 .gotoToday button:hover {
     color: #fff;
     background-color: var(--primary-color);
 }
+
 .gotoToday .goto button {
     border: none;
     border-left: 1px solid var(--text-color);
     border-radius: 0;
 }
-#bookingForm{
+
+.modal {
+    display: none; /* Hidden by default */
     position: fixed;
-    top: 0;
+    z-index: 1000;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color:var(--hover-btn);
-    opacity: 0.8;
-    z-index: 10;
-    display: none;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color:var(--modalbg-colour); 
 }
-#addBooking,
-#viewBooking{
-    display: none;
-    width: 350px;
-    background-color: var(--sidebar-color);
-    padding: 25px;
-    z-index: 20;
-    position: fixed;
-    margin: 300px 600px;
-    border-radius: 2rem;
+
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-30%, -120%); /* Center the modal */
+    background-color:var(--sidebar-color);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px; /* Limit modal width */
+    max-height: 90%; /* Prevent it from overflowing */
+    overflow-y: auto; /* Add scroll only if content overflows */
+    border-radius: 10px;
 }
-.error{
-    border-color: #ea2027 !important;
+
+.close {
+    color:var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+.timeslot{
+    background-color:var(--primary-color);
+    color: #FFF;
+    border-radius: 10px;
+    padding: 2px;
+    margin: 5px;
+}
+
+.timeslot.selectedTimeslot {
+    background: linear-gradient(45deg,#32CD32, #006400);
+}
+
+.input{
+    border-top: 1px solid #ccc;
+    margin-top:10px;
+    padding-top: 10px;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem; /* Space between input rows */
+}
+
+.input-container label {
+    width: 120px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    color: var(--hover-btn);
+}
+.input-container i {
+    margin-right: 8px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.input-container input[type="text"] {
+    font-size: 15px;
+    width: 100%;
+    background-color: #ccc;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+}
+
+.book-btn {
+    text-align: right; /* Align the button to the right */
+    margin-top: 10px;
+}
+
+.book-btn button {
+    background: linear-gradient(45deg,#32CD32, #006400);
+    color: white;
+    padding: 10px 20px; /* Increased padding for a larger button */
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem; 
+    transition: var(--tran-03); 
+}
+
+#btnDelete{
+    background: linear-gradient(45deg, #ff5733, #ff1a1a);
+    color: white;
+    padding: 12px 20px; /* Increased padding for a larger button */
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-size: 1rem; 
+    transition: var(--tran-03);  
+}
+
+.btnClose:hover,
+.book-btn button:hover,
+#btnDelete:hover{
+    transform: scale(1.05);
+}
+
 /* payment page */
 .paymentBox{
     background: var(--sidebar-color);
@@ -1307,6 +1143,7 @@ main > .searchbar {
     position: relative; 
     margin-left:75px;
 }
+
 .payment-title {
     font-size: 22px;
     font-weight: 700;
@@ -1314,10 +1151,12 @@ main > .searchbar {
     line-height: 1.3;
     color: var(--text-color);
 }
+
 .payment-form{
     width:100%;
     margin-bottom: 1rem;
 }
+
 .payment-method {
     display: flex;
     align-items: center;
@@ -1326,9 +1165,11 @@ main > .searchbar {
     margin-bottom: 12px;
     width: 100%;
 }
+
 .payment-method input {
     display: none;
 }
+
 .payment-method-item {
     width: 80px;
     height: 80px;
@@ -1340,9 +1181,11 @@ main > .searchbar {
     position: relative;
     flex-shrink: 0;
 }
+
 input:checked + .payment-method-item {
     border-color:var(--primary-color)
 }
+
 input:checked + .payment-method-item::before {
     content: '';
     position: absolute;
@@ -1357,15 +1200,18 @@ input:checked + .payment-method-item::before {
     background-position: center;
     background-repeat: no-repeat;
 }
+
 .payment-method-item > img {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
+
 .payment-form-group {
     position: relative;
     margin-bottom: 5px;
 }
+
 .payment-form-control {
     outline: transparent;
     border: 1px solid var(--text-color);
@@ -1375,6 +1221,7 @@ input:checked + .payment-method-item::before {
     transition: var(--tran-02);
     background-color: var(--sidebar-color);
 }
+
 .payment-form-label {
     position: absolute;
     top: 50%;
@@ -1384,39 +1231,47 @@ input:checked + .payment-method-item::before {
     pointer-events: none;
     transition: var(--tran-02)
 }
+
 .payment-form-control:focus {
     outline: 1px solid var(--primary-color);
     border-color: var(--primary-color);
     background-color: var(--sidebar-color);
 }
+
 .payment-form-control:focus + .payment-form-label,
 .payment-form-control:not(:placeholder-shown) + .payment-form-label {
     top: 30%;
     font-size: 12px;
 }
+
 .payment-form-label-required::after {
     content: ' *';
     color: red;
 }
+
 .payment-form-group-flex1 {
     display: flex;
     flex-direction: column;
 }
+
 .payment-form-group-flex2 {
     display: flex;
     gap:5rem;
     margin-left: 1rem;
     color: var(--text-color);
 }
+
 .payment-form-group-flex2 select{
     background-color: var(--sidebar-color);
     color: var(--text-color);
     border-radius: 0.5rem;
 }
+
 #cvv{
     width:100px;
-    margin-top: 5px;
+    margin: 5px 0;
 }
+
 .payment-form-submit-button {
     background-color: var(--primary-color);
     border-radius: 8px;
@@ -1428,35 +1283,346 @@ input:checked + .payment-method-item::before {
     border: none;
     cursor: pointer;
     color: white;
-    font-weight: 600;
+    font-size: 1rem;
     padding: 16px;
     transition: var(--tran-02);
 }
+
 .payment-form-submit-button:hover {
-    background-color: var(--primary-color);
+    color:white;
+    background: var(--primary-color);
+    transform: scale(1.02);
 }
+
 .payment-history{
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
+
 .paymentHistoryTable{
     width: 700px;
-    margin-left: 100px;
+    margin-left: 75px;
 }
+
 .paymentHistoryTable td{
     border-bottom: 1px solid var(--body-color);
     word-break: break-word;
     padding: 10px 20px;
     color: var(--text-color);
-}  
-.paymentHistoryTable td:hover{
+} 
+
+.paymentHistoryTable tr:hover{
     background-color: var(--body-color);
 }
+
 .paymentHistoryTable th{
     background-color: var(--primary-color);
     color: white;
     height: 50px;
 }
 
+/* workout schedule */
+.workoutContainer{
+    grid-column: 1 / -1;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+.workout-card{
+    background-color: var(--sidebar-color);
+    width: 70%;
+    padding: 2rem 2rem;
+    border-radius: 1.5rem;
+    display: block;
+}
+
+.workoutCard-Header{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.workout-img{
+    display: flex;
+    margin-left: 0.5rem;
+    width: 12rem;
+    height: 10rem;
+}
+
+.workout-img img{
+    border-radius: 1rem;
+    width: 100%;
+    object-fit: cover;
+}
+
+.workoutCard-Header .details{
+    display: flex;
+    flex-direction: column;
+    margin-left: 2rem;  
+    width: 100%;
+}
+
+.workoutCard-Header .details .workout-title{
+    margin-bottom:1.5rem;
+    margin-left: 1.5rem;
+}
+
+.workout-description table td{
+    padding: 0 1rem ;
+}
+
+.completebtn,
+.notcompletebtn{
+    float: right; 
+    margin-top:-35px; 
+    color: white;
+    background: linear-gradient(45deg, #ff5733, #ff1a1a);
+    padding: 12px 20px; /* Increased padding for a larger button */
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem; 
+    transition: var(--tran-03);
+}
+.completebtn:hover,
+.notcompletebtn:hover{
+    transform: scale(1.02);
+}  
+
+.completebtn{
+    background: linear-gradient(45deg,#32CD32, #006400); 
+}
+ 
+
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    main .recent-announcements {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    main {
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+   
+    main .insights {
+        grid-template-columns: 1fr;
+    }
+
+    main .member-view-trainer,
+    main .member-supplements{
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    main .trainer-image,
+    main .supplement-image{
+        width: 100px;
+        height: 100px;
+    }
+
+    main.member-view-trainer .member-view-trainer-btn,
+    main.member-supplements .member-supplements-btn{
+        padding: 8px 16px;
+        font-size: 0.8rem;
+    }
+
+    .paymentBox,
+    .trainerviewbtnBox,
+    .bookingBox {
+        width:575px;
+        margin: 20px;
+    }
+
+    .payment-form-control{
+        width: 100%;
+    }
+
+    .payment-form-submit-button {
+        width: 100%;
+    }
+
+    .paymentHistoryTable{
+        width: 500px;
+        margin-left: 20px;
+    }
+
+    #addBooking,
+    #viewBooking {
+        margin: 200px 250px;
+    }      
+
+    .workout-card{
+        width:90%;
+    }
+
+    .workout-img{
+        width:12rem;
+        height: 10rem;
+    }
+    .workoutCard-Header .details,
+    .completebtn,
+    .notcompletebtn{
+        font-size: 12px;
+    }  
+}
+
+/* Settings Page */
+main .settings-container {
+    margin-top: 1rem;
+    background-color: var(--sidebar-color);
+    padding: 2rem;
+    border-radius: 20px;
+}
+
+main .settings-container .details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+main .settings-container .details .profile-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the profile picture */
+    justify-content: space-between;
+    gap: 15px;
+}
+
+main .settings-container .details .profile-picture img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+}
+
+main .settings-container .details .change-picture-btn {
+    margin: 0;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+main .settings-container .details .change-picture-btn:hover {
+    background-color: #0056b3;
+}
+
+main .settings-container .details p {
+    margin-bottom: 1rem;
+}
+
+main .settings-container .details .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%; /* Ensures full width for the fields */
+}
+
+main .settings-container .details .row > p {
+    flex: 1; /* Makes sure the input fields are evenly distributed */
+}
+
+main .settings-container .details p {
+    margin-bottom: 1rem;
+}
+
+main .settings-container .details p strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1rem;
+}
+
+main .settings-container .details input,
+main .settings-container .details select {
+    width: 100%; /* Ensure the input takes full width */
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #555;
+}
+
+main .settings-container .details input[disabled],
+main .settings-container .details select[disabled] {
+    background-color: #f9f9f9;
+    color: #999;
+}
+
+main .settings-container .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+main .settings-container .action-buttons button {
+    padding: 12px 24px; /* Adjust padding for better button size */
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+main .settings-container .action-buttons button.save-btn {
+    background-color: #4CAF50; /* Green for save button */
+    color: white;
+}
+
+main .settings-container .action-buttons button.save-btn:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+main .settings-container .action-buttons button.cancel-btn {
+    background-color: #f44336; /* Red for cancel button */
+    color: white;
+}
+
+main .settings-container .action-buttons button.cancel-btn:hover {
+    background-color: #e53935; /* Darker red on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .details {
+        flex-direction: column;
+    }
+
+    .title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    main .settings-container .details .row {
+        flex-direction: column; /* Stack fields in a column on small screens */
+    }
+
+    main .settings-container .details .row > p {
+        flex: unset; /* Removes the equal width constraint on smaller screens */
+    }
+}
+
+.error {
+    color: red;
+    font-size: 0.8em;
+}
 

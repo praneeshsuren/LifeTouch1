@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/manager-style.css?v=<?php echo time(); ?>" />
+
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
@@ -22,12 +23,13 @@
     </section>
     <main>
 
-        <div class="top">
-            <h1 class="title">View Equipment</h1>
-            <div class="bell">
-                <i class="ph ph-bell"></i>
-                <p>Hi, John!</p>
+        <div class="title">
+
+            <h1>View Equipment</h1>
+            <div class="greeting">
+                <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
             </div>
+
         </div>
         <div class="newMember">
 
@@ -47,7 +49,7 @@
                 </button>
             </form>
             <div class="heading">
-                <a href="equipment_create" class="newMember-btn"><i class="ph ph-plus"></i> Add Equipment</a>
+                <a href="equipment_create" class="newMember-btn"><i class=" ph ph-plus"></i> Add Equipment</a>
             </div>
         </div>
 

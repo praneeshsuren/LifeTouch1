@@ -112,37 +112,26 @@
         <h2 class="heading">Our <span>Events</span></h2>
 
         <div class="plans-content">
-            <div class="box">
-                <h3>Healthy Cooking Workshop</h3>
-                <h2><span>Rs.5000</span></h2>
-                <h2>December 31</h2>
-                <ul>
-                    <li>Learn to prepare delicious, nutritious meals with a professional chef.</li>
-                    <li>Receive a recipe booklet and a nutrition guide.</li>
-                </ul>
-                <a href="#">Join Now<i class='bx bx-right-arrow-alt'></i></a>
-            </div>
-            <div class="box">
-                <h3>Yoga</h3>
-                <h2><span>Rs.5000</span></h2>
-                <h2>December 3</h2>
-                <ul>
-                    <li>Relax and rejuvenate with guided yoga and breathing exercises.</li>
-                    <li>Learn mindfulness techniques to reduce stress.</li>
-                </ul>
-                <a href="#">Join Now<i class='bx bx-right-arrow-alt'></i></a>
-            </div>
-            <div class="box">
-                <h3>Fitness Expo Day</h3>
-                <h2><span>Rs.1000</span></h2>
-                <h2>December 5</h2>
-                <ul>
-                    <li>Explore fitness gear and products at vendor stalls.</li>
-                    <li>Get expert advice on fitness and health trends.</li>
-                </ul>
-                <a href="#">Join Now<i class='bx bx-right-arrow-alt'></i></a>
-            </div>
-        </div>
+            <?php if (!empty($data['events'])): ?>
+                <?php foreach ($data['events'] as $event): ?>
+                    <div class="box">
+                        <h3><?php echo ($event->name); ?></h3>
+                        <h2><span>Rs.<?php echo number_format($event->price, 2); ?></span></h2>
+                        <h2><?php echo date("F j", strtotime($event->event_date)); ?></h2>
+                        <ul>
+                            <li><?php echo ($event->description); ?></li>
+                            <?php if ($event->free_for_members): ?>
+                                <li><strong>Free for Members!</strong></li>
+                            <?php endif; ?>
+                        </ul>
+                        <a href="#">Join Now<i class='bx bx-right-arrow-alt'></i></a>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                    <h2>No Events are currently ongoing.</h2>
+            <?php endif; ?>
+</div>
+
     </section>
     <!--Trainer section code-->
     <section class="review" id="review">

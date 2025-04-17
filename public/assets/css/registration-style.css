@@ -1,0 +1,264 @@
+
+/* ***************User Registration Form*********** */
+main .user-create-container{
+    margin-top: 1rem;
+    display: flex;
+    height: 100%;
+    background-color: var(--sidebar-color);
+    border-radius: 20px;
+    justify-content: start;
+}
+
+main .user-create-container .user-create-sidebar{
+    background-color: #e7f0f7;
+    margin: 1.5rem;
+    border-radius: 20px;
+    padding: 4rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    width: fit-content;
+}
+
+main .user-create-container .user-create-sidebar .section-nav {
+    position: sticky;
+    top: 40px;
+}
+
+main .user-create-container .user-create-sidebar .section-nav h2{
+    margin-bottom: 2rem;
+    text-wrap: nowrap;
+}
+  
+main .user-create-container .user-create-sidebar .section-link-wrapper {
+    display: flex;
+    align-items: start;
+}
+  
+main .user-create-container .user-create-sidebar .section-line-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 10px;
+}
+  
+main .user-create-container .user-create-sidebar .section-link {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    flex-grow: 1;
+    margin-top: 3.5px;
+    text-wrap: nowrap;
+}
+  
+main .user-create-container .user-create-sidebar .section-link.active {
+    font-weight: bold;
+}
+
+main .user-create-container .user-create-sidebar .section-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: #007bff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    background-color: white;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  
+main .user-create-container .user-create-sidebar .section-number.completed {
+    color: white;
+    background-color: #007bff; 
+    border-color: #007bff;
+  }
+  
+  /* Connecting line */
+main .user-create-container .user-create-sidebar .section-line {
+    width: 2px;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #ccc;
+    transition: background-color 0.5s ease;
+  }
+  
+main .user-create-container .user-create-sidebar .section-line.active {
+    background-color: #007bff; /* Highlighted color */
+  }
+
+
+main .user-create-container .user-form{
+    padding: 20px;
+    padding: 4rem;
+    padding-left: 1rem;
+    padding-right: 2.5rem;
+    color: var(--hover-btn);
+    width: 100%;
+}
+
+main .user-create-container .user-form .form-container {
+    width: 100%;
+}
+
+main .user-create-container .user-form .form-container .section-content{
+    margin-bottom: 3rem;
+}
+
+main .user-create-container .user-form .form-container .section-content h3{
+    margin-bottom: 1rem;
+}
+
+main .user-form .form-container .input-container{
+    margin-bottom: 10px;
+}
+
+
+main .user-form .input-container .input-box1 {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+main .user-form .input-container .input-box1 label{
+    text-wrap: nowrap;
+    margin-right: 1rem;
+}
+
+main .user-form .input-container .input-box1 input{
+    width: 100%;
+    height: 50px;
+    padding: 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+main .user-form .form-container .section-content .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem; /* Adjust spacing between inputs */
+    margin: 0;
+  }
+  
+main .user-form .form-container .section-content .row .input-container {
+    flex: 1; /* Ensure inputs are evenly spaced */
+    margin: 0;
+  }
+
+main .user-form .form-container .input-image-box {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+}
+
+main .user-form .form-container .image-container {
+    width: 200px; 
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ccc; 
+    display: flex;
+    margin-bottom: 10px;
+}
+
+main .user-form .form-container .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+main .user-form .form-container .input-image-box .image-upload-input {
+    display: none;
+}
+
+main .user-form .form-container .input-image-box .image-upload-label {
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 2rem;
+}
+
+main .user-form .form-container .input-image-box .image-upload-label:hover {
+    background-color: #0056b3;
+}
+
+
+main .user-form .input-container .input-box1 #gender {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+main .user-form .input-container .input-box1 #gender:focus {
+    border-color: #4a90e2;
+    outline: none;
+    background-color: #fff;
+}
+
+main .user-form .input-container .input-box1 #gender select:invalid {
+    color: #999;
+}
+
+main .user-form .input-container .input-box1 #gender option {
+    color: #333;
+}
+
+main .user-form .btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    padding-top: 2rem;
+}
+
+
+main .user-form .btn-container .user-create-btn {
+    width: fit-content;
+    padding: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    background-color: #2693FF;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    align-self: center;
+}
+
+main .user-form .btn-container .user-create-btn:hover {
+    background-color: #1c7bd9;
+    transform: scale(1.03);
+}
+
+/* Error Message Styles */
+main .user-form .form-container .input-container .invalid-feedback {
+    color: #FF0000;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    main .trainer-form .input-container {
+        flex-direction: column;
+    }
+}
