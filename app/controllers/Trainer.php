@@ -48,33 +48,58 @@
                     break;
         
                 case 'workoutSchedules':
-                    $this->view('trainer/trainer-memberWorkouts');
+                    $memberId = $_GET['id'] ?? null;
+                
+                    if ($memberId) {
+                        $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
+                        $schedules = $workoutScheduleDetailsModel->findAllSchedulesByMemberId($memberId);
+                
+                        // Sort schedules in descending order by created_at
+                        usort($schedules, function ($a, $b) {
+                            return strtotime($b->created_at) - strtotime($a->created_at);
+                        });
+                
+                        $data = [
+                            'member_id' => $memberId,
+                            'schedules' => $schedules
+                        ];
+                        $this->view('trainer/trainer-memberWorkouts', $data);
+                    } else {
+                        $_SESSION['error'] = 'Member not found.';
+                        redirect('trainer/dashboard');
+                    }
                     break;
+                    
                 
                 case 'workoutDetails':
-                    // Fetch specific workout details using workout ID from URL
-                    $scheduleId = $_GET['id']; // Get workout schedule ID from URL
-                    
-                    // Fetch workout schedule details
-                    $workoutScheduleModel = new M_WorkoutSchedule;
-                    $schedule = $workoutScheduleModel->findByScheduleId($scheduleId);
-    
+                    // Fetch the schedule ID from the URL
+                    $scheduleId = $_GET['id'];
+                
+                    // Fetch the schedule details (weight, measurements, etc.)
+                    $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
+                    $schedule = $workoutScheduleDetailsModel->findByScheduleId($scheduleId);
+                
+                    // If no schedule is found, handle the error
                     if (!$schedule) {
-                        // Handle case where schedule ID is not found
-                        $this->view('404'); // Optionally, redirect to a 404 page
+                        $_SESSION['error'] = 'Workout schedule not found.';
+                        redirect('trainer/members/workoutSchedules');
                         return;
                     }
-    
-                    // Pass schedule data to the view
+                
+                    // Fetch the workout rows (the individual workouts in the schedule)
+                    $workoutScheduleModel = new M_WorkoutSchedule;
+                    $workoutDetails = $workoutScheduleModel->findAllByScheduleId($scheduleId);
+                
                     $data = [
-                        'schedule' => $schedule
+                        'schedule' => $schedule,         // The schedule details (weight, measurements, etc.)
+                        'workout_details' => $workoutDetails // The individual workout rows for the schedule
                     ];
+                
+                    // Render the view with the fetched data
                     $this->view('trainer/trainer-viewWorkoutSchedule', $data);
                     break;
-                    
         
                 case 'createWorkoutSchedule':
-                    // Fetch member details if provided via URL
                     $memberModel = new M_Member;
                     $member = $memberModel->findByMemberId($_GET['id']);
             

@@ -54,7 +54,6 @@
               <li><a href="#membership-details"><i class="ph ph-calendar-dots"></i>Member Attendance<span class=""></a></li>
               <li><a href="#supplement-records"><i class="ph ph-money"></i>Payment History</a></li>
               <li><a href="#workout-schedules"><i class="ph ph-barbell"></i>Supplement Records</a></li>
-              <li><a href="#login-credentials"><i class="ph ph-lock-simple"></i>Login Credentials</a></li>
             </ul>
 
           </div>

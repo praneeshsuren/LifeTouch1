@@ -1124,26 +1124,49 @@ main .user-container .add-workout-btn{
   background-color: #f9f9f9;
 }
 
-/* Styling for the Workout Name Dropdown */
-.workout-name-select {
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+/* General Styles for the Table and Form */
+.workout-schedule-container {
+  margin-top: 2rem;
+  padding: 2rem;
   background-color: #fff;
-  color: #333;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
-.workout-name-select:focus {
-  outline: none;
-  border-color: #007bff;
-  background-color: #f0f8ff;
+/* Table styling */
+#workout-schedule {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: fixed;
+  margin-bottom: 2rem;
+}
+
+#workout-schedule th,
+#workout-schedule td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+#workout-schedule th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+#workout-schedule td {
+  font-size: 0.9rem;
+}
+
+#workout-schedule tr:hover {
+  background-color: #f9f9f9;
 }
 
 /* Styling for the Inputs */
 .workout-id-cell input,
+.workout-name-cell select,
 .equipment-id-cell input,
 .equipment-name-cell input,
 input[type="number"] {
@@ -1159,6 +1182,7 @@ input[type="number"] {
 }
 
 .workout-id-cell input:focus,
+.workout-name-cell select:focus,
 .equipment-id-cell input:focus,
 .equipment-name-cell input:focus,
 input[type="number"]:focus {
@@ -1167,8 +1191,50 @@ input[type="number"]:focus {
   background-color: #f0f8ff;
 }
 
+/* Reduce size of row number column */
+#workout-schedule th.row-index,
+#workout-schedule td.row-index {
+  width: 60px;
+  text-align: center;
+  padding: 8px;
+}
+
+/* Description column - wider input */
+.description-cell {
+  width: 250px;
+}
+
+.description-cell input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.description-cell input:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+/* Measurement Group - Aligning the Beginning and End fields side by side */
+.measurement-group {
+  margin-top: 1rem;
+  display: flex;
+  gap: 20px; /* Adds space between the fields */
+}
+
+.measurement-group div {
+  flex: 1; /* Ensures equal width for each field */
+}
+
 /* Add Row and Submit Button Styling */
-button{
+button {
   padding: 10px 20px;
   font-size: 0.9rem;
   color: #fff;
@@ -1197,6 +1263,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
+
 /* For mobile responsiveness */
 @media screen and (max-width: 768px) {
   .workout-schedule-container {
@@ -1221,6 +1288,67 @@ button:disabled {
 
 .delete-row-btn:hover {
   background-color: darkred;
+}
+
+.action-buttons-update-schedule button{
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  margin-right: 10px; /* Add space between buttons */
+}
+
+#mark-completed {
+  background-color: #28a745; /* Green color */
+}
+
+#mark-completed:hover {
+  background-color: #218838;
+}
+
+/* Save as PDF Button */
+#save-pdf {
+  background-color: #007bff; /* Blue color */
+}
+
+#save-pdf:hover {
+  background-color: #0056b3;
+}
+
+/* Delete Schedule Button */
+#delete-schedule {
+  background-color: #dc3545; /* Red color */
+}
+
+#delete-schedule:hover {
+  background-color: #c82333;
+}
+
+/* Update Schedule Button - positioned to the right */
+#update-schedule {
+  background-color: #ffc107; /* Yellow color */
+  margin-left: auto; /* This pushes the button to the far right */
+}
+
+#update-schedule:hover {
+  background-color: #e0a800;
+}
+
+/* Action Buttons Container */
+.action-buttons-update-schedule {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left by default */
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Move the Update Schedule Button to the right */
+.action-buttons-update-schedule button:last-child {
+  margin-left: auto; /* Push the last button (Update Schedule) to the right */
 }
 
 /* Style for the workout schedule cards */
@@ -1270,10 +1398,10 @@ button:disabled {
 
 .schedule-card .status {
   font-weight: bold;
-  padding: 5px 10px;
+  padding: 5px 50px;
   border-radius: 20px;
   text-transform: uppercase;
-  font-size: 0.9em;
+  font-size: 0.9rem;
   margin-top: 10px;
 }
 
