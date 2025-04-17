@@ -57,6 +57,33 @@
             // Call the delete method to delete the record
             return $this->delete($scheduleId, 'schedule_id');  // Assuming 'schedule_no' is the column used for unique identification
         }
+
+        public function findAllByScheduleId($scheduleId)
+        {
+            $query = "
+                SELECT 
+                    ws.row_no,
+                    ws.schedule_id,
+                    ws.workout_id,
+                    ws.description,
+                    w.workout_name,
+                    w.equipment_id,
+                    e.name AS equipment_name,
+                    ws.sets,
+                    ws.reps
+                FROM 
+                    workout_schedule AS ws
+                JOIN 
+                    workouts AS w ON ws.workout_id = w.workout_id
+                JOIN 
+                    equipment AS e ON w.equipment_id = e.equipment_id
+                WHERE 
+                    ws.schedule_id = :schedule_id
+            ";
+
+            return $this->query($query, ['schedule_id' => $scheduleId]);
+        }
+
         }
     
 ?>
