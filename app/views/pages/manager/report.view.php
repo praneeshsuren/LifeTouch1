@@ -50,7 +50,9 @@
                     <p class="text-title">Membership Plan Report</p>
                     <p class="text-body">Details of card 2</p>
                 </div>
-                <button class="card-button">More info</button>
+                <a href="<?php echo URLROOT; ?>/report/payment_report">
+                    <button class="card-button">More info</button>
+                </a>
             </div>
 
             <div class="card">

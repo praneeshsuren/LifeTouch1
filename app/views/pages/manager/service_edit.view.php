@@ -90,21 +90,21 @@
             <a href="<?php echo URLROOT; ?>/manager/equipment_view/<?php echo isset($equipment->equipment_id) ? htmlspecialchars($equipment->equipment_id) : ''; ?>" class="btn" style="float: right; margin-top: 10px;margin-bottom:3px;">Back</a>
 
 
-            <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/service/updateService/<?php echo htmlspecialchars($service->service_id); ?>">
+            <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/service/updateService/<?php echo htmlspecialchars($service->equipment_id); ?>">
                 
                 <input type="hidden" name="service_id" value="<?php echo htmlspecialchars(isset($service->service_id) ? $service->service_id : ''); ?>">
 
                 <div class="input-container">
                     <label for="service_date">Service Date:</label>
-                    <input type="date" id="service_date" name="service_date" value="<?php echo isset($service_date) ? htmlspecialchars($service_date) : ''; ?>" required>
+                    <input type="date" id="service_date" name="service_date" value="<?php echo $service->service_date ?>" required>
                 </div>
                 <div class="input-container">
                     <label for="service_date">Next Service Date:</label>
-                    <input type="date" id="next_service_date" name="next_service_date" value="<?php echo isset($next_service_date) ? htmlspecialchars($service_date) : ''; ?>" required>
+                    <input type="date" id="next_service_date" name="next_service_date" value="<?php echo $service->next_service_date ?>" required>
                 </div>
                 <div class="input-container">
                     <label for="service_cost">Service Cost:</label>
-                    <input type="text" id="service_cost" name="service_cost" value="<?php echo isset($service_cost) ? htmlspecialchars($service_cost) : ''; ?>" required>
+                    <input type="text" id="service_cost" name="service_cost" value="<?php echo $service->service_cost ?>" required>
                 </div>
                 <div class="button-container">
                     <button class="edit-button" style="display: block; margin: 0 auto; border-radius: 20px;width:200px;margin-top:20px;">Update</button>

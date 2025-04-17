@@ -73,7 +73,7 @@
             <div class="lower">
               <p>Total Members</p>
               <div class="progress">
-                <h1>20000</h1>
+                <h1 style="margin-left: 100px;">20000</h1>
                 <div class="text-muted">
                   <small>Last 30 days</small>
                 </div>
@@ -91,7 +91,7 @@
             <div class="lower">
               <p>New Members</p>
               <div class="progress">
-                <h1>20000</h1>
+                <h1 style="margin-left: 100px;">20000</h1>
                 <div class="text-muted">
                   <small>Last 30 days</small>
                 </div>
@@ -109,7 +109,7 @@
             <div class="lower">
               <p>Total Equipments</p>
               <div class="progress">
-                <h1>20000</h1>
+                <h1 style="margin-left: 100px;">20000</h1>
                 <div class="text-muted">
                   <small>Last 30 days</small>
                 </div>
@@ -127,7 +127,7 @@
             <div class="lower">
               <p>Total Workouts Created</p>
               <div class="progress">
-                <h1>20000</h1>
+                <h1 style="margin-left: 100px;">20000</h1>
                 <div class="text-muted">
                   <small>Last 30 days</small>
                 </div>
@@ -163,7 +163,7 @@
 
       </div>
 
-      <div class="right-column">
+      <div class="right-column" style="height: 760px;">
 
         <div class="doughnut-chart">
           <div class="upper-text">
@@ -180,13 +180,13 @@
         </div>
 
       </div>
-      <div class="right-column" style="width: 700px; margin-left: -835px;">
+      <div class="right-column" style="width: 820px; margin-left: -835px;">
         <div class="doughnut-chart">
           <div class="upper-text">
             <h2>Invetory</h2>
             <p>Invetory distribution</p>
           </div>
-          <div class="lower">
+          <div class="lower" style="width: 700px">
             <canvas id="chart3"></canvas>
           </div>
         </div>
@@ -295,125 +295,113 @@
     // Create the chart
     new Chart(ctxBarChart, configBarChart);
 
-    const ctxDoughnutChart = document.getElementById('DoughnutChart').getContext('2d');
+    const doughnutLabels = <?php echo json_encode(array_column($membershipCounts, 'membership_plan')); ?>;
+  const doughnutData = <?php echo json_encode(array_column($membershipCounts, 'count')); ?>;
 
-    const dataDoughnutChart = {
-      labels: [
-        'Monthly', 'Quarterly', 'Semi-Annually', 'Annually'
+  const ctxDoughnutChart = document.getElementById('DoughnutChart').getContext('2d');
+
+  const dataDoughnutChart = {
+    labels: doughnutLabels,
+    datasets: [{
+      label: 'Distribution of Membership Plans',
+      data: doughnutData,
+      backgroundColor: [
+        'rgb(255, 99, 132)', // Color pool
+        'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(153, 102, 255)',
+        'rgb(255, 159, 64)'
       ],
-      datasets: [{
-        label: 'Distribution of Membership Plans',
-        data: [300, 150, 220, 80], // Replace with your actual data
-        fill: true,
-        backgroundColor: [
-          'rgb(255, 99, 132)', // Red
-          'rgb(54, 162, 235)', // Blue
-          'rgb(255, 205, 86)', // Yellow
-          'rgb(75, 192, 192)' // Teal
-        ],
-        hoverOffset: 4
-      }]
-    };
+      hoverOffset: 4
+    }]
+  };
 
-    const configDoughnutChart = {
-      type: 'doughnut',
-      data: dataDoughnutChart, // Correct reference to the data object
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        animation: {
-          duration: 1500,
-          easing: 'easeInOutQuart',
-          onComplete: () => {
-            delayed = true;
-          },
-          delay: (context) => {
-            let delay = 0;
-            if (context.type === 'data' && context.mode === 'default' && !delayed) {
-              delay = context.dataIndex * 100 + context.datasetIndex * 50;
-            }
-            return delay;
-          },
-        },
-        plugins: {
-          legend: {
-            position: 'top',
-            labels: {
-              boxWidth: 20,
-              font: {
-                family: "'Poppins', sans-serif"
-              }
-            }
-          },
-          tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            padding: 10,
-            titleFont: {
-              family: "'Poppins', sans-serif"
-            },
-            bodyFont: {
+  const configDoughnutChart = {
+    type: 'doughnut',
+    data: dataDoughnutChart,
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            font: {
               family: "'Poppins', sans-serif"
             }
           }
         }
       }
-    };
+    }
+  };
 
-    // Create the doughnut chart
-    new Chart(ctxDoughnutChart, configDoughnutChart);
+  new Chart(ctxDoughnutChart, configDoughnutChart);
   </script>
 
-  <script>
-    // Data for gym equipment counts
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const ctx3 = document.getElementById('chart3').getContext('2d');
+
+    // Use base_name instead of name for labels
+    const inventoryLabels = <?php echo json_encode(array_column($inventoryCounts, 'base_name')); ?>;
+    const inventoryData = <?php echo json_encode(array_column($inventoryCounts, 'count')); ?>;
+
     const data = {
-      labels: ['Treadmills', 'Dumbbells', 'Bikes', 'Rowing Machines'], // Equipment names on x-axis
+      labels: inventoryLabels,
       datasets: [{
         label: 'Count of Equipment',
-        data: [70, 140, 50, 40], // Equipment counts
-        backgroundColor: 'rgba(75, 192, 192, 0.5)', // Color for the bars
-      }, ],
+        data: inventoryData,
+        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
     };
 
-    // Configuration for the bar chart
-    const inconfig = {
+    const config = {
       type: 'bar',
       data: data,
       options: {
         plugins: {
           title: {
             display: true,
-            text: 'Gym Equipment Counts', // Chart title
+            text: 'Gym Equipment Inventory'
           },
         },
         responsive: true,
-        interaction: {
-          intersect: false,
-        },
         scales: {
           x: {
-            stacked: false, // No stacking on the x-axis
             title: {
               display: true,
-              text: 'Equipment', // X-axis label
+              text: 'Equipment Type'
             },
           },
           y: {
-            stacked: false, // No stacking on the y-axis
-            title: {
-              display: true,
-              text: 'Count', // Y-axis label
-            },
-          },
+  beginAtZero: true,
+  title: {
+    display: true,
+    text: 'Count'
+  },
+  ticks: {
+    callback: function(value) {
+      return Number.isInteger(value) ? value : '';
+    },
+    stepSize: 1
+  }
+}
+
         },
       },
     };
-    // Render the chart
-    document.addEventListener('DOMContentLoaded', () => {
-      const ctx3 = document.getElementById('chart3').getContext('2d');
-      const ageChart = new Chart(ctx3, inconfig); // Create a new Chart.js instance
-    });
-  </script>
 
-  
+    new Chart(ctx3, config);
+  });
+</script>
+
+<script>
+  const inventoryLabels = <?php echo json_encode(array_column($inventoryCounts, 'name')); ?>;
+  const inventoryData = <?php echo json_encode(array_column($inventoryCounts, 'count')); ?>;
+</script>
+
 
 </body>
