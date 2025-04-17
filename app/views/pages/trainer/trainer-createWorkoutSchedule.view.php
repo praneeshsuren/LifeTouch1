@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/trainer-style.css?v=<?php echo time();?>" />
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/sidebar-greeting.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/trainer-style.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/sidebar-greeting.css?v=<?php echo time(); ?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- CHART.JS -->
@@ -20,6 +20,18 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
+
+  <?php
+      if (isset($_SESSION['success'])) {
+          echo "<script>alert('" . $_SESSION['success'] . "');</script>";
+          unset($_SESSION['success']);
+      }
+
+      if (isset($_SESSION['error'])) {
+          echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+          unset($_SESSION['error']);
+      }
+    ?>
 
   <section class="sidebar">
       <?php require APPROOT.'/views/components/trainer-sidebar.view.php' ?>
@@ -42,10 +54,12 @@
             <table id="workout-schedule">
               <thead>
                   <tr>
+                      <th class="row-index">#</th>
                       <th>Workout ID</th>
                       <th>Workout Name</th>
                       <th>Equipment ID</th>
                       <th>Equipment Name</th>
+                      <th>Description</th>
                       <th>Sets</th>
                       <th>Reps</th>
                       <th>Actions</th>
@@ -53,21 +67,24 @@
               </thead>
               <tbody>
                   <tr>
+                    <td class="row-index">
+                      <span class="row-number-display">1</span>
+                      <input type="hidden" name="workout_details[0][row_no]" class="row-number-input" value="1">
+                    </td>
                     <td class="workout-id-cell">
                         <input type="text" name="workout_details[0][workout_id]" class="workout-id-input" readonly>
                     </td>
                     <td class="workout-name-cell" data-id="">
                         <select class="workout-name-select" name="workout_details[0][workout_name]" required>
                             <option value="" disabled selected>Select Workout</option>
-                            <!-- Workouts will be dynamically loaded here -->
                         </select>
                     </td>
                     <td class="equipment-id-cell"><input type="text" name="workout_details[0][equipment_id]" readonly></td>
                     <td class="equipment-name-cell"><input type="text" name="workout_details[0][equipment_name]" readonly></td>
-                    <td><input type="number" name="workout_details[0][sets]" min="1" required></td>
-                    <td><input type="number" name="workout_details[0][reps]" min="1" required></td>
+                    <td class="description-cell"><input type="text" name="workout_details[0][description]"></td>
+                    <td><input type="number" name="workout_details[0][sets]" min="1"></td>
+                    <td><input type="number" name="workout_details[0][reps]" min="1"></td>
                     <td><button type="button" class="delete-row-btn">Delete</button></td>
-
                   </tr>
               </tbody>
             </table>
@@ -103,6 +120,18 @@
   document.addEventListener('DOMContentLoaded', function () {
     let rowIndex = 1;
 
+    function updateRowNumbers() {
+      const rows = document.querySelectorAll('#workout-schedule tbody tr');
+      rows.forEach((row, index) => {
+        const rowNumber = index + 1;
+        const span = row.querySelector('.row-number-display');
+        const hiddenInput = row.querySelector('.row-number-input');
+
+        span.textContent = rowNumber;
+        hiddenInput.value = rowNumber;
+      });
+    }
+
     fetch('<?php echo URLROOT; ?>/workout/api')
       .then(response => response.json())
       .then(data => {
@@ -127,22 +156,17 @@
           });
         }
 
-        // Initialize first row
-        const firstRow = document.querySelector('#workout-schedule tbody tr');
+        const tbody = document.querySelector('#workout-schedule tbody');
+        const firstRow = tbody.querySelector('tr');
         populateWorkoutSelect(firstRow.querySelector('.workout-name-select'));
         addSelectChangeListener(firstRow.querySelector('.workout-name-select'));
 
-        // Add row button
         document.getElementById('add-row').addEventListener('click', function () {
-          const tbody = document.querySelector('#workout-schedule tbody');
           const newRow = tbody.rows[0].cloneNode(true);
           const index = rowIndex++;
 
-          newRow.setAttribute('data-index', index);
-
           newRow.querySelectorAll('input, select').forEach(input => {
-            input.value = '';
-
+            if (!input.classList.contains('row-number-input')) input.value = '';
             const name = input.getAttribute('name');
             if (name) {
               const updatedName = name.replace(/\[\d+\]/, `[${index}]`);
@@ -150,34 +174,33 @@
             }
           });
 
-          const newSelect = newRow.querySelector('.workout-name-select');
-          populateWorkoutSelect(newSelect);
-          addSelectChangeListener(newSelect);
+          populateWorkoutSelect(newRow.querySelector('.workout-name-select'));
+          addSelectChangeListener(newRow.querySelector('.workout-name-select'));
 
-          const deleteBtn = newRow.querySelector('.delete-row-btn');
-          deleteBtn.addEventListener('click', function () {
+          newRow.querySelector('.delete-row-btn').addEventListener('click', function () {
             const rows = tbody.querySelectorAll('tr');
             if (rows.length > 1) {
               newRow.remove();
+              updateRowNumbers();
             } else {
               alert('At least one row is required.');
             }
           });
 
           tbody.appendChild(newRow);
+          updateRowNumbers();
         });
 
-        // Setup delete button on first row
         firstRow.querySelector('.delete-row-btn').addEventListener('click', function () {
           const rows = document.querySelectorAll('#workout-schedule tbody tr');
           if (rows.length > 1) {
             firstRow.remove();
+            updateRowNumbers();
           } else {
             alert('At least one row is required.');
           }
         });
 
-        // Set member_id if present in URL
         const memberId = new URLSearchParams(window.location.search).get('id');
         if (memberId) {
           document.getElementById('member_id').value = memberId;

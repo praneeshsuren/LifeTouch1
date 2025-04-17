@@ -1167,6 +1167,52 @@ input[type="number"]:focus {
   background-color: #f0f8ff;
 }
 
+/* Reduce size of row number column */
+#workout-schedule th.row-index,
+#workout-schedule td.row-index {
+  width: 30px;
+  text-align: center;
+  padding: 8px;
+}
+
+/* Styling for visible row number */
+.row-number-display {
+  font-weight: bold;
+  font-size: 0.85rem;
+  display: block;
+  text-align: center;
+}
+
+/* Ensure hidden input doesn't stretch the cell */
+.row-number-input {
+  display: none;
+}
+
+
+/* Description column - wider input */
+.description-cell {
+  width: 250px;
+}
+
+.description-cell input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.description-cell input:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+
 /* Add Row and Submit Button Styling */
 button{
   padding: 10px 20px;

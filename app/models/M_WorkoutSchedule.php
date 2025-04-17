@@ -4,8 +4,10 @@
 
         protected $table = 'workout_schedule';
         protected $allowedColumns = [
+            'row_no',
             'schedule_id',
             'workout_id',
+            'description',
             'sets',
             'reps'
         ];

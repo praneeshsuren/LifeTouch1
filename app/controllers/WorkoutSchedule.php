@@ -41,14 +41,18 @@ class WorkoutSchedule extends Controller
 
     
             foreach ($workout_details as $workout) {
+                $row_no = (int) $workout['row_no'];  // Cast to integer
                 $workout_id = (int) $workout['workout_id'];  // Cast to integer
+                $description = $workout['description'];
                 $sets = (int) $workout['sets'];  // Cast to integer
                 $reps = (int) $workout['reps'];  // Cast to integer
     
                 // Prepare data for workout_schedule table
                 $workoutScheduleData = [
+                    'row_no' => $row_no,
                     'schedule_id' => $schedule_id,
                     'workout_id' => $workout_id,
+                    'description' => $description,
                     'sets' => $sets,
                     'reps' => $reps
                 ];
@@ -63,6 +67,11 @@ class WorkoutSchedule extends Controller
     
             // Return success response
             echo 'Workout schedule created successfully.';
+
+            $_SESSION['success'] = 'Workout schedule created successfully.';
+            // Redirect to the member's workout schedules page
+            redirect('trainer/members/workoutSchedules?id=' . $member_id);
+
         }
     }
     
@@ -157,81 +166,5 @@ class WorkoutSchedule extends Controller
         exit;
     }
 
-
-    // Update a workout schedule by schedule_id
-    public function updateSchedule()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $inputData = json_decode(file_get_contents('php://input'), true);
-
-            if (!$inputData) {
-                echo json_encode(['success' => false, 'message' => 'Invalid input data']);
-                exit;
-            }
-
-            $scheduleId = $inputData['schedule_id'];
-            $workoutDetails = $inputData['workout_details']; // Array of workout details
-
-            // Optional fields
-            $weightEnd = isset($inputData['weight_end']) ? $inputData['weight_end'] : null;
-            $chestMeasurementEnd = isset($inputData['chest_measurement_end']) ? $inputData['chest_measurement_end'] : null;
-            $bicepMeasurementEnd = isset($inputData['bicep_measurement_end']) ? $inputData['bicep_measurement_end'] : null;
-            $thighMeasurementEnd = isset($inputData['thigh_measurement_end']) ? $inputData['thigh_measurement_end'] : null;
-
-            // Validate the required fields
-            if (empty($scheduleId) || empty($workoutDetails)) {
-                echo json_encode(['success' => false, 'message' => 'Missing required fields']);
-                exit;
-            }
-
-            // Update the schedule in the database
-            $workoutScheduleModel = new M_WorkoutSchedule;
-            $success = $workoutScheduleModel->updateSchedule($scheduleId, $workoutDetails, $weightEnd, $chestMeasurementEnd, $bicepMeasurementEnd, $thighMeasurementEnd);
-
-            if ($success) {
-                echo json_encode(['success' => true, 'message' => 'Workout schedule updated successfully']);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Error updating workout schedule']);
-            }
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
-        }
-    }
-
-    // Delete a workout schedule by schedule_id
-    public function deleteSchedule()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $inputData = json_decode(file_get_contents('php://input'), true);
-
-            if (!$inputData) {
-                echo json_encode(['success' => false, 'message' => 'Invalid input data']);
-                exit;
-            }
-
-            $scheduleId = $inputData['schedule_id'];
-
-            if (empty($scheduleId)) {
-                echo json_encode(['success' => false, 'message' => 'Missing schedule ID']);
-                exit;
-            }
-
-            // Delete the schedule from the database
-            $workoutScheduleModel = new M_WorkoutSchedule;
-            $success = $workoutScheduleModel->deleteSchedule($scheduleId);
-
-            if ($success) {
-                echo json_encode(['success' => true, 'message' => 'Workout schedule deleted successfully']);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Error deleting workout schedule']);
-            }
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
-        }
-    }
-
-    public function markCompleted(){
-
-    }
 }
 ?>
