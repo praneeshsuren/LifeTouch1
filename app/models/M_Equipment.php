@@ -18,7 +18,7 @@ class M_Equipment
         'purchase_shop',
     ];
 
-
+    
     // Validate input data
     public function validate($data)
     {

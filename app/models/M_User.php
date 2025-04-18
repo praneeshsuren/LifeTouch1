@@ -59,5 +59,10 @@
             // If there are no errors, return true; otherwise, return false.
             return empty($this->errors);
         }
+
+        public function findByUserId($user_id) {
+           $data = ['user_id' => $user_id];
+            return $this->first($data);
+        }
         
     }
