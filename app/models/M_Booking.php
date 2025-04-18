@@ -18,7 +18,7 @@
         public function getBookingsByMonthAndYear($member_id, $trainer_id, $month, $year) {
             $query = "SELECT b.*, ts.slot 
                 FROM $this->table AS b
-                JOIN time_slots AS ts ON b.timeslot_id = ts.id
+                JOIN timeslot AS ts ON b.timeslot_id = ts.id
                 WHERE b.member_id = :member_id 
                 AND b.trainer_id = :trainer_id 
                 AND MONTH(b.booking_date) = :month 
@@ -39,9 +39,9 @@
                 b.*, 
                 m.member_id AS member_id, 
                 CONCAT(m.first_name, ' ', m.last_name) AS member_name, 
-                ts.slot AS time_slot
+                ts.slot AS timeslot
                 FROM booking AS b
-                JOIN time_slots ts ON b.timeslot_id = ts.id
+                JOIN timeslot ts ON b.timeslot_id = ts.id
                 JOIN member m ON b.member_id = m.member_id
                 WHERE b.trainer_id = :trainer_id 
             ";
@@ -49,40 +49,42 @@
             return $this->query($query, ['trainer_id' => $trainer_id]);
         }
 
-        public function bookingsfForAdmin(){
+        public function bookingsForMember($member_id){
+            $query = "SELECT 
+                b.*,  
+                t.trainer_id AS trainer_id, 
+                CONCAT(t.first_name, ' ', t.last_name) AS trainer_name, 
+                ts.slot AS timeslot
+              FROM booking AS b
+              JOIN timeslot ts ON b.timeslot_id = ts.id
+              JOIN member m ON b.member_id = m.member_id
+              JOIN trainer t ON b.trainer_id = t.trainer_id
+              WHERE b.member_id = :member_id";
+            
+            return $this->query($query, ['member_id' => $member_id]);
+        }
+
+        public function bookingsForAdmin(){
             $query = "SELECT 
                 b.*, 
                 m.member_id AS member_id, 
                 CONCAT(m.first_name, ' ', m.last_name) AS member_name, 
                 t.trainer_id AS trainer_id, 
                 CONCAT(t.first_name, ' ', t.last_name) AS trainer_name, 
-                ts.slot AS time_slot
+                ts.slot AS timeslot
               FROM booking AS b
-              JOIN time_slots ts ON b.timeslot_id = ts.id
+              JOIN timeslot ts ON b.timeslot_id = ts.id
               JOIN member m ON b.member_id = m.member_id
               JOIN trainer t ON b.trainer_id = t.trainer_id";
             
             return $this->query($query);
         }
 
-        public function isBooked($member_id, $trainer_id, $booking_date, $timeslot_id){
-            $query = "SELECT * FROM $this->table
-                WHERE trainer_id = :trainer_id 
-                AND booking_date = :booking_date 
-                AND timeslot_id = :timeslot_id";
+        public function isBooked($trainer_id){
+            $query = "SELECT booking_date, timeslot_id, status FROM $this->table
+              WHERE trainer_id = :trainer_id";
 
-            $data = [
-                'member_id' => $member_id,
-                'trainer_id' => $trainer_id, 
-                'booking_date' => $booking_date,
-                'timeslot_id' => $timeslot_id,
-            ];
-            $result = $this->query($query, $data);
-            if($result){
-                return true;
-            } else {
-                return false;
-            }
+            return $this->query($query, ['trainer_id' => $trainer_id]);
         }
             
         public function validate($data) {

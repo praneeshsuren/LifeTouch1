@@ -251,11 +251,16 @@
 
         public function bookings($action = null){
             $bookingModel = new M_Booking();
-            $bookings = $bookingModel->bookingsfForAdmin();
-        
+            $bookings = $bookingModel->bookingsForAdmin();
+            $holidayModal = new M_Holiday();
+            $holidays = $holidayModal->findAll();
+                
             if ($action === 'api'){
                 header('Content-Type: application/json');
-                echo json_encode($bookings);
+                echo json_encode([
+                    'bookings' =>$bookings,
+                    'holidays' => $holidays
+                ]);
                 exit;
             }
             $this->view('admin/admin-booking');
@@ -263,6 +268,19 @@
 
         public function calendar(){
             $this->view('admin/admin-calendar');
+        }
+
+
+        public function payment($action = null){
+            $paymentModel = new M_Payment();
+            $payment = $paymentModel->paymentAdmin();
+
+            if($action === 'api'){
+                header('Content-Type: application/json');
+                echo json_encode(['payment' => $payment]);
+                exit;
+            }
+            $this->view('admin/admin-payment');
         }
 
         public function settings(){
@@ -384,3 +402,4 @@
     }
 
 ?>
+

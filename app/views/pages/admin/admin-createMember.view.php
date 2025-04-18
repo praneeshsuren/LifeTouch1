@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/registration-style.css?v=<?php echo time(); ?>" />
+
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
@@ -70,10 +72,16 @@
                         </div>
                         <a href="#health-details" class="section-link">Health Details</a>
                     </div>
-
                     <div class="section-link-wrapper">
                         <div class="section-line-wrapper">
                             <span class="section-number">5</span>
+                            <div class="section-line"></div>
+                        </div>
+                        <a href="#membership-plan" class="section-link">Membership Plan</a>
+                    </div>
+                    <div class="section-link-wrapper">
+                        <div class="section-line-wrapper">
+                            <span class="section-number">6</span>
                         </div>
                         <a href="#login-credentials" class="section-link">Login Credentials</a>
                     </div>
@@ -243,7 +251,23 @@
                             </div>
                                         
                         </div>
-
+                        <div class="section-content" id="membership-plan">
+                            <h3>Membership Plan</h3>
+                            <div class="input-container">
+                                <div class="input-box1">
+                                    <select id="gender" name="membership_plan" required>
+                                        <option value="" disabled selected>Plan</option>
+                                        <option value="Monthly" <?php echo (isset($_POST['membership_plan']) && $_POST['membership_plan'] === 'Monthly') ? 'selected' : ''; ?>>Monthly</option>
+                                        <option value="Quarterly" <?php echo (isset($_POST['membership_plan']) && $_POST['membership_plan'] === 'Quarterly') ? 'selected' : ''; ?>>Quarterly</option>
+                                        <option value="Semi-Annually" <?php echo (isset($_POST['membership_plan']) && $_POST['membership_plan'] === 'Semi-Annually') ? 'selected' : ''; ?>>Semi-Annually</option>
+                                        <option value="Anually" <?php echo (isset($_POST['membership_plan']) && $_POST['membership_plan'] === 'Anually') ? 'selected' : ''; ?>>Anually</option>
+                                    </select>
+                                    <?php if (!empty($data['errors']['membership_plan'])): ?>
+                                        <span class="invalid-feedback"><?php echo $data['errors']['membership_plan']; ?></span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
                         <div class="section-content" id="login-credentials">
                             
                             <h3>Login Credentials</h3>
