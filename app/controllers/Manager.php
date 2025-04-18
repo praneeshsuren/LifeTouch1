@@ -13,25 +13,31 @@ class Manager extends Controller
     {
         $memberModel = new M_Member();
         $equipmentModel = new M_Equipment();
+        $announcementModel = new M_Announcement;
 
         // Query to group equipment by name and count them
         $inventoryCounts = $equipmentModel->query("
         SELECT 
             REGEXP_REPLACE(name, '[0-9]+$', '') as base_name, 
             COUNT(*) as count 
-        FROM equipment 
-        GROUP BY base_name
-    ");
+            FROM equipment 
+            GROUP BY base_name
+        ");
         // Query to count each membership plan
         $membershipCounts = $memberModel->query("SELECT membership_plan, COUNT(*) as count 
-    FROM member 
-    GROUP BY membership_plan");
+        FROM member 
+        GROUP BY membership_plan");
 
+        // Fetch the latest 4 announcements with admin names
+        $announcements = $announcementModel->findAllWithAdminNames(4);
 
-        $this->view('manager/manager_dashboard', [
+        $data = [
+            'announcements' => $announcements,
             'membershipCounts' => $membershipCounts,
             'inventoryCounts' => $inventoryCounts,
-        ]);
+        ];
+        
+        $this->view('manager/manager_dashboard', $data);
     }
 
 
@@ -483,5 +489,15 @@ class Manager extends Controller
 
         // Pass the equipment data to the view for editing
         $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
+    }
+
+    public function supplements()
+    {
+        $this->view('manager/manager-supplement');
+    }
+
+    public function createSupplement()
+    {
+        $this->view('manager/manager-createSupplement');
     }
 }
