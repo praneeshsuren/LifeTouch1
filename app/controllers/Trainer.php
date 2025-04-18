@@ -132,17 +132,44 @@
         
             $bookingModel = new M_Booking();
             $bookings = $bookingModel->bookingsForTrainer($trainer_id);
+            $holidayModal = new M_Holiday();
+            $holidays = $holidayModal->findAll();
         
             if ($action === 'api') {
                 header('Content-Type: application/json');
-                echo json_encode($bookings);
+                echo json_encode([
+                    'bookings' =>$bookings,
+                    'holidays' => $holidays
+                ]);
                 exit;
+            } elseif($action === 'edit'){
+                header('Content-type: application/json');
+
+                $id = $_POST['id'] ?? null;
+                $status = $_POST['status']?? null;
+
+                if (!$id && !$status) {
+                    echo json_encode(["success" => false, "message" => "Missing required fields"]);
+                    exit;
+                }
+
+                $data = ['status' => $status];
+
+                $result = $bookingModel->update($id, $data);
+
+                echo json_encode(
+                    [
+                        "success" => $result ? true : false,
+                        "message" => $result ? "Booking  updated successfully!" : "Failed to update "
+                    ]
+                    );
+                exit;
+
             }
         
             $this->view('trainer/trainer-booking');
         }
         
-
         public function calendar(){
             $this->view('trainer/trainer-calendar');
         }
