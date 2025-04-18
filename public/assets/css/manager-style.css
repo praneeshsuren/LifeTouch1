@@ -40,126 +40,6 @@ body.dark {
     --box-shadow-color: 0px 10px 8px rgba(255, 255, 255, 0.1);
 }
 
-main>.title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    color: var(--text-color);
-}
-
-main>.title>h1 {
-    font-size: 2rem;
-}
-
-main>.title>.greeting {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-}
-
-main>.title>.greeting h2 {
-    font-size: 1.5rem;
-    font-weight: 300;
-    color: var(--text-color);
-}
-
-main>.title>.greeting>.bell-container {
-    position: relative;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background-color: var(--separator-color);
-    /* Background color for the circle */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow */
-}
-
-main>.title>.greeting>.bell-container:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    /* Enhanced shadow on hover */
-}
-
-main>.title>.greeting>.bell-container .notification {
-    font-size: 1.5rem;
-    /* Size of the bell icon */
-    color: var(--text-color);
-    /* Adjust the bell color */
-}
-
-main>.title>.greeting>.bell-container:hover .notification {
-    transform: scale(1.3);
-    /* Pop out effect */
-    animation: vibrate 0.3s ease-in-out infinite;
-    /* Vibrate effect */
-}
-
-/* Announcements Section */
-
-main {
-    display: grid;
-    grid-template-columns: 1fr -100px;
-    gap: 1rem;
-}
-
-
-main .recent-announcements h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-}
-
-main .recent-announcements .announcements {
-    background: var(--sidebar-color);
-    border-radius: 30px;
-    padding-top: 15px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-shadow: var(--box-shadow-color);
-}
-
-main .recent-announcements .announcementss {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--separator-color);
-    color: var(--hover-btn);
-    padding-top: 10px;
-    padding-bottom: 15px;
-    cursor: pointer;
-    margin-bottom: 1rem;
-}
-
-main .recent-announcements .announcementss:hover {
-    transform: translateY(-10px);
-    transition: var(--tran-03);
-}
-
-main .recent-announcements .announcementss .profile-img {
-    display: flex;
-    margin-bottom: 3rem;
-    margin-left: 0.5rem;
-    width: 4.5rem;
-}
-
-main .recent-announcements .announcementss .profile-img img {
-    border-radius: 50%;
-    width: 100%;
-    object-fit: cover;
-}
-
-main .recent-announcements .announcementss .message {
-    margin-left: 1rem;
-}
-
 .sidebar {
     position: fixed;
     width: 250px;
@@ -495,135 +375,83 @@ body.dark .switch::before {
     left: 92px;
 }
 
-/* Dashboard */
-main {
+main{
     position: absolute;
     top: 0;
     left: 250px;
-    height: 100vh;
+    height: auto;
     width: calc(100% - 250px);
     background: var(--body-color);
-    transition: var(--tran-05);
     z-index: 1;
+    padding: 1.5rem 2rem;
+    transition: var(--tran-05);
 }
 
-main .title {
-    font-size: 30px;
-    font-weight: 500;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    margin-left: 2rem;
-    color: var(--text-color);
+main.active{
+    transition: var(--tran-05);
 }
 
-main .insights {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1.6rem;
-    margin-left: 2rem;
-}
-
-main .insights>div {
-    color: var(--text-color);
-    background: var(--sidebar-color);
-    padding: 2rem;
-    border-radius: 40px;
-    box-shadow: var(--box-shadow-color);
-    transition: var(--tran-03);
-}
-
-main .insights>div:hover {
-    background: var(--separator-color);
-}
-
-main .insights>div i {
-    background-color: #695CFE;
-    padding: 0.5rem;
-    border-radius: 50%;
-    color: var(--sidebar-color);
-    font-size: 2rem;
-}
-
-main .insights>.bookings i {
-    background-color: coral;
-}
-
-main .insights>.workouts i {
-    background-color: lightgreen;
-}
-
-main .insights>div .middle {
+main > .title{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 12.5rem;
-}
-
-main .insights h3 {
-    margin: 1rem 0 0.6rem;
-    font-size: 1rem;
-}
-
-main .insights .progress {
-    position: relative;
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-}
-
-main .insights svg {
-    width: 7rem;
-    height: 7rem;
-}
-
-@keyframes progress-animation {
-    0% {
-        stroke-dashoffset: 0;
-    }
-
-    100% {
-        stroke-dashoffset: 92;
-    }
-}
-
-main .insights svg circle {
-    fill: none;
-    stroke-width: 14;
-    stroke: #695CFE;
-    stroke-linecap: round;
-    transform: translate(8px, 8px);
-    stroke-dasharray: 110;
-    animation: progress-animation 0.8s ease-out forwards;
-}
-
-main .insights .progress .number {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    font-weight: 500;
+    width: 100%;
     color: var(--text-color);
 }
 
-main .insights .progress .number {
-    position: absolute;
-    top: 2.75rem;
-    left: 2.75rem;
+main > .title > h1{
+    font-size: 2rem;
+}
+
+main > .title > .greeting{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+main > .title > .greeting h2{
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--text-color);
+}
+
+main > .title > .greeting > .bell-container {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: var(--separator-color); /* Background color for the circle */
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-color);
-    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-.sidebar.active~main {
-    width: calc(100% - 92px);
-    left: 92px;
+main > .title > .greeting > .bell-container:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
-main .recent-announcements .announcement .message {
-    margin-left: 1rem;
+main > .title > .greeting > .bell-container .notification {
+    font-size: 1.5rem; /* Size of the bell icon */
+    color: var(--text-color); /* Adjust the bell color */
+}
+
+main > .title > .greeting > .bell-container:hover .notification {
+    transform: scale(1.3); /* Pop out effect */
+    animation: vibrate 0.3s ease-in-out infinite; /* Vibrate effect */
+}
+
+/* Vibration keyframes */
+@keyframes vibrate {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-2px); }
+    40% { transform: translateX(2px); }
+    60% { transform: translateX(-2px); }
+    80% { transform: translateX(2px); }
+    100% { transform: translateX(0); }
 }
 
 

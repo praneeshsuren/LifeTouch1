@@ -9,9 +9,17 @@ class Manager extends Controller
         $this->checkAuth('manager');
     }
 
-    public function index()
-    {
-        $this->view('manager/manager_dashboard');
+    public function index() {
+        $announcementModel = new M_Announcement;
+    
+        // Fetch the latest 4 announcements with admin names
+        $announcements = $announcementModel->findAllWithAdminNames(4);
+    
+        $data = [
+            'announcements' => $announcements
+        ];
+    
+        $this->view('manager/manager_dashboard', $data);
     }
 
     public function announcement()
@@ -463,5 +471,15 @@ class Manager extends Controller
 
         // Pass the equipment data to the view for editing
         $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
+    }
+
+    public function supplements()
+    {
+        $this->view('manager/manager-supplement');
+    }
+
+    public function createSupplement()
+    {
+        $this->view('manager/manager-createSupplement');
     }
 }

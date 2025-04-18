@@ -12,32 +12,11 @@
   <!-- STYLESHEET -->
   <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/manager-style.css?v=<?php echo time(); ?>" />
   <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/dashboard.css?v=<?php echo time();?>" />
-
   <!-- ICONS -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <!-- CHART.JS -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <title><?php echo APP_NAME; ?></title>
-<style>
-
-.doughnut-chart .lower {
-    width: 400px;
-    display: flex;
-    justify-content: flex-start; /* Aligns to the left */
-    margin-top: -20px; /* Moves it up */
-}
-.insights {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 20px;
-    position: relative;
-    margin-left: -20px;
-}
-
-
-</style>
-
 </head>
 
 <body>
