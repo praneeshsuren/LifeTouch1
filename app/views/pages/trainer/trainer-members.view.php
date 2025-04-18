@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const row = document.createElement('tr');
           row.style.cursor = 'pointer';
           row.onclick = () => {
-            window.location.href = `<?php echo URLROOT; ?>/trainer/members/viewMember?id=${member.member_id}`;
+            window.location.href = `<?php echo URLROOT; ?>/trainer/members/userDetails?id=${member.member_id}`;
           };
 
           row.innerHTML = `
