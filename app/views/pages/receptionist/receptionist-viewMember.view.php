@@ -88,16 +88,7 @@
                 echo $endDate->format('Y-m-d');
                 ?>
               </p>
-              <div class="download-button" id="downloadPDF" data-member-id="<?php echo $data['member']->member_id; ?>">
-                <div class="download-wrapper">
-                  <div class="download-text">Download</div>
-                  <span class="download-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"></path>
-                    </svg>
-                  </span>
-                </div>
-              </div>
+              
 
 
 
@@ -233,40 +224,5 @@
   <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time(); ?>"></script>
 
 </body>
-<script>
-  document.getElementById("downloadPDF").addEventListener("click", function(event) {
-    event.preventDefault();
-
-    var memberId = this.getAttribute("data-member-id");
-
-    // Create a new AJAX request
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "generate-pdf.php", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        // If successful, initiate download
-        var pdfPath = xhr.responseText; // Response should be the file path
-        window.location.href = pdfPath; // Trigger the file download
-      } else {
-        alert("Failed to generate PDF");
-      }
-    };
-
-    // Send the member_id to the server
-    xhr.send("member_id=" + memberId);
-  });
-</script>
-<script>
-  document.getElementById('downloadPDF').addEventListener('click', function() {
-    // Get the member ID from the data attribute
-    var memberId = this.getAttribute('data-member-id');
-
-    // Open the PDF in a new window/tab
-    var pdfUrl = '/LifeTouch1/public/make_pdf/' + memberId; // Adjust path if needed
-    window.open(pdfUrl, '_blank');
-  });
-</script>
 
 </html>

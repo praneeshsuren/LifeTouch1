@@ -32,45 +32,38 @@
 
         </div>
         <div class="newMember">
-
-            <form class="search" style="margin-left: 40px;">
-                <button>
-                    <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
-                        <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                </button>
-                <div class="search-input">
-                    <input class="input" placeholder="Type your text" required="" type="text">
+            <div class="retrieve-users" style="margin-left: 20px;">
+                <div class="searchBar" style="width: 300px;">
+                    <input
+                        type="text"
+                        id="equipmentSearch"
+                        placeholder="Search by Equipment name..."
+                        onkeyup="filterTable()" />
                 </div>
-                <button class="reset" type="reset">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </form>
-            <div class="heading">
-                <a href="equipment_create" class="newMember-btn"><i class=" ph ph-plus"></i> Add Equipment</a>
+</div>
+                <div class="heading">
+                    <a href="equipment_create" class="newMember-btn"><i class=" ph ph-plus"></i> Add Equipment</a>
+                </div>
             </div>
-        </div>
 
-        <!-- View-equipment-section-->
+            <!-- View-equipment-section-->
 
-        <div class="member-view-trainer">
+            <div class="member-view-trainer">
 
-            <?php if (!empty($equipment)): ?>
-                <?php foreach ($equipment as $item): ?>
-                    <div class="trainer">
-                        <img src="<?php echo URLROOT; ?>/assets/images/Equipment/<?php echo htmlspecialchars($item->file); ?>" alt="Equipment Image" class="trainer-image" />
-                        <h3><?php echo htmlspecialchars($item->name); ?></h3>
-                        <a href="equipment_view/<?php echo $item->equipment_id; ?>">
-                            <button class="member-view-trainer-btn">View</button>
-                        </a>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>No equipment available. <a href="equipment_create">Add some equipment</a>.</p>
-            <?php endif; ?>
-        </div>
+                <?php if (!empty($equipment)): ?>
+                    <?php foreach ($equipment as $item): ?>
+                        <div class="trainer">
+                            <img src="<?php echo URLROOT; ?>/assets/images/Equipment/<?php echo htmlspecialchars($item->file); ?>" alt="Equipment Image" class="trainer-image" />
+                            <h3><?php echo htmlspecialchars($item->name); ?></h3>
+                            <a href="equipment_view/<?php echo $item->equipment_id; ?>">
+                                <button class="member-view-trainer-btn">View</button>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No equipment available. <a href="equipment_create">Add some equipment</a>.</p>
+                <?php endif; ?>
+            </div>
 
 
 
@@ -78,6 +71,18 @@
 
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
 </body>
+<script>
+    function filterTable() {
+        const input = document.getElementById("equipmentSearch");
+        const filter = input.value.toLowerCase();
+        const trainers = document.querySelectorAll(".member-view-trainer .trainer");
+
+        trainers.forEach(trainer => {
+            const name = trainer.querySelector("h3").textContent.toLowerCase();
+            trainer.style.display = name.includes(filter) ? "" : "none";
+        });
+    }
+</script>
 
 </html>
 </body>
