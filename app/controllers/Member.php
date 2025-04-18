@@ -7,7 +7,7 @@
             $this->checkAuth('member');
         }
 
-        public function index(){
+        public function index($action = null) {
             $announcementModel = new M_Announcement;
             // Fetch the latest 4 announcements with admin names
             $announcements = $announcementModel->findAllWithAdminNames(4);
