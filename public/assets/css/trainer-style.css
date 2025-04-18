@@ -53,58 +53,13 @@ main .searchBar input[type="text"]:focus {
 
 /* Announcements Page */
 main .announcementsContainer{
-    padding-top: 1rem;
-    grid-column: 1 / -1;
-    height: 100vh;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
     display: flex;
     align-items: center;
     flex-direction: column;
     gap: 2rem;
     width: 100%;
-}
-
-main .announcementsContainer .announcementHeader{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-
-main .announcementsContainer .announcementHeader .aHeading{
-    display: flex;
-    align-items: center;
-}
-
-main .announcementsContainer .announcementHeader .aHeading h2{
-    font-size: 1.5rem;
-    color: var(--text-color);
-}
-
-main .announcementsContainer .announcementHeader .aHeading #num-of-announcements{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--alert-color);
-    border: 2px solid var(--alert-color);
-    border-radius: 20px;
-    padding: 0.2rem 0.5rem;
-    margin-left: 10px;
-}
-
-main .announcementsContainer .announcementHeader #mark-as-read{
-    color: var(--text-color);
-    cursor: pointer;
-    transition: var(--tran-05);
-    padding: 0.2rem 0.5rem;
-    border-radius: 20px;
-    border: 1px solid var(--text-color);
-}
-
-main .announcementsContainer .announcementHeader #mark-as-read:hover{
-    color: var(--hover-btn);
-    border: 1px solid var(--hover-btn);
-    box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.1);
 }
 
 main .announcementsContainer .announcement-card{
@@ -149,18 +104,6 @@ main .announcementsContainer .announcement-card .announcementCard-Header .detail
 
 main .announcementsContainer .announcement-card .announcementCard-Header .details .name-and-title h3{
     margin-bottom: 5px
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .unread-marker{
-    display: none;
-    border-radius: 20px;
-    border: 1px solid var(--alert-color);
-    padding: 0.2rem 0.5rem;
-    color: var(--alert-color);
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .unread-marker.unread{
-    display: block;
 }
 
 main .announcementsContainer .announcement-card .description{
@@ -222,8 +165,6 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
 /* Users */
 main .user-table-container {
     margin-top: 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -265,7 +206,6 @@ main .user-table-container .user-table-header .search-input {
     border: 1px solid #ddd;
     width: 250px;
   }
-  
   
 main .user-table-container .user-table-wrapper {
     height: auto; /* Adjust as per your design */
@@ -1184,26 +1124,49 @@ main .user-container .add-workout-btn{
   background-color: #f9f9f9;
 }
 
-/* Styling for the Workout Name Dropdown */
-.workout-name-select {
-  width: 100%;
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+/* General Styles for the Table and Form */
+.workout-schedule-container {
+  margin-top: 2rem;
+  padding: 2rem;
   background-color: #fff;
-  color: #333;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
-.workout-name-select:focus {
-  outline: none;
-  border-color: #007bff;
-  background-color: #f0f8ff;
+/* Table styling */
+#workout-schedule {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: fixed;
+  margin-bottom: 2rem;
+}
+
+#workout-schedule th,
+#workout-schedule td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+#workout-schedule th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+#workout-schedule td {
+  font-size: 0.9rem;
+}
+
+#workout-schedule tr:hover {
+  background-color: #f9f9f9;
 }
 
 /* Styling for the Inputs */
 .workout-id-cell input,
+.workout-name-cell select,
 .equipment-id-cell input,
 .equipment-name-cell input,
 input[type="number"] {
@@ -1219,6 +1182,7 @@ input[type="number"] {
 }
 
 .workout-id-cell input:focus,
+.workout-name-cell select:focus,
 .equipment-id-cell input:focus,
 .equipment-name-cell input:focus,
 input[type="number"]:focus {
@@ -1227,8 +1191,50 @@ input[type="number"]:focus {
   background-color: #f0f8ff;
 }
 
+/* Reduce size of row number column */
+#workout-schedule th.row-index,
+#workout-schedule td.row-index {
+  width: 60px;
+  text-align: center;
+  padding: 8px;
+}
+
+/* Description column - wider input */
+.description-cell {
+  width: 250px;
+}
+
+.description-cell input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.description-cell input:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+/* Measurement Group - Aligning the Beginning and End fields side by side */
+.measurement-group {
+  margin-top: 1rem;
+  display: flex;
+  gap: 20px; /* Adds space between the fields */
+}
+
+.measurement-group div {
+  flex: 1; /* Ensures equal width for each field */
+}
+
 /* Add Row and Submit Button Styling */
-button{
+button {
   padding: 10px 20px;
   font-size: 0.9rem;
   color: #fff;
@@ -1257,6 +1263,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
+
 /* For mobile responsiveness */
 @media screen and (max-width: 768px) {
   .workout-schedule-container {
@@ -1283,3 +1290,286 @@ button:disabled {
   background-color: darkred;
 }
 
+.action-buttons-update-schedule button{
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  margin-right: 10px; /* Add space between buttons */
+}
+
+#mark-completed {
+  background-color: #28a745; /* Green color */
+}
+
+#mark-completed:hover {
+  background-color: #218838;
+}
+
+/* Save as PDF Button */
+#save-pdf {
+  background-color: #007bff; /* Blue color */
+}
+
+#save-pdf:hover {
+  background-color: #0056b3;
+}
+
+/* Delete Schedule Button */
+#delete-schedule {
+  background-color: #dc3545; /* Red color */
+}
+
+#delete-schedule:hover {
+  background-color: #c82333;
+}
+
+/* Update Schedule Button - positioned to the right */
+#update-schedule {
+  background-color: #ffc107; /* Yellow color */
+  margin-left: auto; /* This pushes the button to the far right */
+}
+
+#update-schedule:hover {
+  background-color: #e0a800;
+}
+
+/* Action Buttons Container */
+.action-buttons-update-schedule {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left by default */
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Move the Update Schedule Button to the right */
+.action-buttons-update-schedule button:last-child {
+  margin-left: auto; /* Push the last button (Update Schedule) to the right */
+}
+
+/* Style for the workout schedule cards */
+.schedule-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-items: center;
+}
+
+.schedule-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 350px;
+  cursor: pointer;
+}
+
+.schedule-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.schedule-card h3 {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.schedule-card p {
+  font-size: 1em;
+  color: #555;
+  margin: 5px 0;
+}
+
+.schedule-card strong {
+  font-weight: 600;
+  color: #333;
+}
+
+.schedule-card .status {
+  font-weight: bold;
+  padding: 5px 50px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.schedule-card .status.ongoing {
+  background-color: #ffcc00;
+  color: #fff;
+}
+
+.schedule-card .status.completed {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .schedule-cards {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .schedule-cards {
+      grid-template-columns: 1fr;
+  }
+}
+
+/* Settings Page */
+main .settings-container {
+  margin-top: 1rem;
+  background-color: var(--sidebar-color);
+  padding: 2rem;
+  border-radius: 20px;
+}
+
+main .settings-container .details {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+main .settings-container .details .profile-picture {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the profile picture */
+  justify-content: space-between;
+  gap: 15px;
+}
+
+main .settings-container .details .profile-picture img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ddd;
+}
+
+main .settings-container .details .change-picture-btn {
+  margin: 0;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+main .settings-container .details .change-picture-btn:hover {
+  background-color: #0056b3;
+}
+
+main .settings-container .details p {
+  margin-bottom: 1rem;
+}
+
+main .settings-container .details .row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  width: 100%; /* Ensures full width for the fields */
+}
+
+main .settings-container .details .row > p {
+  flex: 1; /* Makes sure the input fields are evenly distributed */
+}
+
+main .settings-container .details p {
+  margin-bottom: 1rem;
+}
+
+main .settings-container .details p strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+  font-size: 1rem;
+}
+
+main .settings-container .details input,
+main .settings-container .details select {
+  width: 100%; /* Ensure the input takes full width */
+  padding: 12px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #555;
+}
+
+main .settings-container .details input[disabled],
+main .settings-container .details select[disabled] {
+  background-color: #f9f9f9;
+  color: #999;
+}
+
+main .settings-container .action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+main .settings-container .action-buttons button {
+  padding: 12px 24px; /* Adjust padding for better button size */
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+main .settings-container .action-buttons button.save-btn {
+  background-color: #4CAF50; /* Green for save button */
+  color: white;
+}
+
+main .settings-container .action-buttons button.save-btn:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+main .settings-container .action-buttons button.cancel-btn {
+  background-color: #f44336; /* Red for cancel button */
+  color: white;
+}
+
+main .settings-container .action-buttons button.cancel-btn:hover {
+  background-color: #e53935; /* Darker red on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .details {
+      flex-direction: column;
+  }
+
+  .title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+  }
+
+  main .settings-container .details .row {
+      flex-direction: column; /* Stack fields in a column on small screens */
+  }
+
+  main .settings-container .details .row > p {
+      flex: unset; /* Removes the equal width constraint on smaller screens */
+  }
+}
+
+.error {
+  color: red;
+  font-size: 0.8em;
+}

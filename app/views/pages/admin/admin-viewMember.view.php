@@ -51,13 +51,14 @@
 
         <div class="navbar">
 
-          <ul class="nav-links">
-            <li><a href="#user-details"><i class="ph ph-user"></i>User Details</a></li>
-            <li><a href="#membership-details"><i class="ph ph-calendar-dots"></i>Member Attendance<span class=""></a></li>
-            <li><a href="#supplement-records"><i class="ph ph-money"></i>Payment History</a></li>
-            <li><a href="#workout-schedules"><i class="ph ph-barbell"></i>Supplement Records</a></li>
-            <li><a href="#login-credentials"><i class="ph ph-lock-simple"></i>Login Credentials</a></li>
-          </ul>
+            <ul class="nav-links">
+              <li><a href="#user-details"><i class="ph ph-user"></i>User Details</a></li>
+              <li><a href="#membership-details"><i class="ph ph-calendar-dots"></i>Member Attendance<span class=""></a></li>
+              <li><a href="#supplement-records"><i class="ph ph-money"></i>Payment History</a></li>
+              <li><a href="#workout-schedules"><i class="ph ph-barbell"></i>Supplement Records</a></li>
+            </ul>
+
+          </div>
 
         </div>
 

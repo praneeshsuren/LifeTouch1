@@ -33,7 +33,7 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/Announcements">
+                <a href="<?php echo URLROOT; ?>/member/announcements">
                     <i class='icon ph-bold ph-newspaper'></i>
                     <span class="text">View Announcements</span>
                 </a>
@@ -56,7 +56,7 @@
         <p class="title">Settings</p>
         <ul>
             <li>
-                <a href="Settings">
+                <a href="<?php echo URLROOT; ?>/member/settings">
                     <i class='icon ph-bold ph-gear'></i>
                     <span class="text">Settings</span>
                 </a>

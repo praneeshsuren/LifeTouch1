@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/trainer-style.css?v=<?php echo time();?>" />
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/sidebar-greeting.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/trainer-style.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/sidebar-greeting.css?v=<?php echo time(); ?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- CHART.JS -->
@@ -31,144 +31,184 @@
           echo "<script>alert('" . $_SESSION['error'] . "');</script>";
           unset($_SESSION['error']);
       }
-  ?>
+    ?>
 
-    <section class="sidebar">
+  <section class="sidebar">
       <?php require APPROOT.'/views/components/trainer-sidebar.view.php' ?>
-    </section>
+  </section>
 
-    <main>
+  <main>
       <div class="title">
-        <h1>Create Workout Schedule</h1>
-        <div class="greeting">
-          <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
-        </div>
+          <h1>Create Workout Schedule</h1>
+          <div class="greeting">
+              <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
+          </div>
       </div>
 
       <div class="workout-schedule-container">
-    <form action="create_schedule.php" method="POST">
-        <table id="workout-schedule">
-            <thead>
-                <tr>
-                    <th>Workout ID</th>
-                    <th>Workout Name</th>
-                    <th>Equipment ID</th>
-                    <th>Equipment Name</th>
-                    <th>Sets</th>
-                    <th>Reps</th>
-                    <th>Actions</th> <!-- New Actions column -->
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="workout-id-cell"><input type="text" readonly></td>
+          <form id="workoutScheduleForm" method="POST" action="<?php echo URLROOT; ?>/WorkoutSchedule/createSchedule">
+            
+            <input type="hidden" id="member_id" name="member_id" value="" />
+            <input type="hidden" name="created_by" value="<?php echo $_SESSION['trainer_id']; ?>" />
+
+            <table id="workout-schedule">
+              <thead>
+                  <tr>
+                      <th class="row-index">#</th>
+                      <th>Workout ID</th>
+                      <th>Workout Name</th>
+                      <th>Equipment ID</th>
+                      <th>Equipment Name</th>
+                      <th>Description</th>
+                      <th>Sets</th>
+                      <th>Reps</th>
+                      <th>Actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td class="row-index">
+                      <span class="row-number-display">1</span>
+                      <input type="hidden" name="workout_details[0][row_no]" class="row-number-input" value="1">
+                    </td>
+                    <td class="workout-id-cell">
+                        <input type="text" name="workout_details[0][workout_id]" class="workout-id-input" readonly>
+                    </td>
                     <td class="workout-name-cell" data-id="">
-                        <select class="workout-name-select" required>
+                        <select class="workout-name-select" name="workout_details[0][workout_name]" required>
                             <option value="" disabled selected>Select Workout</option>
-                            <!-- Workouts will be dynamically loaded here -->
                         </select>
                     </td>
-                    <td class="equipment-id-cell"><input type="text" readonly></td>
-                    <td class="equipment-name-cell"><input type="text" readonly></td>
-                    <td><input type="number" name="sets[]" min="1" required></td>
-                    <td><input type="number" name="reps[]" min="1" required></td>
-                    <td><button type="button" class="delete-row-btn">Delete</button></td> <!-- Delete button -->
-                </tr>
-                <!-- More rows can be added dynamically -->
-            </tbody>
-        </table>
-        <button type="button" id="add-row">Add Row</button>
-        <button type="submit" id="save-schedule">Save Schedule</button>
-    </form>
-</div>
+                    <td class="equipment-id-cell"><input type="text" name="workout_details[0][equipment_id]" readonly></td>
+                    <td class="equipment-name-cell"><input type="text" name="workout_details[0][equipment_name]" readonly></td>
+                    <td class="description-cell"><input type="text" name="workout_details[0][description]"></td>
+                    <td><input type="number" name="workout_details[0][sets]" min="1"></td>
+                    <td><input type="number" name="workout_details[0][reps]" min="1"></td>
+                    <td><button type="button" class="delete-row-btn">Delete</button></td>
+                  </tr>
+              </tbody>
+            </table>
 
-    </main>
+            <button type="button" id="add-row">Add Row</button>
 
-    <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
+            <div>
+                <label for="weight_beginning">Weight (kg):</label>
+                <input type="number" id="weight_beginning" name="weight_beginning" min="1">
+            </div>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-    // Fetch workout data via API
-    fetch('<?php echo URLROOT; ?>/workout/api') // Adjust the URL to your API endpoint
-        .then(response => response.json())
-        .then(data => {
-            const workoutSelects = document.querySelectorAll('.workout-name-select');
-            
-            // Populate the dropdowns with workout data
-            workoutSelects.forEach(select => {
-                data.forEach(workout => {
-                    const option = document.createElement('option');
-                    option.value = workout.workout_id;
-                    option.textContent = workout.workout_name;
-                    select.appendChild(option);
-                });
-            });
+            <div>
+                <label for="chest_measurement_beginning">Chest Measurement (cm):</label>
+                <input type="number" id="chest_measurement_beginning" name="chest_measurement_beginning" min="1">
+            </div>
 
-            // Add event listener to each workout select
-            function addWorkoutSelectEventListener(select) {
-                select.addEventListener('change', function () {
-                    const selectedOption = this.options[this.selectedIndex];
-                    const workoutId = selectedOption.value;
+            <div>
+                <label for="bicep_measurement_beginning">Bicep Measurement (cm):</label>
+                <input type="number" id="bicep_measurement_beginning" name="bicep_measurement_beginning" min="1">
+            </div>
 
-                    // Find the corresponding workout data
-                    const selectedWorkout = data.find(workout => workout.workout_id == workoutId);
+            <div>
+                <label for="thigh_measurement_beginning">Thigh Measurement (cm):</label>
+                <input type="number" id="thigh_measurement_beginning" name="thigh_measurement_beginning" min="1">
+            </div>
 
-                    // Auto-populate the workout_id, equipment_id, and equipment_name fields
-                    const row = this.closest('tr');
-                    row.querySelector('.workout-id-cell input').value = selectedWorkout ? selectedWorkout.workout_id : '';
-                    row.querySelector('.equipment-id-cell input').value = selectedWorkout ? selectedWorkout.equipment_id : '';
-                    row.querySelector('.equipment-name-cell input').value = selectedWorkout ? selectedWorkout.equipment_name : '';
-                });
+            <button type="submit" id="save-schedule">Save Schedule</button>
+        </form>
+    </div>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let rowIndex = 1;
+
+    function updateRowNumbers() {
+      const rows = document.querySelectorAll('#workout-schedule tbody tr');
+      rows.forEach((row, index) => {
+        const rowNumber = index + 1;
+        const span = row.querySelector('.row-number-display');
+        const hiddenInput = row.querySelector('.row-number-input');
+
+        span.textContent = rowNumber;
+        hiddenInput.value = rowNumber;
+      });
+    }
+
+    fetch('<?php echo URLROOT; ?>/workout/api')
+      .then(response => response.json())
+      .then(data => {
+        function populateWorkoutSelect(select) {
+          select.innerHTML = '<option value="" disabled selected>Select Workout</option>';
+          data.forEach(workout => {
+            const option = document.createElement('option');
+            option.value = workout.workout_id;
+            option.textContent = workout.workout_name;
+            select.appendChild(option);
+          });
+        }
+
+        function addSelectChangeListener(select) {
+          select.addEventListener('change', function () {
+            const selectedWorkout = data.find(w => w.workout_id == this.value);
+            const row = this.closest('tr');
+
+            row.querySelector('.workout-id-input').value = selectedWorkout ? selectedWorkout.workout_id : '';
+            row.querySelector('.equipment-id-cell input').value = selectedWorkout ? selectedWorkout.equipment_id : '';
+            row.querySelector('.equipment-name-cell input').value = selectedWorkout ? selectedWorkout.equipment_name : '';
+          });
+        }
+
+        const tbody = document.querySelector('#workout-schedule tbody');
+        const firstRow = tbody.querySelector('tr');
+        populateWorkoutSelect(firstRow.querySelector('.workout-name-select'));
+        addSelectChangeListener(firstRow.querySelector('.workout-name-select'));
+
+        document.getElementById('add-row').addEventListener('click', function () {
+          const newRow = tbody.rows[0].cloneNode(true);
+          const index = rowIndex++;
+
+          newRow.querySelectorAll('input, select').forEach(input => {
+            if (!input.classList.contains('row-number-input')) input.value = '';
+            const name = input.getAttribute('name');
+            if (name) {
+              const updatedName = name.replace(/\[\d+\]/, `[${index}]`);
+              input.setAttribute('name', updatedName);
             }
+          });
 
-            workoutSelects.forEach(select => {
-                addWorkoutSelectEventListener(select); // Add event listener to each select
-            });
+          populateWorkoutSelect(newRow.querySelector('.workout-name-select'));
+          addSelectChangeListener(newRow.querySelector('.workout-name-select'));
 
-            // Add row functionality
-            document.getElementById('add-row').addEventListener('click', function () {
-                const tbody = document.querySelector('#workout-schedule tbody');
-                const newRow = tbody.rows[0].cloneNode(true); // Clone the first row
+          newRow.querySelector('.delete-row-btn').addEventListener('click', function () {
+            const rows = tbody.querySelectorAll('tr');
+            if (rows.length > 1) {
+              newRow.remove();
+              updateRowNumbers();
+            } else {
+              alert('At least one row is required.');
+            }
+          });
 
-                // Reset values in the new row
-                newRow.querySelectorAll('input').forEach(input => input.value = '');
-                newRow.querySelector('.workout-name-select').value = ''; // Clear the dropdown
+          tbody.appendChild(newRow);
+          updateRowNumbers();
+        });
 
-                // Re-add event listener to the new row's workout select
-                const newSelect = newRow.querySelector('.workout-name-select');
-                addWorkoutSelectEventListener(newSelect);
+        firstRow.querySelector('.delete-row-btn').addEventListener('click', function () {
+          const rows = document.querySelectorAll('#workout-schedule tbody tr');
+          if (rows.length > 1) {
+            firstRow.remove();
+            updateRowNumbers();
+          } else {
+            alert('At least one row is required.');
+          }
+        });
 
-                // Add the delete button functionality for the new row
-                const newDeleteButton = newRow.querySelector('.delete-row-btn');
-                newDeleteButton.addEventListener('click', function () {
-                    // Only allow deletion if there's more than one row
-                    const rows = tbody.querySelectorAll('tr');
-                    if (rows.length > 1) {
-                        newRow.remove(); // Remove the row when delete button is clicked
-                    } else {
-                        alert('At least one row is required.');
-                    }
-                });
+        const memberId = new URLSearchParams(window.location.search).get('id');
+        if (memberId) {
+          document.getElementById('member_id').value = memberId;
+        }
+      })
+      .catch(error => console.error('Error fetching workout data:', error));
+  });
+</script>
 
-                tbody.appendChild(newRow); // Append the new row
-            });
-
-            // Add delete button event listeners for existing rows
-            document.querySelectorAll('.delete-row-btn').forEach(button => {
-                button.addEventListener('click', function () {
-                    const row = this.closest('tr');
-                    const rows = row.closest('tbody').querySelectorAll('tr');
-                    if (rows.length > 1) {
-                        row.remove(); // Remove the row when delete button is clicked
-                    } else {
-                        alert('At least one row is required.');
-                    }
-                });
-            });
-        })
-        .catch(error => console.error('Error fetching workout data:', error));
-});
-    </script>
-  </body>
+</body>
 </html>
