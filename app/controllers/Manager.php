@@ -24,16 +24,16 @@ class Manager extends Controller
             GROUP BY base_name
         ");
         // Query to count each membership plan
-        $membershipCounts = $memberModel->query("SELECT membership_plan, COUNT(*) as count 
-        FROM member 
-        GROUP BY membership_plan");
+        // $membershipCounts = $memberModel->query("SELECT membership_plan, COUNT(*) as count 
+        // FROM member 
+        // GROUP BY membership_plan");
 
         // Fetch the latest 4 announcements with admin names
         $announcements = $announcementModel->findAllWithAdminNames(4);
 
         $data = [
             'announcements' => $announcements,
-            'membershipCounts' => $membershipCounts,
+            // 'membershipCounts' => $membershipCounts,
             'inventoryCounts' => $inventoryCounts,
         ];
         
@@ -69,13 +69,13 @@ class Manager extends Controller
     public function announcement_main()
     {
         $announcementModel = new M_Announcement;
-        $announcements = $announcementModel->findAll('announcement_id', 4);
+        $announcements = $announcementModel->findAllWithAdminDetails();
 
         $data = [
             'announcements' => $announcements
         ];
 
-        $this->view('manager/announcement_main', ['data' => $data]);
+        $this->view('manager/announcement_main', $data);
     }
 
     public function announcement_update()
@@ -493,11 +493,39 @@ class Manager extends Controller
 
     public function supplements()
     {
-        $this->view('manager/manager-supplement');
+        $supplementsModel = new M_Supplements; // Assume this is your equipment model
+        $data['supplement'] = $supplementsModel->findAll(); // Fetch all equipment data
+        $this->view('manager/manager-supplement', $data);
     }
 
     public function createSupplement()
     {
         $this->view('manager/manager-createSupplement');
+    }
+
+    public function supplement_view($id)
+    {
+        // Create an instance of the M_Supplements model
+        $supplementModel = new M_Supplements();
+
+        // Fetch the supplement record by ID, limit the result to 1
+        $supplement = $supplementModel->where(['supplement_id' => $id], [], 1);
+
+        // Check if the supplement exists
+        if (!$supplement) {
+            // Redirect to the supplement list if no record found
+            redirect('manager/supplements');
+            return;
+        }
+
+        $purchasesModel = new M_SupplementPurchases();
+
+        $purchases = $purchasesModel->where(['supplement_id' => $id], [], 1);
+
+        // Pass the supplement data to the view
+        $this->view('manager/manager-viewSupplement', [
+            'supplement' => $supplement[0],
+            'purchases' => $purchases
+        ]);
     }
 }
