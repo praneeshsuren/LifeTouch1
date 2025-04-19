@@ -102,7 +102,7 @@
                                 <input type="hidden" id="edit_membershipPlan_id" name="membershipPlan_id">
                                 <div class="input-group">
                                     <label for="edit_plan_name">Plan Name</label>
-                                    <input type="text" id="edit_plan_name" name="plan_name" required>
+                                    <input type="text" id="edit_plan_name" name="plan" required>
                                 </div>
                                 <div class="input-group">
                                     <label for="edit_amount">Amount</label>
