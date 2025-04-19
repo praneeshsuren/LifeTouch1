@@ -1293,6 +1293,61 @@ main .calendarContainer {
     transform: scale(1.05);
 }
 
+/* Booking detail*/
+main .book-details{
+    grid-column: 2;
+    grid-row: 2 / span 2;
+}
+
+main .book-details h2{
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+main .book-details .details{
+    background: var(--sidebar-color);
+    border-radius: 30px;
+    padding-top: 15px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-shadow: var(--box-shadow-color);
+}
+
+main .book-details .detail-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+main .book-details .detail-list .date-heading{
+    font-size: 1.2rem;
+    text-align: left;
+}
+
+main .book-details .detail{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--separator-color);
+    color: var(--hover-btn);
+    padding-top: 10px;
+    padding-bottom: 15px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    transition: var(--tran-03);
+}
+
+main .book-details .detail:hover{
+    transform: translateY(-10px);
+}
+
+main .book-details .detail .message{
+    margin-left: 1rem;
+}
+
 /* payment page */
 .paymentBox{
     background: var(--sidebar-color);
@@ -1413,6 +1468,75 @@ main .calendarContainer {
     height: 50px;
 }
 
+/* membership plan */
+
+.cards{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap:wrap;
+    grid-column: 1/-1;
+}
+
+.card{
+    background-color: white;
+    color: hsl(233, 13%, 49%);
+    border-radius: 0.8rem;
+}
+
+.cards .card.active{
+    background: linear-gradient(135deg,rgba(163,168,240,1) 0%, rgba(105,111,221,1) 100%);
+    color: fff;
+    display: flex;
+    align-items: center;
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+.card-ul{
+   margin: 2.6rem;
+   display: flex;
+   justify-content: center;
+   flex-direction: column; 
+   align-items: center;
+}
+
+ul li{
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding:0.5rem 0;
+}
+
+ul li.price{
+    font-size: 2rem;
+    color: hsl(232,13%, 33%);
+    padding-bottom: 1.5rem;
+}
+
+.shadow{
+    box-shadow: -5px 5px 15px 1px rgba(0,0,0,0.1);
+}
+
+.card.active .price{
+    color: fff;
+}
+
+.planBtn{
+    margin-top: 1rem;
+    height: 2.6rem;
+    width: 13.3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    background: linear-gradient(135deg,rgba(163,168,240,1) 0%, rgba(105,111,221,1) 100%);
+    color: fff;
+    outline: none;
+    border: 0;
+    font-weight: bold;
+}
 /* workout schedule */
 .workoutContainer{
     grid-column: 1 / -1;

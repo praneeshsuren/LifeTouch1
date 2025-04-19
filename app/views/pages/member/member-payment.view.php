@@ -31,6 +31,7 @@
         </div>
       </div>
       <div class="paymentBox">
+        <button id="payBtn" class="trainerviewbtn-Bookreservationbtn" style="float: left; margin-top: 5px;margin-bottom:3px; width:100px;" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'">Membership Plan</button>
         <button id="payBtn" class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: 5px;margin-bottom:3px; width:100px;">Pay</button>
 
         <!-- Past Payment Details -->
@@ -50,7 +51,7 @@
         </div>
       </div>
 
-      <div id="bookingModal" class="modal">
+      <!-- <div id="bookingModal" class="modal">
         <div class="modal-content">
           <span class="close">&times;</span>
           <div class="bookingModal-body">
@@ -81,7 +82,7 @@
             </form>
           </div>
         </div>
-      </div>
+      </div> -->
     </main>
       
     <!-- SCRIPT -->

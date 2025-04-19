@@ -50,43 +50,43 @@
     </main>
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      fetchTrainers();
-    });
+      document.addEventListener('DOMContentLoaded', () => {
+        fetchTrainers();
+      });
 
-    function fetchTrainers() {
-      fetch('<?php echo URLROOT; ?>/member/Trainer/api')
-        .then(response => {
-          console.log('Response Status:', response.status); // Log response status
-          return response.json();
-        })
-        .then(data => {
-          console.log('Fetched Data:', data); 
-          if (Array.isArray(data) && data.length > 0) {
-            const container = document.querySelector('.member-view-trainer');
-            container.innerHTML = ''; 
-            data.forEach(trainer => {
-              const trainerDiv = document.createElement('div');
-              trainerDiv.classList.add('trainer');
-              trainerDiv.innerHTML += `
-                <img src="<?php echo URLROOT; ?>/assets/images/${trainer.image || 'image.png'}" alt="${trainer.first_name}'s image" class="trainer-image"/>
-                <h3>${trainer.first_name}</h3>
-                <button class="member-view-trainer-btn">View</button>
-              `;
+      function fetchTrainers() {
+        fetch('<?php echo URLROOT; ?>/member/Trainer/api')
+          .then(response => {
+            console.log('Response Status:', response.status); // Log response status
+            return response.json();
+          })
+          .then(data => {
+            console.log('Fetched Data:', data); 
+            if (Array.isArray(data) && data.length > 0) {
+              const container = document.querySelector('.member-view-trainer');
+              container.innerHTML = ''; 
+              data.forEach(trainer => {
+                const trainerDiv = document.createElement('div');
+                trainerDiv.classList.add('trainer');
+                trainerDiv.innerHTML += `
+                  <img src="<?php echo URLROOT; ?>/assets/images/${trainer.image || 'image.png'}" alt="${trainer.first_name}'s image" class="trainer-image"/>
+                  <h3>${trainer.first_name}</h3>
+                  <button class="member-view-trainer-btn">View</button>
+                `;
 
-              const viewbutton = trainerDiv.querySelector('.member-view-trainer-btn');
-              viewbutton.onclick = () =>{
-                window.location.href =`<?php echo URLROOT; ?>/member/Trainer/viewTrainer?id=${trainer.trainer_id}`;
-              };
+                const viewbutton = trainerDiv.querySelector('.member-view-trainer-btn');
+                viewbutton.onclick = () =>{
+                  window.location.href =`<?php echo URLROOT; ?>/member/Trainer/viewTrainer?id=${trainer.trainer_id}`;
+                };
 
-              container.appendChild(trainerDiv);
-            });
-          } else{
-            console.log('No trainers found.');
-          }
-        })
-        .catch(error => console.error('Error fetching trainers:', error));
-    }
+                container.appendChild(trainerDiv);
+              });
+            } else{
+              console.log('No trainers found.');
+            }
+          })
+          .catch(error => console.error('Error fetching trainers:', error));
+      }
     </script>
   </body>
 </html>

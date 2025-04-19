@@ -212,6 +212,17 @@
             }
         } 
 
+        public function membershipPlan($action = null){
+            $plan_Model = new M_Membership_plan();
+            $plan = $plan_Model->findAll();
+            if($action === 'api'){
+                header('Content-type: application/json');
+                echo json_encode(['plan' => $plan]);
+                exit;
+            }
+            $this->view('member/member-membership-plan');
+        }
+
         public function Settings(){
             $this->view('member/member-settings');
         }   
