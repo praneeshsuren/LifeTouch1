@@ -543,190 +543,249 @@ main > .title > .greeting > .bell-container:hover .notification {
     100% { transform: translateX(0); }
 }
 
-
-
-/* Users */
-main .retrieve-users{
-    grid-column: 1 / -1;
-    grid-row: 2 / -1;
-}
-
-main .retrieve-users .searchBar {
-    width: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    z-index: 1000;
-}
-
-main .retrieve-users .searchBar input[type="text"] {
-    width: 100%;
-    max-width: 600px; /* Limit maximum width for better layout on large screens */
-    padding: 0.75rem 1rem; /* Padding for a comfortable input size */
-    border: 1px solid #ddd; /* Light border for input */
-    border-radius: 2rem; /* Rounded edges for the input box */
-    font-size: 1rem; /* Comfortable font size */
-    color: #495057; /* Dark gray text */
-    background-color: #ffffff; /* White background for contrast */
-    outline: none; /* Remove outline on focus */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
-    transition: all 0.3s ease; /* Smooth transition for hover/focus */
-}
-
-main .retrieve-users .searchBar input[type="text"]:focus {
-    border-color: var(--primary-color); /* Primary purple-blue border on focus */
-    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4); /* Glow effect */
-}
-
-/* Add User Button */
-
-main .retrieve-users .searchBar .add-user a button {
-    padding: 12px 45px;
-    background-color: var(--primary-color); /* Purple-blue button background */
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 3rem;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-main .retrieve-users .searchBar .add-user a button:hover {
-    transform: scale(1.05);
-}
-
-main .retrieve-users .table-container {
-    overflow: auto;
-    height: 100%;
-    margin: 0;
+/*User Table*/
+main .table-container {
+    margin: 2rem 0;
     border-radius: 0.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
+  
+main .table-container .filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .filters .filter {
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+main .table-container .filters .filter.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+main .table-container .user-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .user-table-header .search-input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    width: 250px;
+  }
+  
+main .table-container .user-table-header .add-user-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+main .table-container .user-table-wrapper {
+    height: auto; /* Adjust as per your design */
+    overflow: hidden; /* Hide scrollbar by default */
+    position: relative;
+    border: 1px solid #ddd; /* Optional: border around the scrollable area */
+    border-radius: 0.5rem;
+    transition: var(--tran-03);
+  }
 
-main .retrieve-users .table-container table{
-    margin: 0;
-}
+main .table-container .user-table-wrapper:hover {
+    overflow: auto;
+  }
 
-/* Base Table Styles */
-main .retrieve-users .user-table {
+main .table-container .user-table-wrapper .user-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.95rem;
-    background-color: #ffffff;
-}
-
-/* Header Styles */
-main .retrieve-users .user-table thead {
-    background-color: #695CFE; /* Primary purple-blue background */
-    color: #ffffff; /* White text for contrast */
-    border-bottom: 2px solid #09090a; /* Slightly darker border */
-}
-
-main .retrieve-users .user-table th {
-    padding: 1rem;
-    font-weight: 600;
+    position: relative;
+  }
+  
+main .table-container .user-table-wrapper .user-table th,
+main .table-container .user-table-wrapper .user-table td {
+    padding: 10px 15px;
     text-align: left;
-    white-space: nowrap;
-}
-
-/* Home Address Column Specific Width */
-main .retrieve-users .user-table th:nth-child(9),
-main .retrieve-users .user-table td:nth-child(9) {
-    width: 250px; /* Increase the width for the Home Address column */
-}
-
-/* Body Styles */
-main .retrieve-users .user-table td {
-    padding: 1rem;
-    color: #495057; /* Muted dark gray text */
-    border-bottom: 1px solid #f1f1f1; /* Light border for rows */
-}
-
-/* Row Hover Effect */
-main .retrieve-users .user-table tbody tr:hover {
-    background-color: #f2f1fe; /* Light purple-blue on hover */
-    transition: background-color 0.3s ease;
-}
-
-/* Zebra Striping */
-main .retrieve-users .user-table tbody tr:nth-child(even) {
-    background-color: #f8f9fa; /* Light gray for even rows */
-}
-
-/* Image in Table */
-main .retrieve-users .user-table .user-image {
-    width: 2.5rem;
-    height: 2.5rem;
+    border-bottom: 1px solid #ddd;
+    min-width: 100px;
+    text-wrap: nowrap;
+  }
+  
+main .table-container .user-table-wrapper .user-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    position: sticky; /* Makes the header sticky */
+    top: 0; /* Sticks to the top of the container */
+    z-index: 2; /* Ensures it stays above table body */
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+  }
+  
+main .table-container .user-table-wrapper .user-image {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    vertical-align: middle;
-    margin-right: 0.5rem;
-}
+  }
+  
+main .table-container .user-table-wrapper .status-badge {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.active {
+    background-color: #28a745;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.inactive {
+    background-color: #dc3545;
+  }
 
-/* Scrollbar Styling */
-.table-container::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-.table-container::-webkit-scrollbar-track {
+main .table-container .user-table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #888;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-track {
     background: #f1f1f1;
+  }
+
+/* ***************User Registration Form*********** */
+main .user-create-container{
+    margin-top: 1rem;
+    display: flex;
+    height: 100%;
+    background-color: var(--sidebar-color);
+    border-radius: 20px;
+    justify-content: start;
 }
 
-.table-container::-webkit-scrollbar-thumb {
-    background: #695CFE; /* Matches the header color */
-    border-radius: 3px;
+main .user-create-container .user-create-sidebar{
+    background-color: #e7f0f7;
+    margin: 1.5rem;
+    border-radius: 20px;
+    padding: 4rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    width: fit-content;
 }
 
-.table-container::-webkit-scrollbar-thumb:hover {
-    background: #5e4fda; /* Darker purple-blue on hover */
+main .user-create-container .user-create-sidebar .section-nav {
+    position: sticky;
+    top: 40px;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .table-container {
-        margin: 1rem 0;
-    }
-
-    .user-table th,
-    .user-table td {
-        padding: 0.75rem;
-        font-size: 0.9rem;
-    }
+main .user-create-container .user-create-sidebar .section-nav h2{
+    margin-bottom: 2rem;
+    text-wrap: nowrap;
 }
-
-
-/* User Registration Form */
-main .user-form{
-    grid-column: 1 / -1;
+  
+main .user-create-container .user-create-sidebar .section-link-wrapper {
+    display: flex;
+    align-items: start;
+}
+  
+main .user-create-container .user-create-sidebar .section-line-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: var(--hover-btn);
+    margin-right: 10px;
 }
-
-main .user-form h2{ 
-    font-size: 1.5rem;
+  
+main .user-create-container .user-create-sidebar .section-link {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    flex-grow: 1;
+    margin-top: 3.5px;
+    text-wrap: nowrap;
+}
+  
+main .user-create-container .user-create-sidebar .section-link.active {
     font-weight: bold;
-    margin-bottom: 40px;
 }
 
-main .user-form .form-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;  /* Two columns */
-    gap: 4rem;
-}
-
-main .user-form .form-container .left-column, .right-column {
+main .user-create-container .user-create-sidebar .section-number {
     display: flex;
     justify-content: center;
-    flex-direction: column;
+    align-items: center;
+    font-size: 1rem;
+    color: #007bff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    background-color: white;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  
+main .user-create-container .user-create-sidebar .section-number.completed {
+    color: white;
+    background-color: #007bff; 
+    border-color: #007bff;
+  }
+  
+  /* Connecting line */
+main .user-create-container .user-create-sidebar .section-line {
+    width: 2px;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #ccc;
+    transition: background-color 0.5s ease;
+  }
+  
+main .user-create-container .user-create-sidebar .section-line.active {
+    background-color: #007bff; /* Highlighted color */
+  }
+
+
+main .user-create-container .user-form{
+    padding: 20px;
+    padding: 4rem;
+    padding-left: 1rem;
+    padding-right: 2.5rem;
+    color: var(--hover-btn);
+    width: 100%;
+}
+
+main .user-create-container .user-form .form-container {
+    width: 100%;
+}
+
+main .user-create-container .user-form .form-container .section-content{
+    margin-bottom: 3rem;
+}
+
+main .user-create-container .user-form .form-container .section-content h3{
+    margin-bottom: 1rem;
 }
 
 main .user-form .form-container .input-container{
@@ -738,11 +797,20 @@ main .user-form .input-container .input-box {
     position: relative;
     width: 100%;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
 }
 
-main .user-form .input-container .input-box input {
+main .user-form .input-container .input-box label{
+    text-wrap: nowrap;
+    margin-right: 1rem;
+}
+
+main .user-form .input-container .input-box input{
     width: 100%;
-    padding: 10px;
+    height: 50px;
+    padding: 0 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -751,9 +819,61 @@ main .user-form .input-container .input-box input {
     transition: border-color 0.3s ease;
 }
 
-main .user-form .input-container .input-box input:focus {
-    border-color: #2693FF;
+main .user-form .form-container .section-content .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem; /* Adjust spacing between inputs */
+    margin: 0;
+  }
+  
+main .user-form .form-container .section-content .row .input-container {
+    flex: 1; /* Ensure inputs are evenly spaced */
+    margin: 0;
+  }
+
+main .user-form .form-container .input-image-box {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
 }
+
+main .user-form .form-container .image-container {
+    width: 200px; 
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ccc; 
+    display: flex;
+    margin-bottom: 10px;
+}
+
+main .user-form .form-container .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+main .user-form .form-container .input-image-box .image-upload-input {
+    display: none;
+}
+
+main .user-form .form-container .input-image-box .image-upload-label {
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 2rem;
+}
+
+main .user-form .form-container .input-image-box .image-upload-label:hover {
+    background-color: #0056b3;
+}
+
 
 main .user-form .input-container .input-box #gender {
     width: 100%;
@@ -779,82 +899,242 @@ main .user-form .input-container .input-box #gender option {
     color: #333;
 }
 
-main .user-form .form-container .right-column .input-image-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-main .user-form .form-container .right-column .input-image-box label {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 10px;
-}
-
-/* Styling for the circular image component */
-main .user-form .form-container .right-column .image-container {
-    width: 150px; /* Adjust the size as needed */
-    height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #ccc; /* Optional: Adds a border around the circular image */
-    margin-bottom: 20px; /* Optional: Adds space below the image */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-main .user-form .form-container .right-column .image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-
-}
-
-main .user-form .form-container .right-column input[type="file"] {
-    margin-bottom: 20px;
-}
-
-
 main .user-form .btn-container {
-    grid-column: 1 / -1;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-top: 1px solid #ddd;
+    padding-top: 2rem;
 }
 
 
 main .user-form .btn-container .user-create-btn {
-    width: 50%;
-    padding: 12px;
+    width: fit-content;
+    padding: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
     background-color: #2693FF;
     border: none;
-    border-radius: 5px;
-    font-size: 18px;
+    border-radius: 20px;
+    font-size: 1.1rem;
     color: white;
     font-weight: 700;
     cursor: pointer;
     transition: transform 0.3s ease, background-color 0.3s ease;
-    align-self: center; /* Center the button */
+    align-self: center;
 }
 
 main .user-form .btn-container .user-create-btn:hover {
     background-color: #1c7bd9;
-    transform: scale(1.05);
+    transform: scale(1.03);
 }
 
 /* Error Message Styles */
 main .user-form .form-container .input-container .invalid-feedback {
-    color: #FF0000; /* Red color for error */
+    color: #FF0000;
     font-size: 14px;
 }
 
-/* Responsive styling */
 @media (max-width: 768px) {
     main .trainer-form .input-container {
         flex-direction: column;
     }
 }
+
+/* *************View User Page**************** */
+
+main .view-user-container {
+    display: flex;
+    margin-top: 1rem;
+}
+
+main .view-user-container .navbar-container {
+    position: absolute;
+    background-color: #fff;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    width:fit-content;
+    z-index: 1000;
+}
+
+  
+main .view-user-container .navbar-container .navbar ul {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  main .view-user-container .navbar-container .navbar ul li {
+    position: relative;
+    padding: 0;
+}
+
+main .view-user-container .navbar-container .navbar ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 1rem 2rem;
+    color: var(--hover-btn);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative; /* Needed for ::after pseudo-element */
+}
+
+main .view-user-container .navbar-container .navbar ul li i{
+    font-size: 1.3rem;
+    margin-right: 10px;
+}
+
+/* Hover effect */
+main .view-user-container .navbar-container .navbar ul li a:hover {
+    background-color: #f3f7fb;
+    color: #007bff;
+}
+
+/* Active state for the clicked <li><a> */
+main .view-user-container .navbar-container .navbar ul li.active > a {
+    background-color: #f3f7fb;
+    color: #007bff; /* Purple text */
+}
+
+/* Add a rightmost darkened line when the li is active */
+main .view-user-container .navbar-container .navbar ul li.active > a::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0; /* Align to the rightmost end of the <a> element */
+    width: 4px; /* Thickness of the darkened line */
+    height: 100%;
+    background-color: #007bff; /* Dark purple for the line */
+    border-radius: 0 8px 8px 0; /* Optional for rounded edge effect */
+    transition: background-color 0.3s ease;
+}
+
+main .view-user-container .navbar-container .navbar ul li.active span.active{
+    width: 3px;
+    height: 100%;
+    background-color: var(--primary-color);
+}
+  
+main .view-user-container .user-container {
+    margin-left: calc(300px);
+    background-color: var(--sidebar-color);
+    padding: 2rem;
+    width: calc(100% - 300px - 2rem);
+    border-radius: 20px;
+}
+  
+  
+main .view-user-container .user-container .details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+main .view-user-container .user-container .details .profile-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  
+main .view-user-container .user-container .details .profile-picture img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+  }
+  
+main .view-user-container .user-container .details .change-picture-btn {
+    margin: 0;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 2rem;
+  }
+  
+main .view-user-container .user-container .details .change-picture-btn:hover {
+    background-color: #0056b3;
+  }
+
+main .view-user-container .user-container .details p {
+    margin-bottom: 1rem;
+}
+  
+main .view-user-container .user-container .details .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem; /* Adjust spacing between inputs */
+  }
+  
+main .view-user-container .user-container .details .row > p {
+    flex: 1; /* Ensure inputs are evenly spaced */
+  }
+  
+  main .view-user-container .user-container .details p {
+    margin-bottom: 1rem;
+
+  }
+  
+  main .view-user-container .user-container .details p strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1rem;
+
+  }
+  
+  main .view-user-container .user-container .details input,
+  main .view-user-container .user-container .details select {
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  main .view-user-container .user-container .details input[disabled],
+  main .view-user-container .user-container .details select[disabled] {
+    background-color: #f9f9f9;
+    color: #999;
+  }
+  
+  /* Action Buttons */
+  main .view-user-container .user-container .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .details {
+      flex-direction: column;
+    }
+    .title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+
 
 
 /* Announcements Page */
@@ -1082,7 +1362,7 @@ main .table-container .user-table-header .add-user-btn {
   }
   
 main .table-container .user-table-wrapper {
-    width:1000px;
+    width:100%;
     height: auto; /* Adjust as per your design */
     overflow: hidden; /* Hide scrollbar by default */
     position: relative;
