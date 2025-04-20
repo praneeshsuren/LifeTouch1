@@ -55,7 +55,7 @@
 
         public function findLastScheduleByMemberId($memberId)
         {
-            $query = "SELECT * FROM $this->table WHERE member_id = $memberId ORDER BY schedule_no DESC LIMIT 1";
+            $query = "SELECT * FROM $this->table WHERE member_id = '$memberId' ORDER BY schedule_no DESC LIMIT 1";
 
             $result = $this->get_row($query);
             return $result ? $result->schedule_no : 0;  // Return the result or null if not found

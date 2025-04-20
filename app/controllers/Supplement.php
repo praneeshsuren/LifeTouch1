@@ -190,7 +190,107 @@ class Supplement extends Controller
         $this->view('manager/manager-createSupplement', ['errors' => $errors]);
     }
 
+    public function addSupplementSale()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Initialize errors array for validation
+            $errors = [];
+            
+            // Get data from POST request
+            $data = $_POST;
+            $supplementSaleModel = new M_SupplementSales;
 
+            // Sanitize and validate the input data
+            $data['quantity'] = htmlspecialchars(trim($data['quantity']));
+            $data['price_of_a_supplement'] = htmlspecialchars(trim($data['price_of_a_supplement']));
+            $data['sale_date'] = htmlspecialchars(trim($data['sale_date'])); // Add sale_date
+
+            // Retrieve the member_id for redirecting after success
+            $member_id = isset($data['member_id']) ? $data['member_id'] : null;
+
+            // Validate quantity
+            if (empty($data['quantity'])) {
+                $errors['quantity'] = "Quantity is required.";
+            }
+
+            // Validate price
+            if (empty($data['price_of_a_supplement'])) {
+                $errors['price_of_a_supplement'] = "Price of a supplement is required.";
+            }
+
+            // Validate sale_date
+            if (empty($data['sale_date'])) {
+                $errors['sale_date'] = "Sale date is required.";
+            }
+
+            // Proceed with database insertion if no validation errors
+            if (empty($errors)) {
+                // Insert the data into the database
+                $insertStatus = $supplementSaleModel->insert($data);
+
+                // Check if insert was successful
+                if ($insertStatus) {
+                    $_SESSION['success'] = "Supplement sale added successfully!";
+                    // Redirect to the supplement records page after successful insert
+                    redirect('receptionist/members/supplementRecords?id=' . $member_id); 
+                    exit;
+                } else {
+                    $_SESSION['error'] = "An error occurred while adding the supplement sale. Please try again.";
+                }
+            } else {
+                // If validation errors, store them in the session
+                $_SESSION['error'] = "Please fix the errors in the form.";
+            }
+        }
+    }
+
+
+    public function getSupplements() {
+        try {
+            // Check if the query parameter is present
+            if (isset($_GET['query'])) {
+                $query = $_GET['query'];
+                $supplementModel = new M_Supplements;
+                $supplements = $supplementModel->searchSupplements($query);
+                
+                if ($supplements) {
+                    echo json_encode($supplements);  // Return valid JSON
+                } else {
+                    // Return an empty array if no supplements are found
+                    echo json_encode([]);
+                }
+            } else {
+                throw new Exception("Query parameter is missing");
+            }
+        } catch (Exception $e) {
+            // Return an error message as JSON
+            echo json_encode(["error" => $e->getMessage()]);
+        }
+    }
+
+    public function deleteSupplementSale()
+    {
+        $supplementSaleModel = new M_SupplementSales;
+
+        // Get the sale_id from the request
+        $sale_id = $_POST['sale_id'] ?? null;
+        $member_id = $_POST['member_id'] ?? null;
+        if (!$sale_id) {
+            echo "Sale ID is required.";
+            return;
+        }
+        $delete_result = $supplementSaleModel->delete($sale_id, 'sale_id');
+        // Delete the supplement sale record
+        if (!$delete_result) {
+            redirect('receptionist/members/supplementRecords?id=' . $member_id);  // Redirect to a success page
+            exit;
+        } else {
+            // Handle error if deletion fails
+            echo "Failed to delete the supplement sale. Please try again.";
+        }
+    }
+    
+    
 
 }
 

@@ -48,6 +48,24 @@
             return $result ? $result->quantity_sold : null;
         }
 
+        public function searchSupplements($query) {
+            // Ensure the query is sanitized and converted to lowercase for case-insensitive search
+            $query = "%" . strtolower($query) . "%";  // Adding % for LIKE search
+        
+            // SQL query to search for supplements by name in a case-insensitive manner
+            $sql = "SELECT * FROM $this->table WHERE LOWER(name) LIKE :query"; 
+        
+            // Prepare the data array for parameter binding
+            $data = ['query' => $query];
+        
+            // Use the query method from your Database trait to execute the query
+            return $this->query($sql, $data);
+        }
+        
+        
+        
+        
+
     }
 
 ?>

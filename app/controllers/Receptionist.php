@@ -282,7 +282,7 @@ class Receptionist extends Controller
                     }
                     break;
                 
-            case 'viewMember':
+            case 'userDetails':
                 // Load the view to view a trainer
                 $memberModel = new M_Member;
                 $member = $memberModel->findByMemberId($_GET['id']);
@@ -364,6 +364,28 @@ class Receptionist extends Controller
                     redirect('receptionist/members/viewMember?id=' . $userId);
                 }
 
+                break;
+
+            case 'supplementRecords':
+                $memberId = $_GET['id'];
+
+                if ($memberId) {
+
+                    $supplementSalesModel = new M_SupplementSales;
+
+                    // Fetch the supplement records for the member
+                    $supplementRecords = $supplementSalesModel->findByMemberId($memberId);
+            
+                    $data = [
+                        'supplements' => $supplementRecords
+                    ];
+
+                    $this->view('receptionist/receptionist-viewSupplements', $data);
+                    
+                } else {
+                    $_SESSION['error'] = 'Member not found.';
+                    redirect('receptionist/members');
+                }
                 break;
 
             default:

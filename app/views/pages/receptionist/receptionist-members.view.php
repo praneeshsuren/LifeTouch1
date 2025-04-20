@@ -81,7 +81,7 @@
             <tbody>
               <?php if (!empty($data['members'])): ?>
                 <?php foreach ($data['members'] as $member) : ?>
-                  <tr onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/members/viewMember?id=<?php echo $member->member_id; ?>';" style="cursor: pointer;">
+                  <tr onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/members/userDetails?id=<?php echo $member->member_id; ?>';" style="cursor: pointer;">
                       <td><?php echo $member->member_id; ?></td>
                       <td>
                         <img src="<?php echo URLROOT; ?>/assets/images/Member/<?php echo !empty($member->image) ? $member->image : 'default-placeholder.jpg'; ?>" alt="Member Picture" class="user-image">
