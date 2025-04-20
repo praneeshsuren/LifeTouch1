@@ -40,17 +40,18 @@
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-            <a href="equipment" class="btn" style="float: right; margin-top: -10px; margin-bottom: 3px;">Back</a>
-            <form method="post" enctype="multipart/form-data">
+            <a href="supplements" class="btn" style="float: right; margin-top: -10px; margin-bottom: 3px;">Back</a>
+
+            <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/supplement/create_supplement">
 
 
                 <div>
 
                     <div class="profile-img-container">
-                        <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/dumbell_add.png" alt="Equipment Image">
+                        <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/dumbell_add.png" alt="Supplement Image">
                     </div>
                     <p class="file-upload-text">Click below to select an image</p>
-                    <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="image" required accept="image/jpg, image/jpeg, image/png">
+                    <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="image" accept="image/jpg, image/jpeg, image/png">
                 </div>
 
                 <div class="input-container">
@@ -60,11 +61,6 @@
                 </div>
 
                 <div class="input-container">
-                    <input type="text" id="description" name="description" required>
-                    <label for="description" class="label"><i class="ph ph-clipboard-text"></i>Description</label>
-                    <div class="underline"></div>
-                </div>
-                <div class="input-container">
                     <input type="date" id="purchase_date" name="purchase_date" required>
                     <label for="date" class="label"><i class="ph ph-calendar"></i>Purchase Date</label>
                     <div class="underline"></div>
@@ -72,7 +68,13 @@
 
                 <div class="input-container">
                     <input type="text" id="purchase_price" name="purchase_price" required>
-                    <label for="price" class="label"><i class="ph ph-money"></i>Purchase Price</label>
+                    <label for="price" class="label"><i class="ph ph-money"></i>Purchase Price of a Supplement</label>
+                    <div class="underline"></div>
+                </div>
+
+                <div class="input-container">
+                    <input type="number" id="quantity" name="quantity" required>
+                    <label for="quantity" class="label"><i class="ph ph-stack"></i>Quantity</label>
                     <div class="underline"></div>
                 </div>
 

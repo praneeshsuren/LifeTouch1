@@ -59,7 +59,6 @@
 
                 </div>
 
-                <!-- Table with scrolling -->
                 <div class="table-scroll">
                     <table>
                         <thead>
@@ -79,20 +78,20 @@
                                         '<?php echo $announcement->announcement_id; ?>',
                                         '<?php echo $announcement->created_date; ?>',
                                         '<?php echo $announcement->created_time; ?>',
-                                        '<?php echo $announcement->created_by; ?>'
+                                        '<?php echo $announcement->first_name; ?> <?php echo $announcement->last_name; ?>'
                                     )">
                                         <td>
                                             <div class="profile-pic">
                                                 <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                                                 <div class="person-info">
-                                                    <h4>Kavishka</h4>
-                                                    <small class="email">kavishka@gmail.com</small>
+                                                    <h4><?php echo $announcement->first_name; ?></h4>
+                                                    <small class="email"><?php echo $announcement->email_address; ?></small>
                                                 </div>
                                             </div>
                                         </td>
                                         <td><?php echo $announcement->announcement_id; ?></td>
                                         <td><?php echo $announcement->subject; ?></td>
-                                        <td><?php echo $announcement->time; ?></td>
+                                        <td><?php echo $announcement->created_date; ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
@@ -122,7 +121,7 @@
                                 <input id="modalSubject" name="subject" type="text" class="modal-input" placeholder="Announcement Subject" disabled />
                             </div>
                         </div>
-                        <input id="modalId" name="announcement_id" style="display: none;" />
+                        <input id="modalId" name="announcement_id" style="display: none;"/>
                         <textarea id="modalDescription" name="description" class="modal-input" rows="5" placeholder="Announcement Description" disabled></textarea>
                         <div class="date-time">
                             <div class="announcement-date">
@@ -152,6 +151,7 @@
 
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
     <script>
+
         let isEditing = false; // Track whether we are in edit mode or not
         let currentAnnouncement = {}; // Store the current announcement data for editing
 
@@ -167,14 +167,7 @@
             document.getElementById('modalCreatedBy').textContent = createdBy;
 
             // Store the current announcement data
-            currentAnnouncement = {
-                subject,
-                description,
-                ann_id,
-                date,
-                time,
-                createdBy
-            };
+            currentAnnouncement = { subject, description, ann_id, date, time, createdBy };
 
             // Show the Edit and Delete buttons, and hide Save and Cancel buttons initially
             toggleActionButtons(true);
@@ -279,48 +272,8 @@
                 rows[i].style.display = match ? "" : "none";
             }
         }
+
     </script>
-
-    <script>
-            const unReadAnnouncements = document.querySelectorAll('.unread');
-            const unReadAnnouncementsCount = document.getElementById('num-of-announcements');
-            const markAllAsReadButton = document.getElementById('mark-as-read');
-
-            updateUnreadCount();
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.remove('unread');
-                        updateUnreadCount();
-                        // Once the announcement is marked as read, we don't need to observe it anymore
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, {
-                root: null, // Use the viewport as the root
-                rootMargin: '0px',
-                threshold: 0.5 // Trigger when 50% of the element is visible
-            });
-
-            // Start observing each unread announcement
-            unReadAnnouncements.forEach((announcement) => {
-                observer.observe(announcement);
-            });
-
-            markAllAsReadButton.addEventListener('click', function() {
-                unReadAnnouncements.forEach((announcement) => {
-                    announcement.classList.remove('unread');
-                });
-                updateUnreadCount();
-            });
-
-            function updateUnreadCount() {
-                const currentUnreadCount = document.querySelectorAll('.unread').length;
-                unReadAnnouncementsCount.textContent = currentUnreadCount + ' Unread!';
-                unReadAnnouncementsCount.style.display = currentUnreadCount === 0 ? 'none' : 'flex';
-            }
-        </script>
         
 </body>
 

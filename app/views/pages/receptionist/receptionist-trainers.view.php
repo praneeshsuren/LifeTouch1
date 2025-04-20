@@ -43,102 +43,66 @@
 
       </div>
 
-      <div class="retrieve-users">
+      <div class="table-container">
+          <div class="filters">
+            <button class="filter active">All Users</button>
+            <button class="filter">Active Users</button>
+            <button class="filter">Inactive Users</button>
+          </div>
 
-        <div class="searchBar">
-            <input 
-              type="text" 
-              id="trainerSearch" 
-              placeholder="Search by Name, Trainer ID, or NIC..." 
-              onkeyup="filterTable()" 
-            />
-            <div class="add-user">
-              <a href="<?php echo URLROOT; ?>/receptionist/trainers/createTrainer">
-                <button class="add-user-btn">+ Add Trainer</button>
-              </a>
-            </div>
-        </div>
+          <div class="user-table-header">
+            <input type="text" placeholder="Search" class="search-input">
+            <button class="add-user-btn" onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/trainers/createTrainer'">+ Add Trainer</button>
+          </div>
 
-        <div class="table-container">
-          <table class='user-table'>
-            <thead>
-                <tr>
-                    <th>Trainer Id</th>
-                    <th>Profile Picture</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>NIC Number</th>
-                    <th>Gender</th>
-                    <th>Date of Birth</th>
-                    <th>Age</th>
-                    <th>Home Address</th>
-                    <th>Email Address</th>
-                    <th>Contact Number</th>
-                </tr>
-            </thead>
-            <tbody>
-              <?php if (!empty($data['trainers'])): ?>
-                <?php foreach ($data['trainers'] as $trainer) : ?>
-                  <tr onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/trainers/viewTrainer?id=<?php echo $trainer->trainer_id; ?>';" style="cursor: pointer;">
-                      <td><?php echo $trainer->trainer_id; ?></td>
-                      <td>
-                        <img src="<?php echo URLROOT; ?>/assets/images/Trainer/<?php echo !empty($trainer->image) ? $trainer->image : 'default-placeholder.jpg'; ?>" alt="Trainer Picture" class="user-image">
-                      </td>
-                      <td><?php echo $trainer->first_name; ?></td>
-                      <td><?php echo $trainer->last_name; ?></td>
-                      <td><?php echo $trainer->NIC_no; ?></td>
-                      <td><?php echo $trainer->gender; ?></td>
-                      <td><?php echo $trainer->date_of_birth; ?></td>
-                      <td><?php echo calculateAge($trainer->date_of_birth); ?></td>
-                      <td><?php echo $trainer->home_address; ?></td>
-                      <td><?php echo $trainer->email_address; ?></td>
-                      <td><?php echo $trainer->contact_number; ?></td>
-                  </tr>
-                <?php endforeach; ?>
-                <?php else: ?>
+          <div class="user-table-wrapper">
+            <table class='user-table'>
+              <thead>
                   <tr>
-                      <td colspan="10" style="text-align: center;">No trainers available</td>
+                      <th>Trainer Id</th>
+                      <th>Profile Picture</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>NIC Number</th>
+                      <th>Gender</th>
+                      <th>Date of Birth</th>
+                      <th>Age</th>
+                      <th>Home Address</th>
+                      <th>Email Address</th>
+                      <th>Contact Number</th>
                   </tr>
-                <?php endif; ?>
+              </thead>
+              <tbody>
+                <?php if (!empty($data['trainers'])): ?>
+                  <?php foreach ($data['trainers'] as $trainer) : ?>
+                    <tr onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/trainers/viewTrainer?id=<?php echo $trainer->trainer_id; ?>';" style="cursor: pointer;">
+                        <td><?php echo $trainer->trainer_id; ?></td>
+                        <td>
+                          <img src="<?php echo URLROOT; ?>/assets/images/Trainer/<?php echo !empty($trainer->image) ? $trainer->image : 'default-placeholder.jpg'; ?>" alt="Trainer Picture" class="user-image">
+                        </td>
+                        <td><?php echo $trainer->first_name; ?></td>
+                        <td><?php echo $trainer->last_name; ?></td>
+                        <td><?php echo $trainer->NIC_no; ?></td>
+                        <td><?php echo $trainer->gender; ?></td>
+                        <td><?php echo $trainer->date_of_birth; ?></td>
+                        <td><?php echo calculateAge($trainer->date_of_birth); ?></td>
+                        <td><?php echo $trainer->home_address; ?></td>
+                        <td><?php echo $trainer->email_address; ?></td>
+                        <td><?php echo $trainer->contact_number; ?></td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                        <td colspan="11" style="text-align: center;">No trainers available</td>
+                    </tr>
+                  <?php endif; ?>
               </tbody>
             </table>
           </div>
 
-        </div> 
+      </div>
       
     </main>
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
-
-    <script>
-      function filterTable() {
-        // Get the input field and its value
-        const input = document.getElementById("trainerSearch");
-        const filter = input.value.toLowerCase(); // Convert input to lowercase for case-insensitive matching
-        const table = document.querySelector(".user-table tbody"); // Get the table body
-        const rows = table.getElementsByTagName("tr"); // Get all rows in the table body
-
-        // Loop through all table rows and hide those that don't match the search query
-        for (let i = 0; i < rows.length; i++) {
-            const cells = rows[i].getElementsByTagName("td"); // Get all cells in the current row
-            let match = false;
-
-            // Check each cell in the row for a match
-            for (let j = 0; j < cells.length; j++) {
-                if (cells[j]) {
-                    if (cells[j].textContent.toLowerCase().includes(filter)) {
-                        match = true; // Found a match
-                        break;
-                    }
-                }
-            }
-
-            // Show or hide the row based on whether there was a match
-            rows[i].style.display = match ? "" : "none";
-        }
-    }
-    </script>
-
-  </body>
-</html>
