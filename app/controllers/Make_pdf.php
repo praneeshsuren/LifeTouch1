@@ -85,6 +85,8 @@ class Make_pdf extends Controller
                 tr:nth-child(even) {
                     background-color: #f2dede;
                 }
+                                    .footer { margin-top: 30px; font-size: 12px; text-align: center; }
+
             </style>
         </head>
         <body>
@@ -99,7 +101,9 @@ class Make_pdf extends Controller
                             <th>Service Cost</th>
                         </tr>
                     </thead>
-                    <tbody>";
+                    <tbody>
+                    
+                    ";
 
         foreach ($overdueServices as $service) {
             $html .= "<tr>
@@ -113,6 +117,9 @@ class Make_pdf extends Controller
         $html .= "
                     </tbody>
                 </table>
+            </div>
+            <div class='footer'>
+                <p>© " . date('Y') . " " . APP_NAME . " - All Rights Reserved</p>
             </div>
         </body>
         </html>";
@@ -137,4 +144,3 @@ class Make_pdf extends Controller
         $dompdf->stream('overdue_equipment_report.pdf', ['Attachment' => 0]);
     }
 }
-?>

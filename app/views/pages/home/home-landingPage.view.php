@@ -307,27 +307,25 @@
     }
 
     function toggleMembership() {
-    const checkbox = document.getElementById('isMember');
-    const memberField = document.getElementById('membershipGroup');
-    const payNowBtn = document.querySelector('.button-group button[type="button"]');
-    const eventForm = document.getElementById('eventForm');
-    const isFree = eventForm.getAttribute('data-free') === '1';
+        const checkbox = document.getElementById('isMember');
+        const memberField = document.getElementById('membershipGroup');
+        const payNowBtn = document.querySelector('.button-group button[type="button"]');
+        const eventForm = document.getElementById('eventForm');
+        const isFree = eventForm.getAttribute('data-free') === '1';
 
-    // Show/hide membership number input
-    memberField.style.display = checkbox.checked ? 'block' : 'none';
+        // Show/hide membership number input
+        memberField.style.display = checkbox.checked ? 'block' : 'none';
 
-    // Show Pay Now button if:
-    // - Event is NOT free, regardless of membership
-    // - User is NOT a member
-    if (!isFree || !checkbox.checked) {
-        payNowBtn.style.display = 'inline-block';
-    } else {
-        // Event is free and user is a member
-        payNowBtn.style.display = 'none';
+        // Show Pay Now button if:
+        // - Event is NOT free, regardless of membership
+        // - User is NOT a member
+        if (!isFree || !checkbox.checked) {
+            payNowBtn.style.display = 'inline-block';
+        } else {
+            // Event is free and user is a member
+            payNowBtn.style.display = 'none';
+        }
     }
-}
-
-
 </script>
 <script>
     window.addEventListener('DOMContentLoaded', () => {
@@ -345,35 +343,6 @@
 </script>
 <script>
     document.querySelectorAll('.plans-content .box a').forEach((button, index) => {
-    button.addEventListener('click', function(e) {
-        e.preventDefault();
-        const eventId = eventIds[index];
-        const isFreeForMembers = freeEvents[index];
-
-        document.getElementById('eventIdInput').value = eventId;
-        document.getElementById('joinForm').style.display = 'flex';
-
-        // Store free status as a custom data attribute
-        const form = document.getElementById('eventForm');
-        form.setAttribute('data-free', isFreeForMembers ? '1' : '0');
-
-        // Reset checkbox and membership section
-        document.getElementById('isMember').checked = false;
-        document.getElementById('membershipGroup').style.display = 'none';
-
-        // Decide default Pay Now visibility
-        const payNowBtn = document.querySelector('.button-group button[type="button"]');
-        payNowBtn.style.display = isFreeForMembers ? 'none' : 'inline-block';
-    });
-});
-
-</script>
-
-<script>
-    const eventIds = <?php echo json_encode(array_column($data['events'], 'event_id')); ?>;
-    const freeEvents = <?php echo json_encode(array_column($data['events'], 'free_for_members')); ?>;
-
-    document.querySelectorAll('.plans-content .box a').forEach((button, index) => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const eventId = eventIds[index];
@@ -382,12 +351,78 @@
             document.getElementById('eventIdInput').value = eventId;
             document.getElementById('joinForm').style.display = 'flex';
 
-            // Store the free status in a hidden attribute or global variable
-            document.getElementById('eventForm').setAttribute('data-free', isFreeForMembers ? '1' : '0');
+            // Store free status as a custom data attribute
+            const form = document.getElementById('eventForm');
+            form.setAttribute('data-free', isFreeForMembers ? '1' : '0');
 
-            toggleMembership(); // Call this to evaluate visibility of "Pay Now"
+            // Reset checkbox and membership section
+            document.getElementById('isMember').checked = false;
+            document.getElementById('membershipGroup').style.display = 'none';
+
+            // Decide default Pay Now visibility
+            const payNowBtn = document.querySelector('.button-group button[type="button"]');
+            payNowBtn.style.display = isFreeForMembers ? 'none' : 'inline-block';
         });
     });
 </script>
+
+<script>
+    const eventIds = <?php echo json_encode(array_column($data['events'], 'event_id')); ?>;
+    const freeEvents = <?php echo json_encode(array_column($data['events'], 'free_for_members')); ?>;
+
+    const form = document.getElementById('eventForm');
+    const joinForm = document.getElementById('joinForm');
+    const eventIdInput = document.getElementById('eventIdInput');
+    const isMemberCheckbox = document.getElementById('isMember');
+    const membershipGroup = document.getElementById('membershipGroup');
+    const payNowBtn = document.querySelector('.button-group button[type="button"]');
+    const joinBtn = document.querySelector('.button-group button[type="submit"]');
+
+    document.querySelectorAll('.plans-content .box a').forEach((button, index) => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Set Event ID and whether event is free for members
+            eventIdInput.value = eventIds[index];
+            const isFree = freeEvents[index];
+            form.setAttribute('data-free', isFree ? '1' : '0');
+
+            // Reset form state
+            isMemberCheckbox.checked = false;
+            membershipGroup.style.display = 'none';
+
+            // Initially assume not a member → show Pay
+            payNowBtn.style.display = 'inline-block';
+            joinBtn.style.display = 'none';
+
+            // Show form
+            joinForm.style.display = 'flex';
+        });
+    });
+
+    isMemberCheckbox.addEventListener('change', function() {
+        const isMember = this.checked;
+        const isFree = form.getAttribute('data-free') === '1';
+
+        // Toggle membership number field
+        membershipGroup.style.display = isMember ? 'block' : 'none';
+
+        // Determine button visibility based on member and free status
+        if (isMember && isFree) {
+            // Case 1: Member + Free = Show Join only
+            joinBtn.style.display = 'inline-block';
+            payNowBtn.style.display = 'none';
+        } else {
+            // All other cases = Show Pay
+            joinBtn.style.display = 'none';
+            payNowBtn.style.display = 'inline-block';
+        }
+    });
+
+    function closeForm() {
+        joinForm.style.display = 'none';
+    }
+</script>
+
 
 </html>

@@ -106,6 +106,8 @@ class Manager extends Controller
     {
         $this->view('manager/report');
     }
+
+
     public function report_main()
     {
         $this->view('manager/report_main');
@@ -491,6 +493,65 @@ class Manager extends Controller
         $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
     }
 
+    public function membership_plan()
+{
+    $membershipModel = new M_Membership_plan();
+    $data['membership_plan'] = $membershipModel->findAll(); // ✅ match this with the view
+    $this->view('manager/membership_plan', $data);
+}
+
+    public function create_plan()
+    {
+        $membershipModel = new M_Membership_plan();
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $planData = [
+                'plan' => trim($_POST['plan_name']),
+                'amount' => trim($_POST['amount'])
+            ];
+
+            if ($membershipModel->insert($planData)) {
+                redirect('manager/membership_plan');
+            } else {
+                die("Failed to add plan.");
+            }
+        } else {
+            redirect('manager/membership_plan');
+        }
+    }
+    public function delete_plan()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $planId = $_POST['membershipPlan_id'];
+
+        $model = new M_Membership_plan();
+        $model->delete($planId, 'membershipPlan_id'); // Specify the primary key column
+
+        redirect('manager/membership_plan');
+    }
+}
+public function update_plan() {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $model = new M_Membership_plan();
+        $id = $_POST['membershipPlan_id'];
+        
+        if ($model->validate($_POST)) {
+            $model->update($id, $_POST, 'membershipPlan_id');
+            redirect('manager/membership_plan');
+        } else {
+            // Handle validation errors
+            $data = [
+                'plan' => (object)$_POST,
+                'errors' => $model->errors,
+                'title' => 'Edit Membership Plan'
+            ];
+            $this->view('manager/membership_plan', $data);
+        }
+    }
+}
+
+
     public function supplements()
     {
         $supplementsModel = new M_Supplements; // Assume this is your equipment model
@@ -528,4 +589,5 @@ class Manager extends Controller
             'purchases' => $purchases
         ]);
     }
+
 }

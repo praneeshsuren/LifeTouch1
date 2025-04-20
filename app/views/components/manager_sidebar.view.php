@@ -63,6 +63,12 @@
                 </a>
             </li>
             <li>
+                <a href="<?php echo URLROOT; ?>/manager/membership_plan">
+                <i class="ph ph-clock-user"></i>
+                    <span class="text">Membership Plans</span>
+                </a>
+            </li>
+            <li>
                 <a href="<?php echo URLROOT; ?>/manager/supplements">
                     <i class="ph ph-pint-glass"></i>
                     <span class="text">Supplements</span>
