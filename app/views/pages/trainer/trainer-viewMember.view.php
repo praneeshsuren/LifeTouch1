@@ -52,9 +52,9 @@
 
             <ul class="nav-links">
               <li><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
-              <li><a href="#membership-details"><i class="ph ph-calendar-dots"></i>Member Attendance<span class=""></a></li>
+              <li><a href="" id="memberAttendanceLink"><i class="ph ph-calendar-dots"></i>Member Attendance<span class=""></a></li>
               <li><a href="" id="workoutSchedulesLink"><i class="ph ph-notebook"></i>Workout Schedules</a></li>
-              <li><a href="#supplement-records"><i class="ph ph-barbell"></i>Supplement Records</a></li>
+              <li><a href="" id="supplementRecordsLink"><i class="ph ph-barbell"></i>Supplement Records</a></li>
             </ul>
 
           </div>

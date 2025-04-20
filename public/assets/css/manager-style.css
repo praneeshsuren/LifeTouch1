@@ -40,155 +40,6 @@ body.dark {
     --box-shadow-color: 0px 10px 8px rgba(255, 255, 255, 0.1);
 }
 
-main>.title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    color: var(--text-color);
-}
-
-main>.title>h1 {
-    font-size: 2rem;
-}
-
-main>.title>.greeting {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-right: 55px;
-}
-
-main>.title>.greeting h2 {
-    font-size: 1.5rem;
-    font-weight: 300;
-    color: var(--text-color);
-}
-
-main>.title>.greeting>.bell-container {
-    position: relative;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background-color: var(--separator-color);
-    /* Background color for the circle */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow */
-}
-
-
-main>.title>.greeting>.bell-container:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    /* Enhanced shadow on hover */
-}
-
-main>.title>.greeting>.bell-container .notification {
-    font-size: 1.5rem;
-    /* Size of the bell icon */
-    color: var(--text-color);
-    /* Adjust the bell color */
-}
-
-main>.title>.greeting>.bell-container:hover .notification {
-    transform: scale(1.3);
-    /* Pop out effect */
-    animation: vibrate 0.3s ease-in-out infinite;
-    /* Vibrate effect */
-}
-
-/* Vibration keyframes */
-@keyframes vibrate {
-    0% {
-        transform: translateX(0);
-    }
-
-    20% {
-        transform: translateX(-2px);
-    }
-
-    40% {
-        transform: translateX(2px);
-    }
-
-    60% {
-        transform: translateX(-2px);
-    }
-
-    80% {
-        transform: translateX(2px);
-    }
-
-    100% {
-        transform: translateX(0);
-    }
-}
-
-/* Announcements Section */
-
-main {
-    display: grid;
-    grid-template-columns: 1fr -100px;
-    gap: 1rem;
-}
-
-
-main .recent-announcements h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-}
-
-main .recent-announcements .announcements {
-    background: var(--sidebar-color);
-    border-radius: 30px;
-    padding-top: 15px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-shadow: var(--box-shadow-color);
-}
-
-main .recent-announcements .announcementss {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--separator-color);
-    color: var(--hover-btn);
-    padding-top: 10px;
-    padding-bottom: 15px;
-    cursor: pointer;
-    margin-bottom: 1rem;
-}
-
-main .recent-announcements .announcementss:hover {
-    transform: translateY(-10px);
-    transition: var(--tran-03);
-}
-
-main .recent-announcements .announcementss .profile-img {
-    display: flex;
-    margin-bottom: 3rem;
-    margin-left: 0.5rem;
-    width: 4.5rem;
-}
-
-main .recent-announcements .announcementss .profile-img img {
-    border-radius: 50%;
-    width: 100%;
-    object-fit: cover;
-}
-
-main .recent-announcements .announcementss .message {
-    margin-left: 1rem;
-}
-
 .sidebar {
     position: fixed;
     width: 250px;
@@ -524,135 +375,83 @@ body.dark .switch::before {
     left: 92px;
 }
 
-/* Dashboard */
-main {
+main{
     position: absolute;
     top: 0;
     left: 250px;
-    height: 100vh;
+    height: auto;
     width: calc(100% - 250px);
     background: var(--body-color);
-    transition: var(--tran-05);
     z-index: 1;
+    padding: 1.5rem 2rem;
+    transition: var(--tran-05);
 }
 
-main .title {
-    font-size: 30px;
-    font-weight: 500;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    margin-left: 2rem;
-    color: var(--text-color);
+main.active{
+    transition: var(--tran-05);
 }
 
-main .insights {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1.6rem;
-    margin-left: 2rem;
-}
-
-main .insights>div {
-    color: var(--text-color);
-    background: var(--sidebar-color);
-    padding: 2rem;
-    border-radius: 40px;
-    box-shadow: var(--box-shadow-color);
-    transition: var(--tran-03);
-}
-
-main .insights>div:hover {
-    background: var(--separator-color);
-}
-
-main .insights>div i {
-    background-color: #695CFE;
-    padding: 0.5rem;
-    border-radius: 50%;
-    color: var(--sidebar-color);
-    font-size: 2rem;
-}
-
-main .insights>.bookings i {
-    background-color: coral;
-}
-
-main .insights>.workouts i {
-    background-color: lightgreen;
-}
-
-main .insights>div .middle {
+main > .title{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 12.5rem;
-}
-
-main .insights h3 {
-    margin: 1rem 0 0.6rem;
-    font-size: 1rem;
-}
-
-main .insights .progress {
-    position: relative;
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-}
-
-main .insights svg {
-    width: 7rem;
-    height: 7rem;
-}
-
-@keyframes progress-animation {
-    0% {
-        stroke-dashoffset: 0;
-    }
-
-    100% {
-        stroke-dashoffset: 92;
-    }
-}
-
-main .insights svg circle {
-    fill: none;
-    stroke-width: 14;
-    stroke: #695CFE;
-    stroke-linecap: round;
-    transform: translate(8px, 8px);
-    stroke-dasharray: 110;
-    animation: progress-animation 0.8s ease-out forwards;
-}
-
-main .insights .progress .number {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    font-weight: 500;
+    width: 100%;
     color: var(--text-color);
 }
 
-main .insights .progress .number {
-    position: absolute;
-    top: 2.75rem;
-    left: 2.75rem;
+main > .title > h1{
+    font-size: 2rem;
+}
+
+main > .title > .greeting{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+main > .title > .greeting h2{
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--text-color);
+}
+
+main > .title > .greeting > .bell-container {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: var(--separator-color); /* Background color for the circle */
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-color);
-    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-.sidebar.active~main {
-    width: calc(100% - 92px);
-    left: 92px;
+main > .title > .greeting > .bell-container:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
-main .recent-announcements .announcement .message {
-    margin-left: 1rem;
+main > .title > .greeting > .bell-container .notification {
+    font-size: 1.5rem; /* Size of the bell icon */
+    color: var(--text-color); /* Adjust the bell color */
+}
+
+main > .title > .greeting > .bell-container:hover .notification {
+    transform: scale(1.3); /* Pop out effect */
+    animation: vibrate 0.3s ease-in-out infinite; /* Vibrate effect */
+}
+
+/* Vibration keyframes */
+@keyframes vibrate {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-2px); }
+    40% { transform: translateX(2px); }
+    60% { transform: translateX(-2px); }
+    80% { transform: translateX(2px); }
+    100% { transform: translateX(0); }
 }
 
 
@@ -930,7 +729,8 @@ body.dark form button:hover {
 
 }
 
-main .announcements-container {
+/*Announcement Main*/
+main .announcements-container{
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -948,37 +748,25 @@ main .announcements-container .searchBar {
 
 main .announcements-container .searchBar input[type="text"] {
     width: 100%;
-    max-width: 400px;
-    /* Limit maximum width for better layout on large screens */
-    padding: 0.75rem 1rem;
-    /* Padding for a comfortable input size */
-    border: 1px solid #ddd;
-    /* Light border for input */
-    border-radius: 2rem;
-    /* Rounded edges for the input box */
-    font-size: 1rem;
-    /* Comfortable font size */
-    color: #495057;
-    /* Dark gray text */
-    background-color: #ffffff;
-    /* White background for contrast */
-    outline: none;
-    /* Remove outline on focus */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    /* Subtle inner shadow */
-    transition: all 0.3s ease;
-    /* Smooth transition for hover/focus */
+    max-width: 400px; /* Limit maximum width for better layout on large screens */
+    padding: 0.75rem 1rem; /* Padding for a comfortable input size */
+    border: 1px solid #ddd; /* Light border for input */
+    border-radius: 2rem; /* Rounded edges for the input box */
+    font-size: 1rem; /* Comfortable font size */
+    color: #495057; /* Dark gray text */
+    background-color: #ffffff; /* White background for contrast */
+    outline: none; /* Remove outline on focus */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+    transition: all 0.3s ease; /* Smooth transition for hover/focus */
     margin-left: 3rem;
 }
 
 main .announcements-container .searchBar input[type="text"]:focus {
-    border-color: var(--primary-color);
-    /* Primary purple-blue border on focus */
-    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4);
-    /* Glow effect */
+    border-color: var(--primary-color); /* Primary purple-blue border on focus */
+    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4); /* Glow effect */
 }
 
-main .announcements-container .heading {
+main .announcements-container .heading{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1005,8 +793,7 @@ main .announcements-container .table-container .heading {
 
 main .announcements-container .table-container .heading .btn {
     padding: 12px 30px;
-    background-color: var(--primary-color);
-    /* Purple-blue button background */
+    background-color: var(--primary-color); /* Purple-blue button background */
     color: #ffffff;
     font-size: 1rem;
     font-weight: bold;
@@ -1029,8 +816,7 @@ main .announcements-container .table-container .table-scroll {
 
 main .announcements-container .table-container .table-scroll table {
     width: 100%;
-    height: 100%;
-    /* Adjust the height as needed */
+    height: 100%; /* Adjust the height as needed */
     border-collapse: collapse;
     overflow-y: auto;
 }
@@ -1084,20 +870,197 @@ main .announcements-container table td a:hover {
 main .announcements-container table tbody tr td[colspan] {
     text-align: center;
     vertical-align: middle;
-    height: 100px;
-    /* Set a height for the row to make the message more prominent */
-    color: #6c757d;
-    /* Optional: Add a soft color for the message */
-    font-size: 1rem;
-    /* Adjust font size */
-    font-style: italic;
-    /* Optional: Italicize the message for emphasis */
+    height: 100px; /* Set a height for the row to make the message more prominent */
+    color: #6c757d; /* Optional: Add a soft color for the message */
+    font-size: 1rem; /* Adjust font size */
+    font-style: italic; /* Optional: Italicize the message for emphasis */
 }
 
-/* Dark Mode for .last-announcement */
-body.dark .last-announcement {
-    background-color: #3C3C3C;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+/* Profile Pic and Info */
+.profile-pic {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.person-info h4 {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.person-info small {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    main {
+        margin-left: 200px;
+        padding: 15px;
+    }
+
+    main .announcements-container .heading h2 {
+        font-size: 16px;
+    }
+
+    main .announcements-container .heading .btn {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    main .announcements-container table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+/* Modal */
+main .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+main .modal-content {
+    background: white;
+    padding: 3rem;
+    border-radius: 25px;
+    width: 35%;
+    overflow: hidden; /* Prevent overflow */
+    max-height: 80vh; /* Limit height to viewport */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+main .modal-content .details{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+main .modal-content .details .profile-img{
+    display: flex;
+    width: 4.75rem;
+}
+
+main .modal-content .details .profile-img img{
+    border-radius: 50%;
+    width: 100%;
+    object-fit: cover;
+}
+
+main .modal-content .details .name-and-title{
+    margin-left: 1rem;
+    width: 100%;
+    display: block;
+    color: var(--hover-btn);
+    text-align: left;
+}
+
+main .modal-content .details .name-and-title h3{
+    font-size: 1rem;
+    margin-bottom: 5px
+}
+
+main .modal-content h3{
+    margin: 10px 0;
+}
+
+main .modal-content #modalSubject{
+    font-size: 1.4rem;
+    width: 100%;
+}
+
+main .modal-body p {
+    margin: 5px 0;
+    color: #555;
+    text-align: left;
+}
+
+main .modal-content #modalDescription{
+    margin: 2.5rem 0;
+    width: 100%;
+    font-size: 1rem;
+    height: auto; /* Allow dynamic height */
+    resize: vertical;  /* Allow vertical resizing */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    width: 100%;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar {
+    width: 8px;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+main .modal-body .date-time{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--hover-btn);
+}
+
+main .modal-body .date-time .announcement-date{
+    display: flex;
+    align-items: center;
+}
+
+main .modal-body .date-time .announcement-time{
+    display: flex;
+    align-items: center;
+}
+
+main .modal-body .date-time i{
+    font-size: 1.2rem;
+    margin-right: 6px;
+}
+
+main .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+main .modal-body .modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 2rem;
 }
 
 
@@ -1991,18 +1954,7 @@ body.dark .profile-table td {
     color: #ddd;
 }
 
-.profile-img {
-    width: 180px;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 5%;
-}
 
-.profile-img-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
 .member-card {
 
@@ -2291,7 +2243,8 @@ body.dark .payment-body {
     width: 400px;
 }
 
-.input-container input[type="text"] {
+.input-container input[type="text"],
+.input-container input[type="number"] {
     font-size: 15px;
     width: 100%;
     border: none;
@@ -2301,7 +2254,8 @@ body.dark .payment-body {
     outline: none;
 }
 
-body.dark .input-container input[type="text"] {
+body.dark .input-container input[type="text"]
+body.dark .input-container input[type="number"] {
     color: white;
 }
 
@@ -2315,7 +2269,9 @@ body.dark .input-container input[type="text"] {
 }
 
 .input-container input[type="text"]:focus~.label,
-.input-container input[type="text"]:valid~.label {
+.input-container input[type="text"]:valid~.label
+.input-container input[type="number"]:focus~.label,
+.input-container input[type="number"]:valid~.label {
     top: -20px;
     font-size: 16px;
     color: #7e7e7e;
@@ -2333,7 +2289,9 @@ body.dark .input-container input[type="text"] {
 }
 
 .input-container input[type="text"]:focus~.underline,
-.input-container input[type="text"]:valid~.underline {
+.input-container input[type="text"]:valid~.underline
+.input-container input[type="number"]:focus~.underline,
+.input-container input[type="number"]:valid~.underline {
     transform: scaleX(1);
 }
 
@@ -2971,7 +2929,6 @@ main .create-announcement .alert {
 }
 
 /*equipment*/
-
 .heading .newMember-btn i {
     font-size: 18px;
     vertical-align: middle;
@@ -3322,3 +3279,17 @@ main .retrieve-users .searchBar .add-user a button {
 main .retrieve-users .searchBar .add-user a button:hover {
     transform: scale(1.05);
 }
+
+.delete-row-btn {
+    margin: 0;
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+  
+  .delete-row-btn:hover {
+    background-color: darkred;
+  }

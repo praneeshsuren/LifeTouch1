@@ -192,7 +192,7 @@
             <div class="wrapper">
                 <div class="review-item">
                     <img src="<?php echo URLROOT; ?>/assets/images/home/1.jpg" alt="" class="trainer-image" />
-                    <h2>John</h2>
+                    <h2>Roshan Karunarathne</h2>
                     <div class="rating">
                         <i class='bx bxs-certification' id="star"></i>
                         <i class='bx bxs-certification' id="star"></i>
@@ -206,7 +206,7 @@
 
                 <div class="review-item">
                     <img src="<?php echo URLROOT; ?>/assets/images/home/2.jpg" alt="" class="trainer-image" />
-                    <h2>John</h2>
+                    <h2>Amila Dhanushka</h2>
                     <div class="rating">
                         <i class='bx bxs-certification' id="star"></i>
                         <i class='bx bxs-certification' id="star"></i>
@@ -219,7 +219,7 @@
 
                 <div class="review-item">
                     <img src="<?php echo URLROOT; ?>/assets/images/home/3.jpg" alt="" class="trainer-image" />
-                    <h2>John</h2>
+                    <h2>Thilina Romesh</h2>
                     <div class="rating">
                         <i class='bx bxs-certification' id="star"></i>
                         <i class='bx bxs-certification' id="star"></i>
@@ -264,9 +264,9 @@
     <!-- Footer section code -->
     <footer class="footer">
         <div class="social">
-            <a href="#"><i class='bx bxl-instagram'></i></a>
-            <a href="#"><i class='bx bxl-facebook'></i></a>
-            <a href="#"><i class='bx bxl-linkedin'></i></a>
+            <a href=""><i class='bx bxl-instagram'></i></a>
+            <a href="https://www.facebook.com/lifetouchphysicalfitness" target="_blank"><i class='bx bxl-facebook'></i></a>
+            <a href="https://api.whatsapp.com/send?phone=%2B94779257773&context=ARBkh6ua3j8vfi6so0P814szJrlRZ4SKTx_Uho4ZRBJ6vHDxuryQnblFnLzUpzkGLjZJsfY26-zehb5gRxCYH-BZPExjt4u-uWRsGPGVfUeI3hKB2cMd--fMLyfAsaOFn5wQHXkm92GI_kTQQZj6PnpRSA&source=FB_Page&app=facebook&entry_point=page_cta&fbclid=IwY2xjawG1QI1leHRuA2FlbQIxMAABHYxNkxoER3sF_d2Z3qIC7KU3jpaZo0D6LaZoFkO2lpVh5yTnZoC2eyBSwg_aem_a0wUXS2YcROlNPikW5vs8Q" target="_blank"><i class='bx bxl-whatsapp'></i></a>
         </div>
 
         <!-- Location, Contact, and Mail section -->
