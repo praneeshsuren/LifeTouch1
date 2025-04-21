@@ -77,7 +77,7 @@
     <main>
         <div class="title">
 
-            <h1 style="margin-top: -30px;">Edit Service history</h1>
+            <h1>Edit Service history</h1>
             <div class="greeting">
                 <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
             </div>
@@ -85,12 +85,12 @@
         </div>
 
 
-        <div class="service-form" style="margin-top: -90px; height: 99%; width:1000px;">
+        <div class="service-form" style="margin-top: 60px; height: 99%; width:1000px;">
 
             <a href="<?php echo URLROOT; ?>/manager/equipment_view/<?php echo isset($equipment->equipment_id); ?>" class="btn" style="float: right; margin-top: 10px;margin-bottom:3px;">Back</a>
 
 
-            <form method="post" action="<?php echo URLROOT; ?>/service/updateService/<?php echo htmlspecialchars($service->equipment_id); ?>">
+            <form method="post" action="<?php echo URLROOT; ?>/service/updateService/<?php echo htmlspecialchars($service->service_id); ?>">
                 
                 <input type="hidden" name="service_id" value="<?php echo htmlspecialchars(isset($service->service_id)); ?>">
 
@@ -107,7 +107,7 @@
                     <input type="text" id="service_cost" name="service_cost" value="<?php echo $service->service_cost ?>" required>
                 </div>
                 <div class="button-container">
-                    <button class="edit-button" style="display: block; margin: 0 auto; border-radius: 20px;width:200px;margin-top:20px;">Update</button>
+                    <button type="submit" class="edit-button" style="display: block; margin: 0 auto; border-radius: 20px;width:200px;margin-top:20px;">Update</button>
                 </div>
             </form>
 

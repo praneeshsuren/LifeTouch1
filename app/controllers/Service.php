@@ -22,10 +22,10 @@ class Service extends Controller
             if ($service->validate($postData)) {
                 if ($service->insert($postData)) {
                     $_SESSION['success'] = "Service has been successfully added!";
-                    
+
                     // Get the updated service history and pass it to the view
-                    $data['services'] = $service->findAll(); 
-                    redirect('manager/equipment_view/'.$postData['equipment_id']); // Pass the services data to the view
+                    $data['services'] = $service->findAll();
+                    redirect('manager/equipment_view/' . $postData['equipment_id']); // Pass the services data to the view
                 } else {
                     $_SESSION['error'] = "There was an issue adding the service. Please try again.";
                     redirect('manager/equipment_view');
@@ -54,11 +54,20 @@ class Service extends Controller
 
     public function updateService($id)
 {
-    $equipmentModel = new M_Equipment();
-    $equipment = $equipmentModel->where(['equipment_id' => $id], [], 'equipment_id');
     $serviceModel = new M_Service();
+    
+    // First get the current service record to know the equipment_id
+    $service = $serviceModel->where(['service_id' => $id], [], 'service_id');
+    
+    if (empty($service)) {
+        $_SESSION['error'] = "Service not found";
+        redirect('manager/equipment');
+        return;
+    }
+    
+    $equipment_id = $service[0]->equipment_id;
 
-    // First handle form submission if POST
+    // Handle form submission if POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updatedData = [
             'service_date' => $_POST['service_date'],
@@ -68,53 +77,39 @@ class Service extends Controller
 
         if ($serviceModel->update($id, $updatedData, 'service_id')) {
             $_SESSION['success'] = "Service updated successfully";
-            
-            // Get the equipment_id from the updated service
-            $service = $serviceModel->where(['service_id' => $id], [], 'service_id');
-            redirect('manager/equipment_view/'.$service[0]->equipment_id);
+            // Use the equipment_id we already have
+            redirect('manager/equipment_view/' . $equipment_id);
         } else {
             $_SESSION['error'] = "Failed to update service";
-            redirect('manager/equipment');
+            redirect('manager/equipment_view/' . $equipment_id);
         }
         return;
     }
 
-    // For GET requests - fetch and display the service
-    $service = $serviceModel->where(['service_id' => $id], [], 'service_id');
-
-    // Debug output - remove after testing
-
-    if (empty($service)) {
-        $_SESSION['error'] = "Service not found";
-        redirect('manager/equipment');
-        return;
-    }
-
-    // Pass to view - ensure we're using the first result
+    // For GET requests - display the edit form
     $this->view('manager/service_edit', [
-        'service' => $service[0],  // Use the first item from the array
-        'equipment_id' => $service[0]->equipment_id
+        'service' => $service[0],
+        'equipment_id' => $equipment_id
     ]);
 }
-public function deleteService($id)
-{
-    $serviceModel = new M_Service();  // Create an instance of the M_Equipment model
+    public function deleteService($id)
+    {
+        $serviceModel = new M_Service();  // Create an instance of the M_Equipment model
 
-    // Call the delete method from the model
-    $result = $serviceModel->delete($id, 'service_id');  // 'service_id' is the column to identify the service
+        // Call the delete method from the model
+        $result = $serviceModel->delete($id, 'service_id');  // 'service_id' is the column to identify the service
 
-    if ($result === false) {
-        // Handle failure (e.g., redirect to the equipment list with a failure message)
-        $_SESSION['message'] = 'Failed to delete service.';
-    } else {
-        // Handle success (e.g., redirect to the equipment list with a success message)
-        $_SESSION['message'] = 'Service deleted successfully.';
+        if ($result === false) {
+            // Handle failure (e.g., redirect to the equipment list with a failure message)
+            $_SESSION['message'] = 'Failed to delete service.';
+        } else {
+            // Handle success (e.g., redirect to the equipment list with a success message)
+            $_SESSION['message'] = 'Service deleted successfully.';
+        }
+
+        // Redirect back to the same page
+        $referer = $_SERVER['HTTP_REFERER'];
+        header("Location: $referer");
+        exit;
     }
-
-    // Redirect back to the same page
-    $referer = $_SERVER['HTTP_REFERER'];
-    header("Location: $referer");
-    exit;
-}
-
 }

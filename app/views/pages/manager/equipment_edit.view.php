@@ -48,7 +48,7 @@
                 <div>
 
                     <div class="profile-img-container">
-                        <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/Equipment/<?php echo htmlspecialchars($equipment->file); ?>" alt="Equipment Image">
+                        <img style="height:300px;width:300px" class="profile-img" src="<?php echo URLROOT; ?>/assets/images/Equipment/<?php echo htmlspecialchars($equipment->file); ?>" alt="Equipment Image">
                     </div>
                     <p class="file-upload-text">Click below to select a new image (if needed)</p>
                     <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="file" accept="image/jpg, image/jpeg, image/png">

@@ -25,13 +25,13 @@
     <main>
         <div class="title">
 
-            <h1 style="margin-top: -200px;">Reports</h1>
-            <div class="greeting" style="margin-top: -200px;">
+            <h1>Reports</h1>
+            <div class="greeting">
                 <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
             </div>
 
         </div>
-        <div class="card-container">
+        <div class="card-container" style="margin-top: 250px;">
             <div class="card">
                 <div class="card-details">
                     <i class="ph ph-barbell" style="font-size: 50px;"></i>
