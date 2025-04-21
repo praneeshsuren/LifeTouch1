@@ -212,15 +212,76 @@
             }
         } 
 
+        public function checkout(){
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $_SESSION['payment_data'] = [
+                    'member_id' => $_POST['member_id'],
+                    'id' => $_POST['package_id'],
+                    'startDate' => $_POST['paymentStartDate'],
+                    'endDate' => $_POST['paymentExpireDate']
+                ];
+        
+                $this->view('member/member-cardPayment',[
+                    'session' => $_SESSION['payment_data'],
+                ]);
+            } else {
+                // Direct page access fallback
+                header('Location: ' . URLROOT . '/member/membershipPlan');
+                exit;
+            }
+        }
+
+        public function cardPayment($action = null){
+            $plan_Model = new M_Membership_plan();
+            $plan = $plan_Model->findAll();
+            if($action === 'api'){
+                header('Content-type: application/json');
+                $payment_data = isset($_SESSION['payment_data']) ? $_SESSION['payment_data'] : null;
+                echo json_encode([
+                    'plan' => $plan,
+                    'session' => $payment_data
+                ]);
+                exit;
+            }
+        }
+
         public function membershipPlan($action = null){
+            $member_id = $_SESSION['member_id'] ?? null;
             $plan_Model = new M_Membership_plan();
             $plan = $plan_Model->findAll();
             if($action === 'api'){
                 header('Content-type: application/json');
                 echo json_encode(['plan' => $plan]);
                 exit;
+            } else if ($action === 'savePlan'){
+                if($_SERVER['REQUEST_METHOD'] === "POST") {
+                    header('Content-Type: application/json');
+
+                    $member_id = $_POST['member_id'] ?? null;
+                    $plan_id = $_POST['plan_id'] ?? null;
+                    $payment_intent_id = $_POST['payment_intent_id'] ?? null;
+                    $status = $_POST['status'] ?? null;
+                    $startDate = $_POST['startDate'] ?? null;
+                    $endDate = $_POST['endDate'] ?? null;
+
+                    $data = [
+                        'member_id' => $member_id,
+                        'id' => $plan_id,
+                        'payment_intent_id' => $payment_intent_id,
+                        'status' => $status,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate
+                    ];
+
+                    echo json_encode(['success' => 'success']);
+                }
+                else {
+                    echo json_encode(['error' => 'Missing required parameters']);
+                }
+                exit;
             }
-            $this->view('member/member-membership-plan');
+            $data = ['member_id' => $member_id];
+            $this->view('member/member-membership-plan',$data);
         }
 
         public function Settings(){

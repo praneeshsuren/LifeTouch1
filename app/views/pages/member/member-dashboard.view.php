@@ -133,91 +133,9 @@
           </div>
         </div>      
       </div>
-
-      <div class="chart">
-        <div class="chart-header">
-          <h2>Bookings</h2>
-        </div>
-        <div class="chart-container">
-          <table class="paymentHistoryTable">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Trainer's detail</th>
-                  <th>Time</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-          </table>
-        </div>
-      </div>
     </main>
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
-    <script>
-      const dateToday = new Date().toISOString().split('T')[0];
-
-      document.addEventListener("DOMContentLoaded", () =>{ 
-        fetch(`<?php echo URLROOT; ?>/member/index/api`)
-          .then(response => {
-            console.log('Response Status:', response.status);
-            return response.json();
-          })
-          .then(data =>{
-            console.log('bookings:',data);
-            markBookings(data.bookings);
-          })
-          .catch(error => console.error('Error fetching bookings details:', error));
-      });
-
-      function markBookings(bookings) {
-        const tbody = document.querySelector(".paymentHistoryTable tbody");
-        tbody.innerHTML = "";
-           
-        // Filter bookings for "booked" 
-        const filteredBookings = bookings.filter(
-          booking => (booking.status === 'booked') && 
-            new Date(booking.booking_date).getTime() >= new Date(dateToday).getTime()
-        )
-        .sort((a, b) => {
-          const dateA = new Date(a.booking_date);
-          const dateB = new Date(b.booking_date);
-
-          if (dateA.getTime() !== dateB.getTime()) {
-            return dateA - dateB; // sort by date ascending
-          }
-
-          const timeA = convertTo24hrs(a.timeslot.split(" - ")[0]); // "09:00 AM"
-          const timeB = convertTo24hrs(b.timeslot.split(" - ")[0]); // "11:00 AM"
-
-          return timeA.getTime() - timeB.getTime(); 
-        });
-
-        filteredBookings.forEach(booking => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${booking.booking_date}</td>
-            <td>${booking.trainer_name}</td>
-            <td>${booking.timeslot}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-      }
-
-      function convertTo24hrs(time){
-        const [hrMin, period] = time.trim().split(' '); //AM,PM
-        let [hr, min] =hrMin.split(':');
-        hr = parseInt(hr, 10);
-        min = parseInt(min, 10);
-        let hr24 = hr;
-        if(period === 'PM' && hr24 < 12) {
-          hr24 +=12;
-        } else if (period === 'AM' && hr24 ===12) {
-          hr24 = 0;
-        }
-        return new Date(1970, 0, 1, hr24, min);
-      }
-    </script>
   </body>
 </html>
 
