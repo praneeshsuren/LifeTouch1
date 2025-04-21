@@ -71,8 +71,7 @@ class Workout_pdf extends Controller
         </head>
         <body>
             <div class="header">
-                <h1>Workout Schedule Report</h1>
-                <p>Generated on: '.date('Y-m-d').'</p>
+                <h1>Workout Schedule</h1>
             </div>
             
             <table class="info-table">

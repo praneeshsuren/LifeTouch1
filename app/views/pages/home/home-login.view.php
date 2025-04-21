@@ -11,6 +11,109 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/login-style.css?v=<?php echo time(); ?>" />
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            margin: 10% auto;
+            padding: 30px 25px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal h2 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #333;
+        }
+
+        .modal .input-box input {
+            width: 100%;
+            color: #333;
+            padding: 10px 14px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+
+        .modal .input-box input:focus {
+            border-color: #0066ff;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .modal .btn-cancel {
+            background: #ccc;
+            color: #333;
+        }
+
+        .modal .btn-primary {
+            background: #0066ff;
+            color: white;
+        }
+
+        .modal .btn:hover {
+            opacity: 0.9;
+        }
+
+        #resetMessage {
+            font-size: 14px;
+            text-align: center;
+        }
+
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -61,12 +164,105 @@
                 <input type="password" name="password" placeholder="Password" required>
             </div>
 
-            <br><a href="#">Forgot password?</a><br>
+            <br><a href="#" id="forgot-password-link">Forgot password?</a><br>
             <button type="submit" name="submit" class="btn">Login</button>
         </form>
+        <!-- Forgot Password Modal -->
+        <div id="forgotPasswordModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Reset Password</h2>
+                <form id="forgot-password-form">
+                    <div class="input-box">
+                        <input type="text" name="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-cancel">Cancel</button>
+                        <button type="submit" class="btn btn-primary" style="width: 150px;">Send Reset Link</button>
+                    </div>
+                </form>
+                <div id="resetMessage" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+
+
     </div>
 
     <script src="<?php echo URLROOT; ?>/assets/js/login-script.js"></script>
+    <script>
+        // Forgot Password Modal
+        const modal = document.getElementById("forgotPasswordModal");
+        const btn = document.getElementById("forgot-password-link");
+        const span = document.getElementsByClassName("close")[0];
+        const cancelBtn = document.querySelector(".btn-cancel");
+
+        btn.onclick = function(e) {
+            e.preventDefault();
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        cancelBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        document.getElementById("forgot-password-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const username = this.querySelector('input[name="username"]').value.trim();
+    const messageDiv = document.getElementById("resetMessage");
+
+    if (!username) {
+        messageDiv.innerHTML = '<p style="color:red;">Please enter your username</p>';
+        return;
+    }
+
+    // Show loading state
+    messageDiv.innerHTML = '<p style="color:blue;">Processing your request...</p>';
+
+    // Send username to server
+    fetch('<?php echo URLROOT; ?>/login/requestReset', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            messageDiv.innerHTML = '<p style="color:green;">' + data.message + '</p>';
+            setTimeout(() => {
+                modal.style.display = "none";
+                messageDiv.innerHTML = '';
+                this.reset(); // Reset the form
+            }, 3000);
+        } else {
+            messageDiv.innerHTML = '<p style="color:red;">' + data.message + '</p>';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        messageDiv.innerHTML = '<p style="color:red;">An error occurred. Please try again.</p>';
+    });
+});
+    </script>
 </body>
 
 </html>

@@ -35,6 +35,12 @@
             -moz-appearance: none;
             appearance: none;
         }
+        .error-message {
+        color: red;
+        font-size: 0.9rem;
+        margin-top: 5px;
+        display: block;
+    }
     </style>
 </head>
 
@@ -54,6 +60,20 @@
 
 
             <div class="table-container">
+            
+                <?php if (isset($_SESSION['form_errors']['plan'])): ?>
+                    <span class="error-message"><?php echo $_SESSION['form_errors']['plan']; ?></span>
+                <?php
+                    unset($_SESSION['form_errors']['plan']);
+                    unset($_SESSION['form_data']['plan_name']);
+                endif; ?>
+                <?php if (isset($_SESSION['form_errors']['amount'])): ?>
+                    <span class="error-message"><?php echo $_SESSION['form_errors']['amount']; ?></span>
+                <?php
+                    unset($_SESSION['form_errors']['amount']);
+                    unset($_SESSION['form_data']['amount']);
+                endif; ?>
+
                 <div class="heading" style="margin-left: 1040px;">
                     <a href="#" class="newMember-btn" onclick="openForm()"><i class="ph ph-plus"></i> Add Plan</a>
                 </div>
@@ -103,10 +123,16 @@
                                 <div class="input-group">
                                     <label for="edit_plan_name">Plan Name</label>
                                     <input type="text" id="edit_plan_name" name="plan" required>
+                                    <?php if (isset($_SESSION['edit_errors']['plan'])): ?>
+                                        <span class="error-message"><?php echo $_SESSION['edit_errors']['plan']; ?></span>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="input-group">
                                     <label for="edit_amount">Amount</label>
                                     <input type="text" id="edit_amount" name="amount" required>
+                                    <?php if (isset($_SESSION['edit_errors']['amount'])): ?>
+                                        <span class="error-message"><?php echo $_SESSION['edit_errors']['amount']; ?></span>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="button-group">
                                     <button type="submit" class="btn">Update</button>
@@ -124,6 +150,7 @@
                                 <div class="input-group">
                                     <label for="plan_name">Plan Name</label>
                                     <input type="text" id="plan_name" name="plan_name" required />
+
                                 </div>
                                 <div class="input-group">
                                     <label for="amount">Amount</label>
@@ -161,10 +188,19 @@
     </script>
     <script>
         window.onload = function() {
-            // Ensure both modals are hidden on page load
-            document.getElementById("editForm").style.display = "none";
-        };
+            <?php if (isset($_SESSION['edit_errors'])): ?>
+                document.getElementById("editForm").style.display = "flex";
 
+                // Optional: if you want to repopulate the form with previous values
+                <?php if (isset($_SESSION['edit_data'])): ?>
+                    document.getElementById("edit_membershipPlan_id").value = "<?php echo $_SESSION['edit_data']['membershipPlan_id'] ?? ''; ?>";
+                    document.getElementById("edit_plan_name").value = "<?php echo $_SESSION['edit_data']['plan'] ?? ''; ?>";
+                    document.getElementById("edit_amount").value = "<?php echo $_SESSION['edit_data']['amount'] ?? ''; ?>";
+                <?php endif; ?>
+            <?php else: ?>
+                document.getElementById("editForm").style.display = "none";
+            <?php endif; ?>
+        };
         // Open the Edit Form
         function openEditForm(id, planName, amount) {
             document.getElementById("edit_membershipPlan_id").value = id;
@@ -193,6 +229,11 @@
             });
         });
     </script>
+    <?php
+    unset($_SESSION['edit_data']);
+    unset($_SESSION['edit_errors']);
+    unset($_SESSION['error']);
+    ?>
 
 </body>
 

@@ -54,6 +54,8 @@ class Service extends Controller
 
     public function updateService($id)
 {
+    $equipmentModel = new M_Equipment();
+    $equipment = $equipmentModel->where(['equipment_id' => $id], [], 'equipment_id');
     $serviceModel = new M_Service();
 
     // First handle form submission if POST
@@ -81,7 +83,6 @@ class Service extends Controller
     $service = $serviceModel->where(['service_id' => $id], [], 'service_id');
 
     // Debug output - remove after testing
-    echo '<pre>Service Data: '; print_r($service); echo '</pre>';
 
     if (empty($service)) {
         $_SESSION['error'] = "Service not found";
