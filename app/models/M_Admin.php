@@ -25,6 +25,7 @@
             return $this->first($data);  // Use the `first` method to get the first matching record
         }
 
+
         public function validate($data) {
             $this->errors = [];
         

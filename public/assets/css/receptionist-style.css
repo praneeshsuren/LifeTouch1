@@ -17,11 +17,88 @@
     --hover-btn: #000;
     --box-shadow-color: 0px 10px 8px rgba(0, 0, 0, 0.1);
     --table-head-color: #c977fb;
+    --modalbg-colour:rgba(0, 0, 0, 0.4);
 
     --tran-02: all 0.2s ease;
     --tran-03: all 0.3s ease;
     --tran-04: all 0.4s ease;
     --tran-05: all 0.5s ease; 
+}
+
+/******Input Box*******/
+.floating-label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    background: white;
+    padding: 0 10px;
+    color: #999;
+    transition: all 0.3s ease;
+}
+
+input:focus + .floating-label,
+input:valid + .floating-label {
+    top: 0;
+    font-size: 0.75em;
+    color: #007bff;
+}
+
+input:focus + .floating-label{
+    color: #007bff;
+}
+
+input:focus {
+    border-color: #2693FF;
+}
+
+/******Buttons*******/
+.edit-btn,
+.delete-btn,
+.save-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background-color: #007bff;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #b02a37;
+}
+
+.save-btn {
+  background-color: #28a745;
+  display: none;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  display: none;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
 }
 
 html{
@@ -44,6 +121,7 @@ body.dark{
     --text-color: #CCC;
     --hover-btn: #FFF;
     --box-shadow-color: 0px 10px 8px rgba(255, 255, 255, 0.1);
+    --modalbg-colour:rgba(255,255,255,0.4);
 }
 
 /* Sidebar */
@@ -395,9 +473,6 @@ main{
     background: var(--body-color);
     z-index: 1;
     padding: 1.5rem 2rem;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 3rem 1fr 2fr;
 }
 
 main.active{
@@ -468,394 +543,249 @@ main > .title > .greeting > .bell-container:hover .notification {
     100% { transform: translateX(0); }
 }
 
-/* Insight Cards */
-main .insights{
-    padding: 1rem;
-    padding-left: 0;
-    grid-column: 1;
-    grid-row: 2;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.6rem;
-}
-
-main .insights > div{
-    color: var(--hover-btn);
-    background: var(--sidebar-color);
-    padding: 2rem;
-    border-radius: 40px;
-    box-shadow: var(--box-shadow-color);
-}
-
-main .insights > div:hover{
-    background: var(--separator-color);
-    transition: var(--tran-05);
-}
-
-main .insights > div i{
-    background-color: #695CFE;
-    padding: 0.5rem;
-    border-radius: 50%;
-    color: var(--sidebar-color);
-    font-size: 2rem;
-}
-
-main .insights > .bookings  i{
-    background-color: coral;
-}
-
-main .insights > .workouts  i{
-    background-color: lightgreen;
-}
-
-main .insights > div .middle{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-main .insights h3{
-    margin: 1rem 0 0.6rem;
-    font-size: 1rem;
-}
-
-main .insights .progress{
-    position: relative;
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-    margin-left: 2rem;
-}
-
-main .insights svg{
-    width: 7rem;
-    height: 7rem;
-}
-
-@keyframes progress-animation {
-    0% {
-        stroke-dashoffset: 0;
-    }
-    100% {
-        stroke-dashoffset: 92;
-    }
-}
-
-main .insights svg circle {
-    fill: none;
-    stroke-width: 14;
-    stroke: #695CFE;
-    stroke-linecap: round;
-    transform: translate(8px, 8px);
-    stroke-dasharray: 110;
-    animation: progress-animation 0.8s ease-out forwards;
-}
-
-main .insights .progress .number{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-main .insights .progress .number {
-    position: absolute;
-    top: 2.75rem;
-    left: 2.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-color);
-    font-size: 1rem;
-}
-
-/* Announcements Section */
-
-main .recent-announcements{
-    padding-left: 0.6rem;
-    padding-top: 1rem;
-    grid-column: 2;
-    grid-row: 2 / -1;
-}
-
-main .recent-announcements h2{
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-}
-
-main .recent-announcements .announcements{
-    background: var(--sidebar-color);
-    border-radius: 30px;
-    padding-top: 15px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-shadow: var(--box-shadow-color);
-}
-
-main .recent-announcements .announcement{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--separator-color);
-    color: var(--hover-btn);
-    padding-top: 10px;
-    padding-bottom: 15px;
-    cursor: pointer;
-    margin-bottom: 1rem;
-}
-
-main .recent-announcements .announcement:hover{
-    transform: translateY(-10px);
-    transition: var(--tran-03);
-}
-
-main .recent-announcements .announcement .profile-img{
-    display: flex;
-    margin-bottom: 3rem;
-    margin-left: 0.5rem;
-    width: 4.5rem;
-}
-
-main .recent-announcements .announcement .profile-img img{
-    border-radius: 50%;
-    width: 100%;
-    object-fit: cover;
-}
-
-main .recent-announcements .announcement .message{
-margin-left: 1rem;
-}
-
-/* CHARTS */
-
-main .chart{
-    grid-row: 3;
-    grid-column: 1;
-    max-width: 100%;
-    overflow-x: auto;
-}
-
-main .chart .chart-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 2.5rem;
-    grid-column: 1;
-}
-
-main .chart .chart-header i{
-    font-size: 1.6rem;
-    color: var(--text-color);
-    border-radius: 50%;
-    margin-right: 1rem;
-    cursor: pointer;
-}
-
-main .chart .chart-header i:hover {
-    color: var(--hover-btn);
-}
-
-main .chart .chart-header h2 {
-    font-size: 1.5rem;
-    color: var(--text-color);
-}
-
-main .chart .chart-container{
-    width: 100%;
-    margin: 0 auto;
-    height: 90%;
-}
-
-
-/* Users */
-main .retrieve-users{
-    grid-column: 1 / -1;
-    grid-row: 2 / -1;
-}
-
-main .retrieve-users .searchBar {
-    width: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    z-index: 1000;
-}
-
-main .retrieve-users .searchBar input[type="text"] {
-    width: 100%;
-    max-width: 600px; /* Limit maximum width for better layout on large screens */
-    padding: 0.75rem 1rem; /* Padding for a comfortable input size */
-    border: 1px solid #ddd; /* Light border for input */
-    border-radius: 2rem; /* Rounded edges for the input box */
-    font-size: 1rem; /* Comfortable font size */
-    color: #495057; /* Dark gray text */
-    background-color: #ffffff; /* White background for contrast */
-    outline: none; /* Remove outline on focus */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
-    transition: all 0.3s ease; /* Smooth transition for hover/focus */
-}
-
-main .retrieve-users .searchBar input[type="text"]:focus {
-    border-color: var(--primary-color); /* Primary purple-blue border on focus */
-    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4); /* Glow effect */
-}
-
-/* Add User Button */
-
-main .retrieve-users .searchBar .add-user a button {
-    padding: 12px 45px;
-    background-color: var(--primary-color); /* Purple-blue button background */
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 3rem;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-main .retrieve-users .searchBar .add-user a button:hover {
-    transform: scale(1.05);
-}
-
-main .retrieve-users .table-container {
-    overflow: auto;
-    height: 100%;
-    margin: 0;
+/*User Table*/
+main .table-container {
+    margin: 2rem 0;
     border-radius: 0.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
+  
+main .table-container .filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .filters .filter {
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+main .table-container .filters .filter.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+main .table-container .user-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .user-table-header .search-input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    width: 250px;
+  }
+  
+main .table-container .user-table-header .add-user-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+main .table-container .user-table-wrapper {
+    height: auto; /* Adjust as per your design */
+    overflow: hidden; /* Hide scrollbar by default */
+    position: relative;
+    border: 1px solid #ddd; /* Optional: border around the scrollable area */
+    border-radius: 0.5rem;
+    transition: var(--tran-03);
+  }
 
-main .retrieve-users .table-container table{
-    margin: 0;
-}
+main .table-container .user-table-wrapper:hover {
+    overflow: auto;
+  }
 
-/* Base Table Styles */
-main .retrieve-users .user-table {
+main .table-container .user-table-wrapper .user-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.95rem;
-    background-color: #ffffff;
-}
-
-/* Header Styles */
-main .retrieve-users .user-table thead {
-    background-color: #695CFE; /* Primary purple-blue background */
-    color: #ffffff; /* White text for contrast */
-    border-bottom: 2px solid #09090a; /* Slightly darker border */
-}
-
-main .retrieve-users .user-table th {
-    padding: 1rem;
-    font-weight: 600;
+    position: relative;
+  }
+  
+main .table-container .user-table-wrapper .user-table th,
+main .table-container .user-table-wrapper .user-table td {
+    padding: 10px 15px;
     text-align: left;
-    white-space: nowrap;
-}
-
-/* Home Address Column Specific Width */
-main .retrieve-users .user-table th:nth-child(9),
-main .retrieve-users .user-table td:nth-child(9) {
-    width: 250px; /* Increase the width for the Home Address column */
-}
-
-/* Body Styles */
-main .retrieve-users .user-table td {
-    padding: 1rem;
-    color: #495057; /* Muted dark gray text */
-    border-bottom: 1px solid #f1f1f1; /* Light border for rows */
-}
-
-/* Row Hover Effect */
-main .retrieve-users .user-table tbody tr:hover {
-    background-color: #f2f1fe; /* Light purple-blue on hover */
-    transition: background-color 0.3s ease;
-}
-
-/* Zebra Striping */
-main .retrieve-users .user-table tbody tr:nth-child(even) {
-    background-color: #f8f9fa; /* Light gray for even rows */
-}
-
-/* Image in Table */
-main .retrieve-users .user-table .user-image {
-    width: 2.5rem;
-    height: 2.5rem;
+    border-bottom: 1px solid #ddd;
+    min-width: 100px;
+    text-wrap: nowrap;
+  }
+  
+main .table-container .user-table-wrapper .user-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    position: sticky; /* Makes the header sticky */
+    top: 0; /* Sticks to the top of the container */
+    z-index: 2; /* Ensures it stays above table body */
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+  }
+  
+main .table-container .user-table-wrapper .user-image {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    vertical-align: middle;
-    margin-right: 0.5rem;
-}
+  }
+  
+main .table-container .user-table-wrapper .status-badge {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.active {
+    background-color: #28a745;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.inactive {
+    background-color: #dc3545;
+  }
 
-/* Scrollbar Styling */
-.table-container::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-.table-container::-webkit-scrollbar-track {
+main .table-container .user-table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #888;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-track {
     background: #f1f1f1;
+  }
+
+/* ***************User Registration Form*********** */
+main .user-create-container{
+    margin-top: 1rem;
+    display: flex;
+    height: 100%;
+    background-color: var(--sidebar-color);
+    border-radius: 20px;
+    justify-content: start;
 }
 
-.table-container::-webkit-scrollbar-thumb {
-    background: #695CFE; /* Matches the header color */
-    border-radius: 3px;
+main .user-create-container .user-create-sidebar{
+    background-color: #e7f0f7;
+    margin: 1.5rem;
+    border-radius: 20px;
+    padding: 4rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    width: fit-content;
 }
 
-.table-container::-webkit-scrollbar-thumb:hover {
-    background: #5e4fda; /* Darker purple-blue on hover */
+main .user-create-container .user-create-sidebar .section-nav {
+    position: sticky;
+    top: 40px;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .table-container {
-        margin: 1rem 0;
-    }
-
-    .user-table th,
-    .user-table td {
-        padding: 0.75rem;
-        font-size: 0.9rem;
-    }
+main .user-create-container .user-create-sidebar .section-nav h2{
+    margin-bottom: 2rem;
+    text-wrap: nowrap;
 }
-
-
-/* User Registration Form */
-main .user-form{
-    grid-column: 1 / -1;
+  
+main .user-create-container .user-create-sidebar .section-link-wrapper {
+    display: flex;
+    align-items: start;
+}
+  
+main .user-create-container .user-create-sidebar .section-line-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: var(--hover-btn);
+    margin-right: 10px;
 }
-
-main .user-form h2{ 
-    font-size: 1.5rem;
+  
+main .user-create-container .user-create-sidebar .section-link {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    flex-grow: 1;
+    margin-top: 3.5px;
+    text-wrap: nowrap;
+}
+  
+main .user-create-container .user-create-sidebar .section-link.active {
     font-weight: bold;
-    margin-bottom: 40px;
 }
 
-main .user-form .form-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;  /* Two columns */
-    gap: 4rem;
-}
-
-main .user-form .form-container .left-column, .right-column {
+main .user-create-container .user-create-sidebar .section-number {
     display: flex;
     justify-content: center;
-    flex-direction: column;
+    align-items: center;
+    font-size: 1rem;
+    color: #007bff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    background-color: white;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  
+main .user-create-container .user-create-sidebar .section-number.completed {
+    color: white;
+    background-color: #007bff; 
+    border-color: #007bff;
+  }
+  
+  /* Connecting line */
+main .user-create-container .user-create-sidebar .section-line {
+    width: 2px;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #ccc;
+    transition: background-color 0.5s ease;
+  }
+  
+main .user-create-container .user-create-sidebar .section-line.active {
+    background-color: #007bff; /* Highlighted color */
+  }
+
+
+main .user-create-container .user-form{
+    padding: 20px;
+    padding: 4rem;
+    padding-left: 1rem;
+    padding-right: 2.5rem;
+    color: var(--hover-btn);
+    width: 100%;
+}
+
+main .user-create-container .user-form .form-container {
+    width: 100%;
+}
+
+main .user-create-container .user-form .form-container .section-content{
+    margin-bottom: 3rem;
+}
+
+main .user-create-container .user-form .form-container .section-content h3{
+    margin-bottom: 1rem;
 }
 
 main .user-form .form-container .input-container{
@@ -867,11 +797,20 @@ main .user-form .input-container .input-box {
     position: relative;
     width: 100%;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
 }
 
-main .user-form .input-container .input-box input {
+main .user-form .input-container .input-box label{
+    text-wrap: nowrap;
+    margin-right: 1rem;
+}
+
+main .user-form .input-container .input-box input{
     width: 100%;
-    padding: 10px;
+    height: 50px;
+    padding: 0 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -880,9 +819,61 @@ main .user-form .input-container .input-box input {
     transition: border-color 0.3s ease;
 }
 
-main .user-form .input-container .input-box input:focus {
-    border-color: #2693FF;
+main .user-form .form-container .section-content .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem; /* Adjust spacing between inputs */
+    margin: 0;
+  }
+  
+main .user-form .form-container .section-content .row .input-container {
+    flex: 1; /* Ensure inputs are evenly spaced */
+    margin: 0;
+  }
+
+main .user-form .form-container .input-image-box {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
 }
+
+main .user-form .form-container .image-container {
+    width: 200px; 
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ccc; 
+    display: flex;
+    margin-bottom: 10px;
+}
+
+main .user-form .form-container .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+main .user-form .form-container .input-image-box .image-upload-input {
+    display: none;
+}
+
+main .user-form .form-container .input-image-box .image-upload-label {
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 2rem;
+}
+
+main .user-form .form-container .input-image-box .image-upload-label:hover {
+    background-color: #0056b3;
+}
+
 
 main .user-form .input-container .input-box #gender {
     width: 100%;
@@ -908,280 +899,243 @@ main .user-form .input-container .input-box #gender option {
     color: #333;
 }
 
-main .user-form .form-container .right-column .input-image-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-main .user-form .form-container .right-column .input-image-box label {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 10px;
-}
-
-/* Styling for the circular image component */
-main .user-form .form-container .right-column .image-container {
-    width: 150px; /* Adjust the size as needed */
-    height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #ccc; /* Optional: Adds a border around the circular image */
-    margin-bottom: 20px; /* Optional: Adds space below the image */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-main .user-form .form-container .right-column .image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-
-}
-
-main .user-form .form-container .right-column input[type="file"] {
-    margin-bottom: 20px;
-}
-
-
 main .user-form .btn-container {
-    grid-column: 1 / -1;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-top: 1px solid #ddd;
+    padding-top: 2rem;
 }
 
 
 main .user-form .btn-container .user-create-btn {
-    width: 50%;
-    padding: 12px;
+    width: fit-content;
+    padding: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
     background-color: #2693FF;
     border: none;
-    border-radius: 5px;
-    font-size: 18px;
+    border-radius: 20px;
+    font-size: 1.1rem;
     color: white;
     font-weight: 700;
     cursor: pointer;
     transition: transform 0.3s ease, background-color 0.3s ease;
-    align-self: center; /* Center the button */
+    align-self: center;
 }
 
 main .user-form .btn-container .user-create-btn:hover {
     background-color: #1c7bd9;
-    transform: scale(1.05);
+    transform: scale(1.03);
 }
 
 /* Error Message Styles */
 main .user-form .form-container .input-container .invalid-feedback {
-    color: #FF0000; /* Red color for error */
+    color: #FF0000;
     font-size: 14px;
 }
 
-/* Responsive styling */
 @media (max-width: 768px) {
     main .trainer-form .input-container {
         flex-direction: column;
     }
 }
 
-/* View Users Page */
-main .navbar-container{
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    grid-column: 1 / -1;
-    width: 100%;
+/* *************View User Page**************** */
+
+main .view-user-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 1rem;
 }
 
-main .navbar-container .navbar{
-    width: 75%;
-    background-color: var(--sidebar-color);
-    box-shadow: var(--box-shadow-color);
-    border-radius: 50px;
-    margin: 0;
-    padding: 0;
+main .view-user-container .navbar-container {
+    position: absolute;
+    background-color: #fff;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    width:fit-content;
+    z-index: 1000;
 }
 
-main .navbar .nav-links {
-    margin: 0;
-    padding: 0;
-    width: 100%;
+  
+main .view-user-container .navbar-container .navbar ul {
+    display: flex;
+    flex-direction: column;
     list-style: none;
-    display: flex; /* Use flexbox for horizontal alignment */
-    justify-content: space-around;
-    align-items: center; /* Aligns items vertically in the center */
-}
-
-main .navbar .nav-links .separator{
-    width: 1px;
-    height: 25px;
     padding: 0;
-    background-color: #ddd;
-    display: inline-block; /* Makes the separator inline */
-    align-self: center; /* Ensures the separator aligns with the text */
-    margin: 0; /* Adds spacing around the separator */
-    opacity: 1;
-}
-  
-main .navbar .nav-links li {
-    margin: 0 0rem;
-    padding: 0px;
-    border-radius: 50px;
-    transition: background-color 0.3s ease;
-    overflow: hidden;
-    z-index: 1;
-}
-  
-main .navbar .nav-links a {
-    text-wrap: nowrap;
-    text-decoration: none;
-    font-size: 1rem;
-    color: var(--hover-btn);
-    transition: all 0.3s ease;
-    padding: 1rem 3.5rem; /* Adjust padding for a balanced appearance */
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-main .navbar .nav-links li:hover {
-    background-color: rgb(238, 238, 238); /* Highlight on hover */
-}
-
-main .navbar .nav-links li.active {
-    background-color: rgb(238, 238, 238); /* Highlight on hover */
-}
-
-main .user-details {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    color: var(--hover-btn);
-}
-
-main .user-details .details {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    font-size: 1rem;
-}
-
-main .user-details .details .profile-picture{
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-main .user-details .details .profile-picture img {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ddd;
-}
-
-main .user-details .details .left-column,
-main .user-details .details .right-column {
-    padding: 10px; /* Adds padding inside each column */
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-main .user-details .details .left-column {
-    grid-column: 1; /* First column */
-    text-align: left; /* Align text to the left */
-}
-
-main .user-details .details .right-column {
-    grid-column: 2; /* Second column */
-    text-align: left; /* Keep text aligned left for consistency */
-}
-
-
-main .user-details .details p{
-    margin: 8px 0;
-}
-
-main .user-details .details input, select{
-    font-size: 1rem;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-main .user-details .details input{
-    width: 100%;
-}
-
-main .user-details .action-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3rem;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
-}
-  
-.edit-btn, .delete-btn, .save-btn, .cancel-btn{
-    font-size: 1rem;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
+    margin: 0;
   }
   
-.edit-btn {
-    padding: 10px 5rem;
-    background-color: #4CAF50;
-    color: white;
+  main .view-user-container .navbar-container .navbar ul li {
+    position: relative;
+    padding: 0;
+}
+
+main .view-user-container .navbar-container .navbar ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 1rem 2rem;
+    color: var(--hover-btn);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative; /* Needed for ::after pseudo-element */
+}
+
+main .view-user-container .navbar-container .navbar ul li i{
+    font-size: 1.3rem;
+    margin-right: 10px;
+}
+
+/* Hover effect */
+main .view-user-container .navbar-container .navbar ul li a:hover {
+    background-color: #f3f7fb;
+    color: #007bff;
+}
+
+/* Active state for the clicked <li><a> */
+main .view-user-container .navbar-container .navbar ul li.active > a {
+    background-color: #f3f7fb;
+    color: #007bff; /* Purple text */
+}
+
+/* Add a rightmost darkened line when the li is active */
+main .view-user-container .navbar-container .navbar ul li.active > a::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0; /* Align to the rightmost end of the <a> element */
+    width: 4px; /* Thickness of the darkened line */
+    height: 100%;
+    background-color: #007bff; /* Dark purple for the line */
+    border-radius: 0 8px 8px 0; /* Optional for rounded edge effect */
+    transition: background-color 0.3s ease;
+}
+
+main .view-user-container .navbar-container .navbar ul li.active span.active{
+    width: 3px;
+    height: 100%;
+    background-color: var(--primary-color);
 }
   
-.delete-btn {
-    padding: 10px 4.5rem;
-    background-color: #F44336;
-    color: white;
-}
-
-.save-btn{
-    padding: 10px 5rem;
-    background-color: #2693FF;
-    color: white;
-}
-
-.cancel-btn{
-    padding: 10px 4.5rem;
-    background-color: #FF0000;
-    color: white;
-}
-
-.edit-btn:hover {
-    background-color: #45a049;
+main .view-user-container .user-container {
+    margin-left: calc(300px);
+    background-color: var(--sidebar-color);
+    padding: 2rem;
+    width: calc(100% - 300px - 2rem);
+    border-radius: 20px;
 }
   
-.delete-btn:hover {
-    background-color: #e53935;
-}
+  
+main .view-user-container .user-container .details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+main .view-user-container .user-container .details .profile-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  
+main .view-user-container .user-container .details .profile-picture img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+  }
+  
+main .view-user-container .user-container .details .change-picture-btn {
+    margin: 0;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 2rem;
+  }
+  
+main .view-user-container .user-container .details .change-picture-btn:hover {
+    background-color: #0056b3;
+  }
 
-.save-btn:hover {
-    background-color: #1c7bd9;
+main .view-user-container .user-container .details p {
+    margin-bottom: 1rem;
 }
+  
+main .view-user-container .user-container .details .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem; /* Adjust spacing between inputs */
+  }
+  
+main .view-user-container .user-container .details .row > p {
+    flex: 1; /* Ensure inputs are evenly spaced */
+  }
+  
+  main .view-user-container .user-container .details p {
+    margin-bottom: 1rem;
 
-.cancel-btn:hover {
-    background-color: #e61e1e;
-}
+  }
+  
+  main .view-user-container .user-container .details p strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1rem;
+
+  }
+  
+  main .view-user-container .user-container .details input,
+  main .view-user-container .user-container .details select {
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  main .view-user-container .user-container .details input[disabled],
+  main .view-user-container .user-container .details select[disabled] {
+    background-color: #f9f9f9;
+    color: #999;
+  }
+  
+  /* Action Buttons */
+  main .view-user-container .user-container .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .details {
+      flex-direction: column;
+    }
+    .title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+
+
 
 /* Announcements Page */
 main .announcementsContainer{
@@ -1350,3 +1304,1346 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
         grid-template-columns: 1fr;
     }
 }
+
+/* booking page */
+main .table-container {
+    margin: 2rem 3rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+  
+main .table-container .filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .filters .filter {
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+main .table-container .filters .filter.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+main .table-container .user-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .user-table-header .search-input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    width: 250px;
+  }
+  
+main .table-container .user-table-header .add-user-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+main .table-container .user-table-wrapper {
+    width:100%;
+    height: auto; /* Adjust as per your design */
+    overflow: hidden; /* Hide scrollbar by default */
+    position: relative;
+    border: 1px solid #ddd; /* Optional: border around the scrollable area */
+    border-radius: 0.5rem;
+    transition: var(--tran-03);
+  }
+
+main .table-container .user-table-wrapper:hover {
+    overflow: auto;
+  }
+
+main .table-container .user-table-wrapper .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    position: relative;
+  }
+  
+main .table-container .user-table-wrapper .user-table th,
+main .table-container .user-table-wrapper .user-table td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    min-width: 100px;
+    text-wrap: nowrap;
+  }
+  
+main .table-container .user-table-wrapper .user-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    position: sticky; /* Makes the header sticky */
+    top: 0; /* Sticks to the top of the container */
+    z-index: 2; /* Ensures it stays above table body */
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+  }
+  
+main .table-container .user-table-wrapper .user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+main .table-container .user-table-wrapper .status-badge {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.active {
+    background-color: #28a745;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.inactive {
+    background-color: #dc3545;
+  }
+
+main .table-container .user-table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #888;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+.status {
+    width:80px;
+    height:40px;
+    padding: 5px 10px;
+    border-radius: 10px; /* Smooth rounded corners */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white; /* Ensure text is readable */
+    text-align: center;
+    background-color: #007bff;
+}
+
+/* calendar */
+main .calendarContainer {
+    grid-column: 1;
+    background-color: var(--sidebar-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevent overflow issues */
+    width: 1000px;
+    height: 650px;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: var(--box-shadow-color);
+    transition: var(--tran-03);
+    position: relative; 
+    color: var(--text-color);
+    padding-top: 50px;
+    margin: 0rem 4rem;
+}
+
+.calendar-header {
+    position:absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    color: var(--text-color); 
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.calendar-header .prevMonth,
+.calendar-header .nextMonth {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit; 
+    background: none;      
+    border: none; 
+}
+
+.calendar-header .prevMonth:hover,
+.calendar-header .nextMonth:hover {
+    box-shadow: var(--box-shadow-color);
+}
+
+.calendar{
+    width: 100%;
+    margin:1rem 0;
+    margin-top: 4rem;
+    border-collapse: collapse;
+} 
+
+.calendar th {
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+} 
+
+.calendar td {
+    text-align: left;
+    vertical-align: top;
+    cursor: pointer;
+    width: calc(100%/7);
+    height: 70px;
+    font-size: 20px;
+    padding: 5px;
+    border: 1px solid #ddd; 
+}
+
+.calendar td:hover {
+    background-color: var(--primary-color);
+    color: var(--sidebar-color);
+}
+
+.calendar td.plain {
+    pointer-events: none; /* Disable interaction */
+    cursor: default; 
+}
+
+.calendar td.today {
+    border: 2px solid var(--primary-color)
+}
+
+.calendar td.holiday {
+    background-color:rgb(224, 224, 224, 0.5);
+    color: var(--text-color);
+}
+
+.calendar td.active{
+    background-color: var(--primary-color);
+    color: var(--sidebar-color);
+}
+
+.booked-count {
+    background-color: #007bff;
+    color: white;
+    width: 40px;
+    height: 20px;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px auto;
+}
+
+.gotoToday {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    gap: 5px;
+    padding: 0 20px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    margin-top: 0.5rem;
+}
+
+.gotoToday .goto{
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--text-color);
+}
+
+.gotoToday .goto input {
+    background-color: var(--sidebar-color);
+    width: 100%;
+    height: 30px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 0 20px;
+    color: var(--text-color);
+}
+
+.gotoToday button {
+    padding: 5px 10px;
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
+    background-color: transparent;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.gotoToday button:hover {
+    color: #fff;
+    background-color: var(--primary-color);
+}
+
+.gotoToday .goto button {
+    border: none;
+    border-left: 1px solid var(--text-color);
+    border-radius: 0;
+}
+
+.bookingModal {
+    display:none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color:var(--modalbg-colour); 
+}
+
+.bookingModal-content {
+    position: absolute;
+    background-color:var(--sidebar-color);
+    color: var(--text-color);
+    margin: 130px 550px;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 500px; 
+    height: 330px;
+    max-height: 500px;
+    overflow-y: auto; 
+    border-radius: 10px;
+    transition: var(--tran-03);
+}
+
+.bookingModalClose {
+    color:var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.bookingModalClose:hover,
+.bookingModalClose:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+.trainerviewbtn-profileTable-container{
+    margin-top:1rem;
+    color: var(--hover-btn);
+}
+
+.trainerviewbtn-profileTable-container table{
+    width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.trainerviewbtn-profileTable-container tr{
+    display: grid;
+    grid-template-columns: 110px 160px 180px; 
+}
+
+.trainerviewbtn-profileTable-container td{
+    border-bottom: 1px solid var(--body-color);
+    word-break: break-word;
+}
+
+.trainerviewbtn-profileTable-container tr:hover{
+    background-color: var(--body-color);
+}
+
+.book-btn {
+    text-align: right; 
+    margin:auto;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.book-btn button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px; 
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem; 
+    transition: var(--tran-03); 
+}
+
+/* holiday */
+.select-wrapper {
+    font-size: 15px;
+    margin: 1rem 0;
+}
+
+.select-wrapper label {
+    width: 120px;
+    font-size: 16px;
+    align-items: center;
+    color: var(--hover-btn);
+}
+
+.select-wrapper i {
+    margin-right: 8px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.select-wrapper input[type="date"] {
+    font-size: 15px;
+    width: 100%;
+    background-color: #ccc;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+}
+
+.select-btn, .select-option li {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+.select-btn {
+    height: 35px;
+    padding: 5px 20px;
+    border-radius: 10px;
+    background:#ccc ;
+    justify-content: space-between;
+}
+
+.select-btn i {
+    transition: var(--tran-03);
+}
+
+.select-wrapper.active .select-btn i {
+    transform: rotate(-180deg);
+}
+
+.select-content {
+    display: none;
+    margin-top: 5px;
+    padding: 2px 20px;
+    background: #ccc;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+.select-wrapper.active .select-content {
+    display: block;
+}
+
+.select-content .select-search {
+    margin-top: 5px;
+    position: relative;
+}
+
+.select-search input {
+    background: #ccc;
+    height: 35px;
+    width: 100%;
+    outline: none;
+    border-radius: 10px;
+    padding: 0 15px;
+    border: 1px solid #757575;
+}
+
+.select-content .select-option {
+    margin: 5px 0px;
+    max-height: 98px;
+    overflow-y: auto;
+}
+
+.select-option::-webkit-scrollbar {
+    width: 7px;
+}
+
+.select-option::-webkit-scrollbar-track {
+    background: #b3b3b3;
+    border-radius: 20px;
+}
+
+.select-option::-webkit-scrollbar-thumb {
+    background: #757575;
+    border-radius: 20px;
+}
+.select-option li {
+    height: 30px;
+    border-radius: 5px;
+    padding: 0 10px;
+}
+
+.select-option li:hover {
+    background: #b3b3b3;
+}
+
+
+.edit-dlt {
+    display: flex;
+    gap: 10px; 
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.edit, .dlt {
+    width: 30px; 
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; 
+    cursor: pointer;
+    transition: var(--tran-03);
+    color: #FFF;
+}
+
+.edit {
+    background-color: #007bff;
+}
+
+.dlt {
+    background-color: #d9534f; 
+}
+
+.dlt:hover, .edit:hover {
+    transform: scale(1.05);
+    transition: var(--tran-02); 
+}
+
+.edit i, .dlt i {
+    font-size: 18px; 
+}
+
+/*User Table*/
+main .table-container {
+    margin: 2rem 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+  
+main .table-container .filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .filters .filter {
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+main .table-container .filters .filter.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+main .table-container .user-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .user-table-header .search-input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    width: 250px;
+  }
+  
+main .table-container .user-table-header .add-user-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+main .table-container .user-table-wrapper {
+    height: auto; /* Adjust as per your design */
+    overflow: hidden; /* Hide scrollbar by default */
+    position: relative;
+    border: 1px solid #ddd; /* Optional: border around the scrollable area */
+    border-radius: 0.5rem;
+    transition: var(--tran-03);
+  }
+
+main .table-container .user-table-wrapper:hover {
+    overflow: auto;
+  }
+
+main .table-container .user-table-wrapper .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    position: relative;
+  }
+  
+main .table-container .user-table-wrapper .user-table th,
+main .table-container .user-table-wrapper .user-table td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    min-width: 100px;
+    text-wrap: nowrap;
+  }
+  
+main .table-container .user-table-wrapper .user-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    position: sticky; /* Makes the header sticky */
+    top: 0; /* Sticks to the top of the container */
+    z-index: 2; /* Ensures it stays above table body */
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+  }
+  
+main .table-container .user-table-wrapper .user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+main .table-container .user-table-wrapper .status-badge {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.active {
+    background-color: #28a745;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.inactive {
+    background-color: #dc3545;
+  }
+
+main .table-container .user-table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #888;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+/* ***************User Registration Form*********** */
+main .user-create-container{
+    margin-top: 1rem;
+    display: flex;
+    height: 100%;
+    background-color: var(--sidebar-color);
+    border-radius: 20px;
+    justify-content: start;
+}
+
+main .user-create-container .user-create-sidebar{
+    background-color: #e7f0f7;
+    margin: 1.5rem;
+    border-radius: 20px;
+    padding: 4rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    width: fit-content;
+}
+
+main .user-create-container .user-create-sidebar .section-nav {
+    position: sticky;
+    top: 40px;
+}
+
+main .user-create-container .user-create-sidebar .section-nav h2{
+    margin-bottom: 2rem;
+    text-wrap: nowrap;
+}
+  
+main .user-create-container .user-create-sidebar .section-link-wrapper {
+    display: flex;
+    align-items: start;
+}
+  
+main .user-create-container .user-create-sidebar .section-line-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 10px;
+}
+  
+main .user-create-container .user-create-sidebar .section-link {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    flex-grow: 1;
+    margin-top: 3.5px;
+    text-wrap: nowrap;
+}
+  
+main .user-create-container .user-create-sidebar .section-link.active {
+    font-weight: bold;
+}
+
+main .user-create-container .user-create-sidebar .section-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: #007bff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    background-color: white;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  
+main .user-create-container .user-create-sidebar .section-number.completed {
+    color: white;
+    background-color: #007bff; 
+    border-color: #007bff;
+  }
+  
+  /* Connecting line */
+main .user-create-container .user-create-sidebar .section-line {
+    width: 2px;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #ccc;
+    transition: background-color 0.5s ease;
+  }
+  
+main .user-create-container .user-create-sidebar .section-line.active {
+    background-color: #007bff; /* Highlighted color */
+  }
+
+
+main .user-create-container .user-form{
+    padding: 20px;
+    padding: 4rem;
+    padding-left: 1rem;
+    padding-right: 2.5rem;
+    color: var(--hover-btn);
+    width: 100%;
+}
+
+main .user-create-container .user-form .form-container {
+    width: 100%;
+}
+
+main .user-create-container .user-form .form-container .section-content{
+    margin-bottom: 3rem;
+}
+
+main .user-create-container .user-form .form-container .section-content h3{
+    margin-bottom: 1rem;
+}
+
+main .user-form .form-container .input-container{
+    margin-bottom: 10px;
+}
+
+
+main .user-form .input-container .input-box {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+main .user-form .input-container .input-box label{
+    text-wrap: nowrap;
+    margin-right: 1rem;
+}
+
+main .user-form .input-container .input-box input{
+    width: 100%;
+    height: 50px;
+    padding: 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+main .user-form .form-container .section-content .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem; /* Adjust spacing between inputs */
+    margin: 0;
+  }
+  
+main .user-form .form-container .section-content .row .input-container {
+    flex: 1; /* Ensure inputs are evenly spaced */
+    margin: 0;
+  }
+
+main .user-form .form-container .input-image-box {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+}
+
+main .user-form .form-container .image-container {
+    width: 200px; 
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #ccc; 
+    display: flex;
+    margin-bottom: 10px;
+}
+
+main .user-form .form-container .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+main .user-form .form-container .input-image-box .image-upload-input {
+    display: none;
+}
+
+main .user-form .form-container .input-image-box .image-upload-label {
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 2rem;
+}
+
+main .user-form .form-container .input-image-box .image-upload-label:hover {
+    background-color: #0056b3;
+}
+
+
+main .user-form .input-container .input-box #gender {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+main .user-form .input-container .input-box #gender:focus {
+    border-color: #4a90e2;
+    outline: none;
+    background-color: #fff;
+}
+
+main .user-form .input-container .input-box #gender select:invalid {
+    color: #999;
+}
+
+main .user-form .input-container .input-box #gender option {
+    color: #333;
+}
+
+main .user-form .btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #ddd;
+    padding-top: 2rem;
+}
+
+
+main .user-form .btn-container .user-create-btn {
+    width: fit-content;
+    padding: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    background-color: #2693FF;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    align-self: center;
+}
+
+main .user-form .btn-container .user-create-btn:hover {
+    background-color: #1c7bd9;
+    transform: scale(1.03);
+}
+
+/* Error Message Styles */
+main .user-form .form-container .input-container .invalid-feedback {
+    color: #FF0000;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    main .trainer-form .input-container {
+        flex-direction: column;
+    }
+}
+  
+/* *************View User Page**************** */
+
+main .view-user-container {
+    display: flex;
+    margin-top: 1rem;
+}
+
+main .view-user-container .navbar-container {
+    position: absolute;
+    background-color: #fff;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    width:fit-content;
+    z-index: 1000;
+}
+
+  
+main .view-user-container .navbar-container .navbar ul {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  main .view-user-container .navbar-container .navbar ul li {
+    position: relative;
+    padding: 0;
+}
+
+main .view-user-container .navbar-container .navbar ul li a {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 1rem 2rem;
+    color: var(--hover-btn);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative; /* Needed for ::after pseudo-element */
+}
+
+main .view-user-container .navbar-container .navbar ul li i{
+    font-size: 1.3rem;
+    margin-right: 10px;
+}
+
+/* Hover effect */
+main .view-user-container .navbar-container .navbar ul li a:hover {
+    background-color: #f3f7fb;
+    color: #007bff;
+}
+
+/* Active state for the clicked <li><a> */
+main .view-user-container .navbar-container .navbar ul li.active > a {
+    background-color: #f3f7fb;
+    color: #007bff; /* Purple text */
+}
+
+/* Add a rightmost darkened line when the li is active */
+main .view-user-container .navbar-container .navbar ul li.active > a::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0; /* Align to the rightmost end of the <a> element */
+    width: 4px; /* Thickness of the darkened line */
+    height: 100%;
+    background-color: #007bff; /* Dark purple for the line */
+    border-radius: 0 8px 8px 0; /* Optional for rounded edge effect */
+    transition: background-color 0.3s ease;
+}
+
+main .view-user-container .navbar-container .navbar ul li.active span.active{
+    width: 3px;
+    height: 100%;
+    background-color: var(--primary-color);
+}
+  
+main .view-user-container .user-container {
+    margin-left: calc(300px);
+    background-color: var(--sidebar-color);
+    padding: 2rem;
+    width: calc(100% - 300px - 2rem);
+    border-radius: 20px;
+}
+  
+  
+main .view-user-container .user-container .details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+main .view-user-container .user-container .details .profile-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  
+main .view-user-container .user-container .details .profile-picture img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+  }
+  
+main .view-user-container .user-container .details .change-picture-btn {
+    margin: 0;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 2rem;
+  }
+  
+main .view-user-container .user-container .details .change-picture-btn:hover {
+    background-color: #0056b3;
+  }
+
+main .view-user-container .user-container .details p {
+    margin-bottom: 1rem;
+}
+  
+main .view-user-container .user-container .details .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem; /* Adjust spacing between inputs */
+  }
+  
+main .view-user-container .user-container .details .row > p {
+    flex: 1; /* Ensure inputs are evenly spaced */
+  }
+  
+  main .view-user-container .user-container .details p {
+    margin-bottom: 1rem;
+
+  }
+  
+  main .view-user-container .user-container .details p strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1rem;
+
+  }
+  
+  main .view-user-container .user-container .details input,
+  main .view-user-container .user-container .details select {
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  main .view-user-container .user-container .details input[disabled],
+  main .view-user-container .user-container .details select[disabled] {
+    background-color: #f9f9f9;
+    color: #999;
+  }
+  
+  /* Action Buttons */
+  main .view-user-container .user-container .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .details {
+      flex-direction: column;
+    }
+    .title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+
+/* Supplements page */
+
+main .supplement-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main .supplement-header button{
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem; 
+    transition: var(--tran-03); 
+}
+
+main .supplement-header button:hover {
+    background-color: #0056b3;
+    transform: scale(1.03);
+}
+
+.suggestions-dropdown {
+    position: absolute;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: white;
+    width: 30%;
+    box-sizing: border-box;
+    z-index: 9999;
+}
+
+.suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Table Styling */
+.supplement-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .supplement-table table {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .supplement-table th, .supplement-table td {
+    padding: 15px;
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .supplement-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .supplement-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .supplement-table tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+  }
+  
+  .supplement-table img.supplement-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  .supplement-table td {
+    border-top: 1px solid #ddd;
+  }
+  
+  .supplement-table td:first-child {
+    width: 100px; /* Adjust the width for the image column */
+  }
+  
+  .supplement-table td:last-child {
+    width: 150px; /* Adjust the width for the date column */
+  }
+
+  .supplement-table .edit-btn, .supplement-table .delete-btn {
+    padding: 3px 7px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #fff;
+  }
+  
+  /* Responsive Design for Smaller Screens */
+  @media (max-width: 768px) {
+    .supplement-table th, .supplement-table td {
+      padding: 10px;
+      font-size: 14px;
+    }
+  
+    .supplement-table img.supplement-image {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+}
+
+.modal-content h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.modal-content .submit-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-content .submit-btn:hover {
+    background-color: #45a049;
+}
+
+.modal input[type="text"],
+.modal input[type="file"],
+.modal input[type="date"],
+.modal input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Image container */
+.image-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.supplement-image {
+    max-width: 300px;
+    max-height: 200px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+
+.cancel-btn {
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    display: inline-block; /* Ensure button is shown inline */
+  }
+  
+  .cancel-btn:hover {
+    background-color: darkred;
+  }

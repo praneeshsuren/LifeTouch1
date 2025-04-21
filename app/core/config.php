@@ -22,3 +22,8 @@
 
     //True means show errors
     define('DEBUG', true);
+
+    // payment
+    define('STRIPE_SECRET_KEY', getenv('STRIPE_SECRET_KEY'));
+    define('STRIPE_PUBLISHABLE_KEY', getenv('STRIPE_PUBLISHABLE_KEY'));
+    

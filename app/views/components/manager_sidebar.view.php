@@ -52,8 +52,8 @@
             </li>
             <li>
                 <a href="<?php echo URLROOT; ?>/manager/announcement_main">
-                    <i class="ph ph-megaphone"></i>
-                    <span class="text">Post Announcements</span>
+                    <i class="icon ph-bold ph-newspaper"></i>
+                    <span class="text">Announcements</span>
                 </a>
             </li>
             <li>
@@ -66,6 +66,12 @@
                 <a href="<?php echo URLROOT; ?>/manager/membership_plan">
                 <i class="ph ph-clock-user"></i>
                     <span class="text">Membership Plans</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo URLROOT; ?>/manager/supplements">
+                    <i class="ph ph-pint-glass"></i>
+                    <span class="text">Supplements</span>
                 </a>
             </li>
         </ul>

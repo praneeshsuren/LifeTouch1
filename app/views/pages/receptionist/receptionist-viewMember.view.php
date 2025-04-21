@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
   <!-- STYLESHEET -->
-  <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time(); ?>" />
+  <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/receptionist-style.css?v=<?php echo time(); ?>" />
   <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/downloadButton-style.css?v=<?php echo time(); ?>" />
 
   <!-- ICONS -->
@@ -41,11 +41,10 @@
         <div class="navbar">
 
           <ul class="nav-links">
-            <li><a href="#user-details"><i class="ph ph-user"></i>User Details</a></li>
-            <li><a href="#membership-details"><i class="ph ph-calendar-dots"></i>Member Attendance<span class=""></a></li>
-            <li><a href="#supplement-records"><i class="ph ph-money"></i>Payment History</a></li>
-            <li><a href="#workout-schedules"><i class="ph ph-barbell"></i>Supplement Records</a></li>
-            <li><a href="#login-credentials"><i class="ph ph-lock-simple"></i>Login Credentials</a></li>
+            <li><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
+            <li><a href="" id="memberAttendanceLink"><i class="ph ph-calendar-dots"></i>Member Attendance</a></li>
+            <li><a href="" id="workoutSchedulesLink"><i class="ph ph-money"></i>Payment History</a></li>
+            <li><a href="" id="supplementRecordsLink"><i class="ph ph-barbell"></i>Supplement Records</a></li>
           </ul>
 
         </div>
@@ -193,35 +192,58 @@
     </div>
 
   </main>
-
-  <!-- SCRIPT -->
-  <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time(); ?>"></script>
-
-  <script>
-    document.getElementById('changePictureBtn').addEventListener('click', () => {
-      document.getElementById('profilePictureInput').click();
-    });
-
-    document.getElementById('profilePictureInput').addEventListener('change', function() {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('trainerImage').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    document.querySelectorAll('.nav-links li a').forEach(link => {
-      link.addEventListener('click', function() {
-        document.querySelectorAll('.nav-links li').forEach(item => item.classList.remove('active'));
-        this.parentElement.classList.add('active');
-      });
-    });
-  </script>
   
   <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time(); ?>"></script>
+  <script>
+      document.getElementById('changePictureBtn').addEventListener('click', () => {
+        document.getElementById('profilePictureInput').click();
+      });
+
+      document.getElementById('profilePictureInput').addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            document.getElementById('trainerImage').src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      document.querySelectorAll('.nav-links li a').forEach(link => {
+        link.addEventListener('click', function () {
+          document.querySelectorAll('.nav-links li').forEach(item => item.classList.remove('active'));
+          this.parentElement.classList.add('active');
+        });
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        // Function to get URL parameter by name
+        function getUrlParameter(name) {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(name);
+        }
+
+        // Get the 'id' parameter (member_id) from the URL
+        const memberId = getUrlParameter('id');
+
+        if (memberId) {
+          // Member ID is available, use it in the navigation link
+          const userDetailsLink = document.getElementById('userDetailsLink');
+          userDetailsLink.href = `<?php echo URLROOT; ?>/receptionist/members/userDetails?id=${memberId}`;
+
+          const workoutSchedulesLink = document.getElementById('workoutSchedulesLink');
+          workoutSchedulesLink.href = `<?php echo URLROOT; ?>/receptionist/members/workoutSchedules?id=${memberId}`;
+
+          const supplementRecordsLink = document.getElementById('supplementRecordsLink');
+          supplementRecordsLink.href = `<?php echo URLROOT; ?>/receptionist/members/supplementRecords?id=${memberId}`;
+
+        } else {
+          // No member_id in the URL, show a message or handle accordingly
+          alert('No member selected.');
+        }
+      });
+    </script>
 
 </body>
 
