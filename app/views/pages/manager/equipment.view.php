@@ -61,7 +61,7 @@
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p>No equipment available. <a href="equipment_create">Add some equipment</a>.</p>
+                    <p>No equipment available.</p>
                 <?php endif; ?>
             </div>
 

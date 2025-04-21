@@ -87,12 +87,12 @@
 
         <div class="service-form" style="margin-top: -90px; height: 99%; width:1000px;">
 
-            <a href="<?php echo URLROOT; ?>/manager/equipment_view/<?php echo isset($equipment->equipment_id) ? htmlspecialchars($equipment->equipment_id) : ''; ?>" class="btn" style="float: right; margin-top: 10px;margin-bottom:3px;">Back</a>
+            <a href="<?php echo URLROOT; ?>/manager/equipment_view/<?php echo isset($equipment->equipment_id); ?>" class="btn" style="float: right; margin-top: 10px;margin-bottom:3px;">Back</a>
 
 
-            <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/service/updateService/<?php echo htmlspecialchars($service->equipment_id); ?>">
+            <form method="post" action="<?php echo URLROOT; ?>/service/updateService/<?php echo htmlspecialchars($service->equipment_id); ?>">
                 
-                <input type="hidden" name="service_id" value="<?php echo htmlspecialchars(isset($service->service_id) ? $service->service_id : ''); ?>">
+                <input type="hidden" name="service_id" value="<?php echo htmlspecialchars(isset($service->service_id)); ?>">
 
                 <div class="input-container">
                     <label for="service_date">Service Date:</label>

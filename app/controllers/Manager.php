@@ -488,61 +488,75 @@ class Manager extends Controller
     }
 
     public function membership_plan()
-{
-    $membershipModel = new M_Membership_plan();
-    $data['membership_plan'] = $membershipModel->findAll(); // ✅ match this with the view
-    $this->view('manager/membership_plan', $data);
-}
+    {
+        $membershipModel = new M_Membership_plan();
+        $data['membership_plan'] = $membershipModel->findAll();
+        $this->view('manager/membership_plan', $data);
+    }
 
     public function create_plan()
     {
         $membershipModel = new M_Membership_plan();
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $planData = [
                 'plan' => trim($_POST['plan_name']),
-                'amount' => trim($_POST['amount'])
+                'amount' => (float) trim($_POST['amount'])  // Cast to float
             ];
 
-            if ($membershipModel->insert($planData)) {
+            if ($membershipModel->validate($planData)) {
+                if ($membershipModel->insert($planData)) {
+                    $_SESSION['success'] = "Plan created successfully!";
+                } else {
+                    $_SESSION['error'] = "Failed to add plan.";
+                }
+            } else {
+                $_SESSION['form_errors'] = $membershipModel->getErrors();
+                $_SESSION['form_data'] = $_POST;
+            }
+
+            redirect('manager/membership_plan');
+        } else {
+            redirect('manager/membership_plan');
+        }
+    }
+
+    public function delete_plan()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $planId = $_POST['membershipPlan_id'];
+
+            $model = new M_Membership_plan();
+            $model->delete($planId, 'membershipPlan_id'); // Specify the primary key column
+
+            redirect('manager/membership_plan');
+        }
+    }
+    public function update_plan()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $model = new M_Membership_plan();
+            $id = $_POST['membershipPlan_id'];
+
+            if ($model->validate($_POST)) {
+                $model->update($id, $_POST, 'membershipPlan_id');
                 redirect('manager/membership_plan');
             } else {
-                die("Failed to add plan.");
+                // Reload membership plans to keep the table visible
+                $data = [
+                    'membership_plan' => $model->findAll(),
+                    'edit_data' => $_POST,
+                    'edit_errors' => $model->getErrors()
+                ];
+
+                $_SESSION['edit_data'] = $_POST;
+                $_SESSION['edit_errors'] = $model->getErrors();
+                $_SESSION['error'] = "Please fix the highlighted errors.";
+
+                redirect('manager/membership_plan');
             }
-        } else {
-            redirect('manager/membership_plan');
         }
     }
-    public function delete_plan()
-{
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $planId = $_POST['membershipPlan_id'];
-
-        $model = new M_Membership_plan();
-        $model->delete($planId, 'membershipPlan_id'); // Specify the primary key column
-
-        redirect('manager/membership_plan');
-    }
-}
-public function update_plan() {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $model = new M_Membership_plan();
-        $id = $_POST['membershipPlan_id'];
-        
-        if ($model->validate($_POST)) {
-            $model->update($id, $_POST, 'membershipPlan_id');
-            redirect('manager/membership_plan');
-        } else {
-            // Handle validation errors
-            $data = [
-                'plan' => (object)$_POST,
-                'errors' => $model->errors,
-                'title' => 'Edit Membership Plan'
-            ];
-            $this->view('manager/membership_plan', $data);
-        }
-    }
-}
-
 }

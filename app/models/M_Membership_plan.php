@@ -9,19 +9,14 @@ class M_Membership_plan
     protected $table = 'membership_plan';
     protected $allowedColumns = [
         'membershipPlan_id',
-        'plan', // Only the column name goes here
+        'plan',
         'amount',
     ];
-    
+
     public function validate($data)
     {
 
         $this->errors = [];
-
-        // Validate equipment_id
-        if (empty($data['membershipPlan_id'])) {
-            $this->errors['membershipPlan_id'] = "membershipPlan ID is required";
-        }
 
         // Validate service_date
         if (empty($data['plan'])) {
@@ -37,5 +32,8 @@ class M_Membership_plan
 
         return empty($this->errors);
     }
-
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 }

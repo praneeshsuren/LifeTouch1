@@ -80,7 +80,7 @@
 
                             <?php if (!empty($services)): ?>
                                 <?php foreach ($services as $service): ?>
-                                    <tr style="cursor: pointer;" onclick="window.location='<?php echo URLROOT; ?>/manager/service_edit/<?php echo $service->service_id; ?>'">
+                                    <tr style="cursor: pointer;" onclick="window.location='<?php echo URLROOT; ?>/service/updateService/<?php echo $service->service_id; ?>'">
                                         <td><?php echo htmlspecialchars($service->service_date); ?></td>
                                         <td><?php echo htmlspecialchars($service->next_service_date); ?></td>
                                         <td><?php echo htmlspecialchars($service->service_cost); ?></td>
@@ -125,7 +125,7 @@
                 </form>
             </div>
 
-            </div>
+        </div>
         </div>
     </main>
 
