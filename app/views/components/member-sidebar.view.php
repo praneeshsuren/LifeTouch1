@@ -23,7 +23,7 @@
             <li>
                 <a href="<?php echo URLROOT; ?>/member/Trainer">
                     <i class='icon ph-bold ph-user'></i>
-                    <span class="text">View trainer</span>
+                    <span class="text">Trainers</span>
                 </a>
             </li>
             <li>
@@ -39,8 +39,8 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/Supplements">
-                    <i class='icon ph-bold ph-flask'></i>
+                <a href="<?php echo URLROOT; ?>/member/supplements">
+                    <i class='icon ph-bold ph-pint-glass'></i>
                     <span class="text">Supplements</span>
                 </a>
             </li>

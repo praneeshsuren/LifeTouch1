@@ -174,8 +174,19 @@
             
         }
 
-        public function Supplements(){
-            $this->view('member/member-supplements');
+        public function supplements(){
+            $member_id = $_SESSION['user_id'];
+
+            $supplementSalesModel = new M_SupplementSales;
+
+            // Fetch the supplement records for the member
+            $supplementRecords = $supplementSalesModel->findByMemberId($member_id);
+    
+            $data = [
+                'supplements' => $supplementRecords
+            ];
+
+            $this->view('member/member-supplements', $data);
         }
 
         public function workoutSchedules(){

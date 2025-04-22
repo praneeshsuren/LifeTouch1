@@ -48,14 +48,14 @@
                 <tbody>
                     <?php foreach ($data['workout_details'] as $workout): ?>
                         <tr>
-                            <td class="row-index"><input type="number" value="<?php echo $workout->row_no; ?>" readonly></td>
-                            <td class="workout-id-cell"><input type="text" value="<?php echo $workout->workout_id; ?>" readonly></td>
-                            <td class="workout-id-cell"><input type="text" value="<?php echo $workout->workout_name; ?>" readonly></td>
-                            <td class="equipment-id-cell"><input type="text" value="<?php echo $workout->equipment_id; ?>" readonly></td>
-                            <td class="equipment-name-cell"><input type="text" value="<?php echo $workout->equipment_name; ?>" readonly></td>
-                            <td class="description-cell"><input type="text" value="<?php echo $workout->description; ?>" readonly></td>
-                            <td><input type="number" value="<?php echo $workout->sets; ?>" min="1" readonly></td>
-                            <td><input type="number" value="<?php echo $workout->reps; ?>" min="1" readonly></td>
+                            <td class="row-index"><input name="row_no" type="number" value="<?php echo $workout->row_no; ?>" readonly></td>
+                            <td class="workout-id-cell"><input name="workout_id" type="text" value="<?php echo $workout->workout_id; ?>" readonly></td>
+                            <td class="workout-id-cell"><input name="workout_name" type="text" value="<?php echo $workout->workout_name; ?>" readonly></td>
+                            <td class="equipment-id-cell"><input name="equipment_id" type="text" value="<?php echo $workout->equipment_id; ?>" readonly></td>
+                            <td class="equipment-name-cell"><input type="text" name="equipment_name" value="<?php echo $workout->equipment_name; ?>" readonly></td>
+                            <td class="description-cell"><input name="description" type="text" value="<?php echo $workout->description; ?>" readonly></td>
+                            <td><input type="number" name="sets" value="<?php echo $workout->sets; ?>" min="1" readonly></td>
+                            <td><input type="number" name="reps" value="<?php echo $workout->reps; ?>" min="1" readonly></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -70,42 +70,42 @@
                 <div class="measurements">
                     <div class="measurement-group">
                         <div>
-                            <label for="weight_beginning">Weight (kg) at Start:</label>
+                            <p>Weight (kg) at Start:</p>
                             <input type="number" id="weight_beginning" name="weight_beginning" value="<?php echo $data['schedule']->weight_beginning; ?>" readonly>
                         </div>
                         <div>
-                            <label for="weight_ending">Weight (kg) at Completion:</label>
+                            <p>Weight (kg) at Completion:</p>
                             <input type="number" id="weight_end" name="weight_end" value="<?php echo $data['schedule']->weight_ending; ?>">
                         </div>
                     </div>
 
                     <div class="measurement-group">
                         <div>
-                            <label for="chest_measurement_beginning">Chest Measurement (cm) at Start:</label>
+                            <p>Chest Measurement (cm) at Start:</p>
                             <input type="number" id="chest_measurement_beginning" name="chest_measurement_beginning" value="<?php echo $data['schedule']->chest_measurement_beginning; ?>" readonly>
                         </div>
                         <div>
-                            <label for="chest_measurement_ending">Chest Measurement (cm) at Completion:</label>
+                        <p>Chest Measurement (cm) at Completion:</p>
                             <input type="number" id="chest_measurement_ending" name="chest_measurement_ending" value="<?php echo $data['schedule']->chest_measurement_ending; ?>">
                         </div>
                     </div>
                     <div class="measurement-group">
                         <div>
-                            <label for="bicep_measurement_beginning">Bicep Measurement (cm) at Start:</label>
+                        <p>Bicep Measurement (cm) at Start:</p>
                             <input type="number" id="bicep_measurement_beginning" name="bicep_measurement_beginning" value="<?php echo $data['schedule']->bicep_measurement_beginning; ?>" readonly>
                         </div>
                         <div>
-                            <label for="bicep_measurement_ending">Chest Measurement (cm) at Completion:</label>
+                        <p>Bicep Measurement (cm) at Completion:</p>
                             <input type="number" id="bicep_measurement_ending" name="bicep_measurement_ending" value="<?php echo $data['schedule']->bicep_measurement_ending; ?>">
                         </div>
                     </div>
                     <div class="measurement-group">
                         <div>
-                            <label for="thigh_measurement_beginning">Chest Measurement (cm) at Start:</label>
+                        <p>Thigh Measurement (cm) at Start:</p>
                             <input type="number" id="thigh_measurement_beginning" name="thigh_measurement_beginning" value="<?php echo $data['schedule']->chest_measurement_beginning; ?>" readonly>
                         </div>
                         <div>
-                            <label for="thigh_measurement_end">Chest Measurement (cm) at Completion:</label>
+                        <p>Thigh Measurement (cm) at Completion:</p>
                             <input type="number" id="thigh_measurement_ending" name="thigh_measurement_ending" value="<?php echo $data['schedule']->chest_measurement_ending; ?>">
                         </div>
                     </div>

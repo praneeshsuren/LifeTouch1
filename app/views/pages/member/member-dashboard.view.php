@@ -294,6 +294,7 @@
             return response.json();
           })
           .then(data =>{
+            console.log('Bookings data:', data);
             markBookings(data.bookings);
           })
           .catch(error => console.error('Error fetching bookings details:', error));
@@ -306,7 +307,6 @@
             return;
         }
         tbody.innerHTML = ""; // Clear existing rows
-
         // Filter bookings for "booked" and future dates
         const filteredBookings = bookings.filter(
             booking => booking.status === 'booked' && 
