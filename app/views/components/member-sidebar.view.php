@@ -27,9 +27,9 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/Workoutschedules">
+                <a href="<?php echo URLROOT; ?>/member/workoutSchedules">
                     <i class='icon ph-bold ph-barbell'></i>
-                    <span class="text">Workout schedules</span>
+                    <span class="text">Workout Schedules</span>
                 </a>
             </li>
             <li>
