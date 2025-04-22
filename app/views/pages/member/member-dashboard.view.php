@@ -157,27 +157,10 @@
         </div>      
       </div>
 
-      <div class="chart">
-        <div class="chart-header">
-          <h2>Bookings</h2>
-        </div>
-        <div class="chart-container">
-          <table class="paymentHistoryTable">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Trainer's detail</th>
-                  <th>Time</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-          </table>
-        </div>
-      </div>
+     
     </main>
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
-    <script>
       const dateToday = new Date().toISOString().split('T')[0];
 
       document.addEventListener("DOMContentLoaded", () =>{ 
@@ -240,7 +223,7 @@
         }
         return new Date(1970, 0, 1, hr24, min);
       }
-    </script>
+   
   </body>
 </html>
 

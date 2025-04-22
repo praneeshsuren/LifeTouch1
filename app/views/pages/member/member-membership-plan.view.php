@@ -106,19 +106,38 @@
               console.log('Plans:',data.plan);
               console.log("Subscription:", data.subscription);
               const plan = Array.isArray(data.plan) ? data.plan : [];
-              const subscription = Array.isArray(data.subscription) ? data.subscription :[];
-              const activeSubscription = subscription[0];
-              if (!subscription) {
-                console.log("No subscription found");
-                subscriptionTable(null, null); 
-                planCards(plan);
-              } else {
-                const selectedPlan = plan.find(p => p.id === activeSubscription.plan_id);
-                const mergedSubscription = { ...activeSubscription,plan_name: selectedPlan?.plan,amount:selectedPlan?.amount}
-                window.mergedSubscriptions = mergedSubscription; 
-                planCards(plan);
-                subscriptionTable(selectedPlan, activeSubscription);
-              }
+              let subscription = [];
+
+if (Array.isArray(data.subscription)) {
+  subscription = data.subscription;
+} else if (typeof data.subscription === "object" && data.subscription !== null) {
+  subscription = [data.subscription]; // wrap single object in array
+}
+
+if (subscription.length === 0) {
+  console.log("No subscription found");
+  subscriptionTable(null, null);
+  planCards(plan);
+} else {
+  const activeSubscription = subscription.find(sub => sub.status === 'active'); // add this check too
+  if (!activeSubscription) {
+    console.log("No active subscription found");
+    subscriptionTable(null, null);
+    planCards(plan);
+    return;
+  }
+
+  const selectedPlan = plan.find(p => p.id === activeSubscription.plan_id);
+  const mergedSubscription = {
+    ...activeSubscription,
+    plan_name: selectedPlan?.plan,
+    amount: selectedPlan?.amount,
+  };
+
+  window.mergedSubscriptions = mergedSubscription;
+  planCards(plan);
+  subscriptionTable(selectedPlan, activeSubscription);
+}
             })
             .catch(error => console.error('Error fetching plans details:', error));
 
