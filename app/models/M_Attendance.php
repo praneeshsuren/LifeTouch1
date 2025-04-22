@@ -79,7 +79,7 @@ class M_Attendance
             WHERE time_in IS NOT NULL
             AND DATE(date) BETWEEN :startOfWeek AND :endOfWeek
             GROUP BY DAYNAME(date)
-            ORDER BY FIELD(DAYNAME(date), 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday')
+            ORDER BY FIELD(DAYNAME(date), 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
         ";
     
         $attendanceByDay = $this->query($queryByDay, [
