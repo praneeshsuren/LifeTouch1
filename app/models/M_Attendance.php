@@ -49,11 +49,11 @@ class M_Attendance
         // Query to get attendance for today
         $queryByHour = "
             SELECT HOUR(time_in) AS hour, COUNT(*) AS attendance_count 
-        FROM $this->table
-        WHERE DATE(date) = :today
-        AND time_in IS NOT NULL
-        GROUP BY HOUR(time_in)
-        ORDER BY hour ASC
+            FROM $this->table
+            WHERE DATE(date) = :today
+            AND time_in IS NOT NULL
+            GROUP BY HOUR(time_in)
+            ORDER BY hour ASC
         ";
     
         // Get the attendance data for today
