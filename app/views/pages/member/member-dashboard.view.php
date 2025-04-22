@@ -247,20 +247,20 @@
             });
         }
     } else if (selectedPeriod === 'today') {
-        // Labels for hours of the day (5 AM to 11 PM)
-        labels = Array.from({ length: 19 }, (_, index) => `${index + 5} AM`);
-        attendanceCounts = new Array(19).fill(0);
+      labels = Array.from({ length: 19 }, (_, index) => `${index + 5}:00`);
+    attendanceCounts = new Array(19).fill(0);
 
-        // Process the attendance data for the day
-        if (attendanceData && attendanceData.attendance_by_hour) {
-            attendanceData.attendance_by_hour.forEach(item => {
-                const hour = item.hour;
-                if (hour >= 5 && hour <= 23) {
-                    // Set the corresponding attendance count for the hour
-                    attendanceCounts[hour - 5] = item.attendance_count;
-                }
-            });
-        }
+    // Handle object returned from backend
+    if (attendanceData && typeof attendanceData.attendance_by_hour === 'object') {
+        Object.entries(attendanceData.attendance_by_hour).forEach(([hour, count]) => {
+            const hourIndex = parseInt(hour, 10) - 5;
+            if (hourIndex >= 0 && hourIndex < 19) {
+                attendanceCounts[hourIndex] = count;
+            }
+        });
+    } else {
+        console.error("attendance_by_hour is not an object or has no data.");
+    }
     }
 
         // Ensure the attendance counts match the labels length (this should always be true now)
