@@ -64,5 +64,7 @@
 
             </div>
         </main>
+
+        <script src="<?php echo URLROOT; ?>/assets/js/member-script.js?v=<?php echo time();?>"></script>
     </body>
 </html>
