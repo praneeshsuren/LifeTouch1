@@ -115,13 +115,16 @@
 
       let barChartInstance;  // Declare globally
       let delayed;  // Declare globally
-       selectedPeriod = 'today';  // Default period
+      let selectedPeriod = 'today';  // Default period
+      const dateToday = new Date().toISOString().split('T')[0];
+
       // Listen for the DOM content to be loaded
       document.addEventListener("DOMContentLoaded", function() {
           const timePeriodSelect = document.getElementById('time-period');
           if (timePeriodSelect) {
               // Set the default period to 'today'
               fetchAndUpdateChart('today');
+              fetchAndMarkBookings();
 
               // Add event listener to handle changes in the dropdown
               timePeriodSelect.addEventListener('change', function() {
@@ -138,7 +141,6 @@
         fetch(`<?php echo URLROOT; ?>/member/index/api?period=${period}`)
           .then(response => response.json())
           .then(data => {
-            console.log('Fetched Data:', data);  // Log the fetched data
             updateBarChart(data.attendance);  // Update the chart with attendance data
           })
           .catch(error => console.error('Error fetching data:', error));
@@ -146,7 +148,6 @@
 
       // Update Bar Chart function
       function updateBarChart(attendanceData) {
-        console.log('Attendance Data:', attendanceData); // Debugging: Check the data being passed
 
         const ctxBarChart = document.getElementById('BarChart');
         if (!ctxBarChart) {
@@ -285,6 +286,76 @@
         // Initialize the chart with the new data
         barChartInstance = new Chart(ctx, configBarChart);
       }
+
+      function fetchAndMarkBookings() {
+        fetch(`<?php echo URLROOT; ?>/member/index/api`)
+          .then(response => {
+            console.log('Response Status:', response.status);
+            return response.json();
+          })
+          .then(data =>{
+            markBookings(data.bookings);
+          })
+          .catch(error => console.error('Error fetching bookings details:', error));
+      }
+
+      function markBookings(bookings) {
+        const tbody = document.querySelector(".paymentHistoryTable tbody");
+        if (!tbody) {
+            console.error('Table body not found');
+            return;
+        }
+        tbody.innerHTML = ""; // Clear existing rows
+
+        // Filter bookings for "booked" and future dates
+        const filteredBookings = bookings.filter(
+            booking => booking.status === 'booked' && 
+            new Date(booking.booking_date).getTime() >= new Date(dateToday).getTime()
+        )
+        .sort((a, b) => {
+            const dateA = new Date(a.booking_date);
+            const dateB = new Date(b.booking_date);
+
+            // Sort by booking date
+            if (dateA.getTime() !== dateB.getTime()) {
+                return dateA - dateB;
+            }
+
+            // If dates are the same, sort by timeslot
+            const timeA = convertTo24hrs(a.timeslot.split(" - ")[0]); // "09:00 AM"
+            const timeB = convertTo24hrs(b.timeslot.split(" - ")[0]); // "11:00 AM"
+
+            return timeA.getTime() - timeB.getTime();
+        });
+
+        // Create table rows for each filtered and sorted booking
+        filteredBookings.forEach(booking => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${booking.booking_date}</td>
+                <td>${booking.trainer_name}</td>
+                <td>${booking.timeslot}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Function to convert time from AM/PM to 24-hour format
+    function convertTo24hrs(time) {
+        const [hrMin, period] = time.trim().split(' '); // Split into hour, minute, and period (AM/PM)
+        let [hr, min] = hrMin.split(':');  // Split the hour and minute
+        hr = parseInt(hr, 10);
+        min = parseInt(min, 10);
+        let hr24 = hr;
+
+        if (period === 'PM' && hr24 < 12) {
+            hr24 += 12;  // Convert PM hours to 24-hour format
+        } else if (period === 'AM' && hr24 === 12) {
+            hr24 = 0;    // Convert 12 AM to 0 hours (midnight)
+        }
+
+        return new Date(1970, 0, 1, hr24, min); // Create a new Date object (with fixed date) for comparison
+    }
     </script>
 
   </body>
