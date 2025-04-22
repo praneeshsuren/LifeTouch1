@@ -277,72 +277,36 @@
       // Create the chart
       new Chart(ctxBarChart, configBarChart);
 
-      const ctxDoughnutChart = document.getElementById('DoughnutChart').getContext('2d');
+      
+// DOUGHNUT CHART
+const ctxDoughnutChart = document.getElementById('DoughnutChart').getContext('2d');
+const doughnutLabels = <?php echo json_encode(array_column($membershipCounts, 'membership_plan')); ?>;
+const doughnutData = <?php echo json_encode(array_column($membershipCounts, 'count')); ?>;
+const configDoughnutChart = {
+  type: 'doughnut',
+  data: {
+    labels: doughnutLabels,
+    datasets: [{
+      label: 'Membership Plans',
+      data: doughnutData,
+      backgroundColor: [
+        'rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)', 'rgb(153, 102, 255)', 'rgb(255, 159, 64)'
+      ],
+      hoverOffset: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      }
+    }
+  }
+};
+new Chart(ctxDoughnutChart, configDoughnutChart);
 
-      const dataDoughnutChart = {
-          labels: [
-              'Monthly', 'Quarterly', 'Semi-Annually', 'Annually'
-          ],
-          datasets: [{
-              label: 'Distribution of Membership Plans',
-              data: [300, 150, 220, 80], // Replace with your actual data
-              fill: true,
-              backgroundColor: [
-                  'rgb(255, 99, 132)',  // Red
-                  'rgb(54, 162, 235)',  // Blue
-                  'rgb(255, 205, 86)',  // Yellow
-                  'rgb(75, 192, 192)'   // Teal
-              ],
-              hoverOffset: 4
-          }]
-      };
-
-      const configDoughnutChart = {
-          type: 'doughnut',
-          data: dataDoughnutChart, // Correct reference to the data object
-          options: {
-              responsive: true,
-              maintainAspectRatio: true,
-              animation: {
-                  duration: 1500,
-                  easing: 'easeInOutQuart',
-                  onComplete: () => {
-                      delayed = true;
-                  },
-                  delay: (context) => {
-                      let delay = 0;
-                      if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                          delay = context.dataIndex * 100 + context.datasetIndex * 50;
-                      }
-                      return delay;
-                  },
-              },
-              plugins: {
-                  legend: {
-                      position: 'top',
-                      labels: {
-                          boxWidth: 20,
-                          font: {
-                              family: "'Poppins', sans-serif"
-                          }
-                      }
-                  },
-                  tooltip: {
-                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      padding: 10,
-                      titleFont: {
-                          family: "'Poppins', sans-serif"
-                      },
-                      bodyFont: {
-                          family: "'Poppins', sans-serif"
-                      }
-                  }
-              }
-          }
-      };
-
-      // Create the doughnut chart
-      new Chart(ctxDoughnutChart, configDoughnutChart);
 
     </script>
     <script>

@@ -48,7 +48,7 @@
                 <div class="card-details">
                     <i class="ph ph-user" style="font-size: 50px;"></i>
                     <p class="text-title">Membership Plan Report</p>
-                    <p class="text-body">Details of card 2</p>
+                    <p class="text-body">Membership Plan Valid Period</p>
                 </div>
                 <a href="<?php echo URLROOT; ?>/report/payment_report">
                     <button class="card-button">More info</button>

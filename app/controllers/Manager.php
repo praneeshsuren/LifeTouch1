@@ -24,16 +24,16 @@ class Manager extends Controller
             GROUP BY base_name
         ");
         // Query to count each membership plan
-        // $membershipCounts = $memberModel->query("SELECT membership_plan, COUNT(*) as count 
-        // FROM member 
-        // GROUP BY membership_plan");
+        $membershipCounts = $memberModel->query("SELECT membership_plan, COUNT(*) as count 
+        FROM member 
+        GROUP BY membership_plan");
 
         // Fetch the latest 4 announcements with admin names
         $announcements = $announcementModel->findAllWithAdminNames(4);
 
         $data = [
             'announcements' => $announcements,
-            // 'membershipCounts' => $membershipCounts,
+            'membershipCounts' => $membershipCounts,
             'inventoryCounts' => $inventoryCounts,
         ];
         
@@ -439,8 +439,13 @@ class Manager extends Controller
     {
         $equipmentModel = new M_Equipment();
 
+        // Validate the equipment ID
+        if (empty($id) || !is_numeric($id)) {
+            $_SESSION['message'] = "Invalid equipment ID.";
+            redirect('manager/equipment');
+        }
+
         // Fetch the existing equipment details by ID
-        $data = ['equipment_id' => $id];
         $equipment = $equipmentModel->where(['equipment_id' => $id], [], 1);
 
         if (!$equipment) {
@@ -448,34 +453,27 @@ class Manager extends Controller
             redirect('manager/equipment');
         }
 
-        // Process form submission when the request is POST
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Collect the form data
-            $updatedData = [
-                'name' => $_POST['name'],
-                'description' => $_POST['description'],
-                'purchase_price' => $_POST['purchase_price'],
-                'purchase_date' => $_POST['purchase_date'],
-                'purchase_shop' => $_POST['purchase_shop'],
-            ];
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Collect form data
+            $updatedData = $_POST;
 
-            // Check if the user has uploaded a new file
+            // Handle file upload if a new file is provided
             if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
-                // Handle the file upload
-                $targetDir = "assets/images/Equipment/";
-                $targetFile = $targetDir . basename($_FILES["file"]["name"]);
+            $targetDir = "assets/images/Equipment/";
+            $fileName = time() . "_" . basename($_FILES["file"]["name"]);
+            $targetFile = $targetDir . $fileName;
 
-                // Move the uploaded file to the target directory
-                if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
-                    // Update the file path in the database
-                    $updatedData['file'] = basename($_FILES["file"]["name"]);
-                } else {
-                    // Handle error if file upload fails
-                    $_SESSION['message'] = "Failed to upload image.";
-                    redirect('manager/equipment_edit/' . $id);
-                }
+            if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
+                $updatedData['file'] = $fileName;
+            } else {
+                $_SESSION['message'] = "Failed to upload image.";
+                $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
+                return;
+            }
             }
 
+            // Validate the data using the model's validate function
+            if ($equipmentModel->validate($updatedData)) {
             // Update the equipment in the database
             $updateResult = $equipmentModel->update($id, $updatedData, 'equipment_id');
 
@@ -487,11 +485,19 @@ class Manager extends Controller
 
             // Redirect to the equipment list page after updating
             redirect('manager/equipment');
+            } else {
+            // Pass validation errors to the view
+            $this->view('manager/equipment_edit', [
+                'equipment' => $equipment[0],
+                'errors' => $equipmentModel->getErrors()
+            ]);
+            return;
+            }
         }
 
         // Pass the equipment data to the view for editing
         $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
-    }
+        }
 
     public function membership_plan()
     {

@@ -15,6 +15,7 @@
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
+
 </head>
 
 <body>
@@ -37,7 +38,7 @@
         <div class="box" style="margin-top: 40px;">
             <a href="<?php echo URLROOT; ?>/manager/equipment" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
 
-            <div class="member-card" >
+            <div class="member-card">
                 <div>
 
                     <div class="profile-img-container">
@@ -104,20 +105,41 @@
 
             <div class="service-form">
                 <h2>Add Service</h2>
+                <?php if (isset($_SESSION['form_errors'])): ?>
+                    <div class="alert">
+                        <ul>
+                            <?php foreach ($_SESSION['form_errors'] as $field => $error): ?>
+                                </strong> <?php echo $error; ?>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                    <!-- Clear session errors after displaying -->
+                    <?php unset($_SESSION['form_errors']); ?>
+                <?php endif; ?>
+
                 <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/service/createservice">
                     <input type="hidden" name="equipment_id" value="<?php echo htmlspecialchars($equipment->equipment_id); ?>">
 
                     <div class="input-container">
                         <label for="service_date">Service Date:</label>
                         <input type="date" id="service_date" name="service_date" required>
+                        <?php if (!empty($errors['service_date'])): ?>
+                            <div class="error"><?php echo $errors['service_date']; ?></div>
+                        <?php endif; ?>
                     </div>
                     <div class="input-container">
                         <label for="next_service_date">Next service Date:</label>
                         <input type="date" id="next_service_date" name="next_service_date" required>
+                        <?php if (!empty($errors['next_service_date'])): ?>
+                            <div class="error"><?php echo $errors['next_service_date']; ?></div>
+                        <?php endif; ?>
                     </div>
                     <div class="input-container">
                         <label for="service_cost">Service Cost:</label>
                         <input type="text" id="service_cost" name="service_cost" required>
+                        <?php if (!empty($errors['service_cost'])): ?>
+                            <div class="error"><?php echo $errors['service_cost']; ?></div>
+                        <?php endif; ?>
                     </div>
                     <div class="button-container">
                         <button class="edit-button">Add Service</button>

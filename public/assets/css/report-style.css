@@ -38,6 +38,11 @@ tr.overdue td {
 }
 .status.upcoming {
     color: black;
+    background-color: #f9f9f9;
+  }
+  .status.overdue {
+    color: black;
+    background-color: #febbc1;
   }
 
 .download-button {
