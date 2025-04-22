@@ -10,7 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/member-style.css?v=<?php echo time();?>" />
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/dashboard.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/member-dashboard.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/sidebar-greeting.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- CHART.JS -->
@@ -36,136 +37,82 @@
           <div class="insights">
             <div class="insight-card card-1">
               <div class="upper">
-                <i class="ph ph-users"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
+                <i class="ph ph-barbell"></i>
               </div>
               <div class="lower">
-                <p>Total Members</p>
+                <p>Total Workout Schedules Completed</p>
                 <div class="progress">
-                  <h1>20000</h1>
-                  <div class="text-muted">
-                    <small>Last 30 days</small>
-                  </div>
+                  <h1><?php echo $data['completedSchedules'] ?></h1>
                 </div>
               </div>
             </div>
             <div class="insight-card card-2">
               <div class="upper">
-                <i class="ph ph-user-plus"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
+                <i class="ph ph-pint-glass"></i>
               </div>
               <div class="lower">
-                <p>New Members</p>
+                <p>Total Supplements Purchased</p>
                 <div class="progress">
-                  <h1>20000</h1>
-                  <div class="text-muted">
-                    <small>Last 30 days</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="insight-card card-3">
-              <div class="upper">
-                <i class="ph ph-chat-circle-text"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
-              </div>
-              <div class="lower">
-                <p>Total Inquiries</p>
-                <div class="progress">
-                  <h1>20000</h1>
-                  <div class="text-muted">
-                    <small>Last 30 days</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="insight-card card-4">
-              <div class="upper">
-                <i class="ph ph-calendar-check"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
-              </div>
-              <div class="lower">
-                <p>Total Event Attendees</p>
-                <div class="progress">
-                  <h1>20000</h1>
-                  <div class="text-muted">
-                    <small>Last 30 days</small>
-                  </div>
+                  <h1><?php echo $data['supplementsPurchased'] ?></h1>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="bar-chart">
+
             <div class="upper">
               <div class="upper-text">
                 <h2>Member Attendance</h2>
                 <p>Track the total number of members who attended</p>
               </div>
-
               <div class="period-select">
-  <select id="time-period" name="time-period">
-    <option value="today" selected>Today</option>
-    <option value="week">This Week</option>
-  </select>
-</div>
-
-
-
+                <select id="time-period" name="time-period">
+                  <option value="today" selected>Today</option>
+                  <option value="week">This Week</option>
+                </select>
+              </div>
             </div>
+
             <div class="lower">
               <canvas id="BarChart"></canvas>
             </div>
+
           </div>
+
+          <div class="bookings">
+            <div class="chart-header">
+              <h2>Bookings</h2>
+            </div>
+              <table class="paymentHistoryTable">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Trainer's Detail</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+          </div>
+
         </div>
 
         <div class="right-column">
-          <div class="doughnut-chart">
-            <div class="upper-text">
-              <h2>Membership Types</h2>
-              <p>Membership plan distribution</p>
-            </div> 
-            <div class="lower">
-              <canvas id="DoughnutChart"></canvas>
-            </div>
-          </div>
           <div class="recent-announcements">
             <?php require APPROOT.'/views/components/recent-announcements.view.php' ?>
           </div>
         </div>
+
       </div>
 
-      <div class="chart">
-        <div class="chart-header">
-          <h2>Bookings</h2>
-        </div>
-        <div class="chart-container">
-          <table class="paymentHistoryTable">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Trainer's Detail</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
     </main>
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
-
     <script>
+
       let barChartInstance;  // Declare globally
       let delayed;  // Declare globally
        selectedPeriod = 'today';  // Default period
