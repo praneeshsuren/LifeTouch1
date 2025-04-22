@@ -125,9 +125,8 @@
 
               <div class="period-select">
                 <select id="time-period" name="time-period">
+                  <option value="today">Today</option>
                   <option value="week">This Week</option>
-                  <option value="month">This Month</option>
-                  <option value="year">This Year</option>
                 </select>
               </div>
 
@@ -243,77 +242,146 @@
     </script>                          
 
     <script>
-      const ctxBarChart = document.getElementById('BarChart').getContext('2d');
-      let delayed;
+      function updateBarChart(attendanceData) {
+    console.log('Attendance Data:', attendanceData); // Debugging data
 
-      const dataBarChart = {
-        labels: [
-          'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
-        ],
+    if (barChartInstance) {
+        barChartInstance.destroy();
+    }
+
+    const ctxBarChart = document.getElementById('BarChart').getContext('2d');
+
+    let labels = [];
+    let attendanceCounts = [];
+
+    // Process the attendance data from the backend
+    if (attendanceData && attendanceData.attendance_by_hour) {
+        labels = Array.from({ length: 19 }, (_, index) => `${index + 5} AM`); // Hour labels from 5 AM to 11 PM
+        attendanceCounts = attendanceData.attendance_by_hour.map(item => item.attendance_count); // Extract counts
+    }
+
+    // Ensure attendanceCounts matches the labels length
+    if (attendanceCounts.length === labels.length) {
+        const dataBarChart = {
+            labels: labels,
+            datasets: [{
+                label: 'Number of Members Attended',
+                data: attendanceCounts,
+                fill: true,
+                borderColor: '#5f63f2',
+                backgroundColor: 'rgba(95, 99, 242, 0.2)',
+                tension: 0.4,
+                pointBackgroundColor: '#5f63f2',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                borderWidth: 2,
+                borderRadius: 10,
+                barThickness: 50
+            }]
+        };
+
+        const configBarChart = {
+            type: 'bar',
+            data: dataBarChart,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart',
+                    onComplete: () => {
+                        delayed = true;
+                    },
+                    delay: (context) => {
+                        let delay = 0;
+                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
+                            delay = context.dataIndex * 150 + context.datasetIndex * 50;
+                        }
+                        return delay;
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false,
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        ticks: {
+                            stepSize: 10
+                        },
+                        stacked: true
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Poppins', sans-serif"
+                            }
+                        },
+                        stacked: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            boxWidth: 20,
+                            font: {
+                                family: "'Poppins', sans-serif"
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        padding: 10,
+                        titleFont: {
+                            family: "'Poppins', sans-serif"
+                        },
+                        bodyFont: {
+                            family: "'Poppins', sans-serif"
+                        }
+                    }
+                }
+            }
+        };
+
+        barChartInstance = new Chart(ctxBarChart, configBarChart);
+    } else {
+        console.error('Invalid data structure for chart');
+    }
+}
+
+    </script>
+
+    <script>
+      const ctxDoughnutChart = document.getElementById('DoughnutChart').getContext('2d');
+
+      const dataDoughnutChart = {
+        labels: ['Basic', 'Standard', 'Premium'],
         datasets: [{
-          label: 'Number of Members',
-          data: [15, 25, 35, 45, 30, 20], // Replace with your actual data
-          fill: true,
-          borderColor: '#5f63f2',
-          backgroundColor: 'rgba(95, 99, 242, 0.2)',
-          tension: 0.4,
-          pointBackgroundColor: '#5f63f2',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          pointRadius: 5,
-          pointHoverRadius: 7,
-          borderWidth: 2,
-          borderRadius: 10,
-          barThickness: 50
+          label: 'Membership Types',
+          data: [30, 50, 20], // Replace with your actual data
+          backgroundColor: [
+            '#5f63f2',
+            '#ff6384',
+            '#36a2eb'
+          ],
+          hoverOffset: 4
         }]
       };
 
-      // Chart configuration
-      const configBarChart = {
-        type: 'bar',
-        data: dataBarChart,
+      const configDoughnutChart = {
+        type: 'doughnut',
+        data: dataDoughnutChart,
         options: {
           responsive: true,
           maintainAspectRatio: true,
-          animation: {
-            duration: 2000, // Duration of the animation (2 seconds)
-            easing: 'easeOutQuart', 
-            onComplete: () => {
-              delayed = true;
-            },
-            delay: (context) => {
-              let delay = 0;
-              if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                delay = context.dataIndex * 150 + context.datasetIndex * 50;
-              }
-              return delay;
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                drawBorder: false,
-                color: 'rgba(0, 0, 0, 0.1)'
-              },
-              ticks: {
-                stepSize: 10
-              },
-              stacked: true
-            },
-            x: {
-              grid: {
-                drawBorder: false,
-                display: false
-              },
-              ticks: {
-                font: {
-                  family: "'Poppins', sans-serif"
-                }
-              },
-              stacked: true
-            }
-          },
           plugins: {
             legend: {
               position: 'top',
@@ -338,77 +406,8 @@
         }
       };
 
-      // Create the chart
-      new Chart(ctxBarChart, configBarChart);
-
-      const ctxDoughnutChart = document.getElementById('DoughnutChart').getContext('2d');
-
-      const dataDoughnutChart = {
-          labels: [
-              'Monthly', 'Quarterly', 'Semi-Annually', 'Annually'
-          ],
-          datasets: [{
-              label: 'Distribution of Membership Plans',
-              data: [300, 150, 220, 80], // Replace with your actual data
-              fill: true,
-              backgroundColor: [
-                  'rgb(255, 99, 132)',  // Red
-                  'rgb(54, 162, 235)',  // Blue
-                  'rgb(255, 205, 86)',  // Yellow
-                  'rgb(75, 192, 192)'   // Teal
-              ],
-              hoverOffset: 4
-          }]
-      };
-
-      const configDoughnutChart = {
-          type: 'doughnut',
-          data: dataDoughnutChart, // Correct reference to the data object
-          options: {
-              responsive: true,
-              maintainAspectRatio: true,
-              animation: {
-                  duration: 1500,
-                  easing: 'easeInOutQuart',
-                  onComplete: () => {
-                      delayed = true;
-                  },
-                  delay: (context) => {
-                      let delay = 0;
-                      if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                          delay = context.dataIndex * 100 + context.datasetIndex * 50;
-                      }
-                      return delay;
-                  },
-              },
-              plugins: {
-                  legend: {
-                      position: 'top',
-                      labels: {
-                          boxWidth: 20,
-                          font: {
-                              family: "'Poppins', sans-serif"
-                          }
-                      }
-                  },
-                  tooltip: {
-                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      padding: 10,
-                      titleFont: {
-                          family: "'Poppins', sans-serif"
-                      },
-                      bodyFont: {
-                          family: "'Poppins', sans-serif"
-                      }
-                  }
-              }
-          }
-      };
-
-      // Create the doughnut chart
-      new Chart(ctxDoughnutChart, configDoughnutChart);
-
-    </script>
+      const doughnutChart = new Chart(ctxDoughnutChart, configDoughnutChart);
+      </script>
   </body>
 </html>
 

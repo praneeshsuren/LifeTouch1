@@ -9,26 +9,31 @@
 
         public function index($action = null) {
             $announcementModel = new M_Announcement;
-            // Fetch the latest 4 announcements with admin names
             $announcements = $announcementModel->findAllWithAdminNames(4);
-            $data = [
-                'announcements' => $announcements
-            ];
-  
+            $data = ['announcements' => $announcements];
+            
+            $attendanceModel = new M_Attendance;
+            $period = $_GET['period'] ?? 'today'; // Default to 'today'
+        
+            // Get attendance data for the entire gym (aggregated by hour and day)
+            $attendanceData = $attendanceModel->getAttendanceDataForGraph($period);
+            
             $member_id = $_SESSION['member_id'] ?? null;
             $bookingModel = new M_Booking();
             $bookings = $bookingModel->bookingsForMember($member_id);
+        
             if ($action === 'api') {
                 header('Content-Type: application/json');
                 echo json_encode([
-                    'bookings' => $bookings
+                    'bookings' => $bookings,
+                    'attendance' => $attendanceData  // Send aggregated attendance data
                 ]);
                 exit;
             }
         
             $this->view('member/member-dashboard', $data);
         }
-
+        
         public function Trainer($action = null){
             switch($action){
                 case 'api':
