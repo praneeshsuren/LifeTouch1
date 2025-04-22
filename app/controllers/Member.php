@@ -193,33 +193,35 @@
                     'payment' => $payment
                 ]);
                 exit;
-            } elseif($action === 'add'){
-                if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            } else if ($action === 'savePayment'){
+                if($_SERVER['REQUEST_METHOD'] === "POST") {
                     header('Content-Type: application/json');
 
-                    $date = $_POST['paymentDate'] ?? null;
                     $member_id = $_POST['member_id'] ?? null;
-                    $package = $_POST['packageName'] ?? null;
-                    $email = $_POST['email'] ?? null;
-                    $amount = $_POST['amount'] ?? null;
+                    $plan_id = $_POST['plan_id'] ?? null;
                     $payment_intent_id = $_POST['payment_intent_id'] ?? null;
                     $status = $_POST['status'] ?? null;
+                    $startDate = $_POST['startDate'] ?? null;
+                    $endDate = $_POST['endDate'] ?? null;
+                    $type = $_POST['paymentType'] ?? null;
 
                     $data = [
-                        'email' => $email,
-                        'package_name' => $package,
-                        'amount' => $amount,
                         'member_id' => $member_id,
-                        'created_at' => $date,
+                        'plan_id' => $plan_id,
                         'payment_intent_id' => $payment_intent_id,
                         'status' => $status,
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'type' => $type
                     ];
-                    
                     $result = $payment_Model->insert($data);
-                    echo json_encode(['success' => $result]);
+                    echo json_encode([
+                        "success" => $result ? true : false, 
+                        "message" => $result ? "Payment successful and saved!" : "Payment succeeded, but failed to save payment info"
+                    ]);
                     exit;
-
                 }
+               
             }
             $data = ['member_id' => $member_id];
             $this->view('member/member-payment',$data); 
@@ -252,6 +254,59 @@
                 echo json_encode(['error' => $e->getMessage()]);
             }
         } 
+
+        public function checkout(){
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $_SESSION['payment_data'] = [
+                    'member_id' => $_POST['member_id'],
+                    'id' => $_POST['package_id'],
+                    'startDate' => $_POST['paymentStartDate'],
+                    'endDate' => $_POST['paymentExpireDate'],
+                    'type' => $_POST['payment_type']
+                ];
+        
+                $this->view('member/member-cardPayment',[
+                    'session' => $_SESSION['payment_data'],
+                ]);
+            } else {
+                // Direct page access fallback
+                header('Location: ' . URLROOT . '/member/membershipPlan');
+                exit;
+            }
+        }
+
+        public function cardPayment($action = null){
+            $plan_Model = new M_Membership_plan();
+            $plan = $plan_Model->findAll();
+            if($action === 'api'){
+                header('Content-type: application/json');
+                $payment_data = isset($_SESSION['payment_data']) ? $_SESSION['payment_data'] : null;
+                echo json_encode([
+                    'plan' => $plan,
+                    'session' => $payment_data
+                ]);
+                exit;
+            }
+        }
+
+        public function membershipPlan($action = null){
+            $member_id = $_SESSION['member_id'] ?? null;
+            $plan_Model = new M_Membership_plan();
+            $plan = $plan_Model->findAll();
+            $subscription_Model = new M_Subscription();
+            $subscription_Model->deactivateExpiredSubscriptions();
+            $memberPlan = $subscription_Model->subscriptionMember($member_id);
+            if($action === 'api'){
+                header('Content-type: application/json');
+                echo json_encode([
+                    'plan' => $plan,
+                    'subscription' => $memberPlan
+                ]);
+                exit;
+            } 
+            $data = ['member_id' => $member_id];
+            $this->view('member/member-membership-plan',$data);
+        }
 
         public function settings(){
             

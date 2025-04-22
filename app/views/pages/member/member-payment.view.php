@@ -31,6 +31,7 @@
         </div>
       </div>
       <div class="paymentBox">
+        <button id="payBtn" class="trainerviewbtn-Bookreservationbtn" style="float: left; margin-top: 5px;margin-bottom:3px; width:100px;" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'">Membership Plan</button>
         <button id="payBtn" class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: 5px;margin-bottom:3px; width:100px;">Pay</button>
 
         <!-- Past Payment Details -->
@@ -47,39 +48,6 @@
             </thead>
             <tbody></tbody>
           </table>
-        </div>
-      </div>
-
-      <div id="bookingModal" class="modal">
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          <div class="bookingModal-body">
-            <form id="payment-form" class="payment-form">
-              <h1 class="payment-title">Payment Details</h1>
-              <input type="hidden" id="member_id" value="<?php echo htmlspecialchars($member_id); ?>" name="member_id" required>
-              <input type="hidden" id="paymentDate" required>
-              <div class="payment-form-group">
-              <div class="payment-form-group">
-                <input type="text" id="package" placeholder=" " class="payment-form-control" required />
-                <label for="package" class="payment-form-label payment-form-label-required">Package Name</label>
-              </div>
-              <div class="payment-form-group">
-                <input type="email" id="email" placeholder=" " class="payment-form-control" required />
-                <label for="email" class="payment-form-label payment-form-label-required">Email Address</label>
-              </div>
-              <div class="payment-form-group">
-                <input type="number" id="amount" placeholder=" " class="payment-form-control" required />
-                <label for="amount" class="payment-form-label payment-form-label-required">Amount</label>
-              </div>
-              <div class="payment-form-group">
-                <label for="card-element">Card Details</label>
-                <div id="card-element" class="payment-form-control"></div>
-                <div id="card-errors" role="alert" style="color: red;"></div>
-              </div>
-
-              <button type="submit" class="payment-form-submit-button">Pay Now</button>
-            </form>
-          </div>
         </div>
       </div>
     </main>
