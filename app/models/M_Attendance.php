@@ -32,19 +32,19 @@ class M_Attendance
     }
 
     // Update attendance record by setting time_out
-    public function updateAttendance($id, $data, $idField = 'id')
-    {
-        $query = "UPDATE $this->table SET time_out = :time_out WHERE $idField = :id";
-        return $this->query($query, array_merge(['id' => $id], $data));
-    }
-
-    // Fetch attendance data for graph based on period ('today' or 'week')
     public function getAttendanceDataForGraph($period = 'today')
     {
         $today = date('Y-m-d');
-        $startOfWeek = date('Y-m-d', strtotime('last sunday midnight'));
-        $endOfWeek = date('Y-m-d', strtotime('next saturday midnight'));
-
+        
+        // Get the current day of the week (0=Sunday, 1=Monday, ..., 6=Saturday)
+        $currentDayOfWeek = date('w', strtotime($today)); // Get the current weekday (0=Sunday, 1=Monday, ..., 6=Saturday)
+        
+        // Calculate the date range for the last 7 days (from last Tuesday to this Monday)
+        $startOfWeek = date('Y-m-d', strtotime("-{$currentDayOfWeek} days")); // Get the previous Sunday
+        $startOfWeek = date('Y-m-d', strtotime("last Tuesday", strtotime($startOfWeek))); // Adjust to last Tuesday
+    
+        $endOfWeek = date('Y-m-d', strtotime("next Monday", strtotime($startOfWeek))); // Get next Monday (this week)
+    
         if ($period === 'today') {
             $queryByHour = "
                 SELECT HOUR(time_in) AS hour, COUNT(*) AS attendance_count 
@@ -55,38 +55,31 @@ class M_Attendance
                 GROUP BY HOUR(time_in) 
                 ORDER BY hour ASC
             ";
-
+    
             $attendanceByHour = $this->query($queryByHour, ['today' => $today]);
         } else {
-            $queryByHour = "
-                SELECT HOUR(time_in) AS hour, COUNT(*) AS attendance_count 
-                FROM $this->table 
-                WHERE time_in IS NOT NULL 
-                AND DATE(time_in) BETWEEN :startOfWeek AND :endOfWeek
-                AND HOUR(time_in) BETWEEN 5 AND 23
-                GROUP BY HOUR(time_in) 
-                ORDER BY hour ASC
+            // Fetch attendance data from last Tuesday to this Monday for the "week" period
+            $queryByDay = "
+                SELECT DAYNAME(date) AS day_name, COUNT(*) AS attendance_count
+                FROM $this->table
+                WHERE time_in IS NOT NULL
+                AND DATE(date) BETWEEN :startOfWeek AND :endOfWeek
+                GROUP BY DAYNAME(date)
+                ORDER BY FIELD(DAYNAME(date), 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday')
             ";
-
-            $attendanceByHour = $this->query($queryByHour, ['startOfWeek' => $startOfWeek, 'endOfWeek' => $endOfWeek]);
+    
+            $attendanceByDay = $this->query($queryByDay, [
+                'startOfWeek' => $startOfWeek,
+                'endOfWeek' => $endOfWeek
+            ]);
         }
-
-        $queryByDay = "
-            SELECT DAYOFWEEK(time_in) AS day, COUNT(*) AS attendance_count 
-            FROM $this->table 
-            WHERE time_in IS NOT NULL 
-            AND DATE(time_in) BETWEEN :startOfWeek AND :endOfWeek
-            GROUP BY DAYOFWEEK(time_in) 
-            ORDER BY day ASC
-        ";
-
-        $attendanceByDay = $this->query($queryByDay, ['startOfWeek' => $startOfWeek, 'endOfWeek' => $endOfWeek]);
-
+    
         return [
-            'attendance_by_hour' => $attendanceByHour,
-            'attendance_by_day' => $attendanceByDay
+            'attendance_by_hour' => $attendanceByHour ?? [],
+            'attendance_by_day' => $attendanceByDay ?? []
         ];
     }
+    
 }
 
 ?>
