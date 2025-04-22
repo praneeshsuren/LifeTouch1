@@ -80,14 +80,14 @@
                                         '<?php echo $announcement->announcement_id; ?>',
                                         '<?php echo $announcement->created_date; ?>',
                                         '<?php echo $announcement->created_time; ?>',
-                                        '<?php echo $announcement->created_by; ?>'
+                                        '<?php echo $announcement->first_name; ?> <?php echo $announcement->last_name; ?>'
                                     )">
                                         <td>
                                             <div class="profile-pic">
                                                 <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
                                                 <div class="person-info">
-                                                    <h4>Kavishka</h4>
-                                                    <small class="email">kavishka@gmail.com</small>
+                                                    <h4><?php echo $announcement->first_name; ?></h4>
+                                                    <small class="email"><?php echo $announcement->email_address; ?></small>
                                                 </div>
                                             </div>
                                         </td>

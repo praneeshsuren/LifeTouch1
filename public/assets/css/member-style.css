@@ -24,6 +24,54 @@
     --tran-05: all 0.5s ease; 
 }
 
+/******Buttons*******/
+.edit-btn,
+.delete-btn,
+.save-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background-color: #007bff;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #b02a37;
+}
+
+.save-btn {
+  background-color: #28a745;
+  display: none;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  display: none;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
 body{
     height: 100vh;
     background: var(--body-color);
@@ -51,9 +99,11 @@ body.dark{
     flex-direction: column;
     gap: 20px;
     background: var(--sidebar-color);
-    transition: var(--tran-05);
     padding: 24px;
     z-index: 100;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    transition: var(--tran-05);
 }
 
 .sidebar .head{
@@ -114,7 +164,6 @@ body.dark{
     padding: 12px 8px;
     text-decoration: none;
     color: var(--text-color);
-    transition: var(--tran-03);
 }
 
 .menu ul li > a:hover{
@@ -386,22 +435,19 @@ main{
     position: absolute;
     top: 0;
     left: 250px;
-    height: 100vh;
+    height: auto;
     width: calc(100% - 250px);
     background: var(--body-color);
-    transition: var(--tran-05);
     z-index: 1;
     padding: 1.5rem 2rem;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 3rem 1fr 2fr;
-    gap: 1.6rem;
+    transition: var(--tran-05);
 }
 
-main > .title,
-.title{
-    grid-column: 1 / -1;
-    grid-row: 1;
+main.active{
+    transition: var(--tran-05);
+}
+
+main > .title{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -463,181 +509,7 @@ main > .title > .greeting > .bell-container:hover .notification {
     100% { transform: translateX(0); }
 }
 
-/* Insight Cards */
-main .insights{
-    grid-column: 1;
-    grid-row: 2;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.6rem;
-}
-
-main .insights > div{
-    color: var(--hover-btn);
-    background: var(--sidebar-color);
-    padding: 2rem;
-    border-radius: 40px;
-    box-shadow: var(--box-shadow-color);
-    transition: var(--tran-03);
-}
-
-main .insights > div:hover{
-    background: var(--separator-color);
-}
-
-main .insights > div i{
-    background-color: #695CFE;
-    padding: 0.5rem;
-    border-radius: 50%;
-    color: var(--sidebar-color);
-    font-size: 2rem;
-}
-
-main .insights > .bookings  i{
-    background-color: coral;
-}
-
-main .insights > .workouts  i{
-    background-color: lightgreen;
-}
-
-main .insights > div .middle{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-main .insights h3{
-    margin: 1rem 0 0.6rem;
-    font-size: 1rem;
-}
-
-main .insights .progress{
-    position: relative;
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-    margin-left: 2rem;
-}
-
-main .insights svg{
-    width: 7rem;
-    height: 7rem;
-}
-
-@keyframes progress-animation {
-    0% {
-        stroke-dashoffset: 0;
-    }
-    100% {
-        stroke-dashoffset: 92;
-    }
-}
-
-main .insights svg circle {
-    fill: none;
-    stroke-width: 14;
-    stroke: #695CFE;
-    stroke-linecap: round;
-    transform: translate(8px, 8px);
-    stroke-dasharray: 110;
-    animation: progress-animation 0.8s ease-out forwards;
-}
-
-main .insights .progress .number{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-main .insights .progress .number {
-    position: absolute;
-    top: 2.75rem;
-    left: 2.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-color);
-    font-size: 1rem;
-}
-
-/* Announcements Section in dashboard */
-main .recent-announcements{
-    grid-column: 2;
-    grid-row: 2 / span 2;
-}
-
-main .recent-announcements h2{
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-}
-
-main .recent-announcements .announcements{
-    background: var(--sidebar-color);
-    border-radius: 30px;
-    padding-top: 15px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    box-shadow: var(--box-shadow-color);
-}
-
-main .recent-announcements .announcement-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-main .recent-announcements .announcement-list .date-heading{
-    font-size: 1.2rem;
-    text-align: left;
-}
-
-main .recent-announcements .announcement{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--separator-color);
-    color: var(--hover-btn);
-    padding-top: 10px;
-    padding-bottom: 15px;
-    cursor: pointer;
-    margin-bottom: 1rem;
-    transition: var(--tran-03);
-}
-
-main .recent-announcements .announcement:hover{
-    transform: translateY(-10px);
-}
-
-main .recent-announcements .announcement .profile-img{
-    display: flex;
-    margin-bottom: 3rem;
-    margin-left: 0.5rem;
-    width: 4.5rem;
-}
-
-main .recent-announcements .announcement .profile-img img{
-    border-radius: 50%;
-    width: 100%;
-    object-fit: cover;
-}
-
-main .recent-announcements .announcement .message{
-    margin-left: 1rem;
-}
-
-/* table in dashboard */
 main .chart-container{
-    grid-column: 1;
-    grid-row: 3;
     background-color: var(--sidebar-color);
     border-radius: 2rem;
     padding: 1rem;
@@ -660,57 +532,13 @@ main .chart-header h2 {
 
 /* Announcements Page */
 main .announcementsContainer{
-    grid-column: 1 / -1;
-    height: 100vh;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
     display: flex;
     align-items: center;
     flex-direction: column;
     gap: 2rem;
     width: 100%;
-}
-
-main .announcementsContainer .announcementHeader{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
-
-main .announcementsContainer .announcementHeader .aHeading{
-    display: flex;
-    align-items: center;
-}
-
-main .announcementsContainer .announcementHeader .aHeading h2{
-    font-size: 1.5rem;
-    color: var(--text-color);
-}
-
-main .announcementsContainer .announcementHeader .aHeading #num-of-announcements{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--alert-color);
-    border: 2px solid var(--alert-color);
-    border-radius: 20px;
-    padding: 0.2rem 0.5rem;
-    margin-left: 10px;
-}
-
-main .announcementsContainer .announcementHeader #mark-as-read{
-    color: var(--text-color);
-    cursor: pointer;
-    transition: var(--tran-05);
-    padding: 0.2rem 0.5rem;
-    border-radius: 20px;
-    border: 1px solid var(--text-color);
-}
-
-main .announcementsContainer .announcementHeader #mark-as-read:hover{
-    color: var(--hover-btn);
-    border: 1px solid var(--hover-btn);
-    box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.1);
 }
 
 main .announcementsContainer .announcement-card{
@@ -757,18 +585,6 @@ main .announcementsContainer .announcement-card .announcementCard-Header .detail
     margin-bottom: 5px
 }
 
-main .announcementsContainer .announcement-card .announcementCard-Header .unread-marker{
-    display: none;
-    border-radius: 20px;
-    border: 1px solid var(--alert-color);
-    padding: 0.2rem 0.5rem;
-    color: var(--alert-color);
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header .unread-marker.unread{
-    display: block;
-}
-
 main .announcementsContainer .announcement-card .description{
     margin-top: 1.5rem;
     margin-left: 1rem;
@@ -798,6 +614,31 @@ main .announcementsContainer .announcement-card .announcementCard-Footer .announ
 main .announcementsContainer .announcement-card .announcementCard-Footer i{
     font-size: 1.2rem;
     margin-right: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    main .recent-announcements {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    main {
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    main .insights {
+        grid-template-columns: 1fr;
+    }
 }
 
 /*member-view trainer-section*/
@@ -1881,3 +1722,150 @@ main .book-details .detail .message{
         font-size: 12px;
     }  
 }
+
+/* Settings Page */
+main .settings-container {
+    margin-top: 1rem;
+    background-color: var(--sidebar-color);
+    padding: 2rem;
+    border-radius: 20px;
+}
+
+main .settings-container .details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+main .settings-container .details .profile-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the profile picture */
+    justify-content: space-between;
+    gap: 15px;
+}
+
+main .settings-container .details .profile-picture img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+}
+
+main .settings-container .details .change-picture-btn {
+    margin: 0;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+main .settings-container .details .change-picture-btn:hover {
+    background-color: #0056b3;
+}
+
+main .settings-container .details p {
+    margin-bottom: 1rem;
+}
+
+main .settings-container .details .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%; /* Ensures full width for the fields */
+}
+
+main .settings-container .details .row > p {
+    flex: 1; /* Makes sure the input fields are evenly distributed */
+}
+
+main .settings-container .details p {
+    margin-bottom: 1rem;
+}
+
+main .settings-container .details p strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1rem;
+}
+
+main .settings-container .details input,
+main .settings-container .details select {
+    width: 100%; /* Ensure the input takes full width */
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #555;
+}
+
+main .settings-container .details input[disabled],
+main .settings-container .details select[disabled] {
+    background-color: #f9f9f9;
+    color: #999;
+}
+
+main .settings-container .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+main .settings-container .action-buttons button {
+    padding: 12px 24px; /* Adjust padding for better button size */
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+main .settings-container .action-buttons button.save-btn {
+    background-color: #4CAF50; /* Green for save button */
+    color: white;
+}
+
+main .settings-container .action-buttons button.save-btn:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+main .settings-container .action-buttons button.cancel-btn {
+    background-color: #f44336; /* Red for cancel button */
+    color: white;
+}
+
+main .settings-container .action-buttons button.cancel-btn:hover {
+    background-color: #e53935; /* Darker red on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .details {
+        flex-direction: column;
+    }
+
+    .title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    main .settings-container .details .row {
+        flex-direction: column; /* Stack fields in a column on small screens */
+    }
+
+    main .settings-container .details .row > p {
+        flex: unset; /* Removes the equal width constraint on smaller screens */
+    }
+}
+
+.error {
+    color: red;
+    font-size: 0.8em;
+}
+

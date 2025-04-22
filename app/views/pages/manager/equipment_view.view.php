@@ -71,6 +71,7 @@
                         <thead>
                             <tr>
                                 <th>Service Date</th>
+                                <th>Next service Date</th>
                                 <th>Service Cost</th>
                                 <th>Actions</th>
                             </tr>
@@ -79,8 +80,9 @@
 
                             <?php if (!empty($services)): ?>
                                 <?php foreach ($services as $service): ?>
-                                    <tr style="cursor: pointer;" onclick="window.location='<?php echo URLROOT; ?>/manager/service_edit/<?php echo $service->service_id; ?>'">
+                                    <tr style="cursor: pointer;" onclick="window.location='<?php echo URLROOT; ?>/service/updateService/<?php echo $service->service_id; ?>'">
                                         <td><?php echo htmlspecialchars($service->service_date); ?></td>
+                                        <td><?php echo htmlspecialchars($service->next_service_date); ?></td>
                                         <td><?php echo htmlspecialchars($service->service_cost); ?></td>
                                         <td>
 
@@ -110,6 +112,10 @@
                         <input type="date" id="service_date" name="service_date" required>
                     </div>
                     <div class="input-container">
+                        <label for="next_service_date">Next service Date:</label>
+                        <input type="date" id="next_service_date" name="next_service_date" required>
+                    </div>
+                    <div class="input-container">
                         <label for="service_cost">Service Cost:</label>
                         <input type="text" id="service_cost" name="service_cost" required>
                     </div>
@@ -117,8 +123,9 @@
                         <button class="edit-button">Add Service</button>
                     </div>
                 </form>
-
             </div>
+
+        </div>
         </div>
     </main>
 

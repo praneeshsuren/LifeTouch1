@@ -12,6 +12,9 @@
                         $member = new M_Member;
                         $user = new M_User;
             
+                        if (!isset($_POST['membership_plan'])) {
+                            $_POST['membership_plan'] = 'Monthly'; // Default value
+                        }
                         if ($member->validate($_POST) && $user->validate($_POST)) {
                             $temp = $_POST;
             

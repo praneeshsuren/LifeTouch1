@@ -8,7 +8,7 @@
                 </div>
                 <div class="message">
                     <p>
-                        <b>Kavishka Jayathilaka</b></br>
+                        <b><?php echo $announcement->admin_name; ?></b></br>
                         <?php echo $announcement->subject; ?></br>
                     </p>
                     <div class="time-ago">

@@ -15,6 +15,12 @@
             'equipment_name',
         ];
 
+        public function getByWorkoutId($workoutId) {
+            // Data to filter by workout_id
+            $data = ['workout_id' => $workoutId];
+            return $this->first($data);  // Use the `first` method to get the first matching record
+        }
+
     }
 
 ?>

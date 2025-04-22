@@ -6,18 +6,19 @@
             $this->checkAuth('admin');
         }
 
-        public function index(){
-            
+        public function index() {
             $announcementModel = new M_Announcement;
-            $announcements = $announcementModel->findAll('announcement_id', 4);
-
+        
+            // Fetch the latest 4 announcements with admin names
+            $announcements = $announcementModel->findAllWithAdminNames(4);
+        
             $data = [
                 'announcements' => $announcements
             ];
-
+        
             $this->view('admin/admin-dashboard', $data);
-            
         }
+        
 
         public function events($action = null){
             switch ($action){
@@ -68,7 +69,7 @@
                 default:
 
                     $announcementModel = new M_Announcement;
-                    $announcements = $announcementModel->findAll('announcement_id');
+                    $announcements = $announcementModel->findAllWithAdminDetails();
 
                     $data = [
                         'announcements' => $announcements
@@ -269,6 +270,7 @@
             $this->view('admin/admin-calendar');
         }
 
+
         public function payment($action = null){
             $paymentModel = new M_Payment();
             $payment = $paymentModel->paymentAdmin();
@@ -281,4 +283,123 @@
             $this->view('admin/admin-payment');
         }
 
+        public function settings(){
+            
+            $user_id = $_SESSION['user_id'];
+            $adminModel = new M_Admin;
+            $userModel = new M_User;
+            $user = $userModel->findByUserId($user_id);
+            $admin = $adminModel->findByAdminId($user_id);
+            $data = [
+                'admin' => $admin,
+                'user' => $user
+            ];
+
+            $this->view('admin/admin-settings', $data);
+        }
+
+        public function updateSettings() {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $adminModel = new M_Admin;
+                $userModel = new M_User;
+        
+                // Sanitize inputs
+                $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
+                // Retrieve existing admin data to compare
+                $admin_id = $_POST['user_id'];
+                $existingAdmin = $adminModel->findByAdminId($admin_id);
+        
+                // Retrieve existing user data to compare (for username check)
+                $existingUser = $userModel->findByUserId($admin_id); // Assuming findByUserId exists for users table
+        
+                // Initialize data array to track changes
+                $data = [];
+        
+                // Only include fields that have been updated
+                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address'];
+        
+                // Check for changes and add them to the data array
+                foreach ($fields as $field) {
+                    if (isset($_POST[$field]) && $_POST[$field] !== $existingAdmin->$field) {
+                        $data[$field] = $_POST[$field];
+                    }
+                }
+        
+                // Handle email uniqueness check manually if it's updated
+                if (isset($_POST['email_address']) && $_POST['email_address'] !== $existingAdmin->email_address) {
+                    if ($adminModel->emailExists($_POST['email_address'], $admin_id)) {
+                        $_SESSION['error'] = "Email is already in use.";
+                        $data = [
+                            'errors' => ['email_address' => 'Email is already in use.'],
+                            'admin' => $_POST
+                        ];
+                        $this->view('admin/admin-settings', $data);
+                        return; // Prevent further execution if email is already in use
+                    }
+                }
+        
+                // Check if the username has changed
+                if (isset($_POST['username']) && $_POST['username'] !== $existingUser->username) {
+                    if ($userModel->usernameExists($_POST['username'])) {
+                        $_SESSION['error'] = "Username is already taken.";
+                        $data = [
+                            'errors' => ['username' => 'Username is already in use.'],
+                            'admin' => $_POST
+                        ];
+                        $this->view('admin/admin-settings', $data);
+                        return; // Prevent further execution if username is already in use
+                    } else {
+                        $data['username'] = $_POST['username'];
+                    }
+                }
+        
+                // Handle profile picture upload
+                if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == UPLOAD_ERR_OK) {
+                    $fileTmp = $_FILES['profile_picture']['tmp_name'];
+                    $fileName = basename($_FILES['profile_picture']['name']);
+                    $targetPath = 'public/assets/images/Member/' . $fileName;
+        
+                    if (move_uploaded_file($fileTmp, $targetPath)) {
+                        $data['image'] = $fileName;
+                    } else {
+                        $_SESSION['error'] = "Failed to upload profile picture.";
+                        redirect('admin/settings');
+                        return;
+                    }
+                }
+        
+                // Only proceed with the update if data exists
+                if (!empty($data)) {
+
+
+                    // Update admin data with the updated values
+                    $updatedAdmin = $adminModel->update($admin_id, $data, 'admin_id');
+        
+                    // Update user data (if username was changed)
+                    if (isset($data['username'])) {
+                        $updatedUser = $userModel->update($admin_id, ['username' => $data['username']], 'user_id');
+                    }
+        
+                    // Check if the updates were successful
+                    if (!$updatedAdmin && (isset($updatedUser) ? !$updatedUser : true)) {
+                        $_SESSION['success'] = "Settings have been successfully updated!";
+                    } else {
+                        $_SESSION['error'] = "No changes detected or update failed.";
+                    }
+        
+                    redirect('admin/settings');
+                } else {
+                    // If no changes, redirect back
+                    $_SESSION['error'] = "No changes were made.";
+                    redirect('admin/settings');
+                }
+            } else {
+                redirect('admin/settings');
+            }
+        }               
+        
     }
+
+?>
+

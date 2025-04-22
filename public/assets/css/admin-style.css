@@ -2212,3 +2212,149 @@ main .calendarContainer {
 .trainerviewbtn-profileTable-container tr:hover{
     background-color: var(--body-color);
 }
+
+/* Settings Page */
+main .settings-container {
+    margin-top: 1rem;
+    background-color: var(--sidebar-color);
+    padding: 2rem;
+    border-radius: 20px;
+}
+
+main .settings-container .details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+main .settings-container .details .profile-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the profile picture */
+    justify-content: space-between;
+    gap: 15px;
+}
+
+main .settings-container .details .profile-picture img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+}
+
+main .settings-container .details .change-picture-btn {
+    margin: 0;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+main .settings-container .details .change-picture-btn:hover {
+    background-color: #0056b3;
+}
+
+main .settings-container .details p {
+    margin-bottom: 1rem;
+}
+
+main .settings-container .details .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%; /* Ensures full width for the fields */
+}
+
+main .settings-container .details .row > p {
+    flex: 1; /* Makes sure the input fields are evenly distributed */
+}
+
+main .settings-container .details p {
+    margin-bottom: 1rem;
+}
+
+main .settings-container .details p strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1rem;
+}
+
+main .settings-container .details input,
+main .settings-container .details select {
+    width: 100%; /* Ensure the input takes full width */
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #555;
+}
+
+main .settings-container .details input[disabled],
+main .settings-container .details select[disabled] {
+    background-color: #f9f9f9;
+    color: #999;
+}
+
+main .settings-container .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+main .settings-container .action-buttons button {
+    padding: 12px 24px; /* Adjust padding for better button size */
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+main .settings-container .action-buttons button.save-btn {
+    background-color: #4CAF50; /* Green for save button */
+    color: white;
+}
+
+main .settings-container .action-buttons button.save-btn:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+main .settings-container .action-buttons button.cancel-btn {
+    background-color: #f44336; /* Red for cancel button */
+    color: white;
+}
+
+main .settings-container .action-buttons button.cancel-btn:hover {
+    background-color: #e53935; /* Darker red on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .details {
+        flex-direction: column;
+    }
+
+    .title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    main .settings-container .details .row {
+        flex-direction: column; /* Stack fields in a column on small screens */
+    }
+
+    main .settings-container .details .row > p {
+        flex: unset; /* Removes the equal width constraint on smaller screens */
+    }
+}
+
+.error {
+    color: red;
+    font-size: 0.8em;
+}

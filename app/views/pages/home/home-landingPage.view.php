@@ -109,7 +109,17 @@
 
     <!--Pricing section code-->
     <section class="plans" id="plans">
+
         <h2 class="heading">Our <span>Events</span></h2>
+
+        <?php if (!empty($_SESSION['join_errors']) && is_array($_SESSION['join_errors'])): ?>
+            <div class="error-container" style="color: red; margin-bottom: 10px; font-size: 15px;">
+                <?php foreach ($_SESSION['join_errors'] as $error): ?>
+                    <p><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p>
+                <?php endforeach; ?>
+            </div>
+            <?php unset($_SESSION['join_errors']); ?>
+        <?php endif; ?>
 
         <div class="plans-content">
             <?php if (!empty($data['events'])): ?>
@@ -128,11 +138,53 @@
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                    <h2>No Events are currently ongoing.</h2>
+                <h2>No Events are currently ongoing.</h2>
             <?php endif; ?>
-</div>
+        </div>
 
     </section>
+
+
+    <!-- Join Event Popup Form -->
+    <div id="joinForm" class="popup-form">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeForm()">&times;</span>
+            <h2>Join Event</h2>
+
+            <form id="eventForm" method="POST" action="<?php echo URLROOT; ?>/home/joinEvent">
+                <input type="hidden" id="eventIdInput" name="event_id" />
+                <div class="input-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="full_name" required />
+                </div>
+                <div class="input-group">
+                    <label for="nic">NIC</label>
+                    <input type="text" id="nic" name="nic" required />
+                </div>
+                <div class="input-group checkbox-group" style="display: flex; gap: 10px;">
+                    <label for="isMember">Gym Member?</label>
+                    <input type="checkbox" name="is_member" id="isMember" onclick="toggleMembership()">
+                </div>
+
+                <div class="input-group" id="membershipGroup" style="display: none;">
+                    <label for="membershipNumber">Membership Number</label>
+                    <input type="text" id="membershipNumber" name="membership_number"
+                        pattern="^MB\/[MF]\/\d+$"
+                        title="Format: MB/M/0001 or MB/F/0001"
+                        placeholder="MB/M/0001" />
+                    <small id="membershipError" style="color: red;"></small>
+                </div>
+                <div class="input-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="text" id="contact" name="contact_no" required />
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn">Pay Now</button>
+                    <button type="submit" class="btn">Join</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!--Trainer section code-->
     <section class="review" id="review">
         <div class="review-box">
@@ -140,7 +192,7 @@
             <div class="wrapper">
                 <div class="review-item">
                     <img src="<?php echo URLROOT; ?>/assets/images/home/1.jpg" alt="" class="trainer-image" />
-                    <h2>John</h2>
+                    <h2>Roshan Karunarathne</h2>
                     <div class="rating">
                         <i class='bx bxs-certification' id="star"></i>
                         <i class='bx bxs-certification' id="star"></i>
@@ -154,7 +206,7 @@
 
                 <div class="review-item">
                     <img src="<?php echo URLROOT; ?>/assets/images/home/2.jpg" alt="" class="trainer-image" />
-                    <h2>John</h2>
+                    <h2>Amila Dhanushka</h2>
                     <div class="rating">
                         <i class='bx bxs-certification' id="star"></i>
                         <i class='bx bxs-certification' id="star"></i>
@@ -167,7 +219,7 @@
 
                 <div class="review-item">
                     <img src="<?php echo URLROOT; ?>/assets/images/home/3.jpg" alt="" class="trainer-image" />
-                    <h2>John</h2>
+                    <h2>Thilina Romesh</h2>
                     <div class="rating">
                         <i class='bx bxs-certification' id="star"></i>
                         <i class='bx bxs-certification' id="star"></i>
@@ -212,9 +264,9 @@
     <!-- Footer section code -->
     <footer class="footer">
         <div class="social">
-            <a href="#"><i class='bx bxl-instagram'></i></a>
-            <a href="#"><i class='bx bxl-facebook'></i></a>
-            <a href="#"><i class='bx bxl-linkedin'></i></a>
+            <a href=""><i class='bx bxl-instagram'></i></a>
+            <a href="https://www.facebook.com/lifetouchphysicalfitness" target="_blank"><i class='bx bxl-facebook'></i></a>
+            <a href="https://api.whatsapp.com/send?phone=%2B94779257773&context=ARBkh6ua3j8vfi6so0P814szJrlRZ4SKTx_Uho4ZRBJ6vHDxuryQnblFnLzUpzkGLjZJsfY26-zehb5gRxCYH-BZPExjt4u-uWRsGPGVfUeI3hKB2cMd--fMLyfAsaOFn5wQHXkm92GI_kTQQZj6PnpRSA&source=FB_Page&app=facebook&entry_point=page_cta&fbclid=IwY2xjawG1QI1leHRuA2FlbQIxMAABHYxNkxoER3sF_d2Z3qIC7KU3jpaZo0D6LaZoFkO2lpVh5yTnZoC2eyBSwg_aem_a0wUXS2YcROlNPikW5vs8Q" target="_blank"><i class='bx bxl-whatsapp'></i></a>
         </div>
 
         <!-- Location, Contact, and Mail section -->
@@ -241,5 +293,136 @@
 
     <script src="<?php echo URLROOT; ?>/assets/js/home-script.js?v=<?php echo time(); ?>"></script>
 </body>
+<script>
+    // Show the popup form when "Join Now" is clicked
+    document.querySelectorAll('.plans-content .box a').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default navigation
+            document.getElementById('joinForm').style.display = 'flex';
+        });
+    });
+
+    function closeForm() {
+        document.getElementById('joinForm').style.display = 'none';
+    }
+
+    function toggleMembership() {
+        const checkbox = document.getElementById('isMember');
+        const memberField = document.getElementById('membershipGroup');
+        const payNowBtn = document.querySelector('.button-group button[type="button"]');
+        const eventForm = document.getElementById('eventForm');
+        const isFree = eventForm.getAttribute('data-free') === '1';
+
+        // Show/hide membership number input
+        memberField.style.display = checkbox.checked ? 'block' : 'none';
+
+        // Show Pay Now button if:
+        // - Event is NOT free, regardless of membership
+        // - User is NOT a member
+        if (!isFree || !checkbox.checked) {
+            payNowBtn.style.display = 'inline-block';
+        } else {
+            // Event is free and user is a member
+            payNowBtn.style.display = 'none';
+        }
+    }
+</script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const scrollTo = urlParams.get('scroll');
+        if (scrollTo) {
+            const section = document.getElementById(scrollTo);
+            if (section) {
+                section.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('.plans-content .box a').forEach((button, index) => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const eventId = eventIds[index];
+            const isFreeForMembers = freeEvents[index];
+
+            document.getElementById('eventIdInput').value = eventId;
+            document.getElementById('joinForm').style.display = 'flex';
+
+            // Store free status as a custom data attribute
+            const form = document.getElementById('eventForm');
+            form.setAttribute('data-free', isFreeForMembers ? '1' : '0');
+
+            // Reset checkbox and membership section
+            document.getElementById('isMember').checked = false;
+            document.getElementById('membershipGroup').style.display = 'none';
+
+            // Decide default Pay Now visibility
+            const payNowBtn = document.querySelector('.button-group button[type="button"]');
+            payNowBtn.style.display = isFreeForMembers ? 'none' : 'inline-block';
+        });
+    });
+</script>
+
+<script>
+    const eventIds = <?php echo json_encode(array_column($data['events'], 'event_id')); ?>;
+    const freeEvents = <?php echo json_encode(array_column($data['events'], 'free_for_members')); ?>;
+
+    const form = document.getElementById('eventForm');
+    const joinForm = document.getElementById('joinForm');
+    const eventIdInput = document.getElementById('eventIdInput');
+    const isMemberCheckbox = document.getElementById('isMember');
+    const membershipGroup = document.getElementById('membershipGroup');
+    const payNowBtn = document.querySelector('.button-group button[type="button"]');
+    const joinBtn = document.querySelector('.button-group button[type="submit"]');
+
+    document.querySelectorAll('.plans-content .box a').forEach((button, index) => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Set Event ID and whether event is free for members
+            eventIdInput.value = eventIds[index];
+            const isFree = freeEvents[index];
+            form.setAttribute('data-free', isFree ? '1' : '0');
+
+            // Reset form state
+            isMemberCheckbox.checked = false;
+            membershipGroup.style.display = 'none';
+
+            // Initially assume not a member → show Pay
+            payNowBtn.style.display = 'inline-block';
+            joinBtn.style.display = 'none';
+
+            // Show form
+            joinForm.style.display = 'flex';
+        });
+    });
+
+    isMemberCheckbox.addEventListener('change', function() {
+        const isMember = this.checked;
+        const isFree = form.getAttribute('data-free') === '1';
+
+        // Toggle membership number field
+        membershipGroup.style.display = isMember ? 'block' : 'none';
+
+        // Determine button visibility based on member and free status
+        if (isMember && isFree) {
+            // Case 1: Member + Free = Show Join only
+            joinBtn.style.display = 'inline-block';
+            payNowBtn.style.display = 'none';
+        } else {
+            // All other cases = Show Pay
+            joinBtn.style.display = 'none';
+            payNowBtn.style.display = 'inline-block';
+        }
+    });
+
+    function closeForm() {
+        joinForm.style.display = 'none';
+    }
+</script>
+
 
 </html>
