@@ -35,7 +35,7 @@
             <li>
                 <a href="<?php echo URLROOT; ?>/member/announcements">
                     <i class='icon ph-bold ph-newspaper'></i>
-                    <span class="text">View Announcements</span>
+                    <span class="text">Announcements</span>
                 </a>
             </li>
             <li>
