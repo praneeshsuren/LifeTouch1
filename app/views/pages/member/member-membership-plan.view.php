@@ -34,21 +34,28 @@
         <div class="card shadow">
         </div>
       </div>
-      <!-- <div class="paymentBox">
+      <div class="paymentBox">
         <div class="payment-history">
-          <h1 class="payment-title">Membership Plan Details</h1>
+          <h1 class="payment-title">Your Current Plan</h1>
           <table class="paymentHistoryTable">
             <thead>
               <tr>
                 <th>Membership plan</th>
                 <th>Price</th>
-                <th>Action</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
+          
         </div>
-      </div> -->
+        <div>
+          <button type="submit" id ="renew-btn" class="payment-form-submit-button">Renew</button>
+          <button type="submit" id="cancel-btn" class="payment-form-submit-button">Cancel</button>
+          </div>
+      </div>
       <div id="bookingModal" class="modal">
         <div class="modal-content">
           <span class="close">&times;</span>
@@ -56,7 +63,7 @@
             <form id="payment-form" class="payment-form" method="POST" action="<?php echo URLROOT; ?>/member/checkout">
               <h1 class="payment-title">Payment Details</h1>
               <input type="text" id="member_id" value="<?php echo htmlspecialchars($member_id); ?>" name="member_id" required>
-              <input type="text" name="package_id" id="package_id">
+              <input type="text" name="package_id" id="package_id"><input type="text" name="payment_type" id="payment_type">
               <div class="payment-form-group">
                 <input type="text" id="package" placeholder=" " class="payment-form-control" name="package" readonly required />
                 <label for="package" class="payment-form-label">Package Name</label>
@@ -85,7 +92,11 @@
       
     <!-- SCRIPT -->
     <script>
-      document.addEventListener("DOMContentLoaded", () =>{ 
+      const today = new Date().toISOString().split("T")[0];
+      const modal = document.getElementById("bookingModal");
+      const closeModal = document.querySelector(".close");
+      document.addEventListener("DOMContentLoaded", () => { 
+       
         fetch(`<?php echo URLROOT; ?>/member/membershipPlan/api`)
           .then(response => {
               console.log('Response Status:', response.status);
@@ -93,16 +104,63 @@
             })
             .then(data =>{
               console.log('Plans:',data.plan);
+              console.log("Subscription:", data.subscription);
               const plan = Array.isArray(data.plan) ? data.plan : [];
-              planCards(plan);
+              const subscription = Array.isArray(data.subscription) ? data.subscription :[];
+              const activeSubscription = subscription[0];
+              if (!subscription) {
+                console.log("No subscription found");
+                subscriptionTable(null, null); 
+                planCards(plan);
+              } else {
+                const selectedPlan = plan.find(p => p.id === activeSubscription.plan_id);
+                const mergedSubscription = { ...activeSubscription,plan_name: selectedPlan?.plan,amount:selectedPlan?.amount}
+                window.mergedSubscriptions = mergedSubscription; 
+                planCards(plan);
+                subscriptionTable(selectedPlan, activeSubscription);
+              }
             })
             .catch(error => console.error('Error fetching plans details:', error));
-        
-        paymentModal();
-      });
 
-      const modal = document.getElementById("bookingModal");
-      const closeModal = document.querySelector(".close");
+        paymentModal();
+            
+        const submitButton = document.querySelector(".payment-form-submit-button");
+        const paymentForm = document.querySelector("form");
+
+        paymentForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          if(window.mergedSubscriptions){
+            alert("You have existing subscriptions.");
+            modal.style.display = "none";
+            return;
+          }
+
+          submitButton.disabled = true;
+          this.submit();
+        });
+
+        const renewBtn = document.getElementById("renew-btn");
+
+        renewBtn.addEventListener("click", function (e) {
+
+          if(!window.mergedSubscriptions){
+            alert("You have no active subscription to renew.");
+            return;
+          }
+          const expiry = calculateExpiryDate(today,window.mergedSubscriptions.plan_name);
+          console.log("ex",expiry)
+      
+          document.getElementById('package').value =window.mergedSubscriptions.plan_name;
+          document.getElementById('amount').value = window.mergedSubscriptions.amount;
+          document.getElementById('paymentStartDate').value = today;
+          document.getElementById('paymentExpireDate').value = expiry;
+          document.getElementById('package_id').value = window.mergedSubscriptions.plan_id
+          document.getElementById('payment_type').value = 'renew';  
+
+          bookingModal.style.display = 'block';
+        });
+
+      });
 
       function planCards(plan){
         cardContainer = document.querySelector(".cards");
@@ -143,13 +201,13 @@
                 const startDateInput = document.getElementById("paymentStartDate");
                 const expiryDateInput = document.getElementById("paymentExpireDate");
 
-                const today = new Date().toISOString().split("T")[0];
                 startDateInput.value = today;
                 
                 // Set values in modal
                 packageInput.value = plan.plan;
                 amountInput.value = plan.amount;
                 document.getElementById("package_id").value = plan.id;
+                document.getElementById("payment_type").value = "new";
 
                 const expiry = calculateExpiryDate(today,plan.plan);
                 if (expiry){
@@ -161,6 +219,28 @@
         
             cardContainer.appendChild(card);
         });
+      }
+
+      function subscriptionTable(plan, subscription){
+        tbody = document.querySelector(".paymentHistoryTable tbody");
+        tbody.innerHTML = "";
+
+        if (!subscription) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td colspan="4" style="text-align: center;">No subscription records found.</td>`;
+          tbody.appendChild(tr);
+          return;
+        } else {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${plan.plan}</td>
+            <td>Rs ${plan.amount}.00</td>
+            <td>${subscription.start_date}</td>
+            <td>${subscription.end_date}</td>
+            <td>${subscription.status}</td>`;
+
+          tbody.appendChild(tr);
+        }
       }
 
       function paymentModal(){

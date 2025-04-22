@@ -79,8 +79,8 @@
                                 </div>
                             </div>
                             <div id="card-errors" class="card-error"></div>
-                            <input type="text" id="member_id"><input type="text" id="package_id"><input type="text" id="amount">
-                            <input type="text" id="startDate"><input type="text" id="endDate">
+                            <input type="text" name="member_id" id="member_id"><input type="text" name="plan_id" id="package_id"><input type="text" id="amount">
+                            <input type="text" name="startDate" id="startDate"><input type="text" name="endDate" id="endDate"><input type="text" name="paymentType" id="payment_type">
                             <div class="payment-form-group-flex">
                                 <button type="button" class="payment-form-cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'"> Cancel</button>
                                 <button type="submit" class="payment-form-submit-button"> Pay</button>
@@ -95,7 +95,7 @@
     <script>
         window.STRIPE_PUBLISHABLE_KEY = "<?php echo STRIPE_PUBLISHABLE_KEY; ?>";
         const createPaymentURL = "<?php echo URLROOT; ?>/member/createPayment";
-        const savePlan = "<?php echo URLROOT; ?>/member/membershipPlan/savePlan";
+        const savePlan = "<?php echo URLROOT; ?>/member/Payment/savePayment";
         const redirect = "<?php echo URLROOT; ?>/member/membershipPlan";
 
         document.addEventListener("DOMContentLoaded", () =>{
@@ -115,28 +115,19 @@
                 const selectedPlan = plan.find(p => p.id == session.id);
 
                 if(selectedPlan){
-                    console.log("selected plan:", selectedPlan);
-
-                    document.getElementById("payment-summary-price").textContent = "Rs " + selectedPlan.amount + ".00";
-                    document.getElementById("payment-summary-name").textContent = selectedPlan.plan;
+                    document.getElementById("payment-summary-price").textContent = "Rs " + selectedPlan.amount + ".00";                    document.getElementById("payment-summary-name").textContent = selectedPlan.plan;
                     document.getElementById("payment-summary-total").textContent = "Rs " + selectedPlan.amount + ".00";
                     document.getElementById("member_id").value = session.member_id;
                     document.getElementById("package_id").value = selectedPlan.id;
                     document.getElementById("amount").value = selectedPlan.amount;
                     document.getElementById("startDate").value = session.startDate;
                     document.getElementById("endDate").value = session.endDate;
+                    document.getElementById("payment_type").value = session.type;
 
                 }
               })
               .catch(error => console.error("Error in fetching session data", error));
         });
-
-        // function formatCardNumber(input){
-        //     // Add a space after every 4 digits
-        //     let value = input.value.replace(/\s/g, ""); 
-        //     let formatted = value.match(/.{1,4}/g)?.join(' ') || '';
-        //     input.value = formatted;
-        // }
     </script>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="<?php echo URLROOT; ?>/assets/js/payment-script.js?v=<?php echo time();?>"></script>

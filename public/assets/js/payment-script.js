@@ -40,8 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const member_id = document.getElementById("member_id").value;
       const package_id = document.getElementById("package_id").value;
       const amount = document.getElementById("amount").value;
-      const statDate = document.getElementById("startDate").value;
-      const endDate =  document.getElementById("endDate").value;
 
       try {
         // create paymentIntent from backend
@@ -73,26 +71,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if(stripeResult.error) {
           cardError.textContent = stripeResult.error.message;
           submitButton.disabled = false;
+
           return;
         }
 
-        console.log("status",stripeResult.paymentIntent.status);
-        console.log("str",stripeResult);
-        console.log("Payment inttent:", stripeResult.paymentIntent);
-        console.log("Payment inttent id o:", stripeResult.paymentIntent);
-
         if (stripeResult.paymentIntent.status === "succeeded") {
           const formData = new FormData(this);
-          formData.append("member_id", member_id);
-          formData.append("plan_id", package_id);
           formData.append("payment_intent_id", stripeResult.paymentIntent.id);
           formData.append("status", stripeResult.paymentIntent.status);
-          formData.append("startDate", statDate);
-          formData.append("endDate", endDate);
-
-          for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
-          }
 
           const savePayment = await fetch(savePlan,{
             method: "POST",
@@ -100,17 +86,16 @@ document.addEventListener("DOMContentLoaded", () => {
           });
 
           const result =  await savePayment.json();
-          console.log("s:",result);
           if(result.success) {
-            console.log("success");
+            console.log("Payment successful and saved!");
             alert("Payment successful and saved!");
             this.reset();  // Reset the form fields
             cardNumber.clear();  // Clear the card number
             cardExpiry.clear();  // Clear the expiry date
             cardCvc.clear();  // Clear the CVV
-            location.reload();
+            window.location.href = redirect;
           } else {
-            console.log("fail");
+            console.log("Payment succeeded, but failed to save payment info");
             alert("Payment succeeded, but failed to save payment info.");
           }
         } 

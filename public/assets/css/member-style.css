@@ -1567,12 +1567,12 @@ main .book-details .detail .message{
 
 .payment-form-submit-button {
     color: white;
-    background-color: var(--primary-color);
+    background-color:  rgba(105,111,221,1);
 }
 
 .payment-form-submit-button:hover {
     color: white;
-    background-color: var(--primary-color);
+    background-color: rgba(105,111,221,1);
 }
 
 .date-row {
