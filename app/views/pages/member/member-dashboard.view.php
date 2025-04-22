@@ -213,17 +213,30 @@
         }
 
         const ctx = ctxBarChart.getContext('2d');
-
         let labels = [];
-        if (selectedPeriod === 'week') {
-        // Labels for days of the week (Tuesday to Monday)
-        labels = ['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon'];
-        attendanceCounts = new Array(7).fill(0);  // Initialize with 0 for each day
 
-        // Process the attendance data for the week
+        // Dynamic labels and data based on the selected period
+        if (selectedPeriod === 'week') {
+        // Calculate the last 7 days excluding today
+        const currentDate = new Date();
+        labels = [];
+        attendanceCounts = new Array(7).fill(0);  // Initialize with 0 for each day
+        
+        // Calculate the last 7 days (excluding today)
+        for (let i = 1; i <= 7; i++) {
+            const date = new Date();
+            date.setDate(currentDate.getDate() - i);  // Subtract i days from today
+            const dayName = date.toLocaleString('en-us', { weekday: 'short' });  // Get day name (e.g., "Mon")
+            labels.push(dayName);  // Push the day name to labels
+        }
+
+        // Reverse the order of labels so that yesterday is last
+        labels.reverse();
+
+        // Process the attendance data for the last 7 days (excluding today)
         if (attendanceData && attendanceData.attendance_by_day) {
             attendanceData.attendance_by_day.forEach(item => {
-                const dayName = item.day_name;  // Get the day name
+                const dayName = item.day_name;  // Get the full day name (e.g., "Tuesday")
                 const attendanceCount = item.attendance_count;
 
                 // Map the attendance count to the corresponding day (index)
