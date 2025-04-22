@@ -8,27 +8,44 @@
         }
 
         public function index($action = null) {
+            $member_id = $_SESSION['user_id'];
+
             $announcementModel = new M_Announcement;
-            // Fetch the latest 4 announcements with admin names
-            $announcements = $announcementModel->findAllWithAdminNames(4);
-            $data = [
-                'announcements' => $announcements
-            ];
-  
-            $member_id = $_SESSION['member_id'] ?? null;
+            $announcements = $announcementModel->findAllWithAdminNames(5);
+           
+            
+            $attendanceModel = new M_Attendance;
+            $period = $_GET['period'] ?? 'today'; // Default to 'today'
+        
+            // Get attendance data for the entire gym (aggregated by hour and day)
+            $attendanceData = $attendanceModel->getAttendanceDataForGraph($period);
+
+            $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
+            $completedSchedules = count($workoutScheduleDetailsModel->findAllCompletedSchedulesByMemberId($member_id));
+
+            $supplementSalesModel = new M_SupplementSales;
+            $supplementsPurchased = count($supplementSalesModel->findSupplementsPurchased($member_id));
+
             $bookingModel = new M_Booking();
             $bookings = $bookingModel->bookingsForMember($member_id);
+        
             if ($action === 'api') {
                 header('Content-Type: application/json');
                 echo json_encode([
-                    'bookings' => $bookings
+                    'bookings' => $bookings,
+                    'attendance' => $attendanceData,
                 ]);
                 exit;
             }
-        
+            $data = [
+                'announcements' => $announcements,
+                'completedSchedules' => $completedSchedules,
+                'supplementsPurchased' => $supplementsPurchased,
+            ];
+
             $this->view('member/member-dashboard', $data);
         }
-
+        
         public function Trainer($action = null){
             switch($action){
                 case 'api':
