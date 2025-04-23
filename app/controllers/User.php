@@ -460,6 +460,27 @@
                             ];
 
                             $receptionist_id = $_POST['receptionist_id'];
+                            $receptionist = $receptionistModel->findByReceptionistId($receptionist_id); // Fetch the existing receptionist data
+
+                            // Handle file upload if exists
+                            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                                $targetDir = "assets/images/Receptionist/";
+                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $targetFile = $targetDir . $fileName;
+
+                                // Validate the file (e.g., check file type and size) and move it to the target directory
+                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                    $data['image'] = $fileName; // Save the filename for the database
+                                } else {
+                                    $errors['file'] = "Failed to upload the file. Please try again.";
+                                }
+                            }
+
+                            // If no image uploaded, leave the 'image' key as null (if not set)
+                            if (!isset($data['image'])) {
+                                $data['image'] = $receptionist->image; // Preserve the existing image if no new one is uploaded
+                            }
+                
                 
                             // Call the update function
                             if (!$receptionistModel->update($receptionist_id, $data, 'receptionist_id')) {

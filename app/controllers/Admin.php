@@ -216,20 +216,29 @@
                     // Return specific receptionist data as JSON
                     $receptionistModel = new M_Receptionist;
                     $receptionist = $receptionistModel->findByReceptionistId($_GET['id']);
-                    header('Content-Type: application/json');
-                    $this->view('admin/admin-viewReceptionist');
+
+                    $data = [
+                        'receptionist' => $receptionist
+                    ];
+                    $this->view('admin/admin-viewReceptionist', $data);
+                    break;
+                
+                case 'salaryHistory':
+                    $receptionist_id = $_GET['id'];
+
+                    $this->view('admin/admin-receptionistSalaryHistory');
                     break;
         
                 default:
-                    $this->view('admin/admin-receptionists');
-                    break;
-
-                case 'api':
-                    // Return all receptionists data as JSON
+                    // Fetch all receptionists and pass to the view
                     $receptionistModel = new M_Receptionist;
-                    $receptionists = $receptionistModel->findAll('receptionist_id');
-                    header('Content-Type: application/json');
-                    echo json_encode($receptionists);
+                    $receptionists = $receptionistModel->findAll('created_at');
+
+                    $data = [
+                        'receptionists' => $receptionists
+                    ];
+
+                    $this->view('admin/admin-receptionists', $data);
                     break;
             }
         }

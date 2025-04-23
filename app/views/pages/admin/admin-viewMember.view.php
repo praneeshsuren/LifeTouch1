@@ -218,6 +218,7 @@
       element.disabled = false;
     });
 
+    document.getElementById('user_id').disabled = true;
     // Hide the Edit button, show the Save and Cancel buttons
     
     document.getElementById('editBtn').style.display = 'none';

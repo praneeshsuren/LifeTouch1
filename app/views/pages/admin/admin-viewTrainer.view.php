@@ -168,6 +168,7 @@
       element.disabled = false;
     });
 
+    document.getElementById('user_id').disabled = true;
     // Hide the Edit button, show the Save and Cancel buttons
     
     document.getElementById('editBtn').style.display = 'none';
@@ -228,17 +229,14 @@
       return urlParams.get(name);
     }
 
-    // Get the 'id' parameter (member_id) from the URL
     const trainerId = getUrlParameter('id');
 
     if (trainerId) {
-      // Member ID is available, use it in the navigation link
       document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/admin/trainers/viewTrainer?id=${trainerId}`;
       document.getElementById('salaryHistoryLink').href = `<?php echo URLROOT; ?>/admin/trainers/salaryHistory?id=${trainerId}`;
       document.getElementById('trainerCalendarLink').href = `<?php echo URLROOT; ?>/admin/trainers/trainerCalendar?id=${trainerId}`;
     } else {
-      // No member_id in the URL, show a message or handle accordingly
-      alert('No member selected.');
+      alert('No trainer selected.');
     }
   });
 </script>
