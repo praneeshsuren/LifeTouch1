@@ -99,8 +99,15 @@
 
               <img src="<?php echo URLROOT; ?>/assets/images/Member/<?php echo !empty($data['member']->image) ? $data['member']->image : 'default-placeholder.jpg'; ?>"
                 alt="Member Picture"
-                id="userImage">
-              <input type="file" onchange="display_image(this.files[0])" name="image" id="profilePictureInput" accept="image/*" style="display: none;">
+                id="profilePicture">
+              <input 
+                type="file" 
+                onchange="display_image(this.files[0])" 
+                name="image" 
+                id="profilePictureInput" 
+                accept="image/*" 
+                style="display: none;"
+              >
               <button type="button" id="changePictureBtn" class="change-picture-btn" style="display: none;">Change Picture</button>
             </div>
 
@@ -257,7 +264,7 @@
     if (file) {
       const reader = new FileReader();
       reader.onload = function(e) {
-        document.getElementById('userImage').src = e.target.result;
+        document.getElementById('profilePicture').src = e.target.result;
       };
       reader.readAsDataURL(file);
     }

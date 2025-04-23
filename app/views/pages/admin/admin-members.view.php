@@ -68,7 +68,7 @@
                       <th>Gender</th>
                       <th>Date of Birth</th>
                       <th>Age</th>
-                      <th>Height (m)</th>
+                      <th>Height (cm)</th>
                       <th>Weight (kg)</th>
                       <th>Home Address</th>
                       <th>Email Address</th>

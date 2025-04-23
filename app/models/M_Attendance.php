@@ -34,6 +34,8 @@ class M_Attendance
     // Update attendance record by setting time_out
     public function getAttendanceDataForGraph($period = 'today')
 {
+    date_default_timezone_set('Asia/Colombo');
+    
     $today = date('Y-m-d');
     $currentHour = date('H');  // Get the current hour for handling NULL time_out
 
@@ -150,7 +152,7 @@ public function findByMemberId($member_id)
 }
 
 public function getAttendanceForMonth($member_id, $month, $year)
-{
+{   
     $startOfMonth = date('Y-m-01', strtotime("$year-$month-01"));
     $endOfMonth = date('Y-m-t', strtotime("$year-$month-01"));
 
