@@ -186,11 +186,14 @@
             $member_id = $_SESSION['member_id'] ?? null;
             $payment_Model = new M_Payment();
             $payment = $payment_Model->paymentMember($member_id);
+            $plan_Model = new M_Membership_plan();
+            $plan = $plan_Model->findAll();
 
             if ($action === 'api') {
                 header('Content-Type: application/json');
                 echo json_encode([
-                    'payment' => $payment
+                    'payment' => $payment,
+                    'plan' => $plan
                 ]);
                 exit;
             } else if ($action === 'savePayment'){
@@ -303,7 +306,28 @@
                     'subscription' => $memberPlan
                 ]);
                 exit;
-            } 
+            } else if ($action === 'cancel') {
+                header('Content-type: application/json');
+
+                $id = $_POST['id'] ?? null;
+                $status = $_POST['status'] ?? null;
+
+                if (!$id || !$status) {
+                    echo json_encode(["success" => false, "message" => "Missing required fields"]);
+                    exit;
+                }
+
+                $data = ['status' => $status];
+                $result = $subscription_Model->update($id, $data);
+
+                echo json_encode(
+                    [
+                        "success" => $result ? true : false,
+                        "message" => $result ? "Subscription status updated successfully!" : "Failed to update status"
+                    ]
+                    );
+                exit;
+            }
             $data = ['member_id' => $member_id];
             $this->view('member/member-membership-plan',$data);
         }

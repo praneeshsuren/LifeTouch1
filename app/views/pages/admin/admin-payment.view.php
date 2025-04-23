@@ -60,10 +60,20 @@
                     return response.json();
                 })
                 .then(data =>{
-                    console.log('payment:',data.payment);
-                    if(Array.isArray(data.payment) && data.payment.length > 0){
-                        payment = data.payment;
-                        renderTable(payment);
+                    console.log('payments:',data.payment);
+                    console.log("plan:" ,data.plan);
+                    const payment = Array.isArray(data.payment) ? data.payment : [];
+                    const plan = Array.isArray(data.plan) ? data.plan : [];
+                    
+                    if(payment.length == 0){
+                        console.log("no pyaments found");
+                        paymentTable(null);
+                    } else{
+                        const mergePayment = payment.map(p => {
+                        const selectedPlan = plan.find(s =>s.id === p.plan_id);
+                        return selectedPlan ? { ...p, ...selectedPlan } : p;
+                        })
+                        paymentTable(mergePayment);
                     }
                 })
                 .catch(error => {
@@ -93,39 +103,35 @@
                 renderTable(filteredResults);
             }
 
-            function renderTable(payments){
-                const tableBody = document.querySelector('.user-table tbody');
-                tableBody.innerHTML = '';
+            function paymentTable(payment){
+                tbody = document.querySelector(".user-table tbody");
+                tbody.innerHTML = "";
 
-                if(payments.length > 0){
-                    payments.forEach(payment => {
-                        const row = document.createElement('tr');
-                        row.style.cursor = 'pointer';
-        
-                        row. innerHTML = `
-                            <td>${payment.created_at}</td>
-                            <td>${payment.member_id}</td>
-                            <td>
-                                <div>
-                                    <img src="<?php echo URLROOT; ?>/assets/images/member/${payment.member_image || 'default-placeholder.jpg'}" alt="member Picture" class="user-image">
-                                    <div>${payment.member_name}</div>
-                                </div>
-                            </td>
-                            <td>${payment.package_name}</td>
-                            <td>Rs ${payment.amount}.00</td>
-                        `;
-
-                        tableBody.appendChild(row);
-
-                    });
-                } else {
-                    console.log('No payments found.');
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="11" style="text-align: center;">No payments available</td>
-                        </tr>
-                        `;
+                if (payment.length === 0) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td colspan="4" style="text-align: center;">No payment records found.</td>`;
+                tbody.appendChild(tr);
+                return; 
                 }
+
+                payment.sort((a,b) => new Date(a.start_date) - new Date(b.start_date));
+
+                payment.forEach(payment =>{
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${payment.start_date}</td>
+                    <td>${payment.member_id}</td>
+                        <td>
+                            <div>
+                                <img src="<?php echo URLROOT; ?>/assets/images/member/${payment.member_image || 'default-placeholder.jpg'}" alt="member Picture" class="user-image">
+                                <div>${payment.member_name}</div>
+                            </div>
+                        </td>
+                    <td>${payment.plan}</td>
+                    <td>Rs ${payment.amount}.00</td>`;
+
+                tbody.appendChild(tr);
+                });
             }
         });
     </script>
