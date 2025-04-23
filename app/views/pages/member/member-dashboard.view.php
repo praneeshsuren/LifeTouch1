@@ -69,6 +69,7 @@
               <div class="period-select">
                 <select id="time-period" name="time-period">
                   <option value="today" selected>Today</option>
+                  <option value="yesterday">Yesterday</option>
                   <option value="week">This Week</option>
                 </select>
               </div>
@@ -194,7 +195,7 @@
                 }
             });
         }
-    } else if (selectedPeriod === 'today') {
+    } else if (selectedPeriod === 'today' || selectedPeriod === 'yesterday') {
       labels = Array.from({ length: 19 }, (_, index) => `${index + 5}:00`);
     attendanceCounts = new Array(19).fill(0);
 
