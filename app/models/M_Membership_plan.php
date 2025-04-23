@@ -7,7 +7,7 @@
 
         protected $table = 'membership_plan';
         protected $allowedColumns = [
-            'id',
+            'membershipPlan_id',
             'plan',
             'amount'
         ];
@@ -16,7 +16,7 @@
             $this->errors = [];
         
             if (empty($data['id'])) {
-                $this->errors['d'] = 'id is required';
+                $this->errors['membershipPlan_id'] = 'id is required';
             } 
             if (empty($data['plan'])) {
                 $this->errors['plan'] = 'plan is required';

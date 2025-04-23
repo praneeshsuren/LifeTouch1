@@ -139,7 +139,7 @@
       });
       // Function to fetch data and update the chart
       function fetchAndUpdateChart(period) {
-        fetch(`<?php echo URLROOT; ?>/member/index/api?period=${period}`)
+        fetch(`<?php echo URLROOT; ?>/attendance/updateAttendanceGraph?period=${period}`)
           .then(response => response.json())
           .then(data => {
             updateBarChart(data.attendance);  // Update the chart with attendance data

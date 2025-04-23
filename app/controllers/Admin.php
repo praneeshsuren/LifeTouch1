@@ -9,6 +9,7 @@
         public function index() {
             $announcementModel = new M_Announcement;
             $memberModel = new M_Member;
+            $attendanceModel = new M_Attendance;
         
             // Fetch the latest 4 announcements with admin names
             $announcements = $announcementModel->findAllWithAdminNames(4);
@@ -16,6 +17,7 @@
             // Fetch the All Count of members in the GYM
             $members = $memberModel->countAll();
             $recentMembers = $memberModel->countRecentMembers();
+
             $data = [
                 'announcements' => $announcements,
                 'members' => $members,

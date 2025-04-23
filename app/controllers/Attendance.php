@@ -70,5 +70,17 @@
                 echo "Invalid request method.";
             }
         }
+
+        public function updateAttendanceGraph(){
+            $attendanceModel = new M_Attendance;
+            $period = $_GET['period'] ?? 'today'; // Default to 'today'
+
+            $attendanceData = $attendanceModel->getAttendanceDataForGraph($period);
+
+            header('Content-Type: application/json');
+            echo json_encode([
+                'attendance' => $attendanceData
+            ]);
+        }
     }
 ?>
