@@ -116,7 +116,31 @@
                 case 'memberAttendance':
                     $this->view('admin/admin-memberAttendance');
                     break;
-                
+
+                case 'memberPaymentHistory':
+                    $this->view('admin/admin-memberPaymentHistory');
+                    break;
+
+                case 'memberSupplements':
+                    $memberId = $_GET['id'];
+
+                    if ($memberId) {
+
+                        $supplementSalesModel = new M_SupplementSales;
+
+                        // Fetch the supplement records for the member
+                        $supplementRecords = $supplementSalesModel->findByMemberId($memberId);
+
+                        $data = [
+                            'supplements' => $supplementRecords
+                        ];
+
+                        $this->view('admin/admin-memberSupplements', $data);
+                    } else {
+                        $_SESSION['error'] = 'Member not found.';
+                        redirect('admin/members');
+                    }
+                    break;
                 
                 default:
                     // Fetch all members and pass to the view

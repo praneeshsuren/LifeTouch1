@@ -52,8 +52,8 @@
         <div class="navbar">
 
             <ul class="nav-links">
-              <li><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
-              <li><a href="" id="attendanceLink"><i class="ph ph-calendar-dots"></i>Member Attendance<span class=""></a></li>
+              <li class="active"><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
+              <li><a href="" id="attendanceLink"><i class="ph ph-calendar-dots"></i>Attendance Records</a></li>
               <li><a href="" id="paymentHistoryLink"><i class="ph ph-money"></i>Payment History</a></li>
               <li><a href="" id="supplementRecordsLink"><i class="ph ph-barbell"></i>Supplement Records</a></li>
             </ul>
@@ -261,34 +261,28 @@
     }
   });
 
-  document.querySelectorAll('.nav-links li a').forEach(link => {
-        link.addEventListener('click', function () {
-          document.querySelectorAll('.nav-links li').forEach(item => item.classList.remove('active'));
-          this.parentElement.classList.add('active');
-        });
-      });
 
-      document.addEventListener('DOMContentLoaded', () => {
-  // Function to get URL parameter by name
-  function getUrlParameter(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
-  }
+  document.addEventListener('DOMContentLoaded', () => {
+    // Function to get URL parameter by name
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
 
-  // Get the 'id' parameter (member_id) from the URL
-  const memberId = getUrlParameter('id');
+    // Get the 'id' parameter (member_id) from the URL
+    const memberId = getUrlParameter('id');
 
-  if (memberId) {
-    // Member ID is available, use it in the navigation link
-    const userDetailsLink = document.getElementById('userDetailsLink');
-    userDetailsLink.href = `<?php echo URLROOT; ?>/admin/members/viewMember?id=${memberId}`;
-    const attendanceLink = document.getElementById('attendanceLink');
-    attendanceLink.href = `<?php echo URLROOT; ?>/admin/members/memberAttendance?id=${memberId}`;
-  } else {
-    // No member_id in the URL, show a message or handle accordingly
-    alert('No member selected.');
-  }
-});
+    if (memberId) {
+      // Member ID is available, use it in the navigation link
+      document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/admin/members/viewMember?id=${memberId}`;
+      document.getElementById('attendanceLink').href = `<?php echo URLROOT; ?>/admin/members/memberAttendance?id=${memberId}`;
+      document.getElementById('paymentHistoryLink').href = `<?php echo URLROOT; ?>/admin/members/memberPaymentHistory?id=${memberId}`;
+      document.getElementById('supplementRecordsLink').href = `<?php echo URLROOT; ?>/admin/members/memberSupplements?id=${memberId}`;
+    } else {
+      // No member_id in the URL, show a message or handle accordingly
+      alert('No member selected.');
+    }
+  });
 </script>
 
 

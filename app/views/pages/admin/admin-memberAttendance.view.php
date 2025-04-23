@@ -21,7 +21,7 @@
 
   <main>
     <div class="title">
-      <h1>Member Attendance</h1>
+      <h1>Attendance Records</h1>
       <div class="greeting">
         <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
       </div>
@@ -32,7 +32,7 @@
         <div class="navbar">
           <ul class="nav-links">
             <li><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
-            <li><a href="" id="attendanceLink"><i class="ph ph-calendar-dots"></i>Member Attendance</a></li>
+            <li class="active"><a href="" id="attendanceLink"><i class="ph ph-calendar-dots"></i>Attendance Records</a></li>
             <li><a href="" id="paymentHistoryLink"><i class="ph ph-money"></i>Payment History</a></li>
             <li><a href="" id="supplementRecordsLink"><i class="ph ph-barbell"></i>Supplement Records</a></li>
           </ul>
@@ -88,6 +88,8 @@
             if (memberId) {
                 document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/admin/members/viewMember?id=${memberId}`;
                 document.getElementById('attendanceLink').href = `<?php echo URLROOT; ?>/admin/members/memberAttendance?id=${memberId}`;
+                document.getElementById('paymentHistoryLink').href = `<?php echo URLROOT; ?>/admin/members/memberPaymentHistory?id=${memberId}`;
+                document.getElementById('supplementRecordsLink').href = `<?php echo URLROOT; ?>/admin/members/memberSupplements?id=${memberId}`;
             } else {
                 alert('No member selected.');
             }
