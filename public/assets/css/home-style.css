@@ -813,7 +813,7 @@ span {
 }
 .payment-header {
     padding: 24px;
-    background-color: rgba(105,111,221,1);
+    background-color: var(--main-color);
     border-radius: 12px;
     padding-bottom: 72px;
 }
@@ -838,7 +838,7 @@ span {
     width: calc(100% - 32px);
     height: 16px;
     border-radius: 4px;
-    background-color: rgba(105,111,221,1);
+    background-color:var(--main-color);
 }
 .payment-body {
     background-color: white;
@@ -856,16 +856,17 @@ span {
     padding: 6px 12px;
 }
 .payment-summary-name {
-    color: var(--text-color);
+    color: #757575;
 }
 .payment-summary-price {
     font-weight: 500;
+    color: black;
 }
 .payment-summary-divider {
     width: calc(100% - 16px);
     height: 0;
     margin: 12px auto;
-    border-bottom: 1px dashed var(--body-color);
+    border-bottom: 1px dashed #E4E9F7;
     position: relative;
 }
 .payment-summary-divider::before {
@@ -877,7 +878,7 @@ span {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background-color: var(--body-color);
+    background-color:#E4E9F7;
     box-shadow: inset 0 2px 16px rgba(0, 0, 0, .05);
 }
 .payment-summary-divider::after {
@@ -889,18 +890,18 @@ span {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background-color: var(--body-color);
+    background-color:#E4E9F7;
     box-shadow: inset 0 2px 16px rgba(0, 0, 0, .05);
 }
 .payment-summary-total {
     padding-bottom: 16px;
 }
 .payment-summary-total .payment-summary-name {
-    color: var(--text-color);
+    color:#757575;
 }
 .payment-summary-total .payment-summary-price {
     font-size: 16px;
-    color: rgba(105,111,221,1);
+    color: var(--main-color);
     font-weight: 600;
 }
 
@@ -909,7 +910,7 @@ span {
     font-weight: 700;
     margin-bottom: 6px;
     line-height: 1.3;
-    color: var(--text-color);
+    color: #757575;
 }
 
 .payment-right {
@@ -918,7 +919,7 @@ span {
 .payment-form {
     font-size: 15px;
     padding: 24px;
-    background-color: var(--sidebar-color);
+    background-color:white;
     border-radius: 12px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, .05);
 }
@@ -958,12 +959,12 @@ span {
 
 .payment-form-control {
     outline: transparent;
-    border: 1px solid var(--text-color);
+    border: 1px solid #757575;
     border-radius: 8px;
     padding: 24px 16px 8px 16px;
     width: 100%;
     transition: var(--tran-02);
-    background-color: var(--sidebar-color);
+    background-color: white;
 }
 
 .payment-form-label {
@@ -971,15 +972,15 @@ span {
     top: 50%;
     transform: translateY(-50%);
     left: 16px;
-    color: var(--text-color);
+    color: #757575;
     pointer-events: none;
     transition: var(--tran-02)
 }
 
 .payment-form-control:focus {
-    outline: 1px solid var(--primary-color);
-    border-color: var(--primary-color);
-    background-color: var(--sidebar-color);
+    outline: 1px solid var(--main-color);
+    border-color: var(--main-color);
+    background-color: var(--main-color);
 }
 
 .payment-form-control:focus + .payment-form-label,
@@ -1021,12 +1022,12 @@ span {
 
 .payment-form-submit-button {
     color: white;
-    background-color:  rgba(105,111,221,1);
+    background-color: var(--main-color);
 }
 
 .payment-form-submit-button:hover {
     color: white;
-    background-color: rgba(105,111,221,1);
+    background-color:var(--main-color);
 }
 
 .card-error {
@@ -1040,5 +1041,5 @@ span {
     align-items: center;
     gap: 8px;
     font-size: 1rem;
-    color: var(--text-color);
+    color: #757575;
 }

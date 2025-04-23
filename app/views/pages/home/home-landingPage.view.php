@@ -152,7 +152,7 @@
             <h2>Join Event</h2>
 
             <form id="eventForm" method="POST" action="<?php echo URLROOT; ?>/home/joinEvent">
-                <input type="hidden" id="eventIdInput" name="event_id" />
+                <input type="text" id="eventIdInput" name="event_id" />
                 <div class="input-group">
                     <label for="fullname">Full Name</label>
                     <input type="text" id="fullname" name="full_name" required />
@@ -366,9 +366,36 @@
             }
         }
     });
-    payNowBtn.addEventListener("click", () =>{
-        console.log("click");
-        window.location.href = "<?php echo URLROOT; ?>/home/checkout";
+    payNowBtn.addEventListener("click", function () {
+
+        const fullName = document.getElementById('fullname').value.trim();
+        const nic = document.getElementById('nic').value;
+        const contact = document.getElementById('contact').value;
+        const eventId = document.getElementById('eventIdInput').value;
+        const memberIdField = document.getElementById('membershipNumber').value;
+        const memberId = memberIdField ? memberIdField : null;
+
+        const form = document.createElement("form");
+        form.method ="POST";
+        form.action = '<?php echo URLROOT; ?>/home/checkout';
+
+        const fields = [
+            { name: 'full_name', value: fullName },
+            { name: 'nic', value: nic },
+            { name: 'contact_no', value: contact },
+            { name: 'event_id', value: eventId },
+            { name: 'membership_number', value: memberId }
+        ];
+        fields.forEach(field => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = field.name;
+            input.value = field.value;
+            form.appendChild(input);
+        });
+        document.body.appendChild(form);
+
+        form.submit();
     });
       
 </script>
