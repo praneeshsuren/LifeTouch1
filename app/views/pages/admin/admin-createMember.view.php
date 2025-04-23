@@ -113,7 +113,6 @@
                                     id="profilePictureInput"
                                     class="image-upload-input"
                                     name="image"
-                                    onchange="display_image(this.files[0])"
                                     accept="image/*"
                                 >
 

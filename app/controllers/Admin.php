@@ -175,8 +175,22 @@
                     ];
         
                     $this->view('admin/admin-viewTrainer', $data);
-                    break;                             
-        
+                    break;
+                
+                case 'salaryHistory':
+
+                    $trainer_id = $_GET['id'];
+
+                    $this->view('admin/admin-trainerSalaryHistory');
+                    break;
+
+                case 'trainerCalendar':
+
+                    $trainer_id = $_GET['id'];
+
+                    $this->view('admin/admin-trainerCalendar');
+                    break;
+                
                 default:
                     // Fetch all trainers and pass to the view
                     $trainerModel = new M_Trainer;

@@ -103,6 +103,7 @@
                             ];
 
                             $member_id = $_POST['member_id'];
+                            $member = $memberModel->findByMemberId($member_id); // Fetch the existing member data
 
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
@@ -120,7 +121,7 @@
 
                             // If no image uploaded, leave the 'image' key as null (if not set)
                             if (!isset($data['image'])) {
-                                $data['image'] = null;
+                                $data['image'] = $member->image; // Preserve the existing image if no new one is uploaded
                             }
                 
                             // Call the update function
@@ -222,24 +223,23 @@
 
                             $temp['status'] = 'Active';
 
-                            //Handle image input
+                            // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                                $targetDir = APPROOT. "/assets/images/Trainer/";
+                                $targetDir = "assets/images/Trainer/";
                                 $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
                                 $targetFile = $targetDir . $fileName;
-                            
-                                // Validate and move the file to the target directory
+
+                                // Validate the file (e.g., check file type and size) and move it to the target directory
                                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                                    $data['image'] = $fileName; // Save the filename for the database
+                                    $temp['image'] = $fileName; // Save the filename for the database
                                 } else {
-                                    $errors['image'] = "Failed to upload the file. Please try again.";
+                                    $errors['file'] = "Failed to upload the file. Please try again.";
                                 }
-                            } elseif (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
-                                // Handle other file upload errors
-                                $errors['image'] = "An error occurred during file upload. Please try again.";
-                            } else {
-                                // No file uploaded, set a default value or leave it empty
-                                $data['image'] = null; // Or set a default placeholder if necessary
+                            }
+
+                            // If no image uploaded, leave the 'image' key as null (if not set)
+                            if (!isset($temp['image'])) {
+                                $temp['image'] = null;
                             }
 
                             // Insert into User and Member models
@@ -285,6 +285,26 @@
                             ];
 
                             $trainer_id = $_POST['trainer_id'];
+                            $trainer = $trainerModel->findByTrainerId($trainer_id);
+
+                            // Handle file upload if exists
+                            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                                $targetDir = "assets/images/Trainer/";
+                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $targetFile = $targetDir . $fileName;
+
+                                // Validate the file (e.g., check file type and size) and move it to the target directory
+                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                    $data['image'] = $fileName; // Save the filename for the database
+                                } else {
+                                    $errors['file'] = "Failed to upload the file. Please try again.";
+                                }
+                            }
+
+                            // If no image uploaded, leave the 'image' key as null (if not set)
+                            if (!isset($data['image'])) {
+                                $data['image'] = $trainer->image; // Preserve the existing image if no new one is uploaded
+                            }
                 
                             // Call the update function
                             if (!$trainerModel->update($trainer_id, $data, 'trainer_id')) {
