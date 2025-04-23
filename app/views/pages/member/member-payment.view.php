@@ -42,22 +42,55 @@
             <thead>
               <tr>
                 <th>Date</th>
-                <th>Email</th>
-                <th>Package detail</th>
-                <th>Amount</th>
+                <th>Membership Plan</th>
+                <th>Price</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
+
+        <div id="bookingModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="bookingModal-body">
+              <form id="payment-form" class="payment-form" method="POST" action="<?php echo URLROOT; ?>/member/checkout">
+                <h1 class="payment-title">Payment Details</h1>
+                <input type="text" id="member_id" value="<?php echo htmlspecialchars($member_id); ?>" name="member_id" required>
+                <input type="text" name="package_id" id="package_id"><input type="text" name="payment_type" id="payment_type">
+                <div class="payment-form-group">
+                  <input type="text" id="package" placeholder=" " class="payment-form-control" name="package" readonly required />
+                  <label for="package" class="payment-form-label">Package Name</label>
+                </div>
+                <div class="payment-form-group">
+                  <input type="number" id="amount" placeholder=" " class="payment-form-control" name="amount" readonly required />
+                  <label for="amount" class="payment-form-label">Amount</label>
+                </div>
+                <div class="date-row">
+                  <div class="payment-form-group date-field">
+                      <input type="date" id="paymentStartDate" class="payment-form-control" name="paymentStartDate" readonly required />
+                      <label for="paymentStartDate" class="payment-form-label">Start Date</label>
+                  </div>
+
+                  <div class="payment-form-group date-field">
+                      <input type="date" id="paymentExpireDate" class="payment-form-control" name="paymentExpireDate" readonly required />
+                      <label for="paymentExpireDate" class="payment-form-label">Expiry Date</label>
+                  </div>
+                </div>
+                <button type="submit" class="payment-form-submit-button">Proceed</button>
+              </form>
+            </div>
+          </div>
+      </div>
       </div>
     </main>
       
     <!-- SCRIPT -->
     <script>
+      window.STRIPE_PUBLISHABLE_KEY = "<?php echo STRIPE_PUBLISHABLE_KEY; ?>";
       const createPaymentURL = "<?php echo URLROOT; ?>/member/createPayment";
-      const savePayment = "<?php echo URLROOT; ?>/member/payment/add";
-      window.STRIPE_PUBLIC_KEY = "<?php echo STRIPE_PUBLISHABLE_KEY; ?>";
+      const savePlan = "<?php echo URLROOT; ?>/member/Payment/savePayment";
+      const redirect = "<?php echo URLROOT; ?>/member/membershipPlan";
       document.addEventListener("DOMContentLoaded", () =>{ 
         fetch(`<?php echo URLROOT; ?>/member/payment/api`)
           .then(response => {
@@ -66,8 +99,21 @@
             })
             .then(data =>{
               console.log('payments:',data.payment);
+              console.log("plan:" ,data.plan);
               const payment = Array.isArray(data.payment) ? data.payment : [];
-              paymentTable(payment);
+              const plan = Array.isArray(data.plan) ? data.plan : [];
+              
+              if(payment.length == 0){
+                console.log("no pyaments found");
+                paymentTable(null);
+              } else{
+                const mergePayment = payment.map(p => {
+                  const selectedPlan = plan.find(s =>s.id === p.plan_id);
+                  return selectedPlan ? { ...p, ...selectedPlan } : p;
+                })
+                paymentTable(mergePayment);
+              }
+        
             })
             .catch(error => console.error('Error fetching payments details:', error));
 
@@ -85,12 +131,13 @@
           return; 
         }
 
+        payment.sort((a,b) => new Date(a.start_date) - new Date(b.start_date));
+
         payment.forEach(payment =>{
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td>${payment.created_at}</td>
-            <td>${payment.email}</td>
-            <td>${payment.package_name}</td>
+            <td>${payment.start_date}</td>
+            <td>${payment.plan}</td>
             <td>Rs ${payment.amount}.00</td>`;
 
           tbody.appendChild(tr);

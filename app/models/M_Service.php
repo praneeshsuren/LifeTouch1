@@ -15,25 +15,26 @@ class M_Service
         'service_cost',
         'created_time'
     ];
+    
     public function getOverdueServices()
-{
-    $sql = "SELECT s.*, e.name AS equipment_name
+    {
+        $sql = "SELECT s.*, e.name AS equipment_name
             FROM service s
             LEFT JOIN equipment e ON s.equipment_id = e.equipment_id
             WHERE s.next_service_date <= CURDATE()";
 
-    return $this->query($sql);
-}
+        return $this->query($sql);
+    }
 
-public function getUpcomingServices()
-{
-    $sql = "SELECT s.*, e.name AS equipment_name
+    public function getUpcomingServices()
+    {
+        $sql = "SELECT s.*, e.name AS equipment_name
             FROM service s
             LEFT JOIN equipment e ON s.equipment_id = e.equipment_id
             WHERE s.next_service_date >= CURDATE()";
 
-    return $this->query($sql);
-}
+        return $this->query($sql);
+    }
 
 
     public function findAll()
@@ -41,10 +42,10 @@ public function getUpcomingServices()
         $sql = "SELECT s.*, e.name AS equipment_name 
                 FROM service AS s  
                 LEFT JOIN equipment AS e ON s.equipment_id = e.equipment_id";
-    
+
         return $this->query($sql);
     }
-    
+
     public function validate($data)
     {
 
@@ -63,13 +64,21 @@ public function getUpcomingServices()
         // Validate service_cost
         if (empty($data['service_cost'])) {
             $this->errors['service_cost'] = "Service cost is required";
+        } elseif (!is_numeric($data['service_cost'])) {
+            $this->errors['service_cost'] = "Service cost must be a valid number";
         }
 
         if (empty($data['next_service_date'])) {
             $this->errors['next_service_date'] = "Next service date is required";
+        } elseif (strtotime($data['next_service_date']) <= strtotime($data['service_date'])) {
+            $this->errors['next_service_date'] = "Next service date must be after the service date";
         }
 
         return empty($this->errors);
+    }
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     public function findByEquipmentId($equipment_id)

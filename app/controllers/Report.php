@@ -36,11 +36,7 @@ class Report extends Controller
 {
     $service = new M_Service();
 
-    // Get today's date
-    $today = date('Y-m-d');
-
-    // Fetch only upcoming services (you’ll write this method in M_Service)
-    $upcomingServices = $service->getUpcomingServices($today);
+    $upcomingServices = $service->getUpcomingServices();
 
     $data = [
         'services' => $upcomingServices
@@ -52,11 +48,7 @@ public function equipment_overdue_services()
 {
     $service = new M_Service();
 
-    // Get today's date
-    $today = date('Y-m-d');
-
-    // Fetch only upcoming services 
-    $upcomingServices = $service->getOverdueServices($today);
+    $upcomingServices = $service->getOverdueServices();
 
     $data = [
         'services' => $upcomingServices

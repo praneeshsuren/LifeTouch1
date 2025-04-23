@@ -20,7 +20,7 @@
             'email_address',
             'status',
             'image',
-            'membership_plan'
+            'membershipPlan_id'
         ];
 
         public function findByMemberId($memberId) {

@@ -37,7 +37,7 @@
       </div>
       <div class="paymentBox">
         <div class="payment-history">
-          <h1 class="payment-title">Your Current Plan</h1>
+          <h1 class="payment-title">Your Latest Plan</h1>
           <table class="paymentHistoryTable">
             <thead>
               <tr>
@@ -107,38 +107,25 @@
               console.log('Plans:',data.plan);
               console.log("Subscription:", data.subscription);
               const plan = Array.isArray(data.plan) ? data.plan : [];
-              let subscription = [];
+              planCards(plan);
+              const subscription = Array.isArray(data.subscription) ? data.subscription[0] : null;
+              if (!subscription) {
+                console.log("No subscription found");
+                subscriptionTable(null, null);
+              } else {
+                const selectedPlan = plan.find(p => p.id === subscription.plan_id);
 
-if (Array.isArray(data.subscription)) {
-  subscription = data.subscription;
-} else if (typeof data.subscription === "object" && data.subscription !== null) {
-  subscription = [data.subscription]; // wrap single object in array
-}
-
-if (subscription.length === 0) {
-  console.log("No subscription found");
-  subscriptionTable(null, null);
-  planCards(plan);
-} else {
-  const activeSubscription = subscription.find(sub => sub.status === 'active'); // add this check too
-  if (!activeSubscription) {
-    console.log("No active subscription found");
-    subscriptionTable(null, null);
-    planCards(plan);
-    return;
-  }
-
-  const selectedPlan = plan.find(p => p.id === activeSubscription.plan_id);
-  const mergedSubscription = {
-    ...activeSubscription,
-    plan_name: selectedPlan?.plan,
-    amount: selectedPlan?.amount,
-  };
-
-  window.mergedSubscriptions = mergedSubscription;
-  planCards(plan);
-  subscriptionTable(selectedPlan, activeSubscription);
-}
+                if(selectedPlan) {
+                  const mergedSubscription = {
+                    ...subscription, ...selectedPlan,id: subscription.id
+                  };
+                  console.log("me",mergedSubscription);
+                  window.mergedSubscriptions = mergedSubscription;
+                  subscriptionTable(window.mergedSubscriptions);
+                } else {
+                  console.log("No plan found matching the subscription plan id.");
+                }
+              }
             })
             .catch(error => console.error('Error fetching plans details:', error));
 
@@ -149,10 +136,14 @@ if (subscription.length === 0) {
 
         paymentForm.addEventListener('submit', function(e) {
           e.preventDefault();
-          if(window.mergedSubscriptions){
-            alert("You have existing subscriptions.");
-            modal.style.display = "none";
-            return;
+          if(window.mergedSubscriptions) {
+            if(window.mergedSubscriptions.status == 'active'){
+              alert("You have active subscription.");
+              modal.style.display = "none";
+              return;
+            } 
+          } else {
+            console.log("Merged subscription is not available.");
           }
 
           submitButton.disabled = true;
@@ -160,17 +151,15 @@ if (subscription.length === 0) {
         });
 
         const renewBtn = document.getElementById("renew-btn");
-
         renewBtn.addEventListener("click", function (e) {
 
           if(!window.mergedSubscriptions){
             alert("You have no active subscription to renew.");
             return;
           }
-          const expiry = calculateExpiryDate(today,window.mergedSubscriptions.plan_name);
-          console.log("ex",expiry)
+          const expiry = calculateExpiryDate(today,window.mergedSubscriptions.plan);
       
-          document.getElementById('package').value =window.mergedSubscriptions.plan_name;
+          document.getElementById('package').value =window.mergedSubscriptions.plan;
           document.getElementById('amount').value = window.mergedSubscriptions.amount;
           document.getElementById('paymentStartDate').value = today;
           document.getElementById('paymentExpireDate').value = expiry;
@@ -180,6 +169,37 @@ if (subscription.length === 0) {
           bookingModal.style.display = 'block';
         });
 
+        const cancelBtn = document.getElementById("cancel-btn");
+        cancelBtn.addEventListener("click", () => { 
+          if(!window.mergedSubscriptions){
+            alert("You have no active subscription to cancel.");
+            return;
+          } else if(window.mergedSubscriptions.status == 'inactive') {
+            alert("You have inactive subscription.");
+            return;
+          } else {
+            if (!confirm("Are you sure you want to cancel subscription?")) return;
+            fetch('<?php echo URLROOT?>/member/membershipPlan/cancel', {
+              method: 'POST',
+              headers: {
+                "Content-type": "application/x-www-form-urlencoded"
+              },
+              body: `id=${encodeURIComponent(window.mergedSubscriptions.id)}&status=${encodeURIComponent('inactive')}`,
+            })
+            .then(response => response.json())
+            .then(result =>{
+              console.log(result);
+              if (!result.success) {
+                  alert("subscription cancelled successfully!");
+                  location.reload();
+              } else {
+                  alert("Error: " + result.message);
+              }
+            })
+            .catch(error => console.error("Error canceled aubscription:", error));
+          }
+
+        });
       });
 
       function planCards(plan){
@@ -227,7 +247,11 @@ if (subscription.length === 0) {
                 packageInput.value = plan.plan;
                 amountInput.value = plan.amount;
                 document.getElementById("package_id").value = plan.id;
-                document.getElementById("payment_type").value = "new";
+                if (window.mergedSubscriptions && window.mergedSubscriptions.status == 'inactive') {
+                  document.getElementById("payment_type").value = "renew";
+                }else {
+                  document.getElementById("payment_type").value = "new";
+                }
 
                 const expiry = calculateExpiryDate(today,plan.plan);
                 if (expiry){
@@ -241,7 +265,7 @@ if (subscription.length === 0) {
         });
       }
 
-      function subscriptionTable(plan, subscription){
+      function subscriptionTable(subscription){
         tbody = document.querySelector(".paymentHistoryTable tbody");
         tbody.innerHTML = "";
 
@@ -253,8 +277,8 @@ if (subscription.length === 0) {
         } else {
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td>${plan.plan}</td>
-            <td>Rs ${plan.amount}.00</td>
+            <td>${subscription.plan}</td>
+            <td>Rs ${subscription.amount}.00</td>
             <td>${subscription.start_date}</td>
             <td>${subscription.end_date}</td>
             <td>${subscription.status}</td>`;
