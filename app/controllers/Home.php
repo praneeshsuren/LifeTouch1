@@ -171,4 +171,46 @@ public function Payment($action = null) {
     }
     redirect('home?scroll=plans');
 }
+
+public function  contact($action = null) {
+    $contact_Model = new M_Contact();
+    $contact = $contact_Model->findAll();
+    if ($action === 'api') {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'contact' => $contact
+        ]);
+        exit;
+    } elseif ($action === 'add') {
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            header('Content-Type: application/json');
+
+            $name = $_POST['name'] ?? null;
+            $email = $_POST['email'] ?? null;
+            $msg = $_POST['message'] ?? null;
+
+            if (!$name || !$email || !$msg) {
+                echo json_encode([
+                    "success" => false,
+                    "message" => "All fields are required."
+                ]);
+                exit;
+            }
+            
+
+            $data = [
+                'name' => $name,
+                'email' => $email,
+                'msg' => $msg
+            ];  
+
+            $result = $contact_Model->insert($data);
+            echo json_encode([
+                "success" => $result ? true : false, 
+                "message" => $result ? "Inquiry saved successfully!" : "Fail to save inquiry"
+            ]);
+            exit;
+        }
+    }
+}
 }

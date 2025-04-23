@@ -44,38 +44,7 @@
                         <th>Message</th>
                     </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                        <td>Praneesh</td>
-                        <td>Praneesh@gmail.com</td>
-                        <td>Hi.I am praneesh.</td>
-                        </tr>
-                        <tr>
-                        <td>Amanda</td>
-                        <td>amanda@gmail.com</td>
-                        <td>Hi.I am amanda.</td>
-                        </tr>
-                        <tr>
-                        <td>Imeth</td>
-                        <td>imeth298@gmail.com</td>
-                        <td>Hi.I am imeth.This is too much stress for me</td>
-                        </tr>
-                        <tr>
-                        <td>Dani</td>
-                        <td>dani123jella@gmail.com</td>
-                        <td>Hi.I am dani.</td>
-                        </tr>
-                        <tr>
-                        <td>Hansaja</td>
-                        <td>hansaja.web@gmail.com</td>
-                        <td>This is very useful website.</td>
-                        </tr>
-                        <tr>
-                        <td>Raheem Allam</td>
-                        <td>mahaemrow123@gmail.com</td>
-                        <td>Styles are very beautiful and backend part is nce</td>
-                        </tr>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
                 </div>
             </div>
@@ -84,6 +53,52 @@
         
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time(); ?>"></script>
+    <script>
+        const tbody = document.querySelector('.table tbody');
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch('<?php echo URLROOT; ?>/home/contact/api')
+                .then(response => {
+                    console.log("Response Status:", response.status);
+                    return response.json();
+                })
+                .then(data =>{
+                    const inquiries = Array.isArray(data.contact) ? data.contact :[];
+                    if(inquiries.length === 0){
+                        renderTable(null);
+                    } else {
+                        renderTable(inquiries);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching holidays:', error);
+                    tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="11" style="text-align: center;">Error loading data</td>
+                    </tr>
+                    `;
+                });
+        });
 
+        function renderTable(inquiries) {
+            tbody.innerHTML = "";
+
+            if(inquiries.length === 0){
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td colspan="4" style="text-align: center;">No inquiries found.</td>`;
+                tbody.appendChild(tr);
+                return; 
+            }
+
+            inquiries.forEach(i=> {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${i.name}</td>
+                    <td>${i.email}</td>
+                    <td>${i.msg}</td>`;
+
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
   </body>
 </html>

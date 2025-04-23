@@ -239,7 +239,7 @@
         <div class="contact-container">
             <h2 class="heading">Contact Us</h2>
 
-            <form action="" method="post" class="contact-form">
+            <form action="<?php echo URLROOT; ?>/home/contact/add" method="post" class="contact-form">
                 <div class="input-group">
                     <label for="name">Your Name</label>
                     <input type="text" id="name" name="name" placeholder="Enter your name" required />
@@ -255,7 +255,7 @@
                     <textarea id="message" name="message" rows="4" placeholder="Write your message" required></textarea>
                 </div>
 
-                <button type="submit" class="btn">Send Message</button>
+                <button type="submit" id="contactUsbtn" class="btn">Send Message</button>
             </form>
         </div>
     </section>
@@ -396,6 +396,37 @@
         document.body.appendChild(form);
 
         form.submit();
+    });
+
+    document.querySelector(".contact-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        for (const [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
+
+        fetch("<?php echo URLROOT; ?>/home/contact/add", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => {
+            console.log("Raw response:", res); 
+            return res.json();
+        })
+        .then(data => {
+            if(data.success) {
+                alert("Message sent successfully!");
+                form.reset();
+            } else {
+                alert("Failed to send message.");
+            }
+        })
+        .catch(err => {
+            console.error("Error submitting form:", err);
+            alert("An error occurred.");
+        });
+
     });
       
 </script>
