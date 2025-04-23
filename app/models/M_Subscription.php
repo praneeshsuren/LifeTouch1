@@ -1,40 +1,46 @@
 <?php
 
     //Admin class
-    class M_Payment{
+    class M_Subscription{
 
         use Model;
 
-        protected $table = 'payment';
+        protected $table = 'membership_subscription';
         protected $allowedColumns = [
             'id',
             'member_id',
             'plan_id',
-            'payment_intent_id',
             'status',
-            'type',
             'start_date',
             'end_date',
         ];
 
 
-        public function paymentMember($member_id){
-            $query = "Select p.* from $this->table AS p
-            WHERE p.member_id = :member_id";
+        public function subscriptionMember($member_id) {
+            $query = "Select s.* from $this->table AS s
+            WHERE s.member_id = :member_id";
 
             return $this->query($query, ['member_id' => $member_id]);
         }
 
-        public function paymentAdmin(){
-            $query = "SELECT
-                p.*,
-                m.member_id AS member_id, 
-                CONCAT(m.first_name, ' ', m.last_name) AS member_name
-             FROM payment AS p
-             JOIN member m ON p.member_id = m.member_id";
-
-            return $this->query($query);
+        public function deactivateExpiredSubscriptions() {
+            $today = date('Y-m-d');
+            $query = "UPDATE $this->table SET status = 'inactive'
+            WHERE end_date < :today AND status = 'active'";
+            
+            return $this->query($query, ['today' => $today]);
         }
+
+        // public function paymentAdmin(){
+        //     $query = "SELECT
+        //         p.*,
+        //         m.member_id AS member_id, 
+        //         CONCAT(m.first_name, ' ', m.last_name) AS member_name
+        //      FROM payment AS p
+        //      JOIN member m ON p.member_id = m.member_id";
+
+        //     return $this->query($query);
+        // }
 
         public function validate($data) {
             $this->errors = [];

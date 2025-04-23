@@ -1,141 +1,110 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
     // 1. Initialize Stripe with your publishable key (replace with your actual key if not embedded in HTML)
-    const stripePublicKey = window.STRIPE_PUBLIC_KEY;
-    console.log("Using Stripe public key:", STRIPE_PUBLIC_KEY);
+    const stripe = Stripe(window.STRIPE_PUBLISHABLE_KEY);
+    console.log("Using Stripe public key w:", window.STRIPE_PUBLISHABLE_KEY);
 
-    const stripe = Stripe(stripePublicKey);
     const elements = stripe.elements();
-  
-    // 2. Create an instance of the card Element
-    const card = elements.create("card", {
-      style: {
-        base: {
-          color: "#32325d",
-          fontFamily: "Poppins, sans-serif",
-          fontSmoothing: "antialiased",
-          fontSize: "16px",
-          "::placeholder": {
-            color: "#a0aec0"
-          }
+
+    const style = {
+      base: {
+        fontSize: '16px',
+        color: '#32325d',
+        '::placeholder': {
+          color: '#a0aec0',
         },
-        invalid: {
-          color: "#fa755a",
-          iconColor: "#fa755a"
-        }
-      }
-    });
-  
-    // 3. Mount the card element into the `div#card-element`
-    card.mount("#card-element");
-  
-    // 4. Handle real-time validation errors
-    card.on("change", function (event) {
-      const displayError = document.getElementById("card-errors");
-      if (event.error) {
-        displayError.textContent = event.error.message;
-      } else {
-        displayError.textContent = "";
-      }
-    });
-  
-    // 5. Handle form submission
-    const form = document.getElementById("payment-form");
-    form.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const submitButton = form.querySelector("button[type=submit]");
+      },
+      invalid: {
+        color: '#e53e3e',
+      },
+    };
+    
+    const cardNumber = elements.create('cardNumber', { style });
+    cardNumber.mount('#card-number-element');
+    
+    const cardExpiry = elements.create('cardExpiry', { style });
+    cardExpiry.mount('#card-expiry-element');
+    
+    const cardCvc = elements.create('cardCvc', { style });
+    cardCvc.mount('#card-cvc-element');
+
+
+    document.getElementById("payment-form").addEventListener("submit", async function (e){
+      e.preventDefault();
+
+      const cardError = document.getElementById("card-errors");
+      cardError.textContent = "";
+
+      const submitButton = this.querySelector("button[type=submit]");
       submitButton.disabled = true;
 
       const member_id = document.getElementById("member_id").value;
-      const paymentDate = document.getElementById("paymentDate").value;
-      const email = document.getElementById("email").value;
-      const packageName = document.getElementById("package").value;
-      const amountInput = document.getElementById("amount").value;
-      const amount = parseInt(amountInput);
+      const package_id = document.getElementById("package_id").value;
+      const amount = document.getElementById("amount").value;
 
-      if (!amount || amount < 1) {
-        alert("Please enter a valid amount.");
-        return;
-      }
-  
-      // 6. Send request to backend to create a PaymentIntent
       try {
-        const res = await fetch(createPaymentURL, {
+        // create paymentIntent from backend
+        const res = await fetch(createPaymentURL,{
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email,
-            package: packageName,
-            amount: amount 
-          }),
+          headers: { "Content-Type": "application/json"},
+          body: JSON.stringify({member_id,
+            plan_id: package_id,
+            amount: amount
+          })
         });
-    
+
         const data = await res.json();
-    
-        if (data.error) {
-          alert("Error creating payment intent: " + data.error);
+        if(!data.clientSecret){
+          alert("Failed to create PaymentIntent");
           return;
         }
-    
-        // 7. Confirm the card payment
-        const stripeResult = await stripe.confirmCardPayment(data.clientSecret, {
-          payment_method: {
-            card: card,
-            billing_details: {
-              name: packageName,
-              email: email,
-            },
-          }
-        });
-        console.log("str",stripeResult);
-        const id = stripeResult.paymentIntent.id;
 
-        // 8. Handle payment result
-        if (stripeResult.error) {
-          document.getElementById("card-errors").textContent = stripeResult.error.message;
-        } else if(stripeResult.paymentIntent.status === "succeeded") {
-          const formData = new FormData(form);
-          formData.append("email", email);
-          formData.append("packageName", packageName);
-          formData.append("amount", amount);
-          formData.append("member_id", member_id);
-          formData.append("paymentDate", paymentDate);
-          formData.append("payment_intent_id", id);
+        // Use raw card data from form
+        const cardDetails = {
+          card: cardNumber
+        };
+
+        // confirm payment with raw details
+        const stripeResult = await stripe.confirmCardPayment(data.clientSecret, {
+          payment_method: cardDetails
+        });
+
+        if(stripeResult.error) {
+          cardError.textContent = stripeResult.error.message;
+          submitButton.disabled = false;
+
+          return;
+        }
+
+        if (stripeResult.paymentIntent.status === "succeeded") {
+          const formData = new FormData(this);
+          formData.append("payment_intent_id", stripeResult.paymentIntent.id);
           formData.append("status", stripeResult.paymentIntent.status);
 
-          for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
-          }
-          
-          const saveResponse = await fetch(savePayment, {
+          const savePayment = await fetch(savePlan,{
             method: "POST",
             body: formData
           });
 
-          const result = await saveResponse.json();
-          console.log("s:",result);
-          if (result.success) {
-            console.log("success");
+          const result =  await savePayment.json();
+          if(result.success) {
+            console.log("Payment successful and saved!");
             alert("Payment successful and saved!");
-            const modal = document.getElementById('paymentModal');
-            if (modal) {
-              modal.style.display = 'none';
-            }
-            location.reload();
-            form.reset();
-            card.clear();
+            this.reset();  // Reset the form fields
+            cardNumber.clear();  // Clear the card number
+            cardExpiry.clear();  // Clear the expiry date
+            cardCvc.clear();  // Clear the CVV
+            window.location.href = redirect;
           } else {
-            console.log("fail");
+            console.log("Payment succeeded, but failed to save payment info");
             alert("Payment succeeded, but failed to save payment info.");
           }
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Something went wrong.");
+        } 
+      } catch (err) {
+        console.error("Error:", err);
+        alert("Something went wrong during payment");
       } finally {
         submitButton.disabled = false;
       }
+      
     });
-  });
-  
+});

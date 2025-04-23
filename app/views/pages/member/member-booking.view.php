@@ -55,10 +55,10 @@
                 <button class="todayBtn">Today</button>
             </div>
         </div> 
-        <div class="recent-announcements">
-            <div class="announcements">
+        <div class="book-details">
+            <div class="details">
                 <h2 style="font-size:1.5rem; font-weight:500; padding-top:1rem;text-align:center">Details</h2>
-                <div class="announcement-list"></div>
+                <div class="detail-list"></div>
             </div>
         </div>
         <div id="bookingModal" class="modal">
@@ -102,7 +102,7 @@
         let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; // Default to the current month
         let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
         const dateToday = new Date().toISOString().split('T')[0];
-        const bookDiv = document.querySelector('.announcement-list');
+        const bookDiv = document.querySelector('.detail-list');
         let holidays = [];
         let timeSlots = [];
         let bookings = [];
@@ -302,7 +302,7 @@
                         if (isPast) return;
 
                         const timeslotItem = document.createElement('div');
-                        timeslotItem.classList.add('announcement');
+                        timeslotItem.classList.add('detail');
 
                         const statusCircle = document.createElement('div');
                         statusCircle.classList.add(status === 'booked' ? 'booked' : 'pending');

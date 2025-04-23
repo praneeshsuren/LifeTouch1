@@ -8,27 +8,44 @@
         }
 
         public function index($action = null) {
+            $member_id = $_SESSION['user_id'];
+
             $announcementModel = new M_Announcement;
-            // Fetch the latest 4 announcements with admin names
-            $announcements = $announcementModel->findAllWithAdminNames(4);
-            $data = [
-                'announcements' => $announcements
-            ];
-  
-            $member_id = $_SESSION['member_id'] ?? null;
+            $announcements = $announcementModel->findAllWithAdminNames(5);
+           
+            
+            $attendanceModel = new M_Attendance;
+            $period = $_GET['period'] ?? 'today'; // Default to 'today'
+        
+            // Get attendance data for the entire gym (aggregated by hour and day)
+            $attendanceData = $attendanceModel->getAttendanceDataForGraph($period);
+
+            $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
+            $completedSchedules = count($workoutScheduleDetailsModel->findAllCompletedSchedulesByMemberId($member_id));
+
+            $supplementSalesModel = new M_SupplementSales;
+            $supplementsPurchased = count($supplementSalesModel->findSupplementsPurchased($member_id));
+
             $bookingModel = new M_Booking();
             $bookings = $bookingModel->bookingsForMember($member_id);
+        
             if ($action === 'api') {
                 header('Content-Type: application/json');
                 echo json_encode([
-                    'bookings' => $bookings
+                    'bookings' => $bookings,
+                    'attendance' => $attendanceData,
                 ]);
                 exit;
             }
-        
+            $data = [
+                'announcements' => $announcements,
+                'completedSchedules' => $completedSchedules,
+                'supplementsPurchased' => $supplementsPurchased,
+            ];
+
             $this->view('member/member-dashboard', $data);
         }
-
+        
         public function Trainer($action = null){
             switch($action){
                 case 'api':
@@ -169,40 +186,45 @@
             $member_id = $_SESSION['member_id'] ?? null;
             $payment_Model = new M_Payment();
             $payment = $payment_Model->paymentMember($member_id);
+            $plan_Model = new M_Membership_plan();
+            $plan = $plan_Model->findAll();
 
             if ($action === 'api') {
                 header('Content-Type: application/json');
                 echo json_encode([
-                    'payment' => $payment
+                    'payment' => $payment,
+                    'plan' => $plan
                 ]);
                 exit;
-            } elseif($action === 'add'){
-                if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            } else if ($action === 'savePayment'){
+                if($_SERVER['REQUEST_METHOD'] === "POST") {
                     header('Content-Type: application/json');
 
-                    $date = $_POST['paymentDate'] ?? null;
                     $member_id = $_POST['member_id'] ?? null;
-                    $package = $_POST['packageName'] ?? null;
-                    $email = $_POST['email'] ?? null;
-                    $amount = $_POST['amount'] ?? null;
+                    $plan_id = $_POST['plan_id'] ?? null;
                     $payment_intent_id = $_POST['payment_intent_id'] ?? null;
                     $status = $_POST['status'] ?? null;
+                    $startDate = $_POST['startDate'] ?? null;
+                    $endDate = $_POST['endDate'] ?? null;
+                    $type = $_POST['paymentType'] ?? null;
 
                     $data = [
-                        'email' => $email,
-                        'package_name' => $package,
-                        'amount' => $amount,
                         'member_id' => $member_id,
-                        'created_at' => $date,
+                        'plan_id' => $plan_id,
                         'payment_intent_id' => $payment_intent_id,
                         'status' => $status,
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                        'type' => $type
                     ];
-                    
                     $result = $payment_Model->insert($data);
-                    echo json_encode(['success' => $result]);
+                    echo json_encode([
+                        "success" => $result ? true : false, 
+                        "message" => $result ? "Payment successful and saved!" : "Payment succeeded, but failed to save payment info"
+                    ]);
                     exit;
-
                 }
+               
             }
             $data = ['member_id' => $member_id];
             $this->view('member/member-payment',$data); 
@@ -235,6 +257,80 @@
                 echo json_encode(['error' => $e->getMessage()]);
             }
         } 
+
+        public function checkout(){
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $_SESSION['payment_data'] = [
+                    'member_id' => $_POST['member_id'],
+                    'id' => $_POST['package_id'],
+                    'startDate' => $_POST['paymentStartDate'],
+                    'endDate' => $_POST['paymentExpireDate'],
+                    'type' => $_POST['payment_type']
+                ];
+        
+                $this->view('member/member-cardPayment',[
+                    'session' => $_SESSION['payment_data'],
+                ]);
+            } else {
+                // Direct page access fallback
+                header('Location: ' . URLROOT . '/member/membershipPlan');
+                exit;
+            }
+        }
+
+        public function cardPayment($action = null){
+            $plan_Model = new M_Membership_plan();
+            $plan = $plan_Model->findAll();
+            if($action === 'api'){
+                header('Content-type: application/json');
+                $payment_data = isset($_SESSION['payment_data']) ? $_SESSION['payment_data'] : null;
+                echo json_encode([
+                    'plan' => $plan,
+                    'session' => $payment_data
+                ]);
+                exit;
+            }
+        }
+
+        public function membershipPlan($action = null){
+            $member_id = $_SESSION['member_id'] ?? null;
+            $plan_Model = new M_Membership_plan();
+            $plan = $plan_Model->findAll();
+            $subscription_Model = new M_Subscription();
+            $subscription_Model->deactivateExpiredSubscriptions();
+            $memberPlan = $subscription_Model->subscriptionMember($member_id);
+            if($action === 'api'){
+                header('Content-type: application/json');
+                echo json_encode([
+                    'plan' => $plan,
+                    'subscription' => $memberPlan
+                ]);
+                exit;
+            } else if ($action === 'cancel') {
+                header('Content-type: application/json');
+
+                $id = $_POST['id'] ?? null;
+                $status = $_POST['status'] ?? null;
+
+                if (!$id || !$status) {
+                    echo json_encode(["success" => false, "message" => "Missing required fields"]);
+                    exit;
+                }
+
+                $data = ['status' => $status];
+                $result = $subscription_Model->update($id, $data);
+
+                echo json_encode(
+                    [
+                        "success" => $result ? true : false,
+                        "message" => $result ? "Subscription status updated successfully!" : "Failed to update status"
+                    ]
+                    );
+                exit;
+            }
+            $data = ['member_id' => $member_id];
+            $this->view('member/member-membership-plan',$data);
+        }
 
         public function settings(){
             

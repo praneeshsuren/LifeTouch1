@@ -24,9 +24,17 @@ class Receptionist extends Controller
         $this->view('receptionist/receptionist-dashboard', $data);
     }
 
-    public function announcements()
-    {
-        $this->view('receptionist/receptionist-announcements');
+    public function announcements(){
+
+        $announcementModel = new M_Announcement;
+        $announcements = $announcementModel->findAllWithAdminDetails();
+        $data = [
+            'announcements' => $announcements
+        ];
+
+
+        $this->view('receptionist/receptionist-announcements', $data);
+        
     }
 
     public function trainers($action = null)

@@ -48,4 +48,9 @@ class Home extends Controller
     } else {
         redirect('home?scroll=plans');
     }
-}}
+}
+
+public function checkout(){
+    $this->view('home/checkout');
+}
+}

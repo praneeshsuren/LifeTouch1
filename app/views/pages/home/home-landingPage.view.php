@@ -179,7 +179,7 @@
                     <input type="text" id="contact" name="contact_no" required />
                 </div>
                 <div class="button-group">
-                    <button type="button" class="btn">Pay Now</button>
+                    <button type="button" id="eventPay" class="btn">Pay Now</button>
                     <button type="submit" class="btn">Join</button>
                 </div>
             </form>
@@ -239,7 +239,7 @@
         <div class="contact-container">
             <h2 class="heading">Contact Us</h2>
 
-            <form action="#" method="post" class="contact-form">
+            <form action="" method="post" class="contact-form">
                 <div class="input-group">
                     <label for="name">Your Name</label>
                     <input type="text" id="name" name="name" placeholder="Enter your name" required />
@@ -365,7 +365,12 @@
                 });
             }
         }
+
+    payNowBtn.addEventListener("click", () =>{
+        console.log("click");
+        window.location.href = "<?php echo URLROOT; ?>/home/checkout";
     });
+      
 </script>
 
 
