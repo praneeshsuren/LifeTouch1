@@ -365,7 +365,7 @@
                 });
             }
         }
-
+    });
     payNowBtn.addEventListener("click", () =>{
         console.log("click");
         window.location.href = "<?php echo URLROOT; ?>/home/checkout";
