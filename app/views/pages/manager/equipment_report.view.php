@@ -110,38 +110,13 @@
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
     <script>
         document.getElementById("downloadPDF").addEventListener("click", function(event) {
-            event.preventDefault();
 
             // Open the PDF in a new window
             var pdfUrl = "/LifeTouch1/public/make_pdf";
             window.open(pdfUrl, "_blank");
         });
     </script>
-    <script>
-        document.getElementById("downloadPDF").addEventListener("click", function(event) {
-            event.preventDefault();
 
-            var memberId = this.getAttribute("data-member-id");
-
-            // Create a new AJAX request
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "generate-pdf.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    // If successful, initiate download
-                    var pdfPath = xhr.responseText; // Response should be the file path
-                    window.location.href = pdfPath; // Trigger the file download
-                } else {
-                    alert("Failed to generate PDF");
-                }
-            };
-
-            // Send the member_id to the server
-            xhr.send("member_id=" + memberId);
-        });
-    </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const startDateInput = document.getElementById("startDate");

@@ -38,11 +38,21 @@
 
         <div class="table-container">
             <div class="filters">
-            <a href="equipment_report"><button class="filter">All Services</button></a>
-            <a href="equipment_upcoming_services"> <button class="filter" style="background-color:#007bff;color:white;">Upcoming Services</button></a>
-            <a href="equipment_overdue_services"> <button class="filter">Overdue Services</button></a>
+                <a href="equipment_report"><button class="filter">All Services</button></a>
+                <a href="equipment_upcoming_services"> <button class="filter" style="background-color:#007bff;color:white;">Upcoming Services</button></a>
+                <a href="equipment_overdue_services"> <button class="filter">Overdue Services</button></a>
             </div>
-
+            <div class="date-filter-container">
+                <div class="left">
+                    <label for="startDate">Start Date: </label>
+                    <input type="date" class="date-input" id="startDate" placeholder="Start Date">
+                </div>
+                <div class="right">
+                    <label for="endDate">End Date: </label>
+                    <input type="date" class="date-input" id="endDate" placeholder="End Date">
+                </div>
+                <button id="clearDateFilter" class="filter">Clear Date Filter</button>
+            </div>
             <div class="user-table-wrapper">
                 <table class='user-table'>
                     <thead>
@@ -82,8 +92,8 @@
     </main>
 
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
-    
-    
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const startDateInput = document.getElementById("startDate");
@@ -121,6 +131,15 @@
             // Attach event listeners
             startDateInput.addEventListener("change", filterByDate);
             endDateInput.addEventListener("change", filterByDate);
+        });
+    </script>
+    <script>
+        document.getElementById("clearDateFilter").addEventListener("click", function() {
+            document.getElementById("startDate").value = '';
+            document.getElementById("endDate").value = '';
+            document.querySelectorAll(".user-table tbody tr").forEach(row => {
+                row.style.display = "";
+            });
         });
     </script>
 

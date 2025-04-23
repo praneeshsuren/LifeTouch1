@@ -36,9 +36,16 @@ tr.overdue td {
     /* Dark red text */
     font-weight: bold;
 }
+
 .status.upcoming {
     color: black;
-  }
+    background-color: #f9f9f9;
+}
+
+.status.overdue {
+    color: black;
+    background-color: #febbc1;
+}
 
 .download-button {
     margin-left: 1140px;
@@ -138,13 +145,16 @@ tr.overdue {
 #clearDateFilter:hover {
     background-color: #d32f2f;
 }
+
 /* Add to your report-style.css */
 .user-table tr.non-compliant {
-    background-color: #ffdddd; /* Light red background */
+    background-color: #ffdddd;
+    /* Light red background */
 }
 
 .user-table tr.non-compliant:hover {
-    background-color: #ffcccc; /* Slightly darker red on hover */
+    background-color: #ffcccc;
+    /* Slightly darker red on hover */
 }
 
 .status {

@@ -16,6 +16,13 @@
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
+    <style>
+        .input-container input:focus+.label,
+        .input-container input:not(:placeholder-shown)+.label {
+            top: -16px;
+            font-size: 17px;
+        }
+    </style>
 </head>
 
 
@@ -35,9 +42,10 @@
         </div>
 
         <div class="box">
-            <a href="equipment_view/<?php echo $item->equipment_id; ?>" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
+            <a href="<?php echo URLROOT; ?>/manager/equipment_view/<?php echo $equipment->equipment_id; ?>" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
 
             <form method="post" enctype="multipart/form-data">
+                <br><br>
                 <?php if (!empty($errors)): ?>
                     <div class="alert">
                         <?= implode("<br>", $errors); ?>
@@ -48,7 +56,7 @@
                 <div>
 
                     <div class="profile-img-container">
-                        <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/Equipment/<?php echo htmlspecialchars($equipment->file); ?>" alt="Equipment Image">
+                        <img style="height:300px;width:300px;display:block;margin:auto;" class="profile-img" src="<?php echo URLROOT; ?>/assets/images/Equipment/<?php echo htmlspecialchars($equipment->file); ?>" alt="Equipment Image">
                     </div>
                     <p class="file-upload-text">Click below to select a new image (if needed)</p>
                     <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="file" accept="image/jpg, image/jpeg, image/png">
@@ -56,10 +64,11 @@
 
 
                 <div class="input-container">
-                    <input type="text" id="name" name="name" value="<?php echo $equipment->name; ?>" required>
-                    <label for="name" class="label"><i class="ph ph-barbell"></i>Name</label>
+                    <input type="text" id="name" name="name" value="<?php echo $equipment->name; ?>" required placeholder=" ">
+                    <label for="name" class="label"><i class="ph ph-barbell"></i> Name</label>
                     <div class="underline"></div>
                 </div>
+
 
 
                 <div class="input-container">
