@@ -43,17 +43,11 @@
             <div class="insight-card card-1">
               <div class="upper">
                 <i class="ph ph-users"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
               </div>
               <div class="lower">
                   <p>Total Members</p>
                   <div class="progress">
-                    <h1>20000</h1>
-                    <div class="text-muted">
-                      <small>Last 30 days</small>
-                    </div>
+                    <h1><?php echo $data['members'] ?></h1>
                   </div>
               </div>
             </div>
@@ -61,14 +55,11 @@
             <div class="insight-card card-2">
               <div class="upper">
                 <i class="ph ph-user-plus"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
               </div>
               <div class="lower">
                   <p>New Members</p>
                   <div class="progress">
-                    <h1>20000</h1>
+                    <h1><?php echo $data['recentMembers'] ?></h1>
                     <div class="text-muted">
                       <small>Last 30 days</small>
                     </div>

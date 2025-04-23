@@ -8,12 +8,18 @@
 
         public function index() {
             $announcementModel = new M_Announcement;
+            $memberModel = new M_Member;
         
             // Fetch the latest 4 announcements with admin names
             $announcements = $announcementModel->findAllWithAdminNames(4);
         
+            // Fetch the All Count of members in the GYM
+            $members = $memberModel->countAll();
+            $recentMembers = $memberModel->countRecentMembers();
             $data = [
-                'announcements' => $announcements
+                'announcements' => $announcements,
+                'members' => $members,
+                'recentMembers' => $recentMembers
             ];
         
             $this->view('admin/admin-dashboard', $data);

@@ -106,4 +106,18 @@
             return !empty($result);
         }
 
+        public function countRecentMembers(){
+            $date30DaysAgo = date('Y-m-d H:i:s', strtotime('-30 days'));
+
+            $query = "SELECT COUNT(*) as total FROM {$this->table} WHERE created_at >= :date30DaysAgo";
+
+            $result = $this->query($query, ['date30DaysAgo' => $date30DaysAgo]);
+
+            if ($result && !empty($result)) {
+                return $result[0]->total;
+            }
+    
+            return 0;
+        }
+
     }
