@@ -45,7 +45,7 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/trainer/calendar">
                     <i class='icon ph-bold ph-calendar-dots'></i>
                     <span class="text">View Calendar</span>
                 </a>

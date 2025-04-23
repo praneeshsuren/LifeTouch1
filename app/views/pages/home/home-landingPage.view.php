@@ -152,7 +152,7 @@
             <h2>Join Event</h2>
 
             <form id="eventForm" method="POST" action="<?php echo URLROOT; ?>/home/joinEvent">
-                <input type="text" id="eventIdInput" name="event_id" />
+                <input type="hidden" id="eventIdInput" name="event_id" />
                 <div class="input-group">
                     <label for="fullname">Full Name</label>
                     <input type="text" id="fullname" name="full_name" required />

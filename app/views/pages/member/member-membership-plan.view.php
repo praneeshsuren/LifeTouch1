@@ -54,8 +54,7 @@
         </div>
         <div>
           <button type="submit" id ="renew-btn" class="payment-form-submit-button">Renew</button>
-          <button type="submit" id="cancel-btn" class="payment-form-submit-button">Cancel</button>
-          </div>
+        </div>
       </div>
       <div id="bookingModal" class="modal">
         <div class="modal-content">
@@ -63,8 +62,8 @@
           <div class="bookingModal-body">
             <form id="payment-form" class="payment-form" method="POST" action="<?php echo URLROOT; ?>/member/checkout">
               <h1 class="payment-title">Payment Details</h1>
-              <input type="text" id="member_id" value="<?php echo htmlspecialchars($member_id); ?>" name="member_id" required>
-              <input type="text" name="package_id" id="package_id"><input type="text" name="payment_type" id="payment_type">
+              <input type="hidden" id="member_id" value="<?php echo htmlspecialchars($member_id); ?>" name="member_id" required>
+              <input type="hidden" name="package_id" id="package_id"><input type="hidden" name="payment_type" id="payment_type">
               <div class="payment-form-group">
                 <input type="text" id="package" placeholder=" " class="payment-form-control" name="package" readonly required />
                 <label for="package" class="payment-form-label">Package Name</label>
@@ -167,38 +166,6 @@
           document.getElementById('payment_type').value = 'renew';  
 
           bookingModal.style.display = 'block';
-        });
-
-        const cancelBtn = document.getElementById("cancel-btn");
-        cancelBtn.addEventListener("click", () => { 
-          if(!window.mergedSubscriptions){
-            alert("You have no active subscription to cancel.");
-            return;
-          } else if(window.mergedSubscriptions.status == 'inactive') {
-            alert("You have inactive subscription.");
-            return;
-          } else {
-            if (!confirm("Are you sure you want to cancel subscription?")) return;
-            fetch('<?php echo URLROOT?>/member/membershipPlan/cancel', {
-              method: 'POST',
-              headers: {
-                "Content-type": "application/x-www-form-urlencoded"
-              },
-              body: `id=${encodeURIComponent(window.mergedSubscriptions.id)}&status=${encodeURIComponent('inactive')}`,
-            })
-            .then(response => response.json())
-            .then(result =>{
-              console.log(result);
-              if (!result.success) {
-                  alert("subscription cancelled successfully!");
-                  location.reload();
-              } else {
-                  alert("Error: " + result.message);
-              }
-            })
-            .catch(error => console.error("Error canceled aubscription:", error));
-          }
-
         });
       });
 

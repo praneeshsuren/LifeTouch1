@@ -53,18 +53,6 @@
                     <div class="payment-right">
                         <form id="payment-form" class="payment-form">
                             <h1 class="payment-title">Payment Details</h1>
-                            <!-- <div class="payment-method">
-                                <label class="payment-option">
-                                    <input type="radio" name="cardType" value="visa" checked />
-                                    <img src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa" />
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label class="payment-option">
-                                    <input type="radio" name="cardType" value="mastercard" />
-                                    <img src="https://img.icons8.com/color/48/000000/mastercard.png" alt="Mastercard" />
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div> -->
                             <div class="payment-form-group">
                                 <label for="card-number-element" class="payment-form-label-required">Card Number</label>
                                 <div id="card-number-element" class="payment-form-control"></div>
@@ -80,8 +68,8 @@
                                 </div>
                             </div>
                             <div id="card-errors" class="card-error"></div>
-                            <input type="text" name="member_id" id="member_id"><input type="text" name="plan_id" id="package_id"><input type="text" id="amount">
-                            <input type="text" name="startDate" id="startDate"><input type="text" name="endDate" id="endDate"><input type="text" name="paymentType" id="payment_type">
+                            <input type="hidden" name="member_id" id="member_id"><input type="hidden" name="plan_id" id="package_id"><input type="hidden" id="amount">
+                            <input type="hidden" name="startDate" id="startDate"><input type="hidden" name="endDate" id="endDate"><input type="hidden" name="paymentType" id="payment_type">
                             <div class="payment-form-group-flex">
                                 <button type="button" class="payment-form-cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'"> Cancel</button>
                                 <button type="submit" class="payment-form-submit-button"> Pay</button>

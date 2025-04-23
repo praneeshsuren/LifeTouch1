@@ -59,8 +59,8 @@
                                 </div>
                             </div>
                             <div id="card-errors" class="card-error"></div>
-                            <input type="text" name="event_id" id="event_id"><input type="text" id="amount"><input type="text" id="name" name="name"><input type="text" id="nic" name="nic">
-                            <input type="text" id="contact_no" name="contact_no"><input type="text" id="member_id" name="member_id">
+                            <input type="hidden" name="event_id" id="event_id"><input type="hidden" id="amount"><input type="hidden" id="name" name="name"><input type="hidden" id="nic" name="nic">
+                            <input type="hidden" id="contact_no" name="contact_no"><input type="hidden" id="member_id" name="member_id">
                             <div class="payment-form-group-flex">
                                 <button type="button" class="payment-form-cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'"> Cancel</button>
                                 <button type="submit" class="payment-form-submit-button"> Pay</button>
