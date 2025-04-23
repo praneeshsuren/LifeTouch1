@@ -14,17 +14,6 @@
 </head>
 
 <body>
-  <?php
-  if (isset($_SESSION['success'])) {
-    echo "<script>alert('" . $_SESSION['success'] . "');</script>";
-    unset($_SESSION['success']);
-  }
-
-  if (isset($_SESSION['error'])) {
-    echo "<script>alert('" . $_SESSION['error'] . "');</script>";
-    unset($_SESSION['error']);
-  }
-  ?>
 
   <section class="sidebar">
     <?php require APPROOT . '/views/components/admin-sidebar.view.php' ?>
@@ -149,7 +138,11 @@
                     let summary = '';
                     if (logs.length > 0) {
                         const lastLog = logs[logs.length - 1];
-                        summary = `<div class="attendance"><span>In: ${lastLog.time_in}</span><span>Out: ${lastLog.time_out}</span></div>`;
+                        summary = `
+                        <div class="attendance-time">
+                            <span class="in">In: ${lastLog.time_in}</span>
+                            <span class="out">Out: ${lastLog.time_out}</span>
+                        </div>`;
                     }
 
                     cell.innerHTML = header + summary;
@@ -174,58 +167,58 @@
             }
 
             function showAttendanceModal(logs, dateStr) {
-    const modal = document.createElement('div');
-    modal.className = 'attendance-modal';
+                const modal = document.createElement('div');
+                modal.className = 'attendance-modal';
 
-    // Generate the table rows
-    const tableRows = logs.map((r, index) => `
-        <tr>
-            <td>${index + 1}</td>
-            <td>${r.time_in}</td>
-            <td>${r.time_out}</td>
-        </tr>
-    `).join('');
-
-    // Create modal content with table
-    modal.innerHTML = `
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3>Attendance Details for ${dateStr}</h3>
-            <table class="attendance-table">
-                <thead>
+                // Generate the table rows
+                const tableRows = logs.map((r, index) => `
                     <tr>
-                        <th>#</th>
-                        <th>Time-in</th>
-                        <th>Time-out</th>
+                        <td>${index + 1}</td>
+                        <td>${r.time_in}</td>
+                        <td>${r.time_out}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    ${tableRows}
-                </tbody>
-            </table>
-        </div>
-    `;
+                `).join('');
 
-    // Append the modal to the body
-    document.body.appendChild(modal);
+                // Create modal content with table
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-btn">&times;</span>
+                        <h3>Attendance Details for ${dateStr}</h3>
+                        <table class="attendance-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Time-in</th>
+                                    <th>Time-out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
 
-    // Add 'active' class to show the modal
-    modal.classList.add('active');
+                // Append the modal to the body
+                document.body.appendChild(modal);
 
-    // Close the modal when the close button is clicked
-    modal.querySelector('.close-btn').addEventListener('click', () => {
-        modal.classList.remove('active');
-        setTimeout(() => document.body.removeChild(modal), 300); // Remove the modal after the transition
-    });
+                // Add 'active' class to show the modal
+                modal.classList.add('active');
 
-    // Close modal by clicking outside the modal content
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.remove('active');
-            setTimeout(() => document.body.removeChild(modal), 300);
-        }
-    });
-}
+                // Close the modal when the close button is clicked
+                modal.querySelector('.close-btn').addEventListener('click', () => {
+                    modal.classList.remove('active');
+                    setTimeout(() => document.body.removeChild(modal), 300); // Remove the modal after the transition
+                });
+
+                // Close modal by clicking outside the modal content
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                        setTimeout(() => document.body.removeChild(modal), 300);
+                    }
+                });
+            }
 
 
 

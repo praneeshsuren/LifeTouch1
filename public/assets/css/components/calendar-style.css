@@ -1,6 +1,5 @@
 .user-container .calendar-container .calendar {
     width: 100%;
-    max-width: 800px;
     display: flex;
     flex-direction: column;
     background-color: #fff;
@@ -38,6 +37,7 @@
   }
   
 .user-container .calendar-container .calendar .calendar-weekdays {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     background-color: #f0f0f0;
@@ -85,14 +85,28 @@
   }
   
   .user-container .calendar-container .calendar .calendar-grid .calendar-cell .attendance-time {
-    font-size: 12px;
-    color: #333;
+    font-size: 0.75rem;
+    display: block;
+    color: white;
+  }
+
+  .user-container .calendar-container .calendar .calendar-grid .calendar-cell .attendance-time span {
+    display: block;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 15px;
+    margin-top: 5px;
+  }
+  .user-container .calendar-container .calendar .calendar-grid .calendar-cell .attendance-time .out {
+    background-color: #f44336; /* Red */
+  }
+  .user-container .calendar-container .calendar .calendar-grid .calendar-cell .attendance-time .in {
+    background-color: #4caf50; /* Green */
   }
   
-  .user-container .calendar-container .calendar .calendar-grid .calendar-cell .attendance-time:nth-child(2) {
-    font-weight: bold;
-    color: #007bff;
-  }
+  
   
  /* Basic Modal Styling */
 .attendance-modal {
