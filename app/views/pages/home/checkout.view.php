@@ -79,8 +79,7 @@
                                 </div>
                             </div>
                             <div id="card-errors" class="card-error"></div>
-                            <input type="text" name="member_id" id="member_id"><input type="text" name="plan_id" id="package_id"><input type="text" id="amount">
-                            <input type="text" name="startDate" id="startDate"><input type="text" name="endDate" id="endDate"><input type="text" name="paymentType" id="payment_type">
+                            <input type="text" name="event_id" id="event_id"><input type="text" id="amount">
                             <div class="payment-form-group-flex">
                                 <button type="button" class="payment-form-cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'"> Cancel</button>
                                 <button type="submit" class="payment-form-submit-button"> Pay</button>
