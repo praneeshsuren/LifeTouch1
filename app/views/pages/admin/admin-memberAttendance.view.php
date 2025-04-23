@@ -173,20 +173,61 @@
                 document.getElementById('monthLabel').textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
             }
 
-            // Show a modal with full attendance details
             function showAttendanceModal(logs, dateStr) {
-                const modal = document.createElement('div');
-                modal.className = 'attendance-modal';
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <span class="close-btn">&times;</span>
-                        <h3>Attendance Details for ${dateStr}</h3>
-                        ${logs.map(r => `<div class="attendance-detail"><span>In: ${r.time_in}</span><span>Out: ${r.time_out}</span></div>`).join('')}
-                    </div>
-                `;
-                document.body.appendChild(modal);
-                modal.querySelector('.close-btn').onclick = () => document.body.removeChild(modal);
-            }
+    const modal = document.createElement('div');
+    modal.className = 'attendance-modal';
+
+    // Generate the table rows
+    const tableRows = logs.map((r, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${r.time_in}</td>
+            <td>${r.time_out}</td>
+        </tr>
+    `).join('');
+
+    // Create modal content with table
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>Attendance Details for ${dateStr}</h3>
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Time-in</th>
+                        <th>Time-out</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableRows}
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    // Append the modal to the body
+    document.body.appendChild(modal);
+
+    // Add 'active' class to show the modal
+    modal.classList.add('active');
+
+    // Close the modal when the close button is clicked
+    modal.querySelector('.close-btn').addEventListener('click', () => {
+        modal.classList.remove('active');
+        setTimeout(() => document.body.removeChild(modal), 300); // Remove the modal after the transition
+    });
+
+    // Close modal by clicking outside the modal content
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+            setTimeout(() => document.body.removeChild(modal), 300);
+        }
+    });
+}
+
+
 
             // Navigate to the previous month
             document.getElementById('prevMonth').addEventListener('click', () => {
