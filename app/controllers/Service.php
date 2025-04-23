@@ -40,19 +40,6 @@ class Service extends Controller
         }
     }
 
-    public function viewServices()
-    {
-        $service = new M_Service();
-        $data['services'] = $service->findAll();
-
-        // Debugging: Print the fetched data
-        echo '<pre>';
-        print_r($data['services']);
-        echo '</pre>';
-
-        $this->view('manager/equipment_view', $data);
-    }
-
     public function updateService($id)
     {
         $serviceModel = new M_Service();

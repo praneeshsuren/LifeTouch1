@@ -13,14 +13,14 @@ class Receptionist extends Controller
     public function index()
     {
         $announcementModel = new M_Announcement;
-        
+
         // Fetch the latest 4 announcements with admin names
         $announcements = $announcementModel->findAllWithAdminNames(4);
-    
+
         $data = [
             'announcements' => $announcements
         ];
-    
+
         $this->view('receptionist/receptionist-dashboard', $data);
     }
 
@@ -29,7 +29,8 @@ class Receptionist extends Controller
         $this->view('receptionist/receptionist-announcements');
     }
 
-    public function trainers($action = null) {
+    public function trainers($action = null)
+    {
         switch ($action) {
             case 'createTrainer':
                 // Load the form view to create a trainer
@@ -62,14 +63,18 @@ class Receptionist extends Controller
         }
     }
 
-    public function members($action = null){
+    public function members($action = null)
+    {
         switch ($action) {
             case 'createMember':
+                $model = new M_Membership_plan();
+                $data['membership_plans'] = $model->findAll();
+
                 // Load the form view to create a member
                 $this->view('receptionist/receptionist-createMember');
                 break;
 
-                
+
             case 'userDetails':
                 // Load the view to view a trainer
                 $memberModel = new M_Member;
@@ -92,13 +97,12 @@ class Receptionist extends Controller
 
                     // Fetch the supplement records for the member
                     $supplementRecords = $supplementSalesModel->findByMemberId($memberId);
-            
+
                     $data = [
                         'supplements' => $supplementRecords
                     ];
 
                     $this->view('receptionist/receptionist-viewSupplements', $data);
-                    
                 } else {
                     $_SESSION['error'] = 'Member not found.';
                     redirect('receptionist/members');
@@ -114,21 +118,22 @@ class Receptionist extends Controller
                     'members' => $members
                 ];
 
-                    $this->view('receptionist/receptionist-members', $data);
-                    break;
-            }
+                $this->view('receptionist/receptionist-members', $data);
+                break;
+        }
     }
 
-    public function bookings($action = null){
+    public function bookings($action = null)
+    {
         $bookingModel = new M_Booking();
         $bookings = $bookingModel->bookingsForAdmin();
         $holidayModal = new M_Holiday();
         $holidays = $holidayModal->findAll();
-                
-        if ($action === 'api'){
+
+        if ($action === 'api') {
             header('Content-Type: application/json');
             echo json_encode([
-                'bookings' =>$bookings,
+                'bookings' => $bookings,
                 'holidays' => $holidays
             ]);
             exit;
@@ -136,17 +141,19 @@ class Receptionist extends Controller
         $this->view('receptionist/receptionist-booking');
     }
 
-    public function calendar(){
+    public function calendar()
+    {
         $this->view('receptionist/receptionist-calendar');
     }
 
-    public function holiday($action = null){
+    public function holiday($action = null)
+    {
         $holidayModal = new M_Holiday();
         $holidays = $holidayModal->findAll();
         $bookingModel = new M_Booking();
         $bookings = $bookingModel->findAll();
-    
-        if($action === 'api'){
+
+        if ($action === 'api') {
             header('Content-Type: application/json');
             echo json_encode([
                 'holidays' => $holidays,
@@ -156,37 +163,37 @@ class Receptionist extends Controller
         } elseif ($action === 'add') {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 header('Content-Type: application/json');
-        
+
                 $date = $_POST['holidayDate'] ?? null;
                 $reason = isset($_POST['holidayReason']) && $_POST['holidayReason'] !== '' ? $_POST['holidayReason'] : null;
 
                 $existingHoliday = $holidayModal->first(['date' => $date]);
-                if($existingHoliday){
+                if ($existingHoliday) {
                     echo json_encode(["success" => false, "message" => "A holiday already exists for this date"]);
                     exit;
                 }
-     
+
                 $data = [
                     'date' => $date,
                     'reason' => $reason
                 ];
-                
+
                 $result = $holidayModal->insert($data);
-                
+
                 echo json_encode([
-                    "success" => $result ? true : false, 
+                    "success" => $result ? true : false,
                     "message" => $result ? "Holiday added successfully!" : "Failed to add holiday"
                 ]);
                 exit;
             }
-        
+
             // Ensure a response is always sent
             echo json_encode(["success" => false, "message" => "Invalid request"]);
             exit;
-        } elseif($action === "delete"){
+        } elseif ($action === "delete") {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $id = $_POST['id'];
-        
+
                 if ($holidayModal->delete($id)) {
                     echo json_encode(["success" => true, "message" => "Holiday deleted successfully!"]);
                     exit;
@@ -197,7 +204,7 @@ class Receptionist extends Controller
             }
             echo json_encode(["success" => false, "message" => "Invalid request."]);
             exit;
-        } elseif ($action === 'edit'){
+        } elseif ($action === 'edit') {
             header('Content-type: application/json');
 
             $id = $_POST['id'] ?? null;
@@ -216,39 +223,40 @@ class Receptionist extends Controller
                     "success" => $result ? true : false,
                     "message" => $result ? "Holiday reason updated successfully!" : "Failed to update reason"
                 ]
-                );
+            );
             exit;
-        } elseif($action === 'conflict'){
+        } elseif ($action === 'conflict') {
             header('Content-type: application/json');
 
-                $id = $_POST['id'] ?? null;
-                $status = $_POST['status']?? null;
+            $id = $_POST['id'] ?? null;
+            $status = $_POST['status'] ?? null;
 
-                if (!$id && !$status) {
-                    echo json_encode(["success" => false, "message" => "Missing required fields"]);
-                    exit;
-                }
-
-                $data = ['status' => $status];
-
-                $result = $bookingModel->update($id, $data);
-
-                echo json_encode(
-                    [
-                        "success" => $result ? true : false,
-                        "message" => $result ? "Booking  updated successfully!" : "Failed to update "
-                    ]
-                    );
+            if (!$id && !$status) {
+                echo json_encode(["success" => false, "message" => "Missing required fields"]);
                 exit;
+            }
+
+            $data = ['status' => $status];
+
+            $result = $bookingModel->update($id, $data);
+
+            echo json_encode(
+                [
+                    "success" => $result ? true : false,
+                    "message" => $result ? "Booking  updated successfully!" : "Failed to update "
+                ]
+            );
+            exit;
         }
-        $this->view('receptionist/receptionist-holiday'); 
+        $this->view('receptionist/receptionist-holiday');
     }
 
-    public function payment($action = null){
+    public function payment($action = null)
+    {
         $paymentModel = new M_Payment();
         $payment = $paymentModel->paymentAdmin();
 
-        if($action === 'api'){
+        if ($action === 'api') {
             header('Content-Type: application/json');
             echo json_encode(['payment' => $payment]);
             exit;
@@ -256,4 +264,3 @@ class Receptionist extends Controller
         $this->view('receptionist/receptionist-payment');
     }
 }
-    

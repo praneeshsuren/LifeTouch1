@@ -171,7 +171,7 @@
                     <input type="text" id="membershipNumber" name="membership_number"
                         pattern="^MB\/[MF]\/\d+$"
                         title="Format: MB/M/0001 or MB/F/0001"
-                        placeholder="MB/M/0001" />
+                        />
                     <small id="membershipError" style="color: red;"></small>
                 </div>
                 <div class="input-group">
@@ -294,82 +294,9 @@
     <script src="<?php echo URLROOT; ?>/assets/js/home-script.js?v=<?php echo time(); ?>"></script>
 </body>
 <script>
-    // Show the popup form when "Join Now" is clicked
-    document.querySelectorAll('.plans-content .box a').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault(); // Prevent default navigation
-            document.getElementById('joinForm').style.display = 'flex';
-        });
-    });
-
-    function closeForm() {
-        document.getElementById('joinForm').style.display = 'none';
-    }
-
-    function toggleMembership() {
-        const checkbox = document.getElementById('isMember');
-        const memberField = document.getElementById('membershipGroup');
-        const payNowBtn = document.querySelector('.button-group button[type="button"]');
-        const eventForm = document.getElementById('eventForm');
-        const isFree = eventForm.getAttribute('data-free') === '1';
-
-        // Show/hide membership number input
-        memberField.style.display = checkbox.checked ? 'block' : 'none';
-
-        // Show Pay Now button if:
-        // - Event is NOT free, regardless of membership
-        // - User is NOT a member
-        if (!isFree || !checkbox.checked) {
-            payNowBtn.style.display = 'inline-block';
-        } else {
-            // Event is free and user is a member
-            payNowBtn.style.display = 'none';
-        }
-    }
-</script>
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const scrollTo = urlParams.get('scroll');
-        if (scrollTo) {
-            const section = document.getElementById(scrollTo);
-            if (section) {
-                section.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        }
-    });
-</script>
-<script>
-    document.querySelectorAll('.plans-content .box a').forEach((button, index) => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const eventId = eventIds[index];
-            const isFreeForMembers = freeEvents[index];
-
-            document.getElementById('eventIdInput').value = eventId;
-            document.getElementById('joinForm').style.display = 'flex';
-
-            // Store free status as a custom data attribute
-            const form = document.getElementById('eventForm');
-            form.setAttribute('data-free', isFreeForMembers ? '1' : '0');
-
-            // Reset checkbox and membership section
-            document.getElementById('isMember').checked = false;
-            document.getElementById('membershipGroup').style.display = 'none';
-
-            // Decide default Pay Now visibility
-            const payNowBtn = document.querySelector('.button-group button[type="button"]');
-            payNowBtn.style.display = isFreeForMembers ? 'none' : 'inline-block';
-        });
-    });
-</script>
-
-<script>
+    // Initialize variables
     const eventIds = <?php echo json_encode(array_column($data['events'], 'event_id')); ?>;
     const freeEvents = <?php echo json_encode(array_column($data['events'], 'free_for_members')); ?>;
-
     const form = document.getElementById('eventForm');
     const joinForm = document.getElementById('joinForm');
     const eventIdInput = document.getElementById('eventIdInput');
@@ -378,6 +305,7 @@
     const payNowBtn = document.querySelector('.button-group button[type="button"]');
     const joinBtn = document.querySelector('.button-group button[type="submit"]');
 
+    // Set up event listeners for "Join Now" buttons
     document.querySelectorAll('.plans-content .box a').forEach((button, index) => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
@@ -400,6 +328,7 @@
         });
     });
 
+    // Handle membership checkbox change
     isMemberCheckbox.addEventListener('change', function() {
         const isMember = this.checked;
         const isFree = form.getAttribute('data-free') === '1';
@@ -419,9 +348,24 @@
         }
     });
 
+    // Close form function
     function closeForm() {
         joinForm.style.display = 'none';
     }
+
+    // Smooth scroll to section if specified in URL
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const scrollTo = urlParams.get('scroll');
+        if (scrollTo) {
+            const section = document.getElementById(scrollTo);
+            if (section) {
+                section.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
+    });
 </script>
 
 
