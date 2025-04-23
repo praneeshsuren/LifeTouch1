@@ -137,7 +137,59 @@ class M_Attendance
     }
 }
 
+public function findByMemberId($member_id)
+{
+    $query = "SELECT * FROM $this->table WHERE member_id = :member_id";
+    $result = $this->query($query, ['member_id' => $member_id]);
+
+    if ($result) {
+        return $result;
+    } else {
+        return null; // No records found for the given member_id
+    }
+}
+
+public function getAttendanceForMonth($member_id, $month, $year)
+{
+    $startOfMonth = date('Y-m-01', strtotime("$year-$month-01"));
+    $endOfMonth = date('Y-m-t', strtotime("$year-$month-01"));
+
+    $query = "
+        SELECT DATE(date) AS attendance_date, time_in, time_out
+        FROM $this->table
+        WHERE member_id = :member_id AND DATE(date) BETWEEN :startOfMonth AND :endOfMonth
+        ORDER BY date ASC, time_in ASC
+    ";
+
+    $params = [
+        'member_id' => $member_id,
+        'startOfMonth' => $startOfMonth,
+        'endOfMonth' => $endOfMonth
+    ];
+
+    $attendanceData = $this->query($query, $params);
+
+    // Initialize empty attendanceByDate array
+    $attendanceByDate = [];
     
+    // If no records found, return an empty object instead of null or an error
+    if (!empty($attendanceData)) {
+        foreach ($attendanceData as $attendance) {
+            $attendanceDate = $attendance->attendance_date;
+            if (!isset($attendanceByDate[$attendanceDate])) {
+                $attendanceByDate[$attendanceDate] = [];
+            }
+            $attendanceByDate[$attendanceDate][] = [
+                'time_in' => $attendance->time_in,
+                'time_out' => $attendance->time_out
+            ];
+        }
+    }
+
+    return $attendanceByDate;
+}
+
+
 }
 
 ?>

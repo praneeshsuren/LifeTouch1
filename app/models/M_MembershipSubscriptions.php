@@ -35,5 +35,22 @@
 
         }
 
+        public function findByMemberId($memberId) {
+            $query = "SELECT ms.*, mp.plan FROM 
+                    $this->table ms 
+                    JOIN membership_plan mp ON ms.plan_id = mp.membershipPlan_id 
+                    WHERE ms.member_id = :member_id";
+            
+            $params = [
+                'member_id' => $memberId
+            ];
+            $result = $this->query($query, $params);
+            if ($result) {
+                return $result[0]; // Return the first result
+            } else {
+                return null; // No result found
+            }
+        }
+
     }
 ?>

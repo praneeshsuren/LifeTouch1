@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
   <!-- STYLESHEET -->
-  <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time(); ?>" />
+  <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
   <!-- ICONS -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <!-- CHART.JS -->
@@ -52,57 +52,47 @@
         <div class="navbar">
 
             <ul class="nav-links">
-              <li><a href="#user-details"><i class="ph ph-user"></i>User Details</a></li>
-              <li><a href="#membership-details"><i class="ph ph-calendar-dots"></i>Member Attendance<span class=""></a></li>
-              <li><a href="#supplement-records"><i class="ph ph-money"></i>Payment History</a></li>
-              <li><a href="#workout-schedules"><i class="ph ph-barbell"></i>Supplement Records</a></li>
+              <li><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
+              <li><a href="" id="attendanceLink"><i class="ph ph-calendar-dots"></i>Member Attendance<span class=""></a></li>
+              <li><a href="" id="paymentHistoryLink"><i class="ph ph-money"></i>Payment History</a></li>
+              <li><a href="" id="supplementRecordsLink"><i class="ph ph-barbell"></i>Supplement Records</a></li>
             </ul>
 
           </div>
 
         </div>
 
-      </div>
-
       <div class="user-container">
 
         <form id="userForm" method="POST" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/user/member/updateMember">
 
           <div class="details">
-          <div class="row">
+
+            <div class="row">
               <p style="color: green;">
                 <strong style="color: green;">Membership Plan Start Date:</strong>
                 <?php
-                $createdDate = !empty($data['member']->membership_plan_created_date) ? $data['member']->membership_plan_created_date : $data['member']->created_at;
-                echo (new DateTime($createdDate))->format('Y-m-d');
+                  if (isset($data['membershipSubscription']->start_date)) {
+                    $startDate = $data['membershipSubscription']->start_date;
+                    echo $startDate;
+                  } else {
+                      echo "No membership plan found.";
+                  }
                 ?>
               </p>
+
               <p style="color: red;">
                 <strong style="color: red;">Membership Plan End Date:</strong>
                 <?php
-                $createdDate = !empty($data['member']->membership_plan_created_date) ? $data['member']->membership_plan_created_date : $data['member']->created_at;
-                $endDate = new DateTime($createdDate);
-                switch ($data['member']->membership_plan) {
-                  case 'Monthly':
-                    $endDate->modify('+1 month');
-                    break;
-                  case 'Quarterly':
-                    $endDate->modify('+4 months');
-                    break;
-                  case 'Semi-Annually':
-                    $endDate->modify('+6 months');
-                    break;
-                  case 'Annually':
-                    $endDate->modify('+1 year');
-                    break;
+                if (isset($data['membershipSubscription']->end_date)) {
+                  $endDate = $data['membershipSubscription']->start_date;
+                  echo $endDate;
+                } else {
+                    echo "No membership plan found.";
                 }
-                echo $endDate->format('Y-m-d');
                 ?>
               </p>
               
-
-
-
             </div>
 
             <div class="profile-picture">
@@ -179,10 +169,14 @@
               <p>
                 <strong>Membership Plan:</strong>
                 <select name="membership_plan" id="membership_plan" disabled>
-                  <option value="Monthly" <?php echo $data['member']->membership_plan == 'Monthly' ? 'selected' : ''; ?>>Monthly</option>
+                  <option value="Monthly" <?php echo $data['membershipSubscription']->plan == 'Monthly' ? 'selected' : ''; ?>>Monthly</option>
                   <option value="Quarterly" <?php echo $data['member']->membership_plan == 'Quarterly' ? 'selected' : ''; ?>>Quarterly</option>
                   <option value="Semi-Annually" <?php echo $data['member']->membership_plan == 'Semi-Annually' ? 'selected' : ''; ?>>Semi-Annually</option>
                   <option value="Annually" <?php echo $data['member']->membership_plan == 'Annually' ? 'selected' : ''; ?>>Annually</option>
+
+                  <?php if ($data['member']->membership_plan === null): ?>
+                    <option value="None" selected>None</option>
+                  <?php endif; ?>
                 </select>
               </p>
             </div>
@@ -192,7 +186,7 @@
           <div class="action-buttons">
 
             <button type="button" id="editBtn" class="edit-btn">Edit</button>
-            <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/user/member/deleteMember?id=<?php echo $data['member']->member_id; ?>';">Delete</button>
+            <button type="button" id="deleteBtn" class="delete-btn">Delete</button>
             <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
             <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;">Cancel</button>
 
@@ -210,28 +204,94 @@
   <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time(); ?>"></script>
 
   <script>
-    document.getElementById('changePictureBtn').addEventListener('click', () => {
-      document.getElementById('profilePictureInput').click();
+  // Edit button functionality
+  document.getElementById('editBtn').addEventListener('click', () => {
+    // Enable all input fields and the membership plan select
+    const formElements = document.querySelectorAll('#userForm input, #userForm select');
+    formElements.forEach(element => {
+      element.disabled = false;
     });
 
-    document.getElementById('profilePictureInput').addEventListener('change', function() {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('trainerImage').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
+    // Hide the Edit button, show the Save and Cancel buttons
+    document.getElementById('editBtn').style.display = 'none';
+    document.getElementById('deleteBtn').style.display = 'none';
+    document.getElementById('saveBtn').style.display = 'inline-block';
+    document.getElementById('cancelBtn').style.display = 'inline-block';
+  });
+
+  // Cancel button functionality (reset to disabled)
+  document.getElementById('cancelBtn').addEventListener('click', () => {
+    // Disable all input fields and the membership plan select
+    const formElements = document.querySelectorAll('#userForm input, #userForm select');
+    formElements.forEach(element => {
+      element.disabled = true;
     });
 
-    document.querySelectorAll('.nav-links li a').forEach(link => {
-      link.addEventListener('click', function() {
-        document.querySelectorAll('.nav-links li').forEach(item => item.classList.remove('active'));
-        this.parentElement.classList.add('active');
+    // Hide the Save and Cancel buttons, show the Edit button
+    document.getElementById('saveBtn').style.display = 'none';
+    document.getElementById('cancelBtn').style.display = 'none';
+    document.getElementById('editBtn').style.display = 'inline-block';
+    document.getElementById('deleteBtn').style.display = 'inline-block';
+  });
+
+  // Delete button confirmation functionality
+  document.getElementById('deleteBtn').addEventListener('click', function(e) {
+    e.preventDefault(); // Prevent immediate redirect or form submission
+
+    const confirmation = confirm("Are you sure you want to delete this member?");
+    if (confirmation) {
+      // If user clicks "OK", redirect to the delete URL
+      window.location.href = '<?php echo URLROOT; ?>/user/member/deleteMember?id=<?php echo $data['member']->member_id; ?>';
+    }
+  });
+
+  // Image change functionality
+  document.getElementById('changePictureBtn').addEventListener('click', () => {
+    document.getElementById('profilePictureInput').click();
+  });
+
+  document.getElementById('profilePictureInput').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('trainerImage').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  document.querySelectorAll('.nav-links li a').forEach(link => {
+        link.addEventListener('click', function () {
+          document.querySelectorAll('.nav-links li').forEach(item => item.classList.remove('active'));
+          this.parentElement.classList.add('active');
+        });
       });
-    });
-  </script>
+
+      document.addEventListener('DOMContentLoaded', () => {
+  // Function to get URL parameter by name
+  function getUrlParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+  }
+
+  // Get the 'id' parameter (member_id) from the URL
+  const memberId = getUrlParameter('id');
+
+  if (memberId) {
+    // Member ID is available, use it in the navigation link
+    const userDetailsLink = document.getElementById('userDetailsLink');
+    userDetailsLink.href = `<?php echo URLROOT; ?>/admin/members/viewMember?id=${memberId}`;
+    const attendanceLink = document.getElementById('attendanceLink');
+    attendanceLink.href = `<?php echo URLROOT; ?>/admin/members/memberAttendance?id=${memberId}`;
+  } else {
+    // No member_id in the URL, show a message or handle accordingly
+    alert('No member selected.');
+  }
+});
+</script>
+
+
 
 </body>
 

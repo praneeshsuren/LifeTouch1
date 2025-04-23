@@ -82,5 +82,29 @@
                 'attendance' => $attendanceData
             ]);
         }
+
+        public function getAttendance()
+        {
+            // Get parameters from the URL
+            $member_id = $_GET['member_id'] ?? null;
+            $month = $_GET['month'] ?? null;
+            $year = $_GET['year'] ?? null;
+
+            // If any parameters are missing, return an error
+            if (!$member_id || !$month || !$year) {
+                echo json_encode(['error' => 'Missing required parameters']);
+                exit; // Stop further processing
+            }
+
+            $attendanceModel = new M_Attendance();
+            $attendanceGrouped = $attendanceModel->getAttendanceForMonth($member_id, $month, $year);
+
+            // Ensure the response is in JSON format
+            header('Content-Type: application/json');
+            echo json_encode(['attendanceByDate' => $attendanceGrouped]);
+            exit; // Ensure no additional content is returned
+        }
+
+        
     }
 ?>
