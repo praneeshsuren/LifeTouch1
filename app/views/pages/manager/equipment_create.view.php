@@ -58,6 +58,13 @@
             width: 100%;
             /* Makes the input element take up the full width of its container */
         }
+
+        .input-container input:focus+.label,
+        .input-container input:not(:placeholder-shown)+.label,
+        .input-container input.filled+.label {
+            transform: translateY(-20px);
+            font-size: 17px;
+        }
     </style>
 </head>
 
@@ -77,7 +84,7 @@
         </div>
 
 
-        <div class="box">
+        <div class="box" style="margin-top:20px">
             <?php if (!empty($errors)): ?>
                 <div class="error-messages">
                     <?php foreach ($errors as $error): ?>
@@ -90,39 +97,48 @@
 
 
                 <div>
-
-                    <div class="profile-img-container">
-                        <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/dumbell_add.png" alt="Equipment Image">
+                    <div class="profile-img-container" style="text-align: center;">
+                        <img class="profile-img"
+                            src="<?php echo URLROOT; ?>/assets/images/dumbell_add.png"
+                            alt="Equipment Image"
+                            style="max-width: 200px; max-height: 200px; width: 100%; height: auto; object-fit: contain;" />
                     </div>
-                    <p class="file-upload-text">Click below to select an image</p>
-                    <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="image" required accept="image/jpg, image/jpeg, image/png">
+                    <p class="file-upload-text" style="text-align: center; margin-bottom: 8px;">Click below to select an image</p>
+                    <input onchange="display_image(this.files[0])"
+                        type="file"
+                        class="file-upload-input"
+                        name="image"
+                        required
+                        accept="image/jpg, image/jpeg, image/png"
+                        style="display: block; margin: 0 auto;" />
                 </div>
 
+
                 <div class="input-container">
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" required value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
                     <label for="name" class="label"><i class="ph ph-barbell"></i>Name</label>
                     <div class="underline"></div>
                 </div>
 
                 <div class="input-container">
-                    <input type="text" id="description" name="description" required>
+                    <input type="text" id="description" name="description" required value="<?php echo isset($_POST['description']) ? htmlspecialchars($_POST['description']) : ''; ?>">
                     <label for="description" class="label"><i class="ph ph-clipboard-text"></i>Description</label>
                     <div class="underline"></div>
                 </div>
                 <div class="input-container">
-                    <input type="date" id="purchase_date" name="purchase_date" required>
+                    <input type="date" id="purchase_date" name="purchase_date" required value="<?php echo isset($_POST['purchase_date']) ? htmlspecialchars($_POST['purchase_date']) : ''; ?>">
                     <label for="date" class="label"><i class="ph ph-calendar"></i>Purchase Date</label>
                     <div class="underline"></div>
                 </div>
 
                 <div class="input-container">
-                    <input type="text" id="purchase_price" name="purchase_price" required>
+                    <input type="text" id="purchase_price" name="purchase_price" required value="<?php echo isset($_POST['purchase_price']) ? htmlspecialchars($_POST['purchase_price']) : ''; ?>">
                     <label for="price" class="label"><i class="ph ph-money"></i>Purchase Price</label>
                     <div class="underline"></div>
                 </div>
 
                 <div class="input-container">
-                    <input type="text" id="purchase_shop" name="purchase_shop" required>
+                    <input type="text" id="purchase_shop" name="purchase_shop" required required value="<?php echo isset($_POST['purchase_shop']) ? htmlspecialchars($_POST['purchase_shop']) : ''; ?>">
                     <label for="price" class="label"><i class="ph ph-money"></i>Purchase Shop</label>
                     <div class="underline"></div>
                 </div>
