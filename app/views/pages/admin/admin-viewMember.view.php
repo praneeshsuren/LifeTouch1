@@ -100,9 +100,8 @@
               <img src="<?php echo URLROOT; ?>/assets/images/Member/<?php echo !empty($data['member']->image) ? $data['member']->image : 'default-placeholder.jpg'; ?>"
                 alt="Member Picture"
                 id="userImage">
-              <input type="file" name="profile_picture" id="profilePictureInput" accept="image/*" style="display: none;">
-              <button type="button" id="changePictureBtn" class="change-picture-btn">Change Picture</button>
-
+              <input type="file" onchange="display_image(this.files[0])" name="image" id="profilePictureInput" accept="image/*" style="display: none;">
+              <button type="button" id="changePictureBtn" class="change-picture-btn" style="display: none;">Change Picture</button>
             </div>
 
             <div class="user-details">
@@ -213,10 +212,12 @@
     });
 
     // Hide the Edit button, show the Save and Cancel buttons
+    
     document.getElementById('editBtn').style.display = 'none';
     document.getElementById('deleteBtn').style.display = 'none';
     document.getElementById('saveBtn').style.display = 'inline-block';
     document.getElementById('cancelBtn').style.display = 'inline-block';
+    document.getElementById('changePictureBtn').style.display = 'inline-block';
   });
 
   // Cancel button functionality (reset to disabled)
@@ -230,6 +231,7 @@
     // Hide the Save and Cancel buttons, show the Edit button
     document.getElementById('saveBtn').style.display = 'none';
     document.getElementById('cancelBtn').style.display = 'none';
+    document.getElementById('changePictureBtn').style.display = 'none';
     document.getElementById('editBtn').style.display = 'inline-block';
     document.getElementById('deleteBtn').style.display = 'inline-block';
   });
@@ -255,7 +257,7 @@
     if (file) {
       const reader = new FileReader();
       reader.onload = function(e) {
-        document.getElementById('trainerImage').src = e.target.result;
+        document.getElementById('userImage').src = e.target.result;
       };
       reader.readAsDataURL(file);
     }

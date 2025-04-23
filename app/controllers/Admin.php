@@ -3,7 +3,7 @@
 
         public function __construct() {
             // Check if the user is logged in as a admin
-            $this->checkAuth('admin');
+            $this->checkAuth('Admin');
         }
 
         public function index() {

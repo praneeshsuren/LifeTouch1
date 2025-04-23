@@ -4,7 +4,7 @@
 
         public function __construct() {
             // Check if the user is logged in as a member
-            $this->checkAuth('member');
+            $this->checkAuth('Member');
         }
 
         public function index($action = null) {

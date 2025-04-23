@@ -82,6 +82,25 @@
                             ];
 
                             $member_id = $_POST['member_id'];
+
+                            // Handle file upload if exists
+                            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                                $targetDir = "assets/images/Member/";
+                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $targetFile = $targetDir . $fileName;
+
+                                // Validate the file (e.g., check file type and size) and move it to the target directory
+                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                    $data['image'] = $fileName; // Save the filename for the database
+                                } else {
+                                    $errors['file'] = "Failed to upload the file. Please try again.";
+                                }
+                            }
+
+                            // If no image uploaded, leave the 'image' key as null (if not set)
+                            if (!isset($data['image'])) {
+                                $data['image'] = null;
+                            }
                 
                             // Call the update function
                             if (!$memberModel->update($member_id, $data, 'member_id')) {
