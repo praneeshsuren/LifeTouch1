@@ -62,6 +62,16 @@
 
         }
 
+        public function findAllCompletedSchedulesByMemberId($memberId)
+        {
+            $query = "SELECT * FROM $this->table WHERE member_id = :memberID AND completed_date IS NOT NULL ORDER BY created_at DESC";
+        
+            // Get completed schedules for this member
+            $schedules = $this->query($query, ['memberID' => $memberId]);
+        
+            // Return schedules or an empty array if no schedules found
+            return $schedules ?: [];  // Returns an empty array if no schedules exist
+        }
 
     }
 
