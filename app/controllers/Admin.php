@@ -297,18 +297,25 @@
                     ];
         
                     $this->view('admin/admin-viewAdmin', $data);
-                    break;          
+                    break;
                     
-                case 'api':
-                    // Return all admins data as JSON
-                    $adminModel = new M_Admin;
-                    $admins = $adminModel->findAll('admin_id');
-                    header('Content-Type: application/json');
-                    echo json_encode($admins);
-                    break; 
+                case 'salaryHistory':
+                    
+                    $admin_id = $_GET['id'];
+
+                    $this->view('admin/admin-adminSalaryHistory');
+                    break;
         
                 default:
-                    $this->view('admin/admin-admins');
+                    // Fetch all admins and pass to the view
+                    $adminModel = new M_Admin;
+                    $admins = $adminModel->findAll('created_at');
+
+                    $data = [
+                        'admins' => $admins
+                    ];
+
+                    $this->view('admin/admin-admins', $data);
                     break; 
             }
         }
