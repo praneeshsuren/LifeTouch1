@@ -94,10 +94,7 @@
               <div class="lower">
                   <p>Total Event Attendees</p>
                   <div class="progress">
-                    <h1>20000</h1>
-                    <div class="text-muted">
-                      <small>Last 30 days</small>
-                    </div>
+                    <h1><?php echo $data['eventParticipants'] ?></h1>
                   </div>
               </div>
             </div>
@@ -183,7 +180,6 @@
         fetch(`<?php echo URLROOT; ?>/Attendance/updateAttendanceGraph?period=${period}`)
           .then(response => response.json())
           .then(data => {
-            console.log("Fetched attendance data:", data);  // Debugging: Check the fetched data
             updateBarChart(data.attendance);  // Update the chart with attendance data
           })
           .catch(error => console.error('Error fetching data:', error));

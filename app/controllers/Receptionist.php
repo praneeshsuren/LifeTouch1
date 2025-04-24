@@ -14,16 +14,19 @@ class Receptionist extends Controller
     {
         $announcementModel = new M_Announcement;
         $memberModel = new M_Member;
+        $eventParticipantsModel = new M_EventParticipants;
 
         // Fetch the latest 4 announcements with admin names
         $members = $memberModel->countAll();
         $announcements = $announcementModel->findAllWithAdminNames(4);
         $recentMembers = $memberModel->countRecentMembers();
+        $eventParticipants = $eventParticipantsModel->CountUniqueParticipants();
 
         $data = [
             'announcements' => $announcements,
             'members' => $members,
-            'recentMembers' => $recentMembers
+            'recentMembers' => $recentMembers,
+            'eventParticipants' => $eventParticipants
         ];
 
         $this->view('receptionist/receptionist-dashboard', $data);
