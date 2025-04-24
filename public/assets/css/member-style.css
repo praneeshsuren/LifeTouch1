@@ -1338,71 +1338,72 @@ main #schedule-cards-container {
     overflow: hidden;
 }
 
+/* Schedule Cards Container */
 .schedule-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
+    margin-top: 30px;
     padding: 20px;
-    justify-items: center;
   }
   
   .schedule-card {
     background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    text-align: left;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 100%;
-    max-width: 350px;
     cursor: pointer;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
     height: fit-content;
   }
   
   .schedule-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-10px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   }
   
   .schedule-card h3 {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #333;
+    font-size: 24px;
+    color: #34495e;
     margin-bottom: 15px;
   }
   
   .schedule-card p {
-    font-size: 1em;
-    color: #555;
-    margin: 5px 0;
-  }
-  
-  .schedule-card strong {
-    font-weight: 600;
-    color: #333;
+    font-size: 16px;
+    color: #7f8c8d;
+    margin-bottom: 10px;
   }
   
   .schedule-card .status {
     font-weight: bold;
-    padding: 5px 50px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-  }
-  
-  .schedule-card .status.ongoing {
-    background-color: #ffcc00;
-    color: #fff;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   .schedule-card .status.completed {
-    background-color: #4caf50;
+    background-color: #27ae60;
     color: #fff;
+  }
+  
+  .schedule-card .status.ongoing {
+    background-color: #f39c12;
+    color: #fff;
+  }
+  
+  .schedule-card .status.pending {
+    background-color: #e67e22;
+    color: #fff;
+  }
+  
+  /* Hover and Active States */
+  .schedule-card:active {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
   }
   
   /* Responsive adjustments */
@@ -1418,96 +1419,60 @@ main #schedule-cards-container {
     }
   }
 
-/*Workout Schedule Details*/
-.workout-schedule-container {
-    margin-top: 2rem;
-    padding: 2rem;
-    background-color: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-  }
-  
-  /* Table styling */
-  #workout-schedule {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    table-layout: fixed;
-  }
-  
-  #workout-schedule th,
-  #workout-schedule td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  #workout-schedule th {
-    background-color: #f5f5f5;
-    font-weight: bold;
-    font-size: 1rem;
-  }
-  
-  #workout-schedule td {
-    font-size: 0.9rem;
-  }
-  
-  #workout-schedule tr:hover {
-    background-color: #f9f9f9;
-  }
-  
-  /* General Styles for the Table and Form */
+/* Workout Schedule Details Page */
   .workout-schedule-container {
     margin-top: 2rem;
     padding: 2rem;
     background-color: #fff;
     border-radius: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
-  /* Table styling */
+  /* Table Styling */
   #workout-schedule {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     table-layout: fixed;
     margin-bottom: 2rem;
   }
   
   #workout-schedule th,
   #workout-schedule td {
-    padding: 12px 15px;
+    padding: 14px 20px;
     text-align: left;
     border-bottom: 1px solid #e0e0e0;
   }
   
   #workout-schedule th {
     background-color: #f5f5f5;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 1rem;
+    color: #2c3e50;
   }
   
   #workout-schedule td {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    color: #34495e;
   }
   
   #workout-schedule tr:hover {
     background-color: #f9f9f9;
   }
   
-  /* Styling for the Inputs */
+  /* Table Input Styling */
   .workout-id-cell input,
-  .workout-name-cell select,
   .equipment-id-cell input,
-  .equipment-name-cell input,
   input[type="number"] {
     width: 100%;
-    padding: 8px 12px;
-    font-size: 0.9rem;
+    padding: 10px 14px;
+    font-size: 0.95rem;
     border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 8px;
     background-color: #fff;
     color: #333;
     box-sizing: border-box;
@@ -1515,34 +1480,61 @@ main #schedule-cards-container {
   }
   
   .workout-id-cell input:focus,
-  .workout-name-cell select:focus,
   .equipment-id-cell input:focus,
-  .equipment-name-cell input:focus,
   input[type="number"]:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: #3498db;
     background-color: #f0f8ff;
   }
+
+  /* Equipment Name and Workout Name Column Adjustments */
+.workout-name-cell,
+.equipment-name-cell {
+  width: 300px; /* Adjust this width as needed */
+}
+
+/* For the inputs inside these columns to adjust accordingly */
+.workout-name-cell input,
+.equipment-name-cell input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Ensure they still get the focus effect */
+.workout-name-cell input:focus,
+.equipment-name-cell input:focus {
+  outline: none;
+  border-color: #3498db;
+  background-color: #f0f8ff;
+}
+
   
-  /* Reduce size of row number column */
+  /* Column Width Adjustments */
   #workout-schedule th.row-index,
   #workout-schedule td.row-index {
-    width: 60px;
+    width: 70px;
     text-align: center;
     padding: 8px;
   }
   
-  /* Description column - wider input */
+  /* Description Cell - Wider Input */
   .description-cell {
     width: 250px;
   }
   
   .description-cell input {
     width: 100%;
-    padding: 8px 12px;
-    font-size: 0.9rem;
+    padding: 10px 14px;
+    font-size: 0.95rem;
     border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 8px;
     background-color: #fff;
     color: #333;
     box-sizing: border-box;
@@ -1551,7 +1543,7 @@ main #schedule-cards-container {
   
   .description-cell input:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: #3498db;
     background-color: #f0f8ff;
   }
   
@@ -1559,54 +1551,103 @@ main #schedule-cards-container {
   .measurement-group {
     margin-top: 1rem;
     display: flex;
-    gap: 20px; /* Adds space between the fields */
+    gap: 20px;
+    flex-wrap: wrap;
   }
   
   .measurement-group div {
-    flex: 1; /* Ensures equal width for each field */
+    flex: 1;
+    min-width: 200px; /* Ensure measurements align on mobile */
   }
   
-  /* Add Row and Submit Button Styling */
+  .measurement-group p {
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  
+  /* Buttons Styling */
   button {
-    padding: 10px 20px;
-    font-size: 0.9rem;
+    padding: 12px 25px;
+    font-size: 1rem;
     color: #fff;
-    background-color: #007bff;
+    background-color: #3498db;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 5rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 3rem;
+    display: block;
+    width: 100%;
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: #2980b9;
+    transform: translateY(-2px);
   }
   
-  #add-row {
-    background-color: #28a745;
+  /* Action Buttons Update Schedule */
+  .action-buttons-update-schedule {
+    text-align: center;
+    margin-top: 2rem;
   }
   
-  #add-row:hover {
-    background-color: #218838;
-  }
-  
-  button:disabled {
-    background-color: #d6d6d6;
-    cursor: not-allowed;
-  }
-  
-  
-  /* For mobile responsiveness */
-  @media screen and (max-width: 768px) {
+  /* Responsive Design */
+  @media (max-width: 1200px) {
     .workout-schedule-container {
-        padding: 1rem;
+      margin: 1rem;
+      padding: 1.5rem;
     }
   
     #workout-schedule th,
     #workout-schedule td {
-        font-size: 0.8rem;
-        padding: 8px;
+      font-size: 0.95rem;
+      padding: 10px 15px;
+    }
+  
+    .measurement-group {
+      gap: 15px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    #workout-schedule th,
+    #workout-schedule td {
+      font-size: 0.9rem;
+      padding: 8px 12px;
+    }
+  
+    .workout-schedule-container {
+      padding: 1rem;
+    }
+  
+    .measurement-group {
+      flex-direction: column;
+    }
+  
+    button {
+      width: auto;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    #workout-schedule th,
+    #workout-schedule td {
+      font-size: 0.85rem;
+      padding: 8px 10px;
+    }
+  
+    .workout-id-cell input,
+    .workout-name-cell select,
+    .equipment-id-cell input,
+    .equipment-name-cell input,
+    input[type="number"] {
+      font-size: 0.85rem;
+      padding: 8px 12px;
+    }
+  
+    button {
+      width: 100%;
+      font-size: 1rem;
     }
   }
 

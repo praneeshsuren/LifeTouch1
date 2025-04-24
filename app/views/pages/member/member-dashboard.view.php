@@ -234,7 +234,7 @@
             pointHoverRadius: 7,
             borderWidth: 2,
             borderRadius: 10,
-            barThickness: 50
+            barThickness: 30
           }]
         };
 
