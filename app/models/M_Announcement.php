@@ -10,7 +10,8 @@ class M_Announcement
     protected $allowedColumns = [
         'announcement_id',
         'subject',
-        'announcement',
+        'description',
+        'created_by',
         'created_date',
         'created_time'
     ];
@@ -24,7 +25,7 @@ class M_Announcement
             $this->errors['subject'] = "Subject is required";
         }
 
-        if (empty($data['announcement'])) {
+        if (empty($data['description'])) {
             $this->errors['announcement'] = "Announcement description is required";
         }
 
@@ -36,7 +37,7 @@ class M_Announcement
         // SQL query to join announcement and admin tables
         $query = "
             SELECT a.announcement_id, a.subject, a.description, a.created_by, a.created_date, a.created_time,
-                    CONCAT(ad.first_name, ' ', ad.last_name) AS admin_name
+                    CONCAT(ad.first_name, ' ', ad.last_name) AS admin_name, ad.image
             FROM announcement a
             LEFT JOIN admin ad ON a.created_by = ad.admin_id
             ORDER BY a.created_date DESC, a.created_time DESC 
@@ -63,7 +64,7 @@ class M_Announcement
     public function findAllWithAdminDetails() {
         // SQL query to join announcement and admin tables
         $query = "
-            SELECT a.announcement_id, a.subject, a.description, a.created_by, a.created_date, a.created_time, ad.first_name, ad.last_name, ad.email_address
+            SELECT a.announcement_id, a.subject, a.description, a.created_by, a.created_date, a.created_time, ad.first_name, ad.last_name, ad.email_address, ad.image
             FROM announcement a
             LEFT JOIN admin ad ON a.created_by = ad.admin_id
             ORDER BY a.created_date DESC, a.created_time DESC
