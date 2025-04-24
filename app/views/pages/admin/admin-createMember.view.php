@@ -92,7 +92,7 @@
 
             <div class="user-form">
 
-                <form action="<?php echo URLROOT; ?>/user/member/registerMember" method="post">
+                <form action="<?php echo URLROOT; ?>/user/member/registerMember" method="post" enctype="multipart/form-data">
 
                     <div class="form-container">
 
@@ -106,14 +106,14 @@
                                     <img id="profile-image" src="<?php echo URLROOT; ?>/assets/images/no_img.jpg" alt="Member Image">
                                 </div>
 
-                                <label for="image-upload" class="image-upload-label">Upload Image</label>
+                                <button type="button" id="uploadImageBtn" class="image-upload-label">Upload Image</button>
 
                                 <input
                                     type="file"
-                                    id="image-upload"
+                                    id="profilePictureInput"
                                     class="image-upload-input"
                                     name="image"
-                                    onchange="display_image(this.files[0])"
+                                    accept="image/*"
                                 >
 
                             </div>
@@ -241,7 +241,7 @@
                                 <div class="input-container">
                                     <div class="input-box">
                                         <input type="number" id="height" name="height" value="<?php echo $_POST['height'] ?? ''; ?>" step="0.001" required>
-                                        <label class="floating-label">Height (m)</label>
+                                        <label class="floating-label">Height (cm)</label>
                                         <?php if (!empty($data['errors']['height'])): ?>
                                             <span class="invalid-feedback"><?php echo $data['errors']['height']; ?></span>
                                         <?php endif; ?>
@@ -260,7 +260,7 @@
                                         <option value="Monthly" <?php echo (isset($_POST['membership_plan']) && $_POST['membership_plan'] === 'Monthly') ? 'selected' : ''; ?>>Monthly</option>
                                         <option value="Quarterly" <?php echo (isset($_POST['membership_plan']) && $_POST['membership_plan'] === 'Quarterly') ? 'selected' : ''; ?>>Quarterly</option>
                                         <option value="Semi-Annually" <?php echo (isset($_POST['membership_plan']) && $_POST['membership_plan'] === 'Semi-Annually') ? 'selected' : ''; ?>>Semi-Annually</option>
-                                        <option value="Anually" <?php echo (isset($_POST['membership_plan']) && $_POST['membership_plan'] === 'Anually') ? 'selected' : ''; ?>>Anually</option>
+                                        <option value="Annually" <?php echo (isset($_POST['membership_plan']) && $_POST['membership_plan'] === 'Annually') ? 'selected' : ''; ?>>Annually</option>
                                     </select>
                                     <?php if (!empty($data['errors']['membership_plan'])): ?>
                                         <span class="invalid-feedback"><?php echo $data['errors']['membership_plan']; ?></span>
@@ -325,18 +325,19 @@
         <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
 
         <script>
-            function display_image(file) {
-                if (file) {
-                    const img = document.getElementById("profile-image"); // Ensure the correct ID is used
-                    img.src = URL.createObjectURL(file); // Create a temporary URL for the file
-                    img.onload = () => URL.revokeObjectURL(img.src); // Revoke the URL after the image is loaded
-                }
-            }
+            document.getElementById('uploadImageBtn').addEventListener('click', () => {
+                document.getElementById('profilePictureInput').click();
+            });
 
-            // Update the `onchange` event listener in the input
-            document.querySelector(".image-upload-input").addEventListener("change", function () {
-                const file = this.files[0]; // Get the selected file
-                display_image(file); // Call the function to update the image
+            document.getElementById('profilePictureInput').addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profile-image').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                }
             });
 
             // Updated script to handle input focus

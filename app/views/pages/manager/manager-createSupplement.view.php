@@ -51,7 +51,13 @@
                         <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/dumbell_add.png" alt="Supplement Image">
                     </div>
                     <p class="file-upload-text">Click below to select an image</p>
-                    <input onchange="display_image(this.files[0])" type="file" class="file-upload-input" name="image" accept="image/jpg, image/jpeg, image/png">
+                    <input 
+                        onchange="display_image(this.files[0])" 
+                        type="file" 
+                        class="file-upload-input" 
+                        name="image" 
+                        accept="image/*"
+                    >
                 </div>
 
                 <div class="input-container">

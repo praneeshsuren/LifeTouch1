@@ -18,6 +18,18 @@
   </head>
   <body>
 
+    <?php
+      if (isset($_SESSION['success'])) {
+          echo "<script>alert('" . $_SESSION['success'] . "');</script>";
+          unset($_SESSION['success']); // Clear the message after showing it
+      }
+
+      if (isset($_SESSION['error'])) {
+          echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+          unset($_SESSION['error']); // Clear the message after showing it
+      }
+    ?>
+
     <section class="sidebar">
       <?php require APPROOT.'/views/components/admin-sidebar.view.php' ?>
     </section>
@@ -38,10 +50,8 @@
 
             <ul class="nav-links">
 
-              <li><a href="#user-details"><i class="ph ph-user"></i>User Details</a></li>
-              <li><a href="#receptionist-attendance"><i class="ph ph-calendar-dots"></i>Receptionist Attendance</a></li>
-              <li><a href="#salary-history"><i class="ph ph-money"></i>Salary History</a></li>
-              <li><a href="#receptionist-calendar"><i class="ph ph-barbell"></i>Receptionist Calendar</a></li>
+              <li class="active"><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
+              <li><a href="" id="salaryHistoryLink"><i class="ph ph-money"></i>Salary History</a></li>
 
             </ul>
 
@@ -60,8 +70,14 @@
                 <img src="<?php echo URLROOT; ?>/assets/images/Receptionist/<?php echo !empty($data['receptionist']->image) ? $data['receptionist']->image : 'default-placeholder.jpg'; ?>" 
                     alt="Receptionist Picture" 
                     id="userImage">
-                <input type="file" name="profile_picture" id="profilePictureInput" accept="image/*" style="display: none;">
-                <button type="button" id="changePictureBtn" class="change-picture-btn">Change Picture</button>
+                <input 
+                  type="file" 
+                  name="image" 
+                  id="profilePictureInput" 
+                  accept="image/*" 
+                  style="display: none;"
+                >
+                <button type="button" id="changePictureBtn" class="change-picture-btn" style="display: none;">Change Picture</button>
 
               </div>
 
@@ -123,7 +139,7 @@
             <div class="action-buttons">
 
               <button type="button" id="editBtn" class="edit-btn">Edit</button>
-              <button type="button" id="deleteBtn" class="delete-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/receptionists/deleteReceptionist?id=<?php echo $data['receptionist']->receptionist_id; ?>';">Delete</button>
+              <button type="button" id="deleteBtn" class="delete-btn">Delete</button>
               <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
               <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;">Cancel</button>
 
@@ -139,30 +155,87 @@
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
-
     <script>
-      document.getElementById('changePictureBtn').addEventListener('click', () => {
-        document.getElementById('profilePictureInput').click();
-      });
+  // Edit button functionality
+  document.getElementById('editBtn').addEventListener('click', () => {
+    // Enable all input fields and the membership plan select
+    const formElements = document.querySelectorAll('#userForm input, #userForm select');
+    formElements.forEach(element => {
+      element.disabled = false;
+    });
 
-      document.getElementById('profilePictureInput').addEventListener('change', function () {
-        const file = this.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            document.getElementById('receptionistImage').src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        }
-      });
+    document.getElementById('user_id').disabled = true;
+    // Hide the Edit button, show the Save and Cancel buttons
+    
+    document.getElementById('editBtn').style.display = 'none';
+    document.getElementById('deleteBtn').style.display = 'none';
+    document.getElementById('saveBtn').style.display = 'inline-block';
+    document.getElementById('cancelBtn').style.display = 'inline-block';
+    document.getElementById('changePictureBtn').style.display = 'inline-block';
+  });
 
-      document.querySelectorAll('.nav-links li a').forEach(link => {
-        link.addEventListener('click', function () {
-          document.querySelectorAll('.nav-links li').forEach(item => item.classList.remove('active'));
-          this.parentElement.classList.add('active');
-        });
-      });
-    </script>
+  // Cancel button functionality (reset to disabled)
+  document.getElementById('cancelBtn').addEventListener('click', () => {
+    // Disable all input fields and the membership plan select
+    const formElements = document.querySelectorAll('#userForm input, #userForm select');
+    formElements.forEach(element => {
+      element.disabled = true;
+    });
+
+    // Hide the Save and Cancel buttons, show the Edit button
+    document.getElementById('saveBtn').style.display = 'none';
+    document.getElementById('cancelBtn').style.display = 'none';
+    document.getElementById('changePictureBtn').style.display = 'none';
+    document.getElementById('editBtn').style.display = 'inline-block';
+    document.getElementById('deleteBtn').style.display = 'inline-block';
+  });
+
+  // Delete button confirmation functionality
+  document.getElementById('deleteBtn').addEventListener('click', function(e) {
+    e.preventDefault(); // Prevent immediate redirect or form submission
+
+    const confirmation = confirm("Are you sure you want to delete this receptionist?");
+    if (confirmation) {
+      // If user clicks "OK", redirect to the delete URL
+      window.location.href = '<?php echo URLROOT; ?>/user/receptionist/deleteReceptionist?id=<?php echo $data['receptionist']->receptionist_id; ?>';
+    }
+  });
+
+  // Image change functionality
+  document.getElementById('changePictureBtn').addEventListener('click', () => {
+    document.getElementById('profilePictureInput').click();
+  });
+
+  document.getElementById('profilePictureInput').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('profilePicture').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Function to get URL parameter by name
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    const receptionistId = getUrlParameter('id');
+
+    if (receptionistId) {
+      document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/admin/receptionists/viewReceptionist?id=${receptionistId}`;
+      document.getElementById('salaryHistoryLink').href = `<?php echo URLROOT; ?>/admin/receptionists/salaryHistory?id=${receptionistId}`;
+
+    } else {
+      alert('No receptionist selected.');
+    }
+  });
+</script>
 
 
   </body>

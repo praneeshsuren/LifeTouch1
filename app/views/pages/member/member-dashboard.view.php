@@ -69,6 +69,7 @@
               <div class="period-select">
                 <select id="time-period" name="time-period">
                   <option value="today" selected>Today</option>
+                  <option value="yesterday">Yesterday</option>
                   <option value="week">This Week</option>
                 </select>
               </div>
@@ -138,7 +139,7 @@
       });
       // Function to fetch data and update the chart
       function fetchAndUpdateChart(period) {
-        fetch(`<?php echo URLROOT; ?>/member/index/api?period=${period}`)
+        fetch(`<?php echo URLROOT; ?>/attendance/updateAttendanceGraph?period=${period}`)
           .then(response => response.json())
           .then(data => {
             updateBarChart(data.attendance);  // Update the chart with attendance data
@@ -194,7 +195,7 @@
                 }
             });
         }
-    } else if (selectedPeriod === 'today') {
+    } else if (selectedPeriod === 'today' || selectedPeriod === 'yesterday') {
       labels = Array.from({ length: 19 }, (_, index) => `${index + 5}:00`);
     attendanceCounts = new Array(19).fill(0);
 
@@ -294,6 +295,7 @@
             return response.json();
           })
           .then(data =>{
+            console.log('Bookings data:', data);
             markBookings(data.bookings);
           })
           .catch(error => console.error('Error fetching bookings details:', error));
@@ -306,7 +308,6 @@
             return;
         }
         tbody.innerHTML = ""; // Clear existing rows
-
         // Filter bookings for "booked" and future dates
         const filteredBookings = bookings.filter(
             booking => booking.status === 'booked' && 

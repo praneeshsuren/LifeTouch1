@@ -46,9 +46,9 @@
       <div class="table-container">
 
           <div class="filters">
-            <button class="filter active">All Users</button>
-            <button class="filter">Active Users</button>
-            <button class="filter">Inactive Users</button>
+            <button class="filter active" name="all">All Users</button>
+            <button class="filter" name="active">Active Users</button>
+            <button class="filter" name="inactive">Inactive Users</button>
           </div>
 
           <div class="user-table-header">
@@ -71,10 +71,35 @@
                       <th>Home Address</th>
                       <th>Email Address</th>
                       <th>Contact Number</th>
+                      <th>Status</th>
                   </tr>
               </thead>
               <tbody>
-                <!-- Data will be dynamically populated by JS -->
+                <?php if (!empty($data['receptionists'])): ?>
+                  <?php foreach ($data['receptionists'] as $receptionist) : ?>
+                    <tr onclick="window.location.href='<?php echo URLROOT; ?>/admin/receptionists/viewReceptionist?id=<?php echo $receptionist->receptionist_id; ?>';" style="cursor: pointer;">
+                        <td><?php echo $receptionist->receptionist_id; ?></td>
+                        <td>
+                          <img src="<?php echo URLROOT; ?>/assets/images/Receptionist/<?php echo !empty($receptionist->image) ? $receptionist->image : 'default-placeholder.jpg'; ?>" alt="Receptionist Picture" class="user-image">
+                        </td>
+                        <td><?php echo $receptionist->first_name; ?></td>
+                        <td><?php echo $receptionist->last_name; ?></td>
+                        <td><?php echo $receptionist->NIC_no; ?></td>
+                        <td><?php echo $receptionist->gender; ?></td>
+                        <td><?php echo $receptionist->date_of_birth; ?></td>
+                        <td><?php echo calculateAge($receptionist->date_of_birth); ?></td>
+                        <td><?php echo $receptionist->home_address; ?></td>
+                        <td><?php echo $receptionist->email_address; ?></td>
+                        <td><?php echo $receptionist->contact_number; ?></td>
+                        <td><?php echo $receptionist->status; ?></td>
+
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                        <td colspan="11" style="text-align: center;">No receptionists available</td>
+                    </tr>
+                  <?php endif; ?>
               </tbody>
             </table>
           </div>
@@ -87,75 +112,70 @@
     <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
 
     <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const tableBody = document.querySelector('.user-table tbody');
 
-  // Fetch data from the API
-  fetch('<?php echo URLROOT; ?>/admin/receptionists/api')
-    .then(response => {
-      console.log('Response Status:', response.status); // Log response status
-      return response.json();
-    })
-    .then(data => {
-      console.log('Fetched Data:', data); // Log the data received
-      if (Array.isArray(data) && data.length > 0) {
-        data.forEach(receptionist => {
-          console.log('Receptionist:', receptionist); // Log each receptionist data
-          const row = document.createElement('tr');
-          row.style.cursor = 'pointer';
-          row.onclick = () => {
-            window.location.href = `<?php echo URLROOT; ?>/admin/receptionists/viewReceptionist?id=${receptionist.receptionist_id}`;
-          };
+      document.addEventListener('DOMContentLoaded', () => {
+        // Get references to the DOM elements
+        const searchInput = document.querySelector('.search-input');
+        const filterButtons = document.querySelectorAll('.filter');
+        const userRows = document.querySelectorAll('.user-table tbody tr');
+        
+        // Function to filter rows based on active, inactive, or all
+        function filterRows(status) {
+          userRows.forEach(row => {
+            const statusCell = row.cells[11]; // Assuming the status is in the 13th column (index 12)
+            const rowStatus = statusCell.textContent.toLowerCase();
 
-          row.innerHTML = `
-            <td>${receptionist.receptionist_id}</td>
-            <td>
-              <img src="<?php echo URLROOT; ?>/assets/images/receptionist/${receptionist.image || 'default-placeholder.jpg'}" alt="Receptionist Picture" class="user-image">
-            </td>
-            <td>${receptionist.first_name}</td>
-            <td>${receptionist.last_name}</td>
-            <td>${receptionist.NIC_no}</td>
-            <td>${receptionist.gender}</td>
-            <td>${receptionist.date_of_birth}</td>
-            <td>${calculateAge(new Date(receptionist.date_of_birth))}</td>
-            <td>${receptionist.home_address}</td>
-            <td>${receptionist.email_address}</td>
-            <td>${receptionist.contact_number}</td>
-          `;
+            // Show all rows if "All Users" is selected
+            if (status === 'all') {
+              row.style.display = '';
+            } 
+            // Show only active users
+            else if (status === 'active' && rowStatus === 'active') {
+              row.style.display = '';
+            } 
+            // Show only inactive users
+            else if (status === 'inactive' && rowStatus === 'inactive') {
+              row.style.display = '';
+            } 
+            // Hide the row if it doesn't match the filter
+            else {
+              row.style.display = 'none';
+            }
+          });
+        }
 
-          tableBody.appendChild(row);
+        // Add event listeners to filter buttons
+        filterButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            // Set the active filter button
+            filterButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            // Get the filter type (All, Active, or Inactive)
+            const filterType = button.getAttribute('name'); // Use the 'name' attribute
+            filterRows(filterType);
+          });
         });
-      } else {
-        console.log('No receptionists found.');
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="11" style="text-align: center;">No Receptionists available</td>
-          </tr>
-        `;
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching receptionists:', error); // Log the error
-      tableBody.innerHTML = `
-        <tr>
-          <td colspan="11" style="text-align: center;">Error loading data</td>
-        </tr>
-      `;
-    });
-});
 
-function calculateAge(dob) {
-  const today = new Date();
-  const birthDate = new Date(dob);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-}
+        // Implement search functionality
+        searchInput.addEventListener('input', () => {
+          const searchText = searchInput.value.toLowerCase();
+          
+          userRows.forEach(row => {
+            const rowText = Array.from(row.cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+            if (rowText.includes(searchText)) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        });
 
-</script>
+        // Initially filter to show all users
+        filterRows('all');
+      });
+
+    </script>
 
 
   </body>

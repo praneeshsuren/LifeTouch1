@@ -3,10 +3,12 @@
 </div>
 <div class="head">
     <div class="user-img">
-        <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+            <img src="<?php echo URLROOT; ?>/assets/images/<?php echo $_SESSION['role'] ?>/<?php echo !empty($_SESSION['image']) ? $_SESSION['image'] : 'default-placeholder.jpg'; ?>"
+            alt="User Picture"
+            id="userImage">
     </div>
     <div class="user-details">
-        <p class="post">Member</p>
+        <p class="post"><?php echo $_SESSION['role'] ?></p>
         <p class="name"><?php echo isset($_SESSION['first_name']) ? $_SESSION['first_name'] : 'User'; ?></p>
     </div>
 </div>
@@ -23,13 +25,13 @@
             <li>
                 <a href="<?php echo URLROOT; ?>/member/Trainer">
                     <i class='icon ph-bold ph-user'></i>
-                    <span class="text">View trainer</span>
+                    <span class="text">Trainers</span>
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/Workoutschedules">
+                <a href="<?php echo URLROOT; ?>/member/workoutSchedules">
                     <i class='icon ph-bold ph-barbell'></i>
-                    <span class="text">Workout schedules</span>
+                    <span class="text">Workout Schedules</span>
                 </a>
             </li>
             <li>
@@ -39,8 +41,8 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/Supplements">
-                    <i class='icon ph-bold ph-flask'></i>
+                <a href="<?php echo URLROOT; ?>/member/supplements">
+                    <i class='icon ph-bold ph-pint-glass'></i>
                     <span class="text">Supplements</span>
                 </a>
             </li>

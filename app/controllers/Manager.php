@@ -6,7 +6,7 @@ class Manager extends Controller
     public function __construct()
     {
         // Check if the user is logged in as a manager
-        $this->checkAuth('manager');
+        $this->checkAuth('Manager');
     }
 
     public function index()

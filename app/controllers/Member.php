@@ -4,7 +4,7 @@
 
         public function __construct() {
             // Check if the user is logged in as a member
-            $this->checkAuth('member');
+            $this->checkAuth('Member');
         }
 
         public function index($action = null) {
@@ -12,13 +12,6 @@
 
             $announcementModel = new M_Announcement;
             $announcements = $announcementModel->findAllWithAdminNames(5);
-           
-            
-            $attendanceModel = new M_Attendance;
-            $period = $_GET['period'] ?? 'today'; // Default to 'today'
-        
-            // Get attendance data for the entire gym (aggregated by hour and day)
-            $attendanceData = $attendanceModel->getAttendanceDataForGraph($period);
 
             $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
             $completedSchedules = count($workoutScheduleDetailsModel->findAllCompletedSchedulesByMemberId($member_id));
@@ -32,8 +25,7 @@
             if ($action === 'api') {
                 header('Content-Type: application/json');
                 echo json_encode([
-                    'bookings' => $bookings,
-                    'attendance' => $attendanceData,
+                    'bookings' => $bookings
                 ]);
                 exit;
             }
@@ -174,13 +166,66 @@
             
         }
 
-        public function Supplements(){
-            $this->view('member/member-supplements');
+        public function supplements(){
+            $member_id = $_SESSION['user_id'];
+
+            $supplementSalesModel = new M_SupplementSales;
+
+            // Fetch the supplement records for the member
+            $supplementRecords = $supplementSalesModel->findByMemberId($member_id);
+    
+            $data = [
+                'supplements' => $supplementRecords
+            ];
+
+            $this->view('member/member-supplements', $data);
         }
 
-        public function Workoutschedules(){
-            $this->view('member/member-workoutschedules');
+        public function workoutSchedules(){
+            $member_id = $_SESSION['user_id'];
+            
+            $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
+            $schedules = $workoutScheduleDetailsModel->findAllSchedulesByMemberId($member_id);
+    
+            // Sort schedules in descending order by created_at
+            usort($schedules, function ($a, $b) {
+                return strtotime($b->created_at) - strtotime($a->created_at);
+            });
+    
+            $data = [
+                'member_id' => $member_id,
+                'schedules' => $schedules
+            ];
+
+            $this->view('member/member-workoutSchedules', $data);
         } 
+
+        public function workoutDetails(){
+
+            $schedule_id = $_GET['id'] ?? null;
+
+            // Fetch the schedule details (weight, measurements, etc.)
+            $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
+            $schedule = $workoutScheduleDetailsModel->findByScheduleId($schedule_id);
+        
+            // If no schedule is found, handle the error
+            if (!$schedule) {
+                $_SESSION['error'] = 'Workout schedule not found.';
+                redirect('trainer/members/workoutSchedules');
+                return;
+            }
+        
+            // Fetch the workout rows (the individual workouts in the schedule)
+            $workoutScheduleModel = new M_WorkoutSchedule;
+            $workoutDetails = $workoutScheduleModel->findAllByScheduleId($schedule_id);
+        
+            $data = [
+                'schedule' => $schedule,         // The schedule details (weight, measurements, etc.)
+                'workout_details' => $workoutDetails // The individual workout rows for the schedule
+            ];
+
+            $this->view('member/member-workoutDetails', $data);
+        }
 
         public function Payment($action = null) {
             $member_id = $_SESSION['member_id'] ?? null;

@@ -3,17 +3,25 @@
 
         public function __construct() {
             // Check if the user is logged in as a admin
-            $this->checkAuth('admin');
+            $this->checkAuth('Admin');
         }
 
         public function index() {
             $announcementModel = new M_Announcement;
+            $memberModel = new M_Member;
+            $attendanceModel = new M_Attendance;
         
             // Fetch the latest 4 announcements with admin names
             $announcements = $announcementModel->findAllWithAdminNames(4);
         
+            // Fetch the All Count of members in the GYM
+            $members = $memberModel->countAll();
+            $recentMembers = $memberModel->countRecentMembers();
+
             $data = [
-                'announcements' => $announcements
+                'announcements' => $announcements,
+                'members' => $members,
+                'recentMembers' => $recentMembers
             ];
         
             $this->view('admin/admin-dashboard', $data);
@@ -90,16 +98,49 @@
 
                 case 'viewMember':
                     // Load the view to view a trainer
+                    $member_id = $_GET['id'];
+
                     $memberModel = new M_Member;
-                    $member = $memberModel->findByMemberId($_GET['id']);
-        
+                    $member = $memberModel->findByMemberId($member_id);
+
+                    $membershipSubscriptionModel = new M_MembershipSubscriptions;
+                    $membershipSubscription = $membershipSubscriptionModel->findByMemberId($member_id);
                     $data = [
-                        'member' => $member
+                        'member' => $member,
+                        'membershipSubscription' => $membershipSubscription
                     ];
         
                     $this->view('admin/admin-viewMember', $data);
                     break;
                 
+                case 'memberAttendance':
+                    $this->view('admin/admin-memberAttendance');
+                    break;
+
+                case 'memberPaymentHistory':
+                    $this->view('admin/admin-memberPaymentHistory');
+                    break;
+
+                case 'memberSupplements':
+                    $memberId = $_GET['id'];
+
+                    if ($memberId) {
+
+                        $supplementSalesModel = new M_SupplementSales;
+
+                        // Fetch the supplement records for the member
+                        $supplementRecords = $supplementSalesModel->findByMemberId($memberId);
+
+                        $data = [
+                            'supplements' => $supplementRecords
+                        ];
+
+                        $this->view('admin/admin-memberSupplements', $data);
+                    } else {
+                        $_SESSION['error'] = 'Member not found.';
+                        redirect('admin/members');
+                    }
+                    break;
                 
                 default:
                     // Fetch all members and pass to the view
@@ -134,8 +175,22 @@
                     ];
         
                     $this->view('admin/admin-viewTrainer', $data);
-                    break;                             
-        
+                    break;
+                
+                case 'salaryHistory':
+
+                    $trainer_id = $_GET['id'];
+
+                    $this->view('admin/admin-trainerSalaryHistory');
+                    break;
+
+                case 'trainerCalendar':
+
+                    $trainer_id = $_GET['id'];
+
+                    $this->view('admin/admin-trainerCalendar');
+                    break;
+                
                 default:
                     // Fetch all trainers and pass to the view
                     $trainerModel = new M_Trainer;
@@ -161,20 +216,29 @@
                     // Return specific receptionist data as JSON
                     $receptionistModel = new M_Receptionist;
                     $receptionist = $receptionistModel->findByReceptionistId($_GET['id']);
-                    header('Content-Type: application/json');
-                    $this->view('admin/admin-viewReceptionist');
+
+                    $data = [
+                        'receptionist' => $receptionist
+                    ];
+                    $this->view('admin/admin-viewReceptionist', $data);
+                    break;
+                
+                case 'salaryHistory':
+                    $receptionist_id = $_GET['id'];
+
+                    $this->view('admin/admin-receptionistSalaryHistory');
                     break;
         
                 default:
-                    $this->view('admin/admin-receptionists');
-                    break;
-
-                case 'api':
-                    // Return all receptionists data as JSON
+                    // Fetch all receptionists and pass to the view
                     $receptionistModel = new M_Receptionist;
-                    $receptionists = $receptionistModel->findAll('receptionist_id');
-                    header('Content-Type: application/json');
-                    echo json_encode($receptionists);
+                    $receptionists = $receptionistModel->findAll('created_at');
+
+                    $data = [
+                        'receptionists' => $receptionists
+                    ];
+
+                    $this->view('admin/admin-receptionists', $data);
                     break;
             }
         }

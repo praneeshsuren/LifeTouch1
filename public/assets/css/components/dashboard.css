@@ -82,6 +82,7 @@ main .insights .insight-card .lower .progress h1{
 main .insights .insight-card .lower .progress .text-muted{
     display: flex;
     align-items: center;
+    margin-left: 2rem;
 }
 
 main .insights .insight-card .lower .progress small{
