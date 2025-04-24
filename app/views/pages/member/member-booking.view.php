@@ -96,6 +96,7 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const trainerId = urlParams.get('id'); 
+        console.log(trainerId);
         let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; // Default to the current month
         let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
         const dateToday = new Date().toISOString().split('T')[0];
@@ -247,6 +248,7 @@
         }
 
         function markBookings(bookings) {
+            console.log("b",bookings);
             bookDiv.innerHTML = ''; // Clear existing content
            
             // Filter bookings for "booked" and "pending" statuses

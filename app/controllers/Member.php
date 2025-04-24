@@ -65,7 +65,7 @@
         }
 
         public function Booking($action = null) {
-            $member_id = $_SESSION['member_id'] ?? null;
+            $member_id = $_SESSION['user_id'] ?? null;
             $trainer_id = $_GET['id'] ?? null;
             $month = (int)($_GET['month'] ?? date('m'));
             $year = (int)($_GET['year'] ?? date('Y'));
@@ -228,7 +228,7 @@
         }
 
         public function Payment($action = null) {
-            $member_id = $_SESSION['member_id'] ?? null;
+            $member_id = $_SESSION['user_id'] ?? null;
             $payment_Model = new M_Payment();
             $payment = $payment_Model->paymentMember($member_id);
             $plan_Model = new M_Membership_plan();
@@ -338,7 +338,7 @@
         }
 
         public function membershipPlan($action = null){
-            $member_id = $_SESSION['member_id'] ?? null;
+            $member_id = $_SESSION['user_id'] ?? null;
             $plan_Model = new M_Membership_plan();
             $plan = $plan_Model->findAll();
             $subscription_Model = new M_Subscription();
