@@ -239,7 +239,7 @@
         <div class="contact-container">
             <h2 class="heading">Contact Us</h2>
 
-            <form action="" method="post" class="contact-form">
+            <form action="<?php echo URLROOT; ?>/home/contact/add" method="post" class="contact-form">
                 <div class="input-group">
                     <label for="name">Your Name</label>
                     <input type="text" id="name" name="name" placeholder="Enter your name" required />
@@ -255,7 +255,7 @@
                     <textarea id="message" name="message" rows="4" placeholder="Write your message" required></textarea>
                 </div>
 
-                <button type="submit" class="btn">Send Message</button>
+                <button type="submit" id="contactUsbtn" class="btn">Send Message</button>
             </form>
         </div>
     </section>
@@ -366,9 +366,67 @@
             }
         }
     });
-    payNowBtn.addEventListener("click", () =>{
-        console.log("click");
-        window.location.href = "<?php echo URLROOT; ?>/home/checkout";
+    payNowBtn.addEventListener("click", function () {
+
+        const fullName = document.getElementById('fullname').value.trim();
+        const nic = document.getElementById('nic').value;
+        const contact = document.getElementById('contact').value;
+        const eventId = document.getElementById('eventIdInput').value;
+        const memberIdField = document.getElementById('membershipNumber').value;
+        const memberId = memberIdField ? memberIdField : null;
+
+        const form = document.createElement("form");
+        form.method ="POST";
+        form.action = '<?php echo URLROOT; ?>/home/checkout';
+
+        const fields = [
+            { name: 'full_name', value: fullName },
+            { name: 'nic', value: nic },
+            { name: 'contact_no', value: contact },
+            { name: 'event_id', value: eventId },
+            { name: 'membership_number', value: memberId }
+        ];
+        fields.forEach(field => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = field.name;
+            input.value = field.value;
+            form.appendChild(input);
+        });
+        document.body.appendChild(form);
+
+        form.submit();
+    });
+
+    document.querySelector(".contact-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        for (const [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
+
+        fetch("<?php echo URLROOT; ?>/home/contact/add", {
+            method: "POST",
+            body: formData
+        })
+        .then(res => {
+            console.log("Raw response:", res); 
+            return res.json();
+        })
+        .then(data => {
+            if(data.success) {
+                alert("Message sent successfully!");
+                form.reset();
+            } else {
+                alert("Failed to send message.");
+            }
+        })
+        .catch(err => {
+            console.error("Error submitting form:", err);
+            alert("An error occurred.");
+        });
+
     });
       
 </script>
