@@ -263,10 +263,15 @@ class Receptionist extends Controller
     {
         $paymentModel = new M_Payment();
         $payment = $paymentModel->paymentAdmin();
+        $plan_Model = new M_Membership_plan();
+        $plan = $plan_Model->findAll();
 
-        if ($action === 'api') {
+        if($action === 'api'){
             header('Content-Type: application/json');
-            echo json_encode(['payment' => $payment]);
+            echo json_encode([
+                'payment' => $payment,
+                'plan' => $plan
+            ]);
             exit;
         }
         $this->view('receptionist/receptionist-payment');

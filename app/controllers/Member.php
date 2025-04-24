@@ -351,28 +351,7 @@
                     'subscription' => $memberPlan
                 ]);
                 exit;
-            } else if ($action === 'cancel') {
-                header('Content-type: application/json');
-
-                $id = $_POST['id'] ?? null;
-                $status = $_POST['status'] ?? null;
-
-                if (!$id || !$status) {
-                    echo json_encode(["success" => false, "message" => "Missing required fields"]);
-                    exit;
-                }
-
-                $data = ['status' => $status];
-                $result = $subscription_Model->update($id, $data);
-
-                echo json_encode(
-                    [
-                        "success" => $result ? true : false,
-                        "message" => $result ? "Subscription status updated successfully!" : "Failed to update status"
-                    ]
-                    );
-                exit;
-            }
+            } 
             $data = ['member_id' => $member_id];
             $this->view('member/member-membership-plan',$data);
         }

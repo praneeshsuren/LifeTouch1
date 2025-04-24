@@ -33,8 +33,7 @@
       </div>
       <div class="paymentBox">
         <button id="payBtn" class="trainerviewbtn-Bookreservationbtn" style="float: left; margin-top: 5px;margin-bottom:3px; width:100px;" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'">Membership Plan</button>
-        <button id="payBtn" class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: 5px;margin-bottom:3px; width:100px;">Pay</button>
-
+   
         <!-- Past Payment Details -->
         <div class="payment-history">
           <h1 class="payment-title">Payment Details</h1>
