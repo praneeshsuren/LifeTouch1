@@ -62,6 +62,20 @@ class Receptionist extends Controller
                 $this->view('receptionist/receptionist-viewTrainer', $data);
                 break;
 
+            case 'salaryHistory':
+                // Load the view to view a trainer's salary history
+                $trainer_id = $_GET['id'];
+
+                $this->view('receptionist/receptionist-trainerSalaryHistory');
+                break;
+            
+            case 'trainerCalendar':
+                // Load the view to view a trainer's calendar
+                $trainer_id = $_GET['id'];
+
+                $this->view('receptionist/receptionist-trainerCalendar');
+                break;
+
             default:
                 // Fetch all trainers and pass to the view
                 $trainerModel = new M_Trainer;
