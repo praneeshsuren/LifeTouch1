@@ -78,7 +78,7 @@
         <p class="title">Settings</p>
         <ul>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/receptionist/settings">
                     <i class='icon ph-bold ph-gear'></i>
                     <span class="text">Settings</span>
                 </a>

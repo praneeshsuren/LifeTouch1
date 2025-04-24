@@ -303,4 +303,120 @@ class Receptionist extends Controller
         }
         $this->view('receptionist/receptionist-payment');
     }
+
+    public function settings(){
+        $user_id = $_SESSION['user_id'];
+        $receptionistModel = new M_Receptionist;
+        $userModel = new M_User;
+        $receptionist = $receptionistModel->findByReceptionistId($user_id);
+        $user = $userModel->findByUserId($user_id);
+        $data = [
+            'receptionist' => $receptionist,
+            'user' => $user
+        ];
+        $this->view('receptionist/receptionist-settings', $data);
+    }
+
+    public function updateSettings() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $receptionistModel = new M_Receptionist;
+            $userModel = new M_User;
+    
+            // Sanitize inputs
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    
+            // Retrieve existing receptionist data to compare
+            $receptionist_id = $_POST['user_id'];
+            $existingReceptionist = $receptionistModel->findByReceptionistId($receptionist_id);
+    
+            // Retrieve existing user data to compare (for username check)
+            $existingUser = $userModel->findByUserId($receptionist_id); // Assuming findByUserId exists for users table
+    
+            // Initialize data array to track changes
+            $data = [];
+    
+            // Only include fields that have been updated
+            $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address', 'image'];
+    
+            // Check for changes and add them to the data array
+            foreach ($fields as $field) {
+                if (isset($_POST[$field]) && $_POST[$field] !== $existingReceptionist->$field) {
+                    $data[$field] = $_POST[$field];
+                }
+            }
+    
+            // Handle email uniqueness check manually if it's updated
+            if (isset($_POST['email_address']) && $_POST['email_address'] !== $existingReceptionist->email_address) {
+                if ($receptionistModel->emailExists($_POST['email_address'], $receptionist_id)) {
+                    $_SESSION['error'] = "Email is already in use.";
+                    $data = [
+                        'errors' => ['email_address' => 'Email is already in use.'],
+                        'receptionist' => $_POST
+                    ];
+                    $this->view('receptionist/receptionist-settings', $data);
+                    return; // Prevent further execution if email is already in use
+                }
+            }
+    
+            // Check if the username has changed
+            if (isset($_POST['username']) && $_POST['username'] !== $existingUser->username) {
+                if ($userModel->usernameExists($_POST['username'])) {
+                    $_SESSION['error'] = "Username is already taken.";
+                    $data = [
+                        'errors' => ['username' => 'Username is already in use.'],
+                        'receptionist' => $_POST
+                    ];
+                    $this->view('receptionist/receptionist-settings', $data);
+                    return; // Prevent further execution if username is already in use
+                } else {
+                    $data['username'] = $_POST['username'];
+                }
+            }
+    
+            // Handle file upload if exists and if changed
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $targetDir = "assets/images/Receptionist/";
+                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                $targetFile = $targetDir . $fileName;
+    
+                // Validate the file (e.g., check file type and size) and move it to the target directory
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                    $data['image'] = $fileName; // Save the new filename for the database
+                } else {
+                    $errors['file'] = "Failed to upload the file. Please try again.";
+                }
+            }
+    
+            // Only proceed with the update if data exists
+            if (!empty($data)) {
+
+
+                // Update receptionist data with the updated values
+                $updatedReceptionist = $receptionistModel->update($receptionist_id, $data, 'receptionist_id');
+    
+                // Update user data (if username was changed)
+                if (isset($data['username'])) {
+                    $updatedUser = $userModel->update($receptionist_id, ['username' => $data['username']], 'user_id');
+                }
+    
+                // Check if the updates were successful
+                if (!$updatedReceptionist && (isset($updatedUser) ? !$updatedUser : true)) {
+                    $_SESSION['success'] = "Settings have been successfully updated!";
+                } else {
+                    $_SESSION['error'] = "No changes detected or update failed.";
+                }
+    
+                redirect('receptionist/settings');
+            } else {
+                // If no changes, redirect back
+                $_SESSION['error'] = "No changes were made.";
+                redirect('receptionist/settings');
+            }
+        } else {
+            redirect('receptionist/settings');
+        }
+    }
+
 }
+
+?>
