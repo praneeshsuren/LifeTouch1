@@ -9,10 +9,6 @@
                 if ($announcement->validate($_POST)){
                     $temp = $_POST;
 
-                    $temp['announcement_id'] = 'A';
-                    $offset = str_pad($announcement->countAll() + 1, 4, '0', STR_PAD_LEFT);
-                    $temp['announcement_id'] .= $offset;
-
                     $temp['created_by'] = $_SESSION['user_id'];
                     
                     $announcement->insert($temp);
@@ -42,10 +38,10 @@
                         'description'     => $_POST['description']
                     ];
 
-                    $announcement_id = $_POST['announcement_id'];
+                    $announcement_id = $_POST['id'];
 
                     // Call the update function
-                    if (!$announcementModel->update($announcement_id, $data, 'announcement_id')) {
+                    if (!$announcementModel->update($announcement_id, $data, 'id')) {
                         // Set a success session message
                         $_SESSION['success'] = "Announcement has been successfully updated!";
                         // Redirect to the announcements view page
@@ -76,9 +72,9 @@
 
             $announcementModel = new M_Announcement;
 
-            $announcement_id = $_POST['announcement_id'];
+            $announcement_id = $_POST['id'];
 
-            if (!$announcementModel->delete($announcement_id, 'announcement_id')) {
+            if (!$announcementModel->delete($announcement_id, 'id')) {
                 
                 $_SESSION['success'] = "Announcement has been deleted successfully";
 

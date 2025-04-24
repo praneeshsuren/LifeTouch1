@@ -32,7 +32,7 @@
             <div class="announcementsContainer">
                 <?php if (!empty($data['announcements'])): ?>
                 <?php foreach ($data['announcements'] as $announcement): ?>
-                    <div class="announcement-card">
+                    <div class="announcement-card" id="announcement-<?php echo $announcement->id; ?>">
                         <div class="announcementCard-Header">
                             <div class="details">
                                 <div class="profile-img">
@@ -67,5 +67,19 @@
         </main>
 
         <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                const params = new URLSearchParams(window.location.search);
+                const targetId = params.get('announcement');
+                if (targetId) {
+                const targetElement = document.getElementById('announcement-' + targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetElement.classList.add('highlight-announcement');
+                }
+                }
+            });
+        </script>
+
     </body>
 </html>
