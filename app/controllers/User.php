@@ -575,24 +575,23 @@
 
                             $temp['status'] = 'Active';
 
-                            //Handle image input
+                            // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                                $targetDir = APPROOT. "/assets/images/Manager/";
+                                $targetDir = "assets/images/Manager/";
                                 $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
                                 $targetFile = $targetDir . $fileName;
-                            
-                                // Validate and move the file to the target directory
+
+                                // Validate the file (e.g., check file type and size) and move it to the target directory
                                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                                    $data['image'] = $fileName; // Save the filename for the database
+                                    $temp['image'] = $fileName; // Save the filename for the database
                                 } else {
-                                    $errors['image'] = "Failed to upload the file. Please try again.";
+                                    $errors['file'] = "Failed to upload the file. Please try again.";
                                 }
-                            } elseif (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
-                                // Handle other file upload errors
-                                $errors['image'] = "An error occurred during file upload. Please try again.";
-                            } else {
-                                // No file uploaded, set a default value or leave it empty
-                                $data['image'] = null; // Or set a default placeholder if necessary
+                            }
+
+                            // If no image uploaded, leave the 'image' key as null (if not set)
+                            if (!isset($temp['image'])) {
+                                $temp['image'] = null;
                             }
 
                             // Insert into User and Member models
@@ -616,54 +615,85 @@
                     break;
 
                 case 'updateManager':
-
                     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Initialize the manager model
                         $managerModel = new M_Manager;
                 
-                        // Validate the incoming data
-                        if ($managerModel->validate($_POST)) {
-                            // Prepare the data to update the manager
-
-                            $data = [
-                                'first_name'    => $_POST['first_name'],
-                                'last_name'     => $_POST['last_name'],
-                                'NIC_no'        => $_POST['NIC_no'],
-                                'date_of_birth' => $_POST['date_of_birth'],
-                                'home_address'  => $_POST['home_address'],
-                                'contact_number'=> $_POST['contact_number'],
-                                'gender'        => $_POST['gender'],
-                                'email_address' => $_POST['email_address'],
-                                'image'         => $_POST['image']
-                            ];
-
-                            $manager_id = $_POST['manager_id'];
+                        // Fetch the existing manager data
+                        $manager_id = $_POST['manager_id'];
+                        $manager = $managerModel->findByManagerId($manager_id);
                 
-                            // Call the update function
-                            if (!$managerModel->update($manager_id, $data, 'manager_id')) {
-                                // Set a success session message
-                                $_SESSION['success'] = "Manager has been successfully updated!";
-                                // Redirect to the manager view page
-                                redirect('admin/managers/viewManager?id=' . $manager_id);
-                            } else {
-                                // Handle update failure (optional)
-                                $_SESSION['error'] = "There was an issue updating the manager. Please try again.";
-                                redirect('admin/managers/viewManager?id=' . $manager_id);
-                            }
-                        } else {
-                            // If validation fails, pass errors to the view
-                            $data = [
-                                'errors' => $managerModel->errors,
-                                'manager' => $_POST // Preserve form data for user correction
-                            ];
-                            // Render the view with errors and form data
-                            $this->view('admin/admin-viewManager', $data);
+                        // Start with the existing data (preserve current values)
+                        $data = [
+                            'first_name'    => $manager->first_name,
+                            'last_name'     => $manager->last_name,
+                            'NIC_no'        => $manager->NIC_no,
+                            'date_of_birth' => $manager->date_of_birth,
+                            'home_address'  => $manager->home_address,
+                            'contact_number'=> $manager->contact_number,
+                            'gender'        => $manager->gender,
+                            'email_address' => $manager->email_address,
+                            'image'         => $manager->image // Preserve current image
+                        ];
+                
+                        // Check and update only the fields that have been modified
+                        if (isset($_POST['first_name']) && $_POST['first_name'] != $manager->first_name) {
+                            $data['first_name'] = $_POST['first_name'];
                         }
+                        if (isset($_POST['last_name']) && $_POST['last_name'] != $manager->last_name) {
+                            $data['last_name'] = $_POST['last_name'];
+                        }
+                        if (isset($_POST['NIC_no']) && $_POST['NIC_no'] != $manager->NIC_no) {
+                            $data['NIC_no'] = $_POST['NIC_no'];
+                        }
+                        if (isset($_POST['date_of_birth']) && $_POST['date_of_birth'] != $manager->date_of_birth) {
+                            $data['date_of_birth'] = $_POST['date_of_birth'];
+                        }
+                        if (isset($_POST['home_address']) && $_POST['home_address'] != $manager->home_address) {
+                            $data['home_address'] = $_POST['home_address'];
+                        }
+                        if (isset($_POST['contact_number']) && $_POST['contact_number'] != $manager->contact_number) {
+                            $data['contact_number'] = $_POST['contact_number'];
+                        }
+                        if (isset($_POST['gender']) && $_POST['gender'] != $manager->gender) {
+                            $data['gender'] = $_POST['gender'];
+                        }
+                        if (isset($_POST['email_address']) && $_POST['email_address'] != $manager->email_address) {
+                            $data['email_address'] = $_POST['email_address'];
+                        }
+                
+                        // Handle file upload if exists and if changed
+                        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                            $targetDir = "assets/images/Manager/";
+                            $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                            $targetFile = $targetDir . $fileName;
+                
+                            // Validate the file (e.g., check file type and size) and move it to the target directory
+                            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                $data['image'] = $fileName; // Save the new filename for the database
+                            } else {
+                                $errors['file'] = "Failed to upload the file. Please try again.";
+                            }
+                        }
+                
+                        // Call the update function
+                        if (!$managerModel->update($manager_id, $data, 'manager_id')) {
+                            // Set a success session message
+                            $_SESSION['success'] = "Manager has been successfully updated!";
+                            // Redirect to the manager view page
+                            redirect('admin/managers/viewManager?id=' . $manager_id);
+                        } else {
+                            // Handle update failure (optional)
+                            $_SESSION['error'] = "There was an issue updating the manager. Please try again.";
+                            redirect('admin/managers/viewManager?id=' . $manager_id);
+                        }
+                
                     } else {
-                        // Redirect if the request is not a POST request
+                        // If the request is not a POST request
                         redirect('admin/managers');
                     }
                     break;
+                    
 
                 case 'deleteManager':
 

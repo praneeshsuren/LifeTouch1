@@ -163,7 +163,7 @@
   // Edit button functionality
   document.getElementById('editBtn').addEventListener('click', () => {
     // Enable all input fields and the membership plan select
-    const formElements = document.querySelectorAll('#userForm input, #userForm select');
+    const formElements = document.querySelectorAll('#userForm input');
     formElements.forEach(element => {
       element.disabled = false;
     });

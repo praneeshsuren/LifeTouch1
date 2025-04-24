@@ -46,9 +46,9 @@
       <div class="table-container">
 
           <div class="filters">
-            <button class="filter active">All Users</button>
-            <button class="filter">Active Users</button>
-            <button class="filter">Inactive Users</button>
+            <button class="filter active" name="all">All Users</button>
+            <button class="filter" name="active">Active Users</button>
+            <button class="filter" name="inactive">Inactive Users</button>
           </div>
 
           <div class="user-table-header">
@@ -71,6 +71,7 @@
                       <th>Home Address</th>
                       <th>Email Address</th>
                       <th>Contact Number</th>
+                      <th>Status</th>
                   </tr>
               </thead>
               <tbody>
@@ -90,6 +91,8 @@
                         <td><?php echo $manager->home_address; ?></td>
                         <td><?php echo $manager->email_address; ?></td>
                         <td><?php echo $manager->contact_number; ?></td>
+                        <td><?php echo $manager->status; ?></td>
+
                     </tr>
                   <?php endforeach; ?>
                   <?php else: ?>
@@ -107,6 +110,71 @@
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
+    <script>
+
+      document.addEventListener('DOMContentLoaded', () => {
+        // Get references to the DOM elements
+        const searchInput = document.querySelector('.search-input');
+        const filterButtons = document.querySelectorAll('.filter');
+        const userRows = document.querySelectorAll('.user-table tbody tr');
+        
+        // Function to filter rows based on active, inactive, or all
+        function filterRows(status) {
+          userRows.forEach(row => {
+            const statusCell = row.cells[11]; // Assuming the status is in the 13th column (index 12)
+            const rowStatus = statusCell.textContent.toLowerCase();
+
+            // Show all rows if "All Users" is selected
+            if (status === 'all') {
+              row.style.display = '';
+            } 
+            // Show only active users
+            else if (status === 'active' && rowStatus === 'active') {
+              row.style.display = '';
+            } 
+            // Show only inactive users
+            else if (status === 'inactive' && rowStatus === 'inactive') {
+              row.style.display = '';
+            } 
+            // Hide the row if it doesn't match the filter
+            else {
+              row.style.display = 'none';
+            }
+          });
+        }
+
+        // Add event listeners to filter buttons
+        filterButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            // Set the active filter button
+            filterButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            // Get the filter type (All, Active, or Inactive)
+            const filterType = button.getAttribute('name'); // Use the 'name' attribute
+            filterRows(filterType);
+          });
+        });
+
+        // Implement search functionality
+        searchInput.addEventListener('input', () => {
+          const searchText = searchInput.value.toLowerCase();
+          
+          userRows.forEach(row => {
+            const rowText = Array.from(row.cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+            if (rowText.includes(searchText)) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        });
+
+        // Initially filter to show all users
+        filterRows('all');
+      });
+
+    </script>
 
   </body>
 </html>
