@@ -3,17 +3,24 @@
 
         public function __construct() {
             // Check if the user is logged in as a admin
-            $this->checkAuth('admin');
+            $this->checkAuth('Admin');
         }
 
         public function index() {
             $announcementModel = new M_Announcement;
+            $memberModel = new M_Member;
         
             // Fetch the latest 4 announcements with admin names
             $announcements = $announcementModel->findAllWithAdminNames(4);
         
+            // Fetch the All Count of members in the GYM
+            $members = $memberModel->countAll();
+            $recentMembers = $memberModel->countRecentMembers();
+
             $data = [
-                'announcements' => $announcements
+                'announcements' => $announcements,
+                'members' => $members,
+                'recentMembers' => $recentMembers
             ];
         
             $this->view('admin/admin-dashboard', $data);
@@ -90,16 +97,49 @@
 
                 case 'viewMember':
                     // Load the view to view a trainer
+                    $member_id = $_GET['id'];
+
                     $memberModel = new M_Member;
-                    $member = $memberModel->findByMemberId($_GET['id']);
-        
+                    $member = $memberModel->findByMemberId($member_id);
+
+                    $membershipSubscriptionModel = new M_MembershipSubscriptions;
+                    $membershipSubscription = $membershipSubscriptionModel->findByMemberId($member_id);
                     $data = [
-                        'member' => $member
+                        'member' => $member,
+                        'membershipSubscription' => $membershipSubscription
                     ];
         
                     $this->view('admin/admin-viewMember', $data);
                     break;
                 
+                case 'memberAttendance':
+                    $this->view('admin/admin-memberAttendance');
+                    break;
+
+                case 'memberPaymentHistory':
+                    $this->view('admin/admin-memberPaymentHistory');
+                    break;
+
+                case 'memberSupplements':
+                    $memberId = $_GET['id'];
+
+                    if ($memberId) {
+
+                        $supplementSalesModel = new M_SupplementSales;
+
+                        // Fetch the supplement records for the member
+                        $supplementRecords = $supplementSalesModel->findByMemberId($memberId);
+
+                        $data = [
+                            'supplements' => $supplementRecords
+                        ];
+
+                        $this->view('admin/admin-memberSupplements', $data);
+                    } else {
+                        $_SESSION['error'] = 'Member not found.';
+                        redirect('admin/members');
+                    }
+                    break;
                 
                 default:
                     // Fetch all members and pass to the view
@@ -134,8 +174,22 @@
                     ];
         
                     $this->view('admin/admin-viewTrainer', $data);
-                    break;                             
-        
+                    break;
+                
+                case 'salaryHistory':
+
+                    $trainer_id = $_GET['id'];
+
+                    $this->view('admin/admin-trainerSalaryHistory');
+                    break;
+
+                case 'trainerCalendar':
+
+                    $trainer_id = $_GET['id'];
+
+                    $this->view('admin/admin-trainerCalendar');
+                    break;
+                
                 default:
                     // Fetch all trainers and pass to the view
                     $trainerModel = new M_Trainer;
@@ -161,20 +215,29 @@
                     // Return specific receptionist data as JSON
                     $receptionistModel = new M_Receptionist;
                     $receptionist = $receptionistModel->findByReceptionistId($_GET['id']);
-                    header('Content-Type: application/json');
-                    $this->view('admin/admin-viewReceptionist');
+
+                    $data = [
+                        'receptionist' => $receptionist
+                    ];
+                    $this->view('admin/admin-viewReceptionist', $data);
+                    break;
+                
+                case 'salaryHistory':
+                    $receptionist_id = $_GET['id'];
+
+                    $this->view('admin/admin-receptionistSalaryHistory');
                     break;
         
                 default:
-                    $this->view('admin/admin-receptionists');
-                    break;
-
-                case 'api':
-                    // Return all receptionists data as JSON
+                    // Fetch all receptionists and pass to the view
                     $receptionistModel = new M_Receptionist;
-                    $receptionists = $receptionistModel->findAll('receptionist_id');
-                    header('Content-Type: application/json');
-                    echo json_encode($receptionists);
+                    $receptionists = $receptionistModel->findAll('created_at');
+
+                    $data = [
+                        'receptionists' => $receptionists
+                    ];
+
+                    $this->view('admin/admin-receptionists', $data);
                     break;
             }
         }
@@ -233,18 +296,25 @@
                     ];
         
                     $this->view('admin/admin-viewAdmin', $data);
-                    break;          
+                    break;
                     
-                case 'api':
-                    // Return all admins data as JSON
-                    $adminModel = new M_Admin;
-                    $admins = $adminModel->findAll('admin_id');
-                    header('Content-Type: application/json');
-                    echo json_encode($admins);
-                    break; 
+                case 'salaryHistory':
+                    
+                    $admin_id = $_GET['id'];
+
+                    $this->view('admin/admin-adminSalaryHistory');
+                    break;
         
                 default:
-                    $this->view('admin/admin-admins');
+                    // Fetch all admins and pass to the view
+                    $adminModel = new M_Admin;
+                    $admins = $adminModel->findAll('created_at');
+
+                    $data = [
+                        'admins' => $admins
+                    ];
+
+                    $this->view('admin/admin-admins', $data);
                     break; 
             }
         }
@@ -322,7 +392,7 @@
                 $data = [];
         
                 // Only include fields that have been updated
-                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address'];
+                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address', 'image'];
         
                 // Check for changes and add them to the data array
                 foreach ($fields as $field) {
@@ -359,18 +429,17 @@
                     }
                 }
         
-                // Handle profile picture upload
-                if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == UPLOAD_ERR_OK) {
-                    $fileTmp = $_FILES['profile_picture']['tmp_name'];
-                    $fileName = basename($_FILES['profile_picture']['name']);
-                    $targetPath = 'public/assets/images/Member/' . $fileName;
+                // Handle file upload if exists and if changed
+                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                    $targetDir = "assets/images/Admin/";
+                    $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                    $targetFile = $targetDir . $fileName;
         
-                    if (move_uploaded_file($fileTmp, $targetPath)) {
-                        $data['image'] = $fileName;
+                    // Validate the file (e.g., check file type and size) and move it to the target directory
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                        $data['image'] = $fileName; // Save the new filename for the database
                     } else {
-                        $_SESSION['error'] = "Failed to upload profile picture.";
-                        redirect('admin/settings');
-                        return;
+                        $errors['file'] = "Failed to upload the file. Please try again.";
                     }
                 }
         

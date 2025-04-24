@@ -157,7 +157,10 @@ body.dark{
 
 .user-img img{
     width: 100%;
+    height: 100%;
     object-fit: cover;
+    border-radius: 50%;
+    
 }
 
 .user-details .title,
@@ -1292,6 +1295,7 @@ main .announcements-container table tbody tr td[colspan] {
 .profile-pic img {
     width: 40px;
     height: 40px;
+    object-fit: cover;
     border-radius: 50%;
     margin-right: 10px;
 }
@@ -2371,4 +2375,90 @@ main .settings-container .action-buttons button.cancel-btn:hover {
 .error {
     color: red;
     font-size: 0.8em;
+}
+
+/* Table container */
+.supplement-table {
+    width: 100%;
+    height: auto; /* Adjust as per your design */
+    overflow: hidden; /* Hide scrollbar by default */
+    position: relative;
+    border-radius: 0.5rem;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+/* Table styling */
+.supplement-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+}
+
+.supplement-table table thead tr{
+    background-color: #007bff;
+    color: #fff;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+
+/* Table Header Styling */
+.supplement-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+/* Table Cell Styling */
+.supplement-table td {
+    padding: 12px;
+    text-align: left;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+/* Image Styling */
+.supplement-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Row Hover Effect */
+.supplement-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Alternate Row Color */
+.supplement-table tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+/* Table Footer or No Records Message */
+.supplement-table p {
+    font-size: 16px;
+    color: #777;
+}
+
+/* Price Column Styling */
+.supplement-table td:last-child {
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* Responsive Styling for Table */
+@media screen and (max-width: 768px) {
+    .supplement-table table {
+        font-size: 14px;
+    }
+    .supplement-table th, .supplement-table td {
+        padding: 8px;
+    }
 }

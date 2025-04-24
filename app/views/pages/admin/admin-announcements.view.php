@@ -84,7 +84,7 @@
                                     )">
                                         <td>
                                             <div class="profile-pic">
-                                                <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                                                <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/Admin/<?php echo !empty($announcement->image) ? $announcement->image : 'default-placeholder.jpg'; ?>" alt="Admin Profile Picture">
                                                 <div class="person-info">
                                                     <h4><?php echo $announcement->first_name; ?></h4>
                                                     <small class="email"><?php echo $announcement->email_address; ?></small>

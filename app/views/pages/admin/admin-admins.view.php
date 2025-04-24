@@ -45,9 +45,9 @@
 
       <div class="table-container">
           <div class="filters">
-            <button class="filter active">All Users</button>
-            <button class="filter">Active Users</button>
-            <button class="filter">Inactive Users</button>
+            <button class="filter active" name="all">All Users</button>
+            <button class="filter" name="active">Active Users</button>
+            <button class="filter" name="inactive">Inactive Users</button>
           </div>
 
           <div class="user-table-header">
@@ -70,10 +70,36 @@
                       <th>Home Address</th>
                       <th>Email Address</th>
                       <th>Contact Number</th>
+                      <th>Status</th>
+
                   </tr>
               </thead>
               <tbody>
-                <!-- Data will be dynamically populated by JS -->
+                  <?php if (!empty($data['admins'])): ?>
+                    <?php foreach ($data['admins'] as $admin) : ?>
+                      <tr onclick="window.location.href='<?php echo URLROOT; ?>/admin/admins/viewAdmin?id=<?php echo $admin->admin_id; ?>';" style="cursor: pointer;">
+                          <td><?php echo $admin->admin_id; ?></td>
+                          <td>
+                            <img src="<?php echo URLROOT; ?>/assets/images/Admin/<?php echo !empty($admin->image) ? $admin->image : 'default-placeholder.jpg'; ?>" alt="Admin Picture" class="user-image">
+                          </td>
+                          <td><?php echo $admin->first_name; ?></td>
+                          <td><?php echo $admin->last_name; ?></td>
+                          <td><?php echo $admin->NIC_no; ?></td>
+                          <td><?php echo $admin->gender; ?></td>
+                          <td><?php echo $admin->date_of_birth; ?></td>
+                          <td><?php echo calculateAge($admin->date_of_birth); ?></td>
+                          <td><?php echo $admin->home_address; ?></td>
+                          <td><?php echo $admin->email_address; ?></td>
+                          <td><?php echo $admin->contact_number; ?></td>
+                          <td><?php echo $admin->status; ?></td>
+
+                      </tr>
+                  <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                        <td colspan="11" style="text-align: center;">No Admins available</td>
+                    </tr>
+                  <?php endif; ?>
               </tbody>
             </table>
           </div>
@@ -84,76 +110,68 @@
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
-
     <script>
-      
-      document.addEventListener('DOMContentLoaded', () => {
-        const tableBody = document.querySelector('.user-table tbody');
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get references to the DOM elements
+        const searchInput = document.querySelector('.search-input');
+        const filterButtons = document.querySelectorAll('.filter');
+        const userRows = document.querySelectorAll('.user-table tbody tr');
+        
+        // Function to filter rows based on active, inactive, or all
+        function filterRows(status) {
+          userRows.forEach(row => {
+            const statusCell = row.cells[11]; // Assuming the status is in the 13th column (index 12)
+            const rowStatus = statusCell.textContent.toLowerCase();
 
-        // Fetch data from the API
-        fetch('<?php echo URLROOT; ?>/admin/admins/api')
-          .then(response => {
-            console.log('Response Status:', response.status); // Log response status
-            return response.json();
-          })
-          .then(data => {
-            console.log('Fetched Data:', data); // Log the data received
-            if (Array.isArray(data) && data.length > 0) {
-              data.forEach(admin => {
-                console.log('admin:', admin); // Log each admin data
-                const row = document.createElement('tr');
-                row.style.cursor = 'pointer';
-                row.onclick = () => {
-                  window.location.href = `<?php echo URLROOT; ?>/admin/admins/viewAdmin?id=${admin.admin_id}`;
-                };
-
-                row.innerHTML = `
-                  <td>${admin.admin_id}</td>
-                  <td>
-                    <img src="<?php echo URLROOT; ?>/assets/images/admin/${admin.image || 'default-placeholder.jpg'}" alt="Admin Picture" class="user-image">
-                  </td>
-                  <td>${admin.first_name}</td>
-                  <td>${admin.last_name}</td>
-                  <td>${admin.NIC_no}</td>
-                  <td>${admin.gender}</td>
-                  <td>${admin.date_of_birth}</td>
-                  <td>${calculateAge(new Date(admin.date_of_birth))}</td>
-                  <td>${admin.home_address}</td>
-                  <td>${admin.email_address}</td>
-                  <td>${admin.contact_number}</td>
-                `;
-
-                tableBody.appendChild(row);
-              });
-            } else {
-              console.log('No admins found.');
-              tableBody.innerHTML = `
-                <tr>
-                  <td colspan="11" style="text-align: center;">No admins available</td>
-                </tr>
-              `;
+            // Show all rows if "All Users" is selected
+            if (status === 'all') {
+              row.style.display = '';
+            } 
+            // Show only active users
+            else if (status === 'active' && rowStatus === 'active') {
+              row.style.display = '';
+            } 
+            // Show only inactive users
+            else if (status === 'inactive' && rowStatus === 'inactive') {
+              row.style.display = '';
+            } 
+            // Hide the row if it doesn't match the filter
+            else {
+              row.style.display = 'none';
             }
-          })
-          .catch(error => {
-            console.error('Error fetching admins:', error); // Log the error
-            tableBody.innerHTML = `
-              <tr>
-                <td colspan="11" style="text-align: center;">Error loading data</td>
-              </tr>
-            `;
           });
-      });
-
-      function calculateAge(dob) {
-        const today = new Date();
-        const birthDate = new Date(dob);
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-          age--;
         }
-        return age;
-      }
+
+        // Add event listeners to filter buttons
+        filterButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            // Set the active filter button
+            filterButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            // Get the filter type (All, Active, or Inactive)
+            const filterType = button.getAttribute('name'); // Use the 'name' attribute
+            filterRows(filterType);
+          });
+        });
+
+        // Implement search functionality
+        searchInput.addEventListener('input', () => {
+          const searchText = searchInput.value.toLowerCase();
+          
+          userRows.forEach(row => {
+            const rowText = Array.from(row.cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+            if (rowText.includes(searchText)) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        });
+
+        // Initially filter to show all users
+        filterRows('all');
+      });
 
     </script>
 
