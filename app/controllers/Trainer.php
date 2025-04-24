@@ -8,13 +8,28 @@
         }
         
         public function index(){
+            $trainer_id = $_SESSION['user_id'];
+
             $announcementModel = new M_Announcement;
+            $memberModel = new M_Member;
+            $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
+            $bookingModel = new M_Booking;
         
             // Fetch the latest 4 announcements with admin names
             $announcements = $announcementModel->findAllWithAdminNames(4);
         
+            // Fetch the All Count of members in the GYM
+            $members = $memberModel->countAll();
+            $recentMembers = $memberModel->countRecentMembers();
+            $scheduleCount = $workoutScheduleDetailsModel->findCountByTrainerId($trainer_id);
+            $bookings = $bookingModel->findCountByTrainerId($trainer_id);
+
             $data = [
-                'announcements' => $announcements
+                'announcements' => $announcements,
+                'members' => $members,
+                'recentMembers' => $recentMembers,
+                'scheduleCount' => $scheduleCount,
+                'bookings' => $bookings
             ];
         
             $this->view('trainer/trainer-dashboard', $data);
