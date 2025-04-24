@@ -94,7 +94,7 @@
                 tr.innerHTML = `
                     <td>${i.name}</td>
                     <td>${i.email}</td>
-                    <td>${i.msg}</td>`;
+                    <td class="msg">${i.msg}</td>`;
 
                 tbody.appendChild(tr);
             });

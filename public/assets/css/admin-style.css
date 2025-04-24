@@ -1910,7 +1910,7 @@ main .event-detail-container .form-container{
 .content {
     grid-column: 1 / -1;
     grid-row: 2 / -1;
-    padding: 20px;
+    padding:  20px;
   }
 
   .inquiries-container {
@@ -1919,6 +1919,10 @@ main .event-detail-container .form-container{
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
     font-family: 'Poppins', sans-serif;
+    position: relative;
+    overflow: auto;
+
+    max-width: 1200px;
   }
 
   .inquiries-header {
@@ -1937,12 +1941,15 @@ main .event-detail-container .form-container{
   .inquiries-container .table {
     width: 100%;
     border-collapse: collapse;
+    position: relative;
   }
 
   .inquiries-container .table th, .inquiries-container .table td {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #929196;
+    min-width: 100px;
+    white-space: nowrap;
   }
 
   .inquiries-container .table th {
@@ -1953,6 +1960,12 @@ main .event-detail-container .form-container{
 
   .inquiries-container .table td {
     color: #555;
+  }
+
+  .inquiries-container .table .msg {
+    max-width: 400px;
+    white-space: normal;
+    word-wrap: break-word;
   }
 
   .inquiries-container .table tbody tr:hover {
@@ -1972,10 +1985,6 @@ main .event-detail-container .form-container{
     text-align: center;
     background-color: #007bff;
 }
-
-/* .pending{ background: linear-gradient(45deg, #FFA500, #FF4500);}
-.booked { background: linear-gradient(45deg, #32CD32, #006400);} */
-/* .rejected{ background: linear-gradient(45deg, #FF0000, #8B0000);} */
 
 /* calendar */
 main .calendarContainer {
@@ -2351,6 +2360,11 @@ main .settings-container .action-buttons button.cancel-btn:hover {
 
     main .settings-container .details .row > p {
         flex: unset; /* Removes the equal width constraint on smaller screens */
+    }
+
+    .inquiries-container {
+        min-width: 500px;
+        max-width: 850px;
     }
 }
 

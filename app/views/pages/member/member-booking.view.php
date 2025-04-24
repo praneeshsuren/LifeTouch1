@@ -26,30 +26,36 @@
                 <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
             </div>
         </div>
-        <div class="calendarContainer">
-            <div class="calendar-header"></div>
-            <table class="calendar">
-                <th>Sun</th>
-                <th>Mon</th>
-                <th>Tues</th>
-                <th>Wed</th>
-                <th>Thur</th>
-                <th>Fri</th>
-                <th>Sat</th>
-                <tbody class="calendarBody"></tbody>
-            </table>
-            <div class="gotoToday">
-                <div class="goto">
-                    <input type="text" placeholder="mm/yyyy" class="date-input" />
-                    <button class="gotoBtn">Go</button>
+        <div class="mainContainer">
+            <div class="calendarContainer">
+                <div class="calendar-header"></div>
+                <table class="calendar">
+                    <thead>
+                        <tr>
+                            <th>Sun</th>
+                            <th>Mon</th>
+                            <th>Tues</th>
+                            <th>Wed</th>
+                            <th>Thur</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                        </tr>
+                    </thead>
+                    <tbody class="calendarBody"></tbody>
+                </table>
+                <div class="gotoToday">
+                    <div class="goto">
+                        <input type="text" placeholder="mm/yyyy" class="date-input" />
+                        <button class="gotoBtn">Go</button>
+                    </div>
+                    <button class="todayBtn">Today</button>
                 </div>
-                <button class="todayBtn">Today</button>
-            </div>
-        </div> 
-        <div class="book-details">
-            <div class="details">
-                <h2 style="font-size:1.5rem; font-weight:500; padding-top:1rem;text-align:center">Details</h2>
-                <div class="detail-list"></div>
+            </div> 
+            <div class="booking-details">
+                <div class="details">
+                    <h2 style="font-size:1.5rem; font-weight:500; padding-top:1rem;text-align:center">Details</h2>
+                    <div class="detail-list"></div>
+                </div>
             </div>
         </div>
         <div id="bookingModal" class="modal">
