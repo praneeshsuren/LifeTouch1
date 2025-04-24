@@ -13,12 +13,17 @@ class Receptionist extends Controller
     public function index()
     {
         $announcementModel = new M_Announcement;
+        $memberModel = new M_Member;
 
         // Fetch the latest 4 announcements with admin names
+        $members = $memberModel->countAll();
         $announcements = $announcementModel->findAllWithAdminNames(4);
+        $recentMembers = $memberModel->countRecentMembers();
 
         $data = [
-            'announcements' => $announcements
+            'announcements' => $announcements,
+            'members' => $members,
+            'recentMembers' => $recentMembers
         ];
 
         $this->view('receptionist/receptionist-dashboard', $data);
