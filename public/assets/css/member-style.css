@@ -1325,16 +1325,17 @@ main .settings-container .action-buttons button.cancel-btn:hover {
     font-size: 0.8em;
 }
 
-/*Workout Schedules*/
-main #schedule-cards-container {
+/*Workout Schedules Page*/
+main .workout-container {
     margin-top: 1rem;
     padding-bottom: 2rem;
     width: 100%;
     background-color: var(--sidebar-color);
     padding-top: 1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     padding-bottom: 1.5rem;
     border-radius: 20px;
-    height: 90vh;
     overflow: hidden;
 }
 
@@ -1343,8 +1344,6 @@ main #schedule-cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
-    margin-top: 30px;
-    padding: 20px;
   }
   
   .schedule-card {
@@ -1417,6 +1416,53 @@ main #schedule-cards-container {
     .schedule-cards {
         grid-template-columns: 1fr;
     }
+  }
+
+/*Performance of Schedules*/
+#measurement-charts{
+    margin-top: 4rem;
+    width: 100%;
+}
+
+#measurement-charts h2{
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 2rem;
+}
+
+#measurement-charts .charts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+#measurement-charts .chart-wrapper {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    flex: 1 1 45%;
+    min-width: 300px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+#measurement-charts .chart-wrapper canvas {
+    width: 100% !important;
+    height: 250px !important;
+  }
+  
+#measurement-charts .chart-label {
+    margin-top: 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #555;
+    text-align: center;
   }
 
 /* Workout Schedule Details Page */
@@ -1566,7 +1612,7 @@ main #schedule-cards-container {
   }
   
   /* Buttons Styling */
-  button {
+  #downloadPDF {
     padding: 12px 25px;
     font-size: 1rem;
     color: #fff;
@@ -1580,7 +1626,7 @@ main #schedule-cards-container {
     width: 100%;
   }
   
-  button:hover {
+  #downloadPDF:hover {
     background-color: #2980b9;
     transform: translateY(-2px);
   }

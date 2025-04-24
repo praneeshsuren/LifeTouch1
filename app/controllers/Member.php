@@ -198,7 +198,22 @@
             ];
 
             $this->view('member/member-workoutSchedules', $data);
-        } 
+        }
+
+        public function workoutSchedulesApi(){
+            $member_id = $_SESSION['user_id'];
+            
+            $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
+            $schedules = $workoutScheduleDetailsModel->findAllSchedulesByMemberId($member_id);
+    
+            // Sort schedules in descending order by created_at
+            usort($schedules, function ($a, $b) {
+                return strtotime($a->created_at) - strtotime($b->created_at);
+            });
+    
+            header('Content-Type: application/json');
+            echo json_encode($schedules);
+        }
 
         public function workoutDetails(){
 
