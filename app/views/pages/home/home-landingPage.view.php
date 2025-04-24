@@ -417,7 +417,7 @@
         .then(data => {
             if(data.success) {
                 alert("Message sent successfully!");
-                form.reset();
+                document.querySelector(".contact-form").reset();
             } else {
                 alert("Failed to send message.");
             }
