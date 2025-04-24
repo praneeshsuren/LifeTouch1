@@ -3,10 +3,12 @@
 </div>
 <div class="head">
     <div class="user-img">
-        <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+            <img src="<?php echo URLROOT; ?>/assets/images/<?php echo $_SESSION['role'] ?>/<?php echo !empty($_SESSION['image']) ? $_SESSION['image'] : 'default-placeholder.jpg'; ?>"
+            alt="User Picture"
+            id="userImage">
     </div>
     <div class="user-details">
-        <p class="post">Member</p>
+        <p class="post"><?php echo $_SESSION['role'] ?></p>
         <p class="name"><?php echo isset($_SESSION['first_name']) ? $_SESSION['first_name'] : 'User'; ?></p>
     </div>
 </div>

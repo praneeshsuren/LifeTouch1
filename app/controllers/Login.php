@@ -44,10 +44,10 @@ class Login extends Controller
 
                         if ($memberDetails) {
                             // Store the member details in session
-                            $_SESSION['role'] = 'member';
+                            $_SESSION['role'] = 'Member';
                             $_SESSION['first_name'] = $memberDetails->first_name;
                             $_SESSION['last_name'] = $memberDetails->last_name;
-                            $_SESSION['member_id'] = $memberDetails->member_id; // Store member_id in session
+                            $_SESSION['image'] = $memberDetails->image;
 
                             // Redirect to member dashboard
                             redirect('member');
@@ -63,10 +63,10 @@ class Login extends Controller
 
                         if ($trainerDetails) {
                             // Store the trainer details in session
-                            $_SESSION['role'] = 'trainer';
+                            $_SESSION['role'] = 'Trainer';
                             $_SESSION['first_name'] = $trainerDetails->first_name;
                             $_SESSION['last_name'] = $trainerDetails->last_name;
-                            $_SESSION['trainer_id'] = $trainerDetails->trainer_id;
+                            $_SESSION['image'] = $trainerDetails->image;
 
                             // Redirect to trainer dashboard
                             redirect('trainer');
@@ -82,9 +82,10 @@ class Login extends Controller
 
                         if ($managerDetails) {
                             // Store the member details in session
-                            $_SESSION['role'] = 'manager';
+                            $_SESSION['role'] = 'Manager';
                             $_SESSION['first_name'] = $managerDetails->first_name;
                             $_SESSION['last_name'] = $managerDetails->last_name;
+                            $_SESSION['image'] = $managerDetails->image;
 
                             // Redirect to member dashboard
                             redirect('manager');
@@ -100,9 +101,10 @@ class Login extends Controller
 
                         if ($receptionistDetails) {
                             // Store the member details in session
-                            $_SESSION['role'] = 'receptionist';
+                            $_SESSION['role'] = 'Receptionist';
                             $_SESSION['first_name'] = $receptionistDetails->first_name;
                             $_SESSION['last_name'] = $receptionistDetails->last_name;
+                            $_SESSION['image'] = $receptionistDetails->image;
 
                             // Redirect to member dashboard
                             redirect('receptionist');
@@ -118,9 +120,10 @@ class Login extends Controller
 
                         if ($adminDetails) {
                             // Store the member details in session
-                            $_SESSION['role'] = 'admin';
+                            $_SESSION['role'] = 'Admin';
                             $_SESSION['first_name'] = $adminDetails->first_name;
                             $_SESSION['last_name'] = $adminDetails->last_name;
+                            $_SESSION['image'] = $adminDetails->image;
 
                             // Redirect to member dashboard
                             redirect('admin');

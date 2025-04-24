@@ -4,7 +4,7 @@
 
         public function __construct() {
             // Check if the user is logged in as a trainer
-            $this->checkAuth('trainer');
+            $this->checkAuth('Trainer');
         }
         
         public function index(){

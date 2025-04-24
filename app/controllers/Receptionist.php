@@ -7,7 +7,7 @@ class Receptionist extends Controller
     public function __construct()
     {
         // Check if the user is logged in as a receptionist
-        $this->checkAuth('receptionist');
+        $this->checkAuth('Receptionist');
     }
 
     public function index()

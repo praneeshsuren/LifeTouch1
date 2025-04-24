@@ -1,0 +1,202 @@
+.user-container .calendar-container .calendar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  
+.user-container .calendar-container .calendar .member-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+.user-container .calendar-container .calendar .member-calendar-header .nav-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+.user-container .calendar-container .calendar .member-calendar-header .nav-button:hover {
+    background-color: #0056b3;
+  }
+  
+  #monthLabel {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+.user-container .calendar-container .calendar .calendar-weekdays {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: #f0f0f0;
+    padding: 10px 0;
+  }
+  
+  .user-container .calendar-container .calendar .calendar-weekdays .weekday {
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .user-container .calendar-container .calendar .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 5px;
+    padding: 10px;
+  }
+  
+  .user-container .calendar-container .calendar .calendar-grid .calendar-cell {
+    padding: 10px;
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-height: 80px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .user-container .calendar-container .calendar .calendar-grid .calendar-cell:hover {
+    background-color: #e0f7fa;
+  }
+  
+  .user-container .calendar-container .calendar .calendar-grid .calendar-cell .date {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .user-container .calendar-container .calendar .calendar-grid .empty-cell {
+    background-color: #f9f9f9;
+  }
+  
+  .user-container .calendar-container .calendar .calendar-grid .calendar-cell .attendance-time {
+    font-size: 0.75rem;
+    display: block;
+    color: white;
+  }
+
+  .user-container .calendar-container .calendar .calendar-grid .calendar-cell .attendance-time span {
+    display: block;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 15px;
+    margin-top: 5px;
+  }
+  .user-container .calendar-container .calendar .calendar-grid .calendar-cell .attendance-time .out {
+    background-color: #f44336; /* Red */
+  }
+  .user-container .calendar-container .calendar .calendar-grid .calendar-cell .attendance-time .in {
+    background-color: #4caf50; /* Green */
+  }
+  
+  
+  
+ /* Basic Modal Styling */
+.attendance-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensures the modal appears on top */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Show the modal when it's active */
+.attendance-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Modal Content Box */
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  max-height: 80%;
+}
+
+/* Close Button (X) */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #fff;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Close Button hover effect */
+.close-btn:hover {
+  color: black;
+}
+
+/* Table Styles for Attendance Details */
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.attendance-table th, .attendance-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.attendance-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.attendance-table td {
+  background-color: #f9f9f9;
+}
+
+/* Attendance details header */
+h3 {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Adding fade-in effect */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Apply fade-in animation */
+.attendance-modal.active .modal-content {
+  animation: fadeIn 0.5s ease-in-out;
+}

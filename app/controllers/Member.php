@@ -4,7 +4,7 @@
 
         public function __construct() {
             // Check if the user is logged in as a member
-            $this->checkAuth('member');
+            $this->checkAuth('Member');
         }
 
         public function index($action = null) {
@@ -12,13 +12,6 @@
 
             $announcementModel = new M_Announcement;
             $announcements = $announcementModel->findAllWithAdminNames(5);
-           
-            
-            $attendanceModel = new M_Attendance;
-            $period = $_GET['period'] ?? 'today'; // Default to 'today'
-        
-            // Get attendance data for the entire gym (aggregated by hour and day)
-            $attendanceData = $attendanceModel->getAttendanceDataForGraph($period);
 
             $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
             $completedSchedules = count($workoutScheduleDetailsModel->findAllCompletedSchedulesByMemberId($member_id));
@@ -32,8 +25,7 @@
             if ($action === 'api') {
                 header('Content-Type: application/json');
                 echo json_encode([
-                    'bookings' => $bookings,
-                    'attendance' => $attendanceData,
+                    'bookings' => $bookings
                 ]);
                 exit;
             }
