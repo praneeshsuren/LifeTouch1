@@ -183,6 +183,7 @@
         fetch(`<?php echo URLROOT; ?>/Attendance/updateAttendanceGraph?period=${period}`)
           .then(response => response.json())
           .then(data => {
+            console.log("Fetched attendance data:", data);  // Debugging: Check the fetched data
             updateBarChart(data.attendance);  // Update the chart with attendance data
           })
           .catch(error => console.error('Error fetching data:', error));
