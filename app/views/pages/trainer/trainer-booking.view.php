@@ -199,7 +199,7 @@
                                 row. innerHTML = `
                                     <td>${booking.member_id}</td>
                                     <td>
-                                        <img src="<?php echo URLROOT; ?>/assets/images/member/${booking.member_image || 'default-placeholder.jpg'}" alt="member Picture" class="user-image">
+                                        <img src="<?php echo URLROOT; ?>/assets/images/Member/${booking.image || 'default-placeholder.jpg'}" alt="member Picture" class="user-image">
                                     </td>
                                     <td>${booking.member_name}</td>
                                     <td>${booking.booking_date}</td>

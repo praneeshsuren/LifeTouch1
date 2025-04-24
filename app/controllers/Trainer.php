@@ -128,7 +128,7 @@
         }        
         
         public function bookings($action = null) {
-            $trainer_id = $_SESSION['trainer_id'] ?? null;
+            $trainer_id = $_SESSION['user_id'] ?? null;
         
             $bookingModel = new M_Booking();
             $bookings = $bookingModel->bookingsForTrainer($trainer_id);

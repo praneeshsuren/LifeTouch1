@@ -141,7 +141,7 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    /* width: 100%; */
 }
 
 .member-view-trainer{
@@ -222,7 +222,7 @@ main > .searchbar {
     border-radius: 2rem;
     box-shadow: var(--box-shadow-color);
     color: var(--text-color);
-    margin-left: 200px;
+    margin-left: 125px;
 }
 
 .trainerviewbtn-profile{
@@ -237,11 +237,12 @@ main > .searchbar {
 }
 
 .trainerviewbtn-profile-detail{
-    padding: 55px 20px;
+
+    padding: 40px 20px;
 }
 
 .trainerviewbtn-profileTable-container{
-    margin-top:4rem;
+    margin-top:0.5rem;
     table{
         width: 100%;
         table-layout: auto;
@@ -284,8 +285,13 @@ main > .searchbar {
 }
 
 /* book reservations */
-main .calendarContainer {
-    grid-column: 1;
+.mainContainer{
+    display: flex;
+    gap: 2rem; /* space between columns */
+    flex-wrap: wrap; /* allows stacking on smaller screens */
+}
+.calendarContainer {
+    flex: 1 1 60%;
     background-color: var(--sidebar-color);
     display: flex;
     flex-direction: column;
@@ -404,19 +410,20 @@ main .calendarContainer {
 
 .gotoToday {
     width: 100%;
-    height: 50px;
     display: flex;
     align-items: center;
     justify-content:space-between;
     gap: 5px;
-    padding: 0 20px;
-    margin-bottom: 20px;
+    padding: 0 10px; 
+    margin-bottom: 10px;
+    margin-top: 5px;
     color: var(--primary-color);
-    margin-top: 1rem;
+    height: auto;
 }
 
 .gotoToday .goto{
     display: flex;
+    height: 36px;
     align-items: center;
     border-radius: 5px;
     overflow: hidden;
@@ -424,18 +431,19 @@ main .calendarContainer {
 }
 
 .gotoToday .goto input {
-    background-color: var(--sidebar-color);
-    width: 100%;
-    height: 30px;
+    background-color: var(--sidebar-color); 
+    width: 120px;
+    height: 100%;
     outline: none;
     border: none;
     border-radius: 5px;
     padding: 0 20px;
     color: var(--text-color);
+    border-radius: 0;
 }
 
 .gotoToday button {
-    padding: 5px 10px;
+    padding: 5px 10px; 
     border: 1px solid var(--text-color);
     border-radius: 5px;
     background-color: transparent;
@@ -447,11 +455,18 @@ main .calendarContainer {
     color: #fff;
     background-color: var(--primary-color);
 }
-
-.gotoToday .goto button {
+.gotoToday .gotoBtn {
+    height: 100%;
+    padding: 0 12px;
     border: none;
     border-left: 1px solid var(--text-color);
+    font-size: 0.9rem;
     border-radius: 0;
+}
+
+.gotoToday .todayBtn {
+    padding: 6px 14px;
+    border-radius: 5px;
 }
 
 .modal {
@@ -576,19 +591,18 @@ main .calendarContainer {
 }
 
 /* Booking detail*/
-main .book-details{
-    grid-column: 2;
-    grid-row: 2 / span 2;
+.booking-details{
+    flex: 1 1 35%; 
 }
 
-main .book-details h2{
+.booking-details h2{
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--text-color);
     margin-bottom: 1rem;
 }
 
-main .book-details .details{
+.booking-details .details{
     background: var(--sidebar-color);
     border-radius: 30px;
     padding-top: 15px;
@@ -598,18 +612,18 @@ main .book-details .details{
     box-shadow: var(--box-shadow-color);
 }
 
-main .book-details .detail-list {
+.booking-details .detail-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-main .book-details .detail-list .date-heading{
+.booking-details .detail-list .date-heading{
     font-size: 1.2rem;
     text-align: left;
 }
 
-main .book-details .detail{
+.booking-details .detail{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -622,11 +636,11 @@ main .book-details .detail{
     transition: var(--tran-03);
 }
 
-main .book-details .detail:hover{
+.booking-details .detail:hover{
     transform: translateY(-10px);
 }
 
-main .book-details .detail .message{
+.booking-details .detail .message{
     margin-left: 1rem;
 }
 
@@ -1128,7 +1142,8 @@ main .book-details .detail .message{
     .trainerviewbtnBox,
     .bookingBox {
         width:575px;
-        margin: 20px;
+        height: 600px;
+        margin-left: 5px;
     }
 
     .payment-form-control{

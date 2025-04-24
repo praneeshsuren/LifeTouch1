@@ -39,7 +39,7 @@
                 b.*, 
                 m.member_id AS member_id, 
                 CONCAT(m.first_name, ' ', m.last_name) AS member_name, 
-                ts.slot AS timeslot
+                ts.slot AS timeslot, m.image
                 FROM booking AS b
                 JOIN timeslot ts ON b.timeslot_id = ts.id
                 JOIN member m ON b.member_id = m.member_id
