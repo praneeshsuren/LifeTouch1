@@ -25,7 +25,7 @@ class Home extends Controller
                 'nic'           => trim($_POST['nic']),
                 'is_member'     => isset($_POST['is_member']) ? 1:0,
                 'membership_number' => $_POST['membership_number'] ?? null,
-                'contact_no'    => trim($_POST['contact_no']),
+                'email'    => trim($_POST['email']),
                 
             ];
            

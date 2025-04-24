@@ -15,20 +15,35 @@ class M_JoinEvent
         'nic',
         'is_member',
         'membership_number',
-        'contact_no'
+        'email'
     ];
 
     public function getEventParticipantSummary()
     {
         $query = "
-        SELECT 
-            e.name,
-            e.event_id,
-            COUNT(ep.id) AS participant_count,
-            COUNT(ep.id) * e.price AS total_revenue 
-        FROM event e
-        LEFT JOIN event_participants ep ON e.event_id = ep.event_id
-        GROUP BY e.event_id, e.name, e.price";
+    SELECT 
+        e.name,
+        e.event_id,
+        COUNT(ep.id) AS participant_count,
+
+        SUM(
+            CASE
+                WHEN e.free_for_members = 1 AND ep.is_member = 1 THEN 0
+                ELSE 1
+            END
+        ) AS paid_count,
+
+        SUM(
+            CASE
+                WHEN e.free_for_members = 1 AND ep.is_member = 1 THEN 0
+                ELSE e.price
+            END
+        ) AS total_revenue
+
+    FROM event e
+    LEFT JOIN event_participants ep ON e.event_id = ep.event_id
+    GROUP BY e.event_id, e.name, e.price, e.free_for_members
+    ";
 
         return $this->query($query);
     }
@@ -60,23 +75,35 @@ class M_JoinEvent
         if (!empty($data['is_member']) && empty($data['membership_number'])) {
             $this->errors['membership_number'] = "Membership number is required for gym members.";
         } elseif (!empty($data['membership_number'])) {
+            // Check if membership number exists in member table
             $memberExists = $this->query("SELECT * FROM member WHERE member_id = :membership_number", [
                 'membership_number' => $data['membership_number']
             ]);
+        
             if (empty($memberExists)) {
                 $this->errors['membership_number'] = "Invalid membership number. Please provide a valid one.";
+            } else {
+                //  Check for duplicates in the event
+                $alreadyJoined = $this->query("SELECT * FROM event_participants WHERE event_id = :event_id AND membership_number = :membership_number", [
+                    'event_id' => $data['event_id'],
+                    'membership_number' => $data['membership_number']
+                ]);
+        
+                if (!empty($alreadyJoined)) {
+                    $this->errors['membership_number'] = "This gym member is already registered for this event.";
+                }
             }
         } else {
             if (empty($data['is_member']) && !empty($data['membership_number'])) {
                 $this->errors['membership_number'] = "Only gym members should provide a membership number.";
             }
         }
-        if (empty($data['contact_no'])) {
-            $this->errors['contact_no'] = "Contact no is required.";
-        } elseif (strlen($data['contact_no']) != 10) {
-            $this->errors['contact_no'] = "Contact no should be 10 digits.";
-
-        }
+        
+        if (empty($data['email'])) {
+            $this->errors['email'] = "Email is required.";
+        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $this->errors['email'] = "Please enter a valid email address.";
+        }        
 
         // Return true if no errors; otherwise, false
         return empty($this->errors);
@@ -88,5 +115,4 @@ class M_JoinEvent
     {
         return $this->errors;
     }
-    
 }

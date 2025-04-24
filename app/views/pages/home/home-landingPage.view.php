@@ -175,8 +175,8 @@
                     <small id="membershipError" style="color: red;"></small>
                 </div>
                 <div class="input-group">
-                    <label for="contact">Contact Number</label>
-                    <input type="text" id="contact" name="contact_no" required />
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="email" required />
                 </div>
                 <div class="button-group">
                     <button type="button" id="eventPay" class="btn">Pay Now</button>

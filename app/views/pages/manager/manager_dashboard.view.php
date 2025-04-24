@@ -19,7 +19,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <title><?php echo APP_NAME; ?></title>
   <style>
-    
+
   </style>
 
 </head>
@@ -32,138 +32,138 @@
 
   <main>
 
-      <div class="title">
-        
-        <h1>Dashboard</h1>
-        <div class="greeting">
-          <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
+    <div class="title">
+
+      <h1>Dashboard</h1>
+      <div class="greeting">
+        <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
+      </div>
+
+    </div>
+
+    <div class="dashboard-container">
+
+      <div class="left-column">
+
+        <div class="insights">
+
+          <div class="insight-card card-1">
+            <div class="upper">
+              <i class="ph ph-users"></i>
+              <div class="status-badge">
+                <span>+9.4%</span>
+              </div>
+            </div>
+            <div class="lower">
+              <p>Total Members</p>
+              <div class="progress">
+                <h1>20000</h1>
+                <div class="text-muted">
+                  <small>Last 30 days</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="insight-card card-2">
+            <div class="upper">
+              <i class="ph ph-user-plus"></i>
+              <div class="status-badge">
+                <span>+9.4%</span>
+              </div>
+            </div>
+            <div class="lower">
+              <p>New Members</p>
+              <div class="progress">
+                <h1>20000</h1>
+                <div class="text-muted">
+                  <small>Last 30 days</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="insight-card card-3">
+            <div class="upper">
+              <i class="ph ph-barbell"></i>
+              <div class="status-badge">
+                <span>+9.4%</span>
+              </div>
+            </div>
+            <div class="lower">
+              <p>Total Equipments</p>
+              <div class="progress">
+                <h1>20000</h1>
+                <div class="text-muted">
+                  <small>Last 30 days</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="insight-card card-4">
+            <div class="upper">
+              <i class="ph ph-notepad"></i>
+              <div class="status-badge">
+                <span>+9.4%</span>
+              </div>
+            </div>
+            <div class="lower">
+              <p>Total Workouts Created</p>
+              <div class="progress">
+                <h1>20000</h1>
+                <div class="text-muted">
+                  <small>Last 30 days</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="bar-chart">
+
+          <div class="upper">
+
+            <div class="upper-text">
+              <h2>Member Attendance</h2>
+              <p>Track the total number of member who attended</p>
+            </div>
+
+            <div class="period-select">
+              <select id="time-period" name="time-period">
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+              </select>
+            </div>
+
+          </div>
+          <div class="lower">
+            <canvas id="BarChart"></canvas>
+          </div>
         </div>
 
       </div>
 
-      <div class="dashboard-container">
+      <div class="right-column">
 
-        <div class="left-column">
-
-          <div class="insights">
-
-            <div class="insight-card card-1">
-              <div class="upper">
-                <i class="ph ph-users"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
-              </div>
-              <div class="lower">
-                  <p>Total Members</p>
-                  <div class="progress">
-                    <h1>20000</h1>
-                    <div class="text-muted">
-                      <small>Last 30 days</small>
-                    </div>
-                  </div>
-              </div>
-            </div>
-           
-            <div class="insight-card card-2">
-              <div class="upper">
-                <i class="ph ph-user-plus"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
-              </div>
-              <div class="lower">
-                  <p>New Members</p>
-                  <div class="progress">
-                    <h1>20000</h1>
-                    <div class="text-muted">
-                      <small>Last 30 days</small>
-                    </div>
-                  </div>
-              </div>
-            </div>
-
-            <div class="insight-card card-3">
-              <div class="upper">
-                <i class="ph ph-chat-circle-text"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
-              </div>
-              <div class="lower">
-                  <p>Total Inquiries</p>
-                  <div class="progress">
-                    <h1>20000</h1>
-                    <div class="text-muted">
-                      <small>Last 30 days</small>
-                    </div>
-                  </div>
-              </div>
-            </div>
-
-            <div class="insight-card card-4">
-              <div class="upper">
-                <i class="ph ph-calendar-check"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
-              </div>
-              <div class="lower">
-                  <p>Total Event Attendees</p>
-                  <div class="progress">
-                    <h1>20000</h1>
-                    <div class="text-muted">
-                      <small>Last 30 days</small>
-                    </div>
-                  </div>
-              </div>
-            </div>
-
+        <div class="doughnut-chart">
+          <div class="upper-text">
+            <h2>Membership Types</h2>
+            <p>Membership plan distribution</p>
           </div>
-
-          <div class="bar-chart">
-
-            <div class="upper">
-
-              <div class="upper-text">
-                <h2>Member Attendance</h2>
-                <p>Track the total number of member who attended</p>
-              </div>
-
-              <div class="period-select">
-                <select id="time-period" name="time-period">
-                  <option value="week">This Week</option>
-                  <option value="month">This Month</option>
-                  <option value="year">This Year</option>
-                </select>
-              </div>
-
-            </div>
-            <div class="lower">
-                <canvas id="BarChart"></canvas>
-            </div>
+          <div class="lower">
+            <canvas id="DoughnutChart"></canvas>
           </div>
-
         </div>
 
-        <div class="right-column">
-
-          <div class="doughnut-chart">
-            <div class="upper-text">
-                  <h2>Membership Types</h2>
-                  <p>Membership plan distribution</p>
-            </div> 
-            <div class="lower">
-                <canvas id="DoughnutChart"></canvas>
-            </div>
-          </div>
-
-          <div class="recent-announcements">
-            <?php require APPROOT.'/views/components/recent-announcements.view.php' ?>
-          </div>
-
+        <div class="recent-announcements">
+          <?php require APPROOT . '/views/components/recent-announcements.view.php' ?>
         </div>
-        <div class="right-column" style="width: 820px; margin-left: -850px;">
+
+      </div>
+      <div class="right-column" style="width: 820px; margin-left: -850px;">
         <div class="doughnut-chart">
           <div class="upper-text">
             <h2>Invetory</h2>
@@ -174,186 +174,185 @@
           </div>
         </div>
       </div>
-    </main>
+  </main>
 
-    <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time();?>"></script>
-    <script>
-      const ctxBarChart = document.getElementById('BarChart').getContext('2d');
-      let delayed;
+  <!-- SCRIPT -->
+  <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
+  <script>
+    const ctxBarChart = document.getElementById('BarChart').getContext('2d');
+    let delayed;
 
-      const dataBarChart = {
-        labels: [
-          'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
-        ],
-        datasets: [{
-          label: 'Number of Members',
-          data: [15, 25, 35, 45, 30, 20], // Replace with your actual data
-          fill: true,
-          borderColor: '#5f63f2',
-          backgroundColor: 'rgba(95, 99, 242, 0.2)',
-          tension: 0.4,
-          pointBackgroundColor: '#5f63f2',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2,
-          pointRadius: 5,
-          pointHoverRadius: 7,
-          borderWidth: 2,
-          borderRadius: 10,
-          barThickness: 50
-        }]
-      };
-
-      // Chart configuration
-      const configBarChart = {
-        type: 'bar',
-        data: dataBarChart,
-        options: {
-          responsive: true,
-          maintainAspectRatio: true,
-          animation: {
-            duration: 2000, // Duration of the animation (2 seconds)
-            easing: 'easeOutQuart', 
-            onComplete: () => {
-              delayed = true;
-            },
-            delay: (context) => {
-              let delay = 0;
-              if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                delay = context.dataIndex * 150 + context.datasetIndex * 50;
-              }
-              return delay;
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                drawBorder: false,
-                color: 'rgba(0, 0, 0, 0.1)'
-              },
-              ticks: {
-                stepSize: 10
-              },
-              stacked: true
-            },
-            x: {
-              grid: {
-                drawBorder: false,
-                display: false
-              },
-              ticks: {
-                font: {
-                  family: "'Poppins', sans-serif"
-                }
-              },
-              stacked: true
-            }
-          },
-          plugins: {
-            legend: {
-              position: 'top',
-              labels: {
-                boxWidth: 20,
-                font: {
-                  family: "'Poppins', sans-serif"
-                }
-              }
-            },
-            tooltip: {
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
-              padding: 10,
-              titleFont: {
-                family: "'Poppins', sans-serif"
-              },
-              bodyFont: {
-                family: "'Poppins', sans-serif"
-              }
-            }
-          }
-        }
-      };
-
-      // Create the chart
-      new Chart(ctxBarChart, configBarChart);
-
-      
-// DOUGHNUT CHART
-const ctxDoughnutChart = document.getElementById('DoughnutChart').getContext('2d');
-const doughnutLabels = <?php echo json_encode(array_column($membershipCounts, 'membership_plan')); ?>;
-const doughnutData = <?php echo json_encode(array_column($membershipCounts, 'count')); ?>;
-const configDoughnutChart = {
-  type: 'doughnut',
-  data: {
-    labels: doughnutLabels,
-    datasets: [{
-      label: 'Membership Plans',
-      data: doughnutData,
-      backgroundColor: [
-        'rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)',
-        'rgb(75, 192, 192)', 'rgb(153, 102, 255)', 'rgb(255, 159, 64)'
+    const dataBarChart = {
+      labels: [
+        'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
       ],
-      hoverOffset: 4
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      }
-    }
-  }
-};
-new Chart(ctxDoughnutChart, configDoughnutChart);
+      datasets: [{
+        label: 'Number of Members',
+        data: [15, 25, 35, 45, 30, 20], // Replace with your actual data
+        fill: true,
+        borderColor: '#5f63f2',
+        backgroundColor: 'rgba(95, 99, 242, 0.2)',
+        tension: 0.4,
+        pointBackgroundColor: '#5f63f2',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2,
+        borderRadius: 10,
+        barThickness: 50
+      }]
+    };
 
-
-    </script>
-    <script>
-// INVENTORY CHART
-const ctxInventory = document.getElementById('chart3').getContext('2d');
-const inventoryLabels = <?php echo json_encode(array_column($inventoryCounts, 'base_name')); ?>;
-const inventoryData = <?php echo json_encode(array_column($inventoryCounts, 'count')); ?>;
-
-const configInventory = {
-  type: 'bar',
-  data: {
-    labels: inventoryLabels,
-    datasets: [{
-      label: 'Equipment Count',
-      data: inventoryData,
-      backgroundColor: 'rgba(75, 192, 192, 0.6)',
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 1
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      title: {
-        display: true,
-        text: 'Gym Equipment Inventory'
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          stepSize: 1,
-          callback: function(value) {
-            return Number.isInteger(value) ? value : '';
+    // Chart configuration
+    const configBarChart = {
+      type: 'bar',
+      data: dataBarChart,
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        animation: {
+          duration: 2000, // Duration of the animation (2 seconds)
+          easing: 'easeOutQuart',
+          onComplete: () => {
+            delayed = true;
+          },
+          delay: (context) => {
+            let delay = 0;
+            if (context.type === 'data' && context.mode === 'default' && !delayed) {
+              delay = context.dataIndex * 150 + context.datasetIndex * 50;
+            }
+            return delay;
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              drawBorder: false,
+              color: 'rgba(0, 0, 0, 0.1)'
+            },
+            ticks: {
+              stepSize: 10
+            },
+            stacked: true
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: false
+            },
+            ticks: {
+              font: {
+                family: "'Poppins', sans-serif"
+              }
+            },
+            stacked: true
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              boxWidth: 20,
+              font: {
+                family: "'Poppins', sans-serif"
+              }
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            padding: 10,
+            titleFont: {
+              family: "'Poppins', sans-serif"
+            },
+            bodyFont: {
+              family: "'Poppins', sans-serif"
+            }
           }
         }
       }
-    }
-  }
-};
-new Chart(ctxInventory, configInventory);
-</script>
+    };
 
-<script>
-  const inventoryLabels = <?php echo json_encode(array_column($inventoryCounts, 'name')); ?>;
-  const inventoryData = <?php echo json_encode(array_column($inventoryCounts, 'count')); ?>;
-</script>
-  </body>
+    // Create the chart
+    new Chart(ctxBarChart, configBarChart);
+
+
+    // DOUGHNUT CHART
+    const ctxDoughnutChart = document.getElementById('DoughnutChart').getContext('2d');
+    const doughnutLabels = <?php echo json_encode(array_column($membershipCounts, 'membership_plan')); ?>;
+    const doughnutData = <?php echo json_encode(array_column($membershipCounts, 'count')); ?>;
+    const configDoughnutChart = {
+      type: 'doughnut',
+      data: {
+        labels: doughnutLabels,
+        datasets: [{
+          label: 'Membership Plans',
+          data: doughnutData,
+          backgroundColor: [
+            'rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)', 'rgb(153, 102, 255)', 'rgb(255, 159, 64)'
+          ],
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          }
+        }
+      }
+    };
+    new Chart(ctxDoughnutChart, configDoughnutChart);
+  </script>
+  <script>
+    // INVENTORY CHART
+    const ctxInventory = document.getElementById('chart3').getContext('2d');
+    const inventoryLabels = <?php echo json_encode(array_column($inventoryCounts, 'base_name')); ?>;
+    const inventoryData = <?php echo json_encode(array_column($inventoryCounts, 'count')); ?>;
+
+    const configInventory = {
+      type: 'bar',
+      data: {
+        labels: inventoryLabels,
+        datasets: [{
+          label: 'Equipment Count',
+          data: inventoryData,
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Gym Equipment Inventory'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1,
+              callback: function(value) {
+                return Number.isInteger(value) ? value : '';
+              }
+            }
+          }
+        }
+      }
+    };
+    new Chart(ctxInventory, configInventory);
+  </script>
+
+  <script>
+    const inventoryLabels = <?php echo json_encode(array_column($inventoryCounts, 'name')); ?>;
+    const inventoryData = <?php echo json_encode(array_column($inventoryCounts, 'count')); ?>;
+  </script>
+</body>
+
 </html>

@@ -31,7 +31,7 @@
 
     <main>
         <div class="title">
-            <h1>Equipment Service Report</h1>
+            <h1>Membership Plan Report</h1>
             <div class="greeting">
                 <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
             </div>
@@ -66,9 +66,7 @@
                                     <th>Email</th>
                                     <th>Membership Plan</th>
                                     <th>Start Date</th>
-                                    <th>Expected Amount</th>
-                                    <th>Total Paid</th>
-                                    <th>Last Payment</th>
+                                    <th>Amount</th>
                                     <th>Valid Until</th>
                                     <th>Status</th>
                                 </tr>
@@ -84,8 +82,6 @@
                                             <td><?php echo htmlspecialchars($member->membership_plan); ?></td>
                                             <td><?php echo htmlspecialchars($member->membership_start_date); ?></td>
                                             <td><?php echo 'Rs. ' . number_format($member->expected_amount, 2); ?></td>
-                                            <td><?php echo 'Rs. ' . number_format($member->total_paid, 2); ?></td>
-                                            <td><?php echo htmlspecialchars($member->last_payment_date); ?></td>
                                             <td><?php echo htmlspecialchars($member->last_valid_date); ?></td>
                                             <td>
                                                 <?php if ($member->is_compliant): ?>

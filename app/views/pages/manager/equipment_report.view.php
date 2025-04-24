@@ -116,7 +116,7 @@
             window.open(pdfUrl, "_blank");
         });
     </script>
-
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const startDateInput = document.getElementById("startDate");

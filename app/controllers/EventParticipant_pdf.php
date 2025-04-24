@@ -104,7 +104,8 @@ class EventParticipant_pdf extends Controller
                 table { width: 100%; border-collapse: collapse; margin-top: 20px; }
                 th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
                 th { background-color:rgb(130, 165, 205); color: white; }
-                tr:nth-child(even) { background-color: #f9f9f9;.footer { margin-top: 30px; font-size: 12px; text-align: center; }
+tr:nth-child(even) { background-color: #f9f9f9; }
+.footer { margin-top: 30px; font-size: 12px; text-align: center; }
 }
             </style>
         </head>
