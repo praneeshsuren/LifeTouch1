@@ -88,20 +88,33 @@ class Receptionist extends Controller
                 break;
 
 
-            case 'userDetails':
+            case 'viewMember':
                 // Load the view to view a trainer
+                $member_id = $_GET['id'];
+
                 $memberModel = new M_Member;
-                $member = $memberModel->findByMemberId($_GET['id']);
+                $member = $memberModel->findByMemberId($member_id);
+
+                $membershipSubscriptionModel = new M_MembershipSubscriptions;
+                $membershipSubscription = $membershipSubscriptionModel->findByMemberId($member_id);
 
                 $data = [
-                    'member' => $member
+                    'member' => $member,
+                    'membershipSubscription' => $membershipSubscription
                 ];
 
                 $this->view('receptionist/receptionist-viewMember', $data);
                 break;
 
+            case 'memberAttendance':
+                $this->view('receptionist/receptionist-memberAttendance');
+                break;
 
-            case 'supplementRecords':
+            case 'memberPaymentHistory':
+                $this->view('receptionist/receptionist-memberPaymentHistory');
+                break;
+
+            case 'memberSupplements':
                 $memberId = $_GET['id'];
 
                 if ($memberId) {

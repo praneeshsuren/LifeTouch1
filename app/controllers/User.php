@@ -82,7 +82,7 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Initialize the Trainer model
                         $memberModel = new M_Member;
-                
+                        $userRole = $_SESSION['role'];
                         // Validate the incoming data
                         if ($memberModel->validate($_POST)) {
                             // Prepare the data to update the trainer
@@ -128,8 +128,17 @@
                             if (!$memberModel->update($member_id, $data, 'member_id')) {
                                 // Set a success session message
                                 $_SESSION['success'] = "Member has been successfully updated!";
-                                // Redirect to the trainer view page
-                                redirect('admin/members/viewMember?id=' . $member_id);
+
+                                // Check the user role and redirect accordingly
+                                if ($userRole == 'Admin') {
+                                    redirect('admin/members/viewMember?id=' . $member_id);
+                                } elseif ($userRole == 'Receptionist') {
+                                    redirect('receptionist/members/viewMember?id=' . $member_id);
+                                } elseif ($userRole == 'Trainer') {
+                                    redirect('trainer/members/viewMember?id=' . $member_id);
+                                } elseif ($userRole == 'Manager') {
+                                    redirect('manager/members/viewMember?id=' . $member_id);
+                                }
                             } else {
                                 // Handle update failure (optional)
                                 $_SESSION['error'] = "There was an issue updating the member. Please try again.";
