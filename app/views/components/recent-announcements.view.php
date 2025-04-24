@@ -4,7 +4,7 @@
         <?php foreach ($data['announcements'] as $announcement): ?>
             <div class="announcement">
                 <div class="profile-img">
-                    <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                    <img src="<?php echo URLROOT; ?>/assets/images/Admin/<?php echo !empty($announcement->image) ? $announcement->image : 'default-placeholder.jpg'; ?>" alt="Admin Profile Picture">
                 </div>
                 <div class="message">
                     <p>
