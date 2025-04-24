@@ -21,7 +21,19 @@ class M_Event
         'created_at',
         'updated_at'
     ];
+    public function getEventById($event_id)
+{
+    $query = "SELECT * FROM event WHERE event_id = :event_id";
+    $result = $this->query($query, ['event_id' => $event_id]);
 
+    if (!empty($result)) {
+        return (object) $result[0]; // 
+    }
+
+    return null;
+}
+
+    
     public function findByEventId($eventId) {
         $data = ['event_id' => $eventId];
         return $this->first($data);  // Use the `first` method to get the first matching record
@@ -36,13 +48,13 @@ class M_Event
 
     }
     // Removed invalid variable declaration
-    public function getEventById($event_id)
-    {
-        $query = "SELECT * FROM event WHERE event_id = :event_id";
-        $result = $this->query($query, ['event_id' => $event_id], true);
+    //public function getEventById($event_id)
+    //{
+      //  $query = "SELECT * FROM event WHERE event_id = :event_id";
+        //$result = $this->query($query, ['event_id' => $event_id], true);
     
-       return $result;
-    }
+       //return $result;
+    //}
 
 
     public function getEventParticipants($event_id)

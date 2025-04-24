@@ -11,6 +11,7 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $member = new M_Member;
                         $user = new M_User;
+                        $payment = new M_PhysicalPayment;
             
                         if (!isset($_POST['membership_plan'])) {
                             $_POST['membership_plan'] = 'Monthly'; // Default value

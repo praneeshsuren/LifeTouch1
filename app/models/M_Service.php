@@ -28,10 +28,12 @@ class M_Service
 
     public function getUpcomingServices()
     {
+        date_default_timezone_set('Asia/Colombo');
+
         $sql = "SELECT s.*, e.name AS equipment_name
             FROM service s
             LEFT JOIN equipment e ON s.equipment_id = e.equipment_id
-            WHERE s.next_service_date >= CURDATE()";
+            WHERE s.next_service_date > CURDATE()";
 
         return $this->query($sql);
     }
