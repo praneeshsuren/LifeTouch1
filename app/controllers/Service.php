@@ -113,31 +113,5 @@ class Service extends Controller
         exit;
     }
 
-    public function equipmentServiceDate(){
-        // Instantiate the service model
-        $serviceModel = new M_Service;
-    
-        // Fetch all overdue services
-        $overdueServices = $serviceModel->getOverdueServices();
-        if ($overdueServices) {
-            // Loop through each overdue service and send a notification to the manager
-            foreach ($overdueServices as $service) {
-                // Prepare the notification message
-                $message = "The service for equipment: '{$service->equipment_name}' is overdue. Service was due on: {$service->next_service_date}.";
-        
-                // Send notification to the manager (using a function like createNotification)
-                $this->sendNotificationToManager($message);
-            }
-        } else {
-            echo "No overdue services found.";
-        }
-    }
-    
-    // Create a method to send the notification
-    public function sendNotificationToManager($message) {
-        $notificationModel = new M_Notification();
-        $notificationModel->notifyAllManagers($message);
-    }
-
 }
 ?>

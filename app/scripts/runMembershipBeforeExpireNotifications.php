@@ -6,5 +6,6 @@ require_once '../core/App.php';
 
 // Instantiate the controller and invoke the function to send notifications
 $controller = new Notification();
-$controller->equipmentOverdueServiceDateNotifications();  // This will check overdue services and send notifications
+$controller->membershipExpiryNotificationsBeforeExpire();
+
 ?>
