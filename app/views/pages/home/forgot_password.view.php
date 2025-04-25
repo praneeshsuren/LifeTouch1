@@ -13,7 +13,30 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/login-style.css?v=<?php echo time(); ?>" />
 
     <style>
-        
+        .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+}
     </style>
 </head>
 
@@ -45,32 +68,32 @@
     </header>
 
     <div id="container">
-        
-            <h2 style="color:white">Forgot Password</h2><br>
+        <h2 style="color:white">Forgot Password</h2><br>
 
-            <?php if (isset($error)): ?>
-                <div class="alert alert-danger"><?php echo $error; ?></div>
-            <?php endif; ?>
+        <?php if (isset($error)): ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php endif; ?>
 
-            <?php if (isset($success)): ?>
-                <div class="alert alert-success"><?php echo $success; ?></div>
-            <?php endif; ?>
+        <?php if (isset($success)): ?>
+            <div class="alert alert-success">
+                <?php echo $success; ?>
+                <?php if (isset($sent_email)): ?>
+                    <br><small>Email sent to: <?php echo htmlspecialchars($sent_email); ?></small>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
-            <form action="<?php echo URLROOT; ?>/login/forgotPassword" method="post">
-                <div class="input-box">
-                    <input type="text" name="username" id="username" class="form-control" placeholder="Username" required>
-                </div>
-                
-                <br><a href="<?php echo URLROOT; ?>/login" style="margin-top: -60px;">Back to Login</a><br>
-
-                <button type="submit" class="btn" style="width: 150px;">Reset Password</button>
-            </form>
-
+        <form action="<?php echo URLROOT; ?>/login/forgotPassword" method="post">
+            <div class="input-box">
+                <input type="text" name="username" id="username" class="form-control" placeholder="Username" required>
+            </div>
             
+            <br><a href="<?php echo URLROOT; ?>/login" style="margin-top: -60px;">Back to Login</a><br>
+
+            <button type="submit" class="btn" style="width: 150px;">Reset Password</button>
+        </form>
     </div>
 
-
-    </div>
 
     <script src="<?php echo URLROOT; ?>/assets/js/login-script.js"></script>
     

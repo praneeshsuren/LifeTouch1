@@ -1,5 +1,8 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 class Receptionist extends Controller
 {
 
@@ -117,6 +120,10 @@ class Receptionist extends Controller
                 }
                 break;
 
+                case 'memberPaymentHistory':
+                    $this->view('receptionist/payment_history');
+                    break;
+
             default:
                 // Fetch all members and pass to the view
                 $memberModel = new M_Member;
@@ -130,7 +137,7 @@ class Receptionist extends Controller
                 break;
         }
     }
-
+    
     public function bookings($action = null)
     {
         $bookingModel = new M_Booking();
@@ -276,4 +283,106 @@ class Receptionist extends Controller
         }
         $this->view('receptionist/receptionist-payment');
     }
+    public function event_payment()
+    {
+        $eventModel = new M_JoinEvent();
+        $data['event'] = $eventModel->getEventdetails();
+
+        $this->view('receptionist/event_payment', $data);
+    }
+    public function joinEvent()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Instantiate the model
+        $eventModel = new M_JoinEvent();
+        $eventDetailsModel = new M_Event(); // Instantiate the M_Event model
+
+        // Collect form data
+        $data = [
+            'event_id' => $_POST['event_id'],
+            'full_name' => $_POST['full_name'],
+            'nic' => $_POST['nic'],
+            'email' => $_POST['email'],
+            'is_member' => $_POST['is_member'],
+            'membership_number' => $_POST['membership_number'] ?? '', // If member, use membership number; otherwise, set it as empty.
+        ];
+
+        // Validate the data
+        if ($eventModel->validate($data)) {
+            // If validation passes, create the participant
+            if ($eventModel->insert($data)) {
+                
+                // Fetch event details
+                $eventDetails = $eventDetailsModel->getEventById($data['event_id']); // Fetch event details based on event_id
+                if ($eventDetails) {
+                    // Prepare event details for email
+                    $eventName = $eventDetails->name;
+                    $eventDate = date('F j, Y', strtotime($eventDetails->event_date));
+                    $startTime = date('g:i A', strtotime($eventDetails->start_time));
+                    $eventLocation = $eventDetails->location;
+
+                    // Send email confirmation
+                    $mail = new PHPMailer(true);
+                    try {
+                        // Server settings
+                        $mail->isSMTP();
+                        $mail->Host = 'smtp.gmail.com';
+                        $mail->SMTPAuth = true;
+                        $mail->Username = 'amandanethmini100@gmail.com'; // Your Gmail
+                        $mail->Password = 'niib zlpx xskb bmag'; // App password
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                        $mail->Port = 587;
+
+                        // Recipients
+                        $mail->setFrom('amandanethmini100@gmail.com', 'Life Touch Fitness');
+                        $mail->addAddress($data['email'], $data['full_name']);
+
+                        // Content
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Confirmation: Event Registration';
+                        $mail->Body    = "
+                        Dear {$data['full_name']},<br><br>
+                        Thank you for registering for the event: <strong>{$eventName}</strong>.<br>
+                        <ul>
+                            <li><strong>Date:</strong> {$eventDate}</li>
+                            <li><strong>Time:</strong> {$startTime}</li>
+                            <li><strong>Location:</strong> {$eventLocation}</li>
+                        </ul>
+                        We look forward to seeing you there!<br><br>
+                        Best regards,<br>
+                        <strong>Life Touch Fitness Team</strong>
+                    ";
+
+                        // Send the email
+                        $mail->send();
+                        
+                        // Redirect after email is sent
+                        redirect('receptionist/event_payment');
+                        exit();
+                    } catch (Exception $e) {
+                        // Handle email error
+                        $_SESSION['join_errors'] = ['email' => 'Mailer Error: ' . $mail->ErrorInfo];
+                        $_SESSION['form_data'] = $data;
+                        redirect('receptionist/event_payment');
+                        exit();
+                    }
+                } else {
+                    // Handle case where event details are not found
+                    $_SESSION['join_errors'] = ['event' => 'Event details not found.'];
+                    redirect('receptionist/event_payment');
+                    exit();
+                }
+            } else {
+                // Handle failure (e.g., show error message)
+                die('Error inserting participant');
+            }
+        } else {
+            // If validation failed, show errors
+            $errors = $eventModel->getErrors();
+            // You can load the view with the error messages
+        }
+    }
+}
+
+
 }

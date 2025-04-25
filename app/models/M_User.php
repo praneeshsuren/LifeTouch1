@@ -13,6 +13,12 @@ class M_User
         'password'
     ];
 
+    public function updatePassword($userId, $newPassword)
+    {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        return $this->update($userId, ['password' => $hashedPassword], 'user_id');
+    }
+    
     public function usernameExists($username)
     {
         $query = "SELECT * FROM {$this->table} WHERE username = :username LIMIT 1";

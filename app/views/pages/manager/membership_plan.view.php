@@ -74,7 +74,7 @@
                     unset($_SESSION['form_data']['amount']);
                 endif; ?>
 
-                <div class="heading" style="margin-left: 1040px;">
+                <div class="heading" style="margin-left: 1390px;">
                     <a href="#" class="newMember-btn" onclick="openForm()"><i class="ph ph-plus"></i> Add Plan</a>
                 </div>
                 <div class="user-table-wrapper">

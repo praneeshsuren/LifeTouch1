@@ -29,7 +29,7 @@ class EventParticipant_pdf extends Controller
 
             // Get event data
             $eventModel = new M_Event();
-            $eventArr = $eventModel->getEventById($event_id);
+            $eventArr = $eventModel->getEventByIdd($event_id);
             $event = $eventArr[0] ?? null;
 
 

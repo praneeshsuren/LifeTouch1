@@ -85,6 +85,8 @@
                     <input type="date" class="date-input" id="endDate" placeholder="End Date">
                 </div>
                 <button id="clearDateFilter" class="filter">Clear Date Filter</button>
+                <a href="<?php echo URLROOT; ?>/manager/report" class="btn" style="position: absolute; top: 90px; right: 60px;">Back</a>
+
             </div>
 
             <div class="table-container">

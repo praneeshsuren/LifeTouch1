@@ -37,12 +37,12 @@
         </div>
 
         <div class="table-container">
-            
+
             <div class="filters">
                 <a href="#"><button class="filter" style="background-color:#007bff;color:white;">Summary</button></a>
-                <a href="<?php echo URLROOT; ?>/report/event_payment/<?php echo $data['event_id'] ; ?>"> <button class="filter">Add Participant</button></a>
+                <a href="<?php echo URLROOT; ?>/report/event_payment/<?php echo $data['event_id']; ?>"> <button class="filter">Add Participant</button></a>
             </div>
-            <div class="download-button" id="downloadPDF">
+            <div class="download-button" id="downloadPDF" style="margin-left: 10px;">
                 <div class="download-wrapper">
                     <div class="download-text">Download</div>
                     <span class="download-icon">
@@ -52,6 +52,8 @@
                     </span>
                 </div>
             </div>
+            <a href="<?php echo URLROOT; ?>/report/event_report" class="btn" style="position: absolute; top: 90px; right: 60px;">Back</a>
+
             <div class="user-table-wrapper">
 
                 <table class='user-table'>
@@ -83,7 +85,7 @@
                     </tbody>
                 </table>
 
-                
+
             </div>
         </div>
     </main>
@@ -109,7 +111,7 @@
             );
         });
     </script>
-    
+
 </body>
 
 </html>

@@ -68,6 +68,12 @@
                     <span class="text">Announcements</span>
                 </a>
             </li>
+           <li>
+                <a href="<?php echo URLROOT; ?>/receptionist/event_payment">
+                <i class="ph ph-calendar-dot"></i>
+                    <span class="text">Event Payment</span>
+                </a>
+            </li>
         </ul>
     </div>
     <div class="menu">

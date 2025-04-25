@@ -40,6 +40,8 @@
                 <a href="<?php echo URLROOT; ?>/report/participant_details/<?php echo isset($event->event_id) ? $event->event_id : ''; ?>"><button class="filter" onclick="history.back(); return false;">Summary</button></a>
                 <a href="#"> <button class="filter" style="background-color:#007bff;color:white;">Add participant</button></a>
             </div>
+            <a href="<?php echo URLROOT; ?>/report/event_report" class="btn" style="position: absolute; top: 90px; right: 60px;">Back</a>
+
             <div class="table-container">
 
                 <form method="POST" action="<?php echo URLROOT; ?>/report/event_payment/<?php echo $event_id; ?>">

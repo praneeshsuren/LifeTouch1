@@ -48,13 +48,13 @@ class M_Event
 
     }
     // Removed invalid variable declaration
-    //public function getEventById($event_id)
-    //{
-      //  $query = "SELECT * FROM event WHERE event_id = :event_id";
-        //$result = $this->query($query, ['event_id' => $event_id], true);
+    public function getEventByIdd($event_id)
+    {
+        $query = "SELECT * FROM event WHERE event_id = :event_id";
+        $result = $this->query($query, ['event_id' => $event_id], true);
     
-       //return $result;
-    //}
+       return $result;
+    }
 
 
     public function getEventParticipants($event_id)

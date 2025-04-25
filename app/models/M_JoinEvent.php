@@ -18,6 +18,11 @@ class M_JoinEvent
         'email'
     ];
 
+    public function getEventdetails()
+    {
+        $query = "SELECT * FROM event";
+        return $this->query($query);
+    }
     public function getEventParticipantSummary()
     {
         $query = "
