@@ -49,7 +49,7 @@
 
         // Send a notification to all members (user_type starts with 'MB')
         public function notifyAllMembers($message, $userType) {
-            $query = "SELECT user_id FROM users WHERE user_type LIKE 'MB%'";  // Fetch all members
+            $query = "SELECT user_id FROM users WHERE user_id LIKE 'MB%'";  // Fetch all members
             $users = $this->query($query);
             foreach ($users as $user) {
                 $this->createNotification($user->user_id, $message, $userType);
@@ -58,8 +58,17 @@
 
         // Send a notification to all trainers (user_type starts with 'TN')
         public function notifyAllTrainers($message, $userType) {
-            $query = "SELECT user_id FROM users WHERE user_type LIKE 'TN%'";  // Fetch all trainers
+            $query = "SELECT user_id FROM users WHERE user_id LIKE 'TN%'";  // Fetch all trainers
             $users = $this->query($query);
+            foreach ($users as $user) {
+                $this->createNotification($user->user_id, $message, $userType);
+            }
+        }
+
+        public function notifyAllManagers($message) {
+            $query = "SELECT user_id FROM users WHERE user_id LIKE 'MR%'";  // Fetch all managers
+            $users = $this->query($query);
+            $userType = "Manager";
             foreach ($users as $user) {
                 $this->createNotification($user->user_id, $message, $userType);
             }
@@ -74,6 +83,14 @@
                 $this->createNotification($user->user_id, $message, $userType); // Use $userType to specify the recipient type
             }
         }
+
+        // Mark all notifications as read for a specific user
+        public function markAllAsRead($userId) {
+            $query = "UPDATE notifications SET is_read = 1 WHERE user_id = :user_id AND is_read = 0"; // Only mark unread notifications as read
+            $data = [':user_id' => $userId];
+            return $this->query($query, $data);
+        }
+
         
     }
 ?>

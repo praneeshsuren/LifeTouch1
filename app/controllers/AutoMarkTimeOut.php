@@ -22,7 +22,7 @@ class AutoMarkTimeOut
                     $data = ['time_out' => $currentTime];
     
                     // Update the attendance record in the database
-                    if ($attendanceModel->updateAttendance($record->id, $data, 'id')) {
+                    if ($attendanceModel->update($record->id, $data, 'id')) {
                         echo "Time out automatically marked for member ID: " . $record->member_id . "\n";
                     } else {
                         echo "Failed to mark time out for member ID: " . $record->member_id . "\n";

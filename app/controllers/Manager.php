@@ -605,5 +605,5 @@ class Manager extends Controller
             'supplement' => $supplement[0],
             'purchases' => $purchases
         ]);
-        }
+    }
 }
