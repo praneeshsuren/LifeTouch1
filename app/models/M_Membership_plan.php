@@ -9,17 +9,21 @@
         protected $allowedColumns = [
             'membershipPlan_id',
             'plan',
-            'amount'
+            'amount',
+            'duration'
         ];
 
         public function validate($data) {
             $this->errors = [];
         
-            if (empty($data['id'])) {
+            if (empty($data['membershipPlan_id'])) {
                 $this->errors['membershipPlan_id'] = 'id is required';
             } 
             if (empty($data['plan'])) {
                 $this->errors['plan'] = 'plan is required';
+            } 
+            if (empty($data['duration'])) {
+                $this->errors['duration'] = 'duration is required';
             } 
             if (empty($data['amount'])) {
                 $this->errors['amount'] = 'amount is required';

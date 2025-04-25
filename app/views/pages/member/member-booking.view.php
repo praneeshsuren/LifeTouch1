@@ -286,11 +286,14 @@
                         slotText.innerText = slot;
 
                         const editDtl = document.createElement('div');
+                        const editButton = status?.toLowerCase() !== 'booked' 
+                            ? `<div class="booking-action action-secondary" onclick="editBooking('${id}', '${date}', '${timeslot_id}', '${slot}', '${trainer_id}')">
+                                <i class="ph ph-eraser"></i>
+                            </div>`
+                            : '';
                         editDtl.innerHTML = `
                             <div class="edit-dlt">
-                                <div class="booking-action action-secondary" onclick="editBooking('${id}', '${date}', '${timeslot_id}', '${slot}', '${trainer_id}')">
-                                    <i class="ph ph-eraser"></i>
-                                </div>
+                                ${editButton}
                                 <div class="booking-action action-danger" onclick="dltBooking('${id}')">
                                     <i class="ph ph-trash-simple"></i>
                                 </div>
@@ -413,9 +416,7 @@
         }
 
         function buttons(){
-            const gotoBtn = document.querySelector(".gotoBtn");
             const todayBtn = document.querySelector(".todayBtn");
-            const dateInput = document.querySelector(".date-input");
 
             if(todayBtn){
                 todayBtn.addEventListener("click", ()=>{
@@ -424,39 +425,6 @@
                     currentYear = today.getFullYear();
                     window.location.href =`<?php echo URLROOT; ?>/member/Booking?id=${trainerId}&month=${currentMonth}&year=${currentYear}`;
                     buildCalendar();
-                });
-            }
-
-            if(dateInput){
-                dateInput.addEventListener("input", (e) => {
-                    // Allow only numbers and slash
-                    dateInput.value = dateInput.value.replace(/[^0-9/]/g, "");
-                
-                    // Limit the input to 7 characters (MM/YYYY)
-                    if (dateInput.value.length > 7) {
-                        dateInput.value = dateInput.value.slice(0, 7);
-                    }
-                });
-            }
-
-            if(gotoBtn){
-                gotoBtn.addEventListener("click", ()=>{
-                    const input = dateInput.value.trim();
-                    const [inputMonth, inputYear] = input.split("/").map(Number);// Split MM/YYYY and convert to numbers
-                    
-                    if (
-                        inputMonth >= 1 && 
-                        inputMonth <= 12 && 
-                        inputYear >= 1900 && 
-                        inputYear <= 2100
-                    ) {
-                        currentMonth = inputMonth;
-                        currentYear = inputYear;
-                        window.location.href =`<?php echo URLROOT; ?>/member/Booking?id=${trainerId}&month=${currentMonth}&year=${currentYear}`;
-                        buildCalendar(); // Build calendar for the new date
-                    } else {
-                        alert("Please enter a valid date in MM/YYYY format.");
-                    }
                 });
             }
         }

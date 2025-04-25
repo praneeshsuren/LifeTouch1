@@ -49,10 +49,6 @@
                 <tbody class="calendarBody"></tbody>
             </table>
             <div class="gotoToday">
-                <div class="goto">
-                    <input type="text" placeholder="mm/yyyy" class="date-input" />
-                    <button class="gotoBtn">Go</button>
-                </div>
                 <button class="todayBtn">Today</button>
             </div>
         </div> 
@@ -182,9 +178,12 @@
                 }
 
                 if(bookedBookingsbyDate[date]){
-                    const bookingCount = document.createElement("div");
+                    let bookingCount = document.createElement("div");
                     bookingCount.classList.add('booked-count');
-                    bookingCount.innerText = `${bookedBookingsbyDate[date]}`;
+                    bookingCount.innerHTML = `
+                            <span class="booking-dot"></span>
+                            </span>${bookedBookingsbyDate[date]} booking${bookedBookingsbyDate[date] === 1 ? '' :'s'}</span>
+                        `;
                     dayCell.appendChild(bookingCount);
                 }
 
@@ -219,38 +218,6 @@
                 });
             }
 
-            if(dateInput){
-                dateInput.addEventListener("input", (e) => {
-                    // Allow only numbers and slash
-                    dateInput.value = dateInput.value.replace(/[^0-9/]/g, "");
-                
-                    // Limit the input to 7 characters (MM/YYYY)
-                    if (dateInput.value.length > 7) {
-                        dateInput.value = dateInput.value.slice(0, 7);
-                    }
-                });
-            }
-
-            if(gotoBtn){
-                gotoBtn.addEventListener("click", ()=>{
-                    const input = dateInput.value.trim();
-                    const [inputMonth, inputYear] = input.split("/").map(Number);// Split MM/YYYY and convert to numbers
-                    
-                    if (
-                        inputMonth >= 1 && 
-                        inputMonth <= 12 && 
-                        inputYear >= 1900 && 
-                        inputYear <= 2100
-                    ) {
-                        currentMonth = inputMonth;
-                        currentYear = inputYear;
-                        window.location.href =`<?php echo URLROOT; ?>/trainer/calendar?month=${currentMonth}&year=${currentYear}`;
-                        buildCalendar(); // Build calendar for the new date
-                    } else {
-                        alert("Please enter a valid date in MM/YYYY format.");
-                    }
-                });
-            }
         }
 
         // modal
@@ -282,18 +249,25 @@
                             Holiday: ${selectedHoliday}
                         </div>`;
                     } else if (selectedBookings.length > 0) {
-                        bookedBody.innerHTML = "";
                         selectedBookings.forEach(book => {
-                        bookedBody.innerHTML += `
-                            <div>
-                                <table class="trainerviewbtn-profileTable-container">
-                                    <tr>
-                                        <td>${book.member_id}</td>
-                                        <td>${book.member_name}</td>
-                                        <td>${book.timeslot}</td>
-                                    </tr>
-                                </table>
-                            </div>`;
+                        // bookedBody.innerHTML += `
+                        //     <div>
+                        //         <table class="trainerviewbtn-profileTable-container">
+                        //             <tr>
+                        //                 <td>${book.member_id}</td>
+                        //                 <td>${book.member_name}</td>
+                        //                 <td>${book.timeslot}</td>
+                        //             </tr>
+                        //         </table>
+                        //     </div>`;
+                        const bookingItem = document.createElement('div');
+                        bookingItem.classList.add('booking-item');
+                        bookingItem.innerHTML = `
+                            <div class="booking-time">${book.timeslot}</div>
+                            <div class="booking-title">${book.member_name}</div>
+                        `;
+                        bookedBody.appendChild(bookingItem);
+
                         })
                     } else {
                         bookedBody.innerHTML = `<div style="padding-top: 80px; padding-bottom:75px; text-align: center;">No bookings for this date.</div>`;

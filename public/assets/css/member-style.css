@@ -849,17 +849,51 @@ main > .searchbar {
     align-items: center;
     flex-wrap:wrap;
     grid-column: 1/-1;
+    gap:10px;
 }
 
 .card{
     background-color: var(--sidebar-color);
     color: hsl(233, 13%, 49%);
     border-radius: 0.8rem;
+    width: 200px;
+}
+
+.cards:has(> .card:nth-child(2n+1):last-child:nth-child(n+4)){
+    display: block;
+    text-align: center;
+}
+
+.cards:has(> .card:nth-child(2n+1):last-child:nth-child(n+4)) .card{
+    display: inline-block;
+    margin: 10px;
+}
+
+.cards:has(> .card:nth-child(5):last-child) .card:nth-child(3),
+.cards:has(> .card:nth-child(5):last-child) .card:nth-child(4) {
+    margin-top: 10px;
+}
+
+.cards:has(> .card:nth-child(7):last-child) .card:nth-child(4),
+.cards:has(> .card:nth-child(7):last-child) .card:nth-child(5),
+.cards:has(> .card:nth-child(7):last-child) .card:nth-child(7) {
+    margin-top: 10px;
+}
+
+.cards:has(> .card:nth-child(2n):last-child:nth-child(n+5)) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.cards:has(> .card:nth-child(2n):last-child:nth-child(n+5)) .card {
+    flex: 0 0 calc(50% - 40px); /* Half the cards per row, accounting for gap */
+    max-width: 200px; /* Ensure card width doesn't exceed original */
 }
 
 .cards .card.active{
     background: linear-gradient(135deg,rgba(163,168,240,1) 0%, rgba(105,111,221,1) 100%);
-    color: fff;
+    color: #fff;
     display: flex;
     align-items: center;
     transform: scale(1.07);
@@ -883,7 +917,8 @@ main > .searchbar {
 }
 
 .card ul li.price{
-    font-size: 2rem;
+    font-size: 1rem;
+    font-weight: bold;
     color: hsl(232,13%, 33%);
     padding-bottom: 1rem;
 }
