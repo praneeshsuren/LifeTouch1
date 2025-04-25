@@ -9,6 +9,8 @@
         public function index() {
             $announcementModel = new M_Announcement;
             $memberModel = new M_Member;
+            $contactModel = new M_Contact;
+            $eventParticipantsModel = new M_EventParticipants;
         
             // Fetch the latest 4 announcements with admin names
             $announcements = $announcementModel->findAllWithAdminNames(4);
@@ -16,11 +18,15 @@
             // Fetch the All Count of members in the GYM
             $members = $memberModel->countAll();
             $recentMembers = $memberModel->countRecentMembers();
+            $recentContacts = $contactModel->countAllContactsInLast30Days();
+            $eventParticipants = $eventParticipantsModel->countUniqueParticipants();
 
             $data = [
                 'announcements' => $announcements,
                 'members' => $members,
-                'recentMembers' => $recentMembers
+                'recentMembers' => $recentMembers,
+                'recentContacts' => $recentContacts,
+                'eventParticipants' => $eventParticipants
             ];
         
             $this->view('admin/admin-dashboard', $data);
@@ -471,7 +477,22 @@
             } else {
                 redirect('admin/settings');
             }
-        }               
+        }
+        
+        public function notifications(){
+            // Assuming the user ID is stored in session
+            $userId = $_SESSION['user_id'];
+
+            // Fetch notifications from the Notification model
+            $notificationModel = new M_Notification();
+            $notifications = $notificationModel->getNotifications($userId);
+
+            // Pass notifications to the view
+            $data['notifications'] = $notifications;
+
+            // Load the notifications view
+            $this->view('admin/admin-notifications', $data);
+        }
         
     }
 

@@ -10,7 +10,8 @@
             'id',
             'name',
             'email',
-            'msg'
+            'msg',
+            'created_at'
         ];
 
         public function validate($data) {
@@ -34,5 +35,18 @@
         public function getErrors()
         {
             return $this->errors;
-        }      
+        }
+        
+        public function countAllContactsInLast30Days() {
+            $date30DaysAgo = date('Y-m-d H:i:s', strtotime('-30 days'));
+
+            $query = "SELECT COUNT(*) as total FROM {$this->table} WHERE created_at >= :date30DaysAgo";
+
+            $result = $this->query($query, ['date30DaysAgo' => $date30DaysAgo]);
+
+            if ($result && !empty($result)) {
+                return $result[0]->total;
+            }
+            return 0;
+        }
     }

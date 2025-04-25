@@ -138,4 +138,6 @@ class Service extends Controller
         $notificationModel = new M_Notification();
         $notificationModel->notifyAllManagers($message);
     }
+
 }
+?>

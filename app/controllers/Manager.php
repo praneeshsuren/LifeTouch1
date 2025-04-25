@@ -5,7 +5,6 @@ class Manager extends Controller
 
     public function __construct()
     {
-        // Check if the user is logged in as a manager
         $this->checkAuth('Manager');
     }
 
@@ -24,13 +23,16 @@ class Manager extends Controller
             GROUP BY base_name
         ");
 
-
         // Fetch the latest 4 announcements with admin names
         $announcements = $announcementModel->findAllWithAdminNames(4);
+        $members = $memberModel->countAll();
+        $recentMembers = $memberModel->countRecentMembers();
 
         $data = [
             'announcements' => $announcements,
-            'inventoryCounts' => $inventoryCounts
+            'inventoryCounts' => $inventoryCounts,
+            'members' => $members,
+            'recentMembers' => $recentMembers
         ];
         
         $this->view('manager/manager_dashboard', $data);

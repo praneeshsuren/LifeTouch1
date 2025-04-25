@@ -1,6 +1,7 @@
 <?php
 
 class AutoMarkTimeOut
+
 {
     public function autoMarkTimeOut()
     {
@@ -36,7 +37,6 @@ class AutoMarkTimeOut
             echo "Error: " . $e->getMessage();
         }
     }
-    
-
 }
+
 ?>
