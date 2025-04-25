@@ -65,7 +65,7 @@
         }
 
         public function Booking($action = null) {
-            $member_id = $_SESSION['member_id'] ?? null;
+            $member_id = $_SESSION['user_id'] ?? null;
             $trainer_id = $_GET['id'] ?? null;
             $month = (int)($_GET['month'] ?? date('m'));
             $year = (int)($_GET['year'] ?? date('Y'));
@@ -198,7 +198,22 @@
             ];
 
             $this->view('member/member-workoutSchedules', $data);
-        } 
+        }
+
+        public function workoutSchedulesApi(){
+            $member_id = $_SESSION['user_id'];
+            
+            $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
+            $schedules = $workoutScheduleDetailsModel->findAllSchedulesByMemberId($member_id);
+    
+            // Sort schedules in descending order by created_at
+            usort($schedules, function ($a, $b) {
+                return strtotime($a->created_at) - strtotime($b->created_at);
+            });
+    
+            header('Content-Type: application/json');
+            echo json_encode($schedules);
+        }
 
         public function workoutDetails(){
 
@@ -228,7 +243,7 @@
         }
 
         public function Payment($action = null) {
-            $member_id = $_SESSION['member_id'] ?? null;
+            $member_id = $_SESSION['user_id'] ?? null;
             $payment_Model = new M_Payment();
             $payment = $payment_Model->paymentMember($member_id);
             $plan_Model = new M_Membership_plan();
@@ -338,7 +353,7 @@
         }
 
         public function membershipPlan($action = null){
-            $member_id = $_SESSION['member_id'] ?? null;
+            $member_id = $_SESSION['user_id'] ?? null;
             $plan_Model = new M_Membership_plan();
             $plan = $plan_Model->findAll();
             $subscription_Model = new M_Subscription();

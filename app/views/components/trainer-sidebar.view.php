@@ -25,7 +25,7 @@
             <li>
                 <a href="<?php echo URLROOT; ?>/trainer/members">
                     <i class='icon ph-bold ph-user'></i>
-                    <span class="text">View Member</span>
+                    <span class="text">Members</span>
                 </a>
             </li>
             <li>
@@ -43,13 +43,13 @@
             <li>
                 <a href="<?php echo URLROOT; ?>/trainer/announcements">
                     <i class='icon ph-bold ph-newspaper'></i>
-                    <span class="text">View Announcements</span>
+                    <span class="text">Announcements</span>
                 </a>
             </li>
             <li>
                 <a href="<?php echo URLROOT; ?>/trainer/calendar">
                     <i class='icon ph-bold ph-calendar-dots'></i>
-                    <span class="text">View Calendar</span>
+                    <span class="text">Calendar</span>
                 </a>
             </li>
         </ul>

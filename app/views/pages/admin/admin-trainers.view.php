@@ -91,7 +91,6 @@
                         <td><?php echo $trainer->email_address; ?></td>
                         <td><?php echo $trainer->contact_number; ?></td>
                         <td><?php echo $trainer->status; ?></td>
-
                     </tr>
                   <?php endforeach; ?>
                   <?php else: ?>

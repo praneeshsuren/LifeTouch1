@@ -6,23 +6,23 @@ class M_Member
 
     use Model;
 
-    protected $table = 'member';
-    protected $allowedColumns = [
-        'member_id',
-        'first_name',
-        'last_name',
-        'date_of_birth',
-        'NIC_no',
-        'home_address',
-        'height',
-        'weight',
-        'contact_number',
-        'gender',
-        'email_address',
-        'status',
-        'image',
-        'membershipPlan_id'
-    ];
+        protected $table = 'member';
+        protected $allowedColumns = [
+            'member_id',
+            'first_name',
+            'last_name',
+            'date_of_birth',
+            'NIC_no',
+            'home_address',
+            'height',
+            'weight',
+            'contact_number',
+            'gender',
+            'email_address',
+            'status',
+            'image',
+            'membershipPlan_id'
+        ];
 
     public function findByMemberId($memberId)
     {
@@ -117,10 +117,11 @@ class M_Member
 
         $result = $this->query($query, ['date30DaysAgo' => $date30DaysAgo]);
 
-        if ($result && !empty($result)) {
-            return $result[0]->total;
+            if ($result && !empty($result)) {
+                return $result[0]->total;
+            }
+    
+            return 0;
         }
 
-        return 0;
     }
-}

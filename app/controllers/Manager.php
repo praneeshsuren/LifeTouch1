@@ -23,18 +23,14 @@ class Manager extends Controller
             FROM equipment 
             GROUP BY base_name
         ");
-        // Query to count each membership plan
-        $membershipCounts = $memberModel->query("SELECT membership_plan, COUNT(*) as count 
-        FROM member 
-        GROUP BY membership_plan");
+
 
         // Fetch the latest 4 announcements with admin names
         $announcements = $announcementModel->findAllWithAdminNames(4);
 
         $data = [
             'announcements' => $announcements,
-            'membershipCounts' => $membershipCounts,
-            'inventoryCounts' => $inventoryCounts,
+            'inventoryCounts' => $inventoryCounts
         ];
 
         $this->view('manager/manager_dashboard', $data);

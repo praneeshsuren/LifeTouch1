@@ -77,7 +77,7 @@
                                     <tr onclick="openModal(
                                         '<?php echo $announcement->subject; ?>',
                                         '<?php echo $announcement->description; ?>',
-                                        '<?php echo $announcement->announcement_id; ?>',
+                                        '<?php echo $announcement->id; ?>',
                                         '<?php echo $announcement->created_date; ?>',
                                         '<?php echo $announcement->created_time; ?>',
                                         '<?php echo $announcement->first_name; ?> <?php echo $announcement->last_name; ?>'
@@ -91,7 +91,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><?php echo $announcement->announcement_id; ?></td>
+                                        <td><?php echo $announcement->id; ?></td>
                                         <td><?php echo $announcement->subject; ?></td>
                                         <td><?php echo $announcement->created_date; ?></td>
                                     </tr>
