@@ -395,7 +395,7 @@
                 $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         
                 // Retrieve existing member data to compare
-                $member_id = $_POST['member_id'];
+                $member_id = $_POST['user_id'];
                 $existingMember = $memberModel->findByMemberId($member_id);
         
                 // Retrieve existing user data to compare (for username check)
@@ -405,7 +405,7 @@
                 $data = [];
         
                 // Only include fields that have been updated
-                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address'];
+                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address', 'image'];
         
                 // Check for changes and add them to the data array
                 foreach ($fields as $field) {
@@ -443,17 +443,16 @@
                 }
         
                 // Handle profile picture upload
-                if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == UPLOAD_ERR_OK) {
-                    $fileTmp = $_FILES['profile_picture']['tmp_name'];
-                    $fileName = basename($_FILES['profile_picture']['name']);
-                    $targetPath = 'public/assets/images/Member/' . $fileName;
+                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                    $targetDir = "assets/images/Member/";
+                    $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                    $targetFile = $targetDir . $fileName;
         
-                    if (move_uploaded_file($fileTmp, $targetPath)) {
-                        $data['image'] = $fileName;
+                    // Validate the file (e.g., check file type and size) and move it to the target directory
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                        $data['image'] = $fileName; // Save the new filename for the database
                     } else {
-                        $_SESSION['error'] = "Failed to upload profile picture.";
-                        redirect('member/settings');
-                        return;
+                        $errors['file'] = "Failed to upload the file. Please try again.";
                     }
                 }
         

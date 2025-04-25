@@ -68,4 +68,14 @@ class M_User
         $data = ['user_id' => $user_id];
         return $this->first($data);
     }
+
+    public function updatePassword($user_id, $new_password)
+    {
+        $data = [
+            'user_id' => $user_id,
+            'password' => $new_password
+        ];
+
+        return $this->update($user_id, $data, 'user_id');
+    }
 }
