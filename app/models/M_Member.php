@@ -20,7 +20,8 @@
             'email_address',
             'status',
             'image',
-            'membershipPlan_id'
+            'membershipPlan_id',
+            'id'
         ];
 
         public function findByMemberId($memberId) {
@@ -120,4 +121,16 @@
             return 0;
         }
 
+        public function getLastMemberId() {
+            // Get the last member's ID from the database
+            $query = "SELECT id FROM {$this->table} ORDER BY id DESC LIMIT 1";
+            $result = $this->query($query);
+        
+            if ($result && !empty($result)) {
+                return $result[0];  // Return the last member record
+            }
+        
+            return null;  // Return null if no records are found
+        }
+        
     }

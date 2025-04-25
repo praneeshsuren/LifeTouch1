@@ -48,12 +48,16 @@
                     <i class='arrow ph-bold ph-caret-down'></i>
                 </a>
                 <ul class="sub-menu">
-                    <a href="<?php echo URLROOT; ?>/receptionist/bookings">
-                        <span class="text">Bookings</span>
-                    </a>
-                    <a href="<?php echo URLROOT; ?>/receptionist/holiday">
-                        <span class="text">Holidays</span>
-                    </a>
+                    <li>
+                        <a href="<?php echo URLROOT; ?>/receptionist/bookings">
+                            <span class="text">Bookings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo URLROOT; ?>/receptionist/holiday">
+                            <span class="text">Holidays</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li>
@@ -74,7 +78,7 @@
         <p class="title">Settings</p>
         <ul>
             <li>
-                <a href="#">
+                <a href="<?php echo URLROOT; ?>/receptionist/settings">
                     <i class='icon ph-bold ph-gear'></i>
                     <span class="text">Settings</span>
                 </a>

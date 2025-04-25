@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/receptionist-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
@@ -26,7 +26,7 @@
         
         <h1>Trainers</h1>
         <div class="greeting">
-            <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
+          <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
 
       </div>
@@ -76,7 +76,7 @@
 
             <div class="user-form">
 
-                <form action="<?php echo URLROOT; ?>/user/trainer/registerTrainer" method="post">
+                <form action="<?php echo URLROOT; ?>/user/trainer/registerTrainer" method="post" enctype="multipart/form-data">
 
                     <div class="form-container">
 
@@ -90,14 +90,14 @@
                                     <img id="profile-image" src="<?php echo URLROOT; ?>/assets/images/no_img.jpg" alt="Trainer Image">
                                 </div>
 
-                                <label for="image-upload" class="image-upload-label">Upload Image</label>
+                                <button type="button" id="uploadImageBtn" class="image-upload-label">Upload Image</button>
 
                                 <input
                                     type="file"
-                                    id="image-upload"
+                                    id="profilePictureInput"
                                     class="image-upload-input"
                                     name="image"
-                                    onchange="display_image(this.files[0])"
+                                    accept="image/*"
                                 >
 
                             </div>
@@ -255,24 +255,27 @@
                 </form>
 
             </div>
-     
-        
+
+        </div>
     </main>
+
         <!-- SCRIPT -->
         <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
-        <script>
-            function display_image(file) {
-                if (file) {
-                    const img = document.getElementById("profile-image"); // Ensure the correct ID is used
-                    img.src = URL.createObjectURL(file); // Create a temporary URL for the file
-                    img.onload = () => URL.revokeObjectURL(img.src); // Revoke the URL after the image is loaded
-                }
-            }
 
-            // Update the `onchange` event listener in the input
-            document.querySelector(".image-upload-input").addEventListener("change", function () {
-                const file = this.files[0]; // Get the selected file
-                display_image(file); // Call the function to update the image
+        <script>
+            document.getElementById('uploadImageBtn').addEventListener('click', () => {
+                document.getElementById('profilePictureInput').click();
+            });
+
+            document.getElementById('profilePictureInput').addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profile-image').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                }
             });
 
             // Updated script to handle input focus
@@ -344,7 +347,7 @@
             });
 
 
-        </script>
+    </script>
 
 </body>
 </html>

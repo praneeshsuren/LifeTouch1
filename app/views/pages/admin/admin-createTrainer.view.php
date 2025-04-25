@@ -257,6 +257,7 @@
             </div>
 
         </div>
+    </main>
 
         <!-- SCRIPT -->
         <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time();?>"></script>
@@ -346,9 +347,7 @@
             });
 
 
-        </script>
-
-    </main>
+    </script>
 
 </body>
 </html>

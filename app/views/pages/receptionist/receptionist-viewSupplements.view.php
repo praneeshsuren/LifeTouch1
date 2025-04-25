@@ -45,9 +45,9 @@
           <div class="navbar">
             <ul class="nav-links">
               <li><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
-              <li><a href="" id="memberAttendanceLink"><i class="ph ph-calendar-dots"></i>Member Attendance</a></li>
-              <li><a href="" id="workoutSchedulesLink"><i class="ph ph-money"></i>Payment History</a></li>
-              <li><a href="" id="supplementRecordsLink"><i class="ph ph-barbell"></i>Supplement Records</a></li>
+              <li><a href="" id="attendanceLink"><i class="ph ph-calendar-dots"></i>Attendance Records</a></li>
+              <li><a href="" id="paymentHistoryLink"><i class="ph ph-money"></i>Payment History</a></li>
+              <li class="active"><a href="" id="supplementRecordsLink"><i class="ph ph-barbell"></i>Supplement Records</a></li>
             </ul>
           </div>
         </div>
@@ -160,14 +160,10 @@
 
         if (memberId) {
           // Member ID is available, use it in the navigation link
-          const userDetailsLink = document.getElementById('userDetailsLink');
-          userDetailsLink.href = `<?php echo URLROOT; ?>/receptionist/members/userDetails?id=${memberId}`;
-
-          const workoutSchedulesLink = document.getElementById('workoutSchedulesLink');
-          workoutSchedulesLink.href = `<?php echo URLROOT; ?>/receptionist/members/workoutSchedules?id=${memberId}`;
-
-          const supplementRecordsLink = document.getElementById('supplementRecordsLink');
-          supplementRecordsLink.href = `<?php echo URLROOT; ?>/receptionist/members/supplementRecords?id=${memberId}`;
+          document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/receptionist/members/viewMember?id=${memberId}`;
+          document.getElementById('attendanceLink').href = `<?php echo URLROOT; ?>/receptionist/members/memberAttendance?id=${memberId}`;
+          document.getElementById('paymentHistoryLink').href = `<?php echo URLROOT; ?>/receptionist/members/memberPaymentHistory?id=${memberId}`;
+          document.getElementById('supplementRecordsLink').href = `<?php echo URLROOT; ?>/receptionist/members/memberSupplements?id=${memberId}`;
 
         } else {
           // No member_id in the URL, show a message or handle accordingly

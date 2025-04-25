@@ -73,6 +73,25 @@
             return $schedules ?: [];  // Returns an empty array if no schedules exist
         }
 
+        public function findCountByTrainerId($trainerId) {
+            // Get the current date and the date 30 days ago
+            $date = date('Y-m-d');
+            $date_30_days_ago = date('Y-m-d', strtotime('-30 days', strtotime($date)));
+        
+            // Modify query to count schedules created within the last 30 days
+            $query = "SELECT COUNT(*) as count FROM $this->table WHERE created_by = :trainerID AND created_at >= :date_30_days_ago";
+        
+            // Get the count of schedules for this trainer created in the last 30 days
+            $count = $this->query($query, [
+                'trainerID' => $trainerId,
+                'date_30_days_ago' => $date_30_days_ago
+            ]);
+        
+            // Return the count or 0 if no schedules are found
+            return $count ? $count[0]->count : 0;  // Returns 0 if no schedules exist
+        }
+        
+
     }
 
 ?>

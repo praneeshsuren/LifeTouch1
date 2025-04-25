@@ -49,7 +49,7 @@
           <form id="workoutScheduleForm" method="POST" action="<?php echo URLROOT; ?>/WorkoutSchedule/createSchedule">
             
             <input type="hidden" id="member_id" name="member_id" value="" />
-            <input type="hidden" name="created_by" value="<?php echo $_SESSION['trainer_id']; ?>" />
+            <input type="hidden" name="created_by" value="<?php echo $_SESSION['user_id']; ?>" />
 
             <table id="workout-schedule">
               <thead>

@@ -120,6 +120,28 @@
             return $this->errors;
         }
 
-       
+        public function findCountByTrainerId($trainer_id) {
+            // Get the current date and calculate the date 30 days ago
+            $date = date('Y-m-d');
+            $date_30_days_ago = date('Y-m-d', strtotime('-30 days', strtotime($date)));
+        
+            // Correct the query to count only 'booked' schedules within the last 30 days
+            $query = "SELECT COUNT(*) AS count 
+                      FROM $this->table 
+                      WHERE trainer_id = :trainer_id 
+                      AND created_at >= :date_30_days_ago 
+                      AND status = 'booked'";
+        
+            // Prepare data for the query
+            $data = [
+                'trainer_id' => $trainer_id,
+                'date_30_days_ago' => $date_30_days_ago
+            ];
+        
+            // Execute the query and return the count
+            $result = $this->query($query, $data);
+            return $result ? $result[0]->count : 0; // Return 0 if no bookings found
+        }
+        
     
     }
