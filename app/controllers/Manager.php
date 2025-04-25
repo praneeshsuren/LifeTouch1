@@ -606,4 +606,20 @@ class Manager extends Controller
             'purchases' => $purchases
         ]);
     }
+
+    public function notifications(){
+        // Assuming the user ID is stored in session
+        $userId = $_SESSION['user_id'];
+
+        // Fetch notifications from the Notification model
+        $notificationModel = new M_Notification();
+        $notifications = $notificationModel->getNotifications($userId);
+
+        // Pass notifications to the view
+        $data['notifications'] = $notifications;
+
+        // Load the notifications view
+        $this->view('manager/manager-notifications', $data);
+    }
+    
 }
