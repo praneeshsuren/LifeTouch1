@@ -62,7 +62,16 @@
             return $this->query($sql, $data);
         }
         
+        public function countAllSupplements() {
+            // SQL query to count all supplements
+            $sql = "SELECT COUNT(*) as total FROM $this->table";
         
+            // Execute the query and fetch the result
+            $result = $this->get_row($sql);
+        
+            // Return the total count
+            return $result ? $result->total : 0;
+        }
         
         
 

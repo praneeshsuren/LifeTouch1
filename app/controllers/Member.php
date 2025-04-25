@@ -486,6 +486,18 @@
                 redirect('member/settings');
             }
         }
+
+        public function notifications(){
+            $member_id = $_SESSION['user_id'];
+            $notificationModel = new M_Notification;
+            $notifications = $notificationModel->getNotifications($member_id);
+    
+            $data = [
+                'notifications' => $notifications
+            ];
+
+            $this->view('member/member-notifications', $data);
+        }
 }
 
 ?>
