@@ -72,6 +72,26 @@
             // Return the total count
             return $result ? $result->total : 0;
         }
+
+        public function getSupplement($supplementId) {
+            // SQL query to fetch supplements with pagination
+            $query = "SELECT * FROM $this->table WHERE supplement_id = :supplementId";
+        
+            // Prepare the data array for parameter binding
+            $data = [
+                'supplementId' => $supplementId
+            ];
+        
+            // Use the query method from your Database trait to execute the query
+            $result = $this->query($query, $data);
+
+            // Return the result
+            if ($result) {
+                return $result[0]; // Return the first result
+            } else {
+                return null; // No results found
+            }
+        }
         
         
 
