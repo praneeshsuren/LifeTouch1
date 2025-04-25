@@ -38,22 +38,19 @@
           <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
       </div>
-      <div class="searchbar">
-          <div class="search-input">
-            <input class="input" placeholder="Search" required="" type="text">
-          </div>
-      </div>
 
       <!-- View-trainer-section-->
-      <div class="member-view-trainer-grid-container">
-        <div class="member-view-trainer"></div>
-      </div>
+      <div class="trainers-grid"></div>
     </main>
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         fetchTrainers();
       });
+
+      const today = new Date();
+      const month = today.getMonth(); 
+      const year = today.getFullYear();
 
       function fetchTrainers() {
         fetch('<?php echo URLROOT; ?>/member/Trainer/api')
@@ -64,18 +61,32 @@
           .then(data => {
             console.log('Fetched Data:', data); 
             if (Array.isArray(data) && data.length > 0) {
-              const container = document.querySelector('.member-view-trainer');
+              const container = document.querySelector('.trainers-grid');
               container.innerHTML = ''; 
               data.forEach(trainer => {
                 const trainerDiv = document.createElement('div');
-                trainerDiv.classList.add('trainer');
+                trainerDiv.classList.add('trainer-card');
                 trainerDiv.innerHTML += `
-                  <img src="<?php echo URLROOT; ?>/assets/images/${trainer.image || 'image.png'}" alt="${trainer.first_name}'s image" class="trainer-image"/>
-                  <h3>${trainer.first_name}</h3>
-                  <button class="member-view-trainer-btn">View</button>
+                  <div class="trainer-image">
+                    <img src="<?php echo URLROOT; ?>/assets/images/${trainer.image || 'image.png'}" alt="${trainer.first_name}'s image"/>
+                  </div>
+                  <div class="trainer-info">
+                    <h2 class="trainer-name">${trainer.first_name}</h2>
+                    <p class="trainer-specialty">Strength & Conditioning</p>
+                    <p class="trainer-bio">John specializes in strength training and functional fitness.</p>
+                    <div class="trainer-contact">
+                      <button class="btn btn-primary">Sechedule Session</button>
+                      <button class="btn btn-outline">Profile</button>
+                    </div>
+                  </div>
                 `;
 
-                const viewbutton = trainerDiv.querySelector('.member-view-trainer-btn');
+                const scheduleBtn = trainerDiv.querySelector('.btn-primary');
+                scheduleBtn.onclick = () =>{
+                  window.location.href =`<?php echo URLROOT; ?>/member/Booking?id=${trainer.trainer_id}&month=${month+1}&year=${year}`;
+                };
+
+                const viewbutton = trainerDiv.querySelector('.btn-outline');
                 viewbutton.onclick = () =>{
                   window.location.href =`<?php echo URLROOT; ?>/member/Trainer/viewTrainer?id=${trainer.trainer_id}`;
                 };

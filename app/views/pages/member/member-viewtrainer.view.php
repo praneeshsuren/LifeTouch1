@@ -60,7 +60,7 @@
 
             const bookigbuttonDiv = document.createElement('div');
             bookigbuttonDiv.innerHTML=`
-                <button class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: -10px;margin-bottom:3px;">Booking Reservation</button>
+                <button class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: -10px;margin-bottom:3px;">Schedule</button>
             `;
                         
             const bookingbutton = bookigbuttonDiv.querySelector('.trainerviewbtn-Bookreservationbtn');

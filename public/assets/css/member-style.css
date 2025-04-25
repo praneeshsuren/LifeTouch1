@@ -168,14 +168,7 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
 .trainer:hover{
     background: var(--separator-color);
 }
-  
-.trainer-image{
-    border-radius: 50%;
-    width: 120px; /* Increased width */
-    height: 120px; /* Increased height */
-    object-fit: cover;
-    margin-bottom: 1rem; /* Adds space between the image and the button */
-}
+
   
 .member-view-trainer .member-view-trainer-btn{
     background-color: var(--primary-color);
@@ -237,7 +230,6 @@ main > .searchbar {
 }
 
 .trainerviewbtn-profile-detail{
-
     padding: 40px 20px;
 }
 
@@ -291,6 +283,7 @@ main > .searchbar {
     flex-wrap: wrap; /* allows stacking on smaller screens */
 }
 .calendarContainer {
+    margin-top: 1rem;
     flex: 1 1 60%;
     background-color: var(--sidebar-color);
     display: flex;
@@ -394,204 +387,107 @@ main > .searchbar {
     color: var(--sidebar-color);
 }
 
-.pending {
-    background: linear-gradient(45deg, #FFA500, #FF4500);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+.edit-dlt {
+    display: flex;
+    flex-direction: row;
+    gap: 8px; 
+    align-items: center; 
+    margin-left: auto; 
 }
 
-.booked {
-    background: linear-gradient(45deg, #32CD32, #006400) !important;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+.booking-status {
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    transition: var(--tran-02)
+}
+
+.status-booked {
+    background-color:#ecfdf5;
+    color:  #10b981;
+}
+
+.status-pending {
+    background-color: #fffbeb;
+    color: #f59e0b;
+}
+
+.booking-action {
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.action-secondary {
+    background-color: transparent;
+    color:  #1f2937;
+    border: 1px solid #e5e7eb;
+}
+
+.action-secondary:hover {
+    background-color:#e5e7eb;
+}
+
+.action-danger {
+    background-color: transparent;
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}
+
+.action-danger:hover {
+    background-color:  #fef2f2;
 }
 
 .gotoToday {
     width: 100%;
+    height: 50px;
     display: flex;
     align-items: center;
-    justify-content:space-between;
+    justify-content:flex-end;
     gap: 5px;
-    padding: 0 10px; 
-    margin-bottom: 10px;
-    margin-top: 5px;
-    color: var(--primary-color);
-    height: auto;
-}
-
-.gotoToday .goto{
-    display: flex;
-    height: 36px;
-    align-items: center;
-    border-radius: 5px;
-    overflow: hidden;
-    border: 1px solid var(--text-color);
-}
-
-.gotoToday .goto input {
-    background-color: var(--sidebar-color); 
-    width: 120px;
-    height: 100%;
-    outline: none;
-    border: none;
-    border-radius: 5px;
     padding: 0 20px;
-    color: var(--text-color);
-    border-radius: 0;
+    color: var(--primary-color);
 }
 
 .gotoToday button {
-    padding: 5px 10px; 
-    border: 1px solid var(--text-color);
-    border-radius: 5px;
-    background-color: transparent;
-    cursor: pointer;
-    color: var(--text-color);
-}
-
-.gotoToday button:hover {
-    color: #fff;
-    background-color: var(--primary-color);
-}
-.gotoToday .gotoBtn {
-    height: 100%;
-    padding: 0 12px;
+    height: 36px; /* Match .goto height */
     border: none;
-    border-left: 1px solid var(--text-color);
+    background-color: #4a6cf7; /* Blue from the image, replace with --primary-color if needed */
+    color: #fff;
     font-size: 0.9rem;
-    border-radius: 0;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 
 .gotoToday .todayBtn {
-    padding: 6px 14px;
+    padding: 0 12px;
     border-radius: 5px;
+    border: 1px solid var(--text-color); /* Keep border as in original */
+    background-color: transparent; /* Match image */
+    color: var(--text-color);
 }
 
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-color:var(--modalbg-colour); 
+.gotoToday .todayBtn:hover {
+    background-color: var(--primary-color);
+    color: #fff;
 }
 
-.modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-30%, -120%); /* Center the modal */
-    background-color:var(--sidebar-color);
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px; /* Limit modal width */
-    max-height: 90%; /* Prevent it from overflowing */
-    overflow-y: auto; /* Add scroll only if content overflows */
-    border-radius: 10px;
-}
-
-.close {
-    color:var(--text-color);
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-.timeslot{
-    background-color:var(--primary-color);
-    color: #FFF;
-    border-radius: 10px;
-    padding: 2px;
-    margin: 5px;
-}
-
-.timeslot.selectedTimeslot {
-    background: linear-gradient(45deg,#32CD32, #006400);
-}
-
-.input{
-    border-top: 1px solid #ccc;
-    margin-top:10px;
-    padding-top: 10px;
-}
-
-.input-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem; /* Space between input rows */
-}
-
-.input-container label {
-    width: 120px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    color: var(--hover-btn);
-}
-.input-container i {
-    margin-right: 8px;
-    font-size: 18px;
-    vertical-align: middle;
-}
-
-.input-container input[type="text"] {
-    font-size: 15px;
-    width: 100%;
-    background-color: #ccc;
-    padding: 5px;
-    border: none;
-    border-radius: 10px;
-}
-
-.book-btn {
-    text-align: right; /* Align the button to the right */
-    margin-top: 10px;
-}
-
-.book-btn button {
-    background: linear-gradient(45deg,#32CD32, #006400);
-    color: white;
-    padding: 10px 20px; /* Increased padding for a larger button */
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 1rem; 
-    transition: var(--tran-03); 
-}
-
-#btnDelete{
-    background: linear-gradient(45deg, #ff5733, #ff1a1a);
-    color: white;
-    padding: 12px 20px; /* Increased padding for a larger button */
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    margin-top: 1rem;
-    font-size: 1rem; 
-    transition: var(--tran-03);  
-}
-
-.btnClose:hover,
-.book-btn button:hover,
-#btnDelete:hover{
-    transform: scale(1.05);
-}
 
 /* Booking detail*/
 .booking-details{
+    margin-top: 1rem;
     flex: 1 1 35%; 
 }
 
@@ -610,6 +506,8 @@ main > .searchbar {
     padding-left: 20px;
     padding-right: 20px;
     box-shadow: var(--box-shadow-color);
+    overflow: auto;
+    max-height: 650px;
 }
 
 .booking-details .detail-list {
@@ -843,7 +741,8 @@ main > .searchbar {
 .payment-form-group-flex > :not(:last-child) {
     margin-right: 12px;
 }
-.payment-form-submit-button, .payment-form-cancel-button  {
+.payment-form-submit-button {
+    margin-top: 1rem;
     border-radius: 8px;
     outline: transparent;
     display: flex;
@@ -857,7 +756,7 @@ main > .searchbar {
     transition: var(--tran-02);
 }
 
-.payment-form-submit-button:hover, .payment-form-cancel-button:hover{
+.payment-form-submit-button:hover {
     transform: scale(1.02);
 }
 
@@ -944,6 +843,7 @@ main > .searchbar {
 /* membership plan */
 
 .cards{
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1699,4 +1599,465 @@ main #schedule-cards-container {
     .supplement-table td:first-child, .supplement-table td:last-child {
         width: auto; /* Allow the first and last columns to resize dynamically */
     }
+
+    .payment-form-submit-button {
+        margin-top: 3rem;
+    }
 }
+
+
+/* Trainers grid */
+.trainers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.trainer-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%;
+    max-width: 300;
+    height: 400px;
+}
+
+.trainer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.trainer-image {
+    border-radius: 50%;
+    margin-top: 1rem !important;
+    height: 150px;
+    width: 150px;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.trainer-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.trainer-card:hover .trainer-image img {
+    transform: scale(1.05);
+}
+
+.trainer-info {
+    padding: 1.5rem;
+}
+
+.trainer-name {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: #222;
+}
+
+.trainer-specialty {
+    color: rgba(105,111,221,1);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.trainer-specialty::before {
+    content: '•';
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.trainer-bio {
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.trainer-contact {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: -50px;
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 0.85rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background-color: rgba(105,111,221,1);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color:  rgba(105,111,221,1);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color:  rgba(105,111,221,1);
+    border: 1px solid  rgba(105,111,221,1);
+}
+
+.btn-outline:hover {
+    background-color: rgba(105, 111, 221, 0.1);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .trainers-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .trainer-card {
+        max-width: 300px;
+    }
+
+    .trainer-image {
+        height: 120px; 
+        width: 120px;
+    }
+    .modal-content {
+        width: 95%;
+        max-width: 100%; 
+        height: 60% !important; 
+        margin-left: 0;
+        padding: 15px; 
+        transform: translate(-50%, -50%);
+        transition: var(--tran-03)
+    }
+
+    .sidebar.active ~ main .modal-content {
+        width:70%;
+        height: 60%;
+        margin-left:0;
+        transition: var(--tran-03)
+
+    }
+}
+
+/* bookingmodal */
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color:var(--modalbg-colour); 
+}
+
+.sidebar.active ~ .modal{
+    width: calc(100% - 92px);
+    left: 92px;
+}
+
+.modal-content {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    background-color:var(--sidebar-color);
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: calc(100vh - 270px);
+    height:350px;
+    max-height: 90%; 
+    overflow-y: auto; 
+    border-radius: 10px;
+    z-index: 1001;
+    margin-left: 125px;
+}
+
+/* .sidebar.active ~ main .modal-content {
+    max-width: calc(100% - 112px); 
+    margin-left: 46px; 
+} */
+
+.close {
+    color:var(--text-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* .bookingModal-body {
+    margin-bottom: 20px;
+} */
+
+/* Timeslots styles */
+.timeslots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.time-slot {
+    font-size: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: white;
+}
+
+.time-slot:hover {
+    border-color:   rgba(105,111,221,1);
+    background-color:#e5e7eb;
+}
+
+.time-slot.selected {
+    background-color:  rgba(105,111,221,1);
+    color: white;
+    border-color:   rgba(105,111,221,1);
+}
+
+.time-slot.booked {
+    background-color:  #f3f4f6;
+    color: #9ca3af;
+    border-color:  #e5e7eb;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+ /* Booking form styles */
+.bookingForm {
+    margin-top: 20px;
+    padding: 15px;
+    border-top: 1px solid  #e5e7eb;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem; /* Space between input rows */
+}
+
+.label {
+    min-width: 100px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.book-btn {
+    margin-top: -90px;
+    text-align: right;
+}
+
+.book-btn button {
+    background-color:  rgba(105,111,221,1);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+.book-btn button:hover {
+    background-color: #4f46e5;
+}
+
+/* membership */
+.current-membership {
+    margin-top: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow:  0 4px 6px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid   rgba(105,111,221,1);
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+  }
+
+  .section-title svg {
+    margin-right: 10px;
+  }
+
+  .membership-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .detail-item {
+    margin-bottom: 15px;
+  }
+
+  .detail-label {
+    font-size: 14px;
+    color: #718096;
+    margin-bottom: 5px;
+  }
+
+  .detail-value {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .status-active {
+    background-color: #c6f6d5;
+    color: #2f855a;
+  }
+
+  .status-inactive {
+  background-color: #fed7d7;
+  color: #c53030;
+}
+
+  .membership-progress {
+    margin-top: 20px;
+  }
+
+  .progress-bar-container {
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background-color: #38b2ac;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  .progress-text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #718096;
+  }
+
+/* No Membership Message */
+.no-membership-message {
+    text-align: center;
+    padding: 20px 0;
+  }
+  
+  .no-membership-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #2d3748;
+    margin-bottom: 15px;
+  }
+  
+  /* Inactive Membership Message */
+  .progress-inactive {
+    background-color: #c53030 !important; /* Red color for inactive status */
+  }
+  .inactive-membership-message {
+    text-align: center;
+    padding: 20px 0;
+  }
+  
+  .renew-plan-button {
+    margin-top: -5rem;
+    background-color: rgba(105,111,221,1);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .renew-plan-button:hover {
+    background-color: rgba(105,111,221,1);
+    transform: translateY(-2px);
+  }
+
+  /* payment table */
+  .payment-history {
+    margin-top: 2rem;
+    background-color:#ffffff;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+  }
+
+  .payment-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+
+  .payment-table th {
+    background-color: #f7fafc;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #2d3748;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .payment-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .payment-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .payment-table tr:hover {
+    background-color: #f7fafc;
+  }

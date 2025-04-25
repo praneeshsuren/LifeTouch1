@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="paymentBox">
-        <button id="payBtn" class="trainerviewbtn-Bookreservationbtn" style="float: left; margin-top: 5px;margin-bottom:3px; width:100px;" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'">Membership Plan</button>
+        <button id="payBtn" class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: 5px;margin-bottom:3px; width:100px;" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'">Membership Plan</button>
    
         <!-- Past Payment Details -->
         <div class="payment-history">
@@ -48,39 +48,6 @@
             <tbody></tbody>
           </table>
         </div>
-
-        <div id="bookingModal" class="modal">
-          <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="bookingModal-body">
-              <form id="payment-form" class="payment-form" method="POST" action="<?php echo URLROOT; ?>/member/checkout">
-                <h1 class="payment-title">Payment Details</h1>
-                <input type="text" id="member_id" value="<?php echo htmlspecialchars($member_id); ?>" name="member_id" required>
-                <input type="text" name="package_id" id="package_id"><input type="text" name="payment_type" id="payment_type">
-                <div class="payment-form-group">
-                  <input type="text" id="package" placeholder=" " class="payment-form-control" name="package" readonly required />
-                  <label for="package" class="payment-form-label">Package Name</label>
-                </div>
-                <div class="payment-form-group">
-                  <input type="number" id="amount" placeholder=" " class="payment-form-control" name="amount" readonly required />
-                  <label for="amount" class="payment-form-label">Amount</label>
-                </div>
-                <div class="date-row">
-                  <div class="payment-form-group date-field">
-                      <input type="date" id="paymentStartDate" class="payment-form-control" name="paymentStartDate" readonly required />
-                      <label for="paymentStartDate" class="payment-form-label">Start Date</label>
-                  </div>
-
-                  <div class="payment-form-group date-field">
-                      <input type="date" id="paymentExpireDate" class="payment-form-control" name="paymentExpireDate" readonly required />
-                      <label for="paymentExpireDate" class="payment-form-label">Expiry Date</label>
-                  </div>
-                </div>
-                <button type="submit" class="payment-form-submit-button">Proceed</button>
-              </form>
-            </div>
-          </div>
-      </div>
       </div>
     </main>
       
