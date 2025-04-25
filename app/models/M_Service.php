@@ -1,5 +1,4 @@
 <?php
-
 // Service class
 class M_Service
 {
@@ -18,6 +17,8 @@ class M_Service
     
     public function getOverdueServices()
     {
+        date_default_timezone_set('Asia/Colombo');
+
         $sql = "SELECT s.*, e.name AS equipment_name
             FROM service s
             LEFT JOIN equipment e ON s.equipment_id = e.equipment_id

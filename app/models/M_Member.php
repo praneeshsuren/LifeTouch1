@@ -132,5 +132,18 @@
         
             return null;  // Return null if no records are found
         }
+
+        public function updateMembershipStatus($member_id, $status) {
+            // Prepare the query to update the membership status
+            $query = "UPDATE $this->table SET status = :status WHERE member_id = :member_id";
+        
+            $params = [
+                'status' => $status,
+                'member_id' => $member_id
+            ];
+        
+            // Execute the query to update the status
+            return $this->query($query, $params);
+        }
         
     }

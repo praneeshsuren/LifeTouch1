@@ -5,7 +5,6 @@ class Manager extends Controller
 
     public function __construct()
     {
-        // Check if the user is logged in as a manager
         $this->checkAuth('Manager');
     }
 
@@ -14,6 +13,7 @@ class Manager extends Controller
         $memberModel = new M_Member();
         $equipmentModel = new M_Equipment();
         $announcementModel = new M_Announcement;
+        $supplementModel = new M_Supplements();
 
         // Query to group equipment by name and count them
         $inventoryCounts = $equipmentModel->query("
@@ -24,13 +24,20 @@ class Manager extends Controller
             GROUP BY base_name
         ");
 
-
         // Fetch the latest 4 announcements with admin names
         $announcements = $announcementModel->findAllWithAdminNames(4);
+        $members = $memberModel->countAll();
+        $recentMembers = $memberModel->countRecentMembers();
+        $supplementCount = $supplementModel->countAllSupplements();
+        $equipmentCount = $equipmentModel->countAllEquipment();
 
         $data = [
             'announcements' => $announcements,
-            'inventoryCounts' => $inventoryCounts
+            'inventoryCounts' => $inventoryCounts,
+            'members' => $members,
+            'recentMembers' => $recentMembers,
+            'supplementCount' => $supplementCount,
+            'equipmentCount' => $equipmentCount
         ];
         
         $this->view('manager/manager_dashboard', $data);
@@ -605,5 +612,21 @@ class Manager extends Controller
             'supplement' => $supplement[0],
             'purchases' => $purchases
         ]);
-        }
+    }
+
+    public function notifications(){
+        // Assuming the user ID is stored in session
+        $userId = $_SESSION['user_id'];
+
+        // Fetch notifications from the Notification model
+        $notificationModel = new M_Notification();
+        $notifications = $notificationModel->getNotifications($userId);
+
+        // Pass notifications to the view
+        $data['notifications'] = $notifications;
+
+        // Load the notifications view
+        $this->view('manager/manager-notifications', $data);
+    }
+    
 }

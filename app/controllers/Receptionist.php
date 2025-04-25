@@ -425,6 +425,18 @@ class Receptionist extends Controller
         }
     }
 
+    public function notifications(){
+        $receptionist_id = $_SESSION['user_id'];
+        $notificationModel = new M_Notification;
+        $notifications = $notificationModel->getNotifications($receptionist_id);
+
+        $data = [
+            'notifications' => $notifications
+        ];
+
+        $this->view('receptionist/receptionist-notifications', $data);
+    }
+
 }
 
 ?>

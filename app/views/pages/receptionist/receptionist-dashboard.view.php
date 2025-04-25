@@ -424,6 +424,12 @@
         doughnutChartInstance = new Chart(ctx, configDoughnutChart);
       }
 
+      function navigateToAnnouncement(id) {
+        const role = "<?php echo $_SESSION['role']; ?>";
+        const url = `<?php echo URLROOT; ?>/${role}/announcements?announcement=${id}#announcement-${id}`;
+        window.location.href = url;
+      }
+
     </script>
     
   </body>

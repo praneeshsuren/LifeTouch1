@@ -68,4 +68,16 @@ class M_Equipment
     {
         return $this->errors;
     }
+
+    public function countAllEquipment()
+    {
+        // SQL query to count all equipment
+        $sql = "SELECT COUNT(*) as total FROM $this->table";
+
+        // Execute the query and fetch the result
+        $result = $this->get_row($sql);
+
+        // Return the total count
+        return $result ? $result->total : 0;
+    }
 }
