@@ -1,37 +1,48 @@
 <?php
 
-    //Admin class
-    class M_Membership_plan{
+//Admin class
+class M_Membership_plan
+{
 
-        use Model;
+    use Model;
 
-        protected $table = 'membership_plan';
-        protected $allowedColumns = [
-            'membershipPlan_id',
-            'plan',
-            'amount'
-        ];
+    protected $table = 'membership_plan';
+    protected $allowedColumns = [
+        'membershipPlan_id',
+        'plan',
+        'duration',
+        'amount'
+    ];
 
-        public function validate($data) {
-            $this->errors = [];
-        
-            if (empty($data['id'])) {
-                $this->errors['membershipPlan_id'] = 'id is required';
-            } 
-            if (empty($data['plan'])) {
-                $this->errors['plan'] = 'plan is required';
-            } 
-            if (empty($data['amount'])) {
-                $this->errors['amount'] = 'amount is required';
-            } 
+    public function validate($data)
+    {
+        $this->errors = [];
 
-            // If there are no errors, return true; otherwise, return false.
-            return empty($this->errors);
+        if (empty($data['plan'])) {
+            $this->errors['plan'] = 'Plan name is required';
+        }
+        if (empty($data['duration'])) {
+            $this->errors['duration'] = 'Duration is required';
+        }
+        if (empty($data['amount'])) {
+            $this->errors['amount'] = 'Amount is required';
+        }
+        // Add validation for numeric values if needed
+        if (!empty($data['amount']) && !is_numeric($data['amount'])) {
+            $this->errors['amount'] = 'Amount must be a number';
+        }
+        if (!empty($data['duration']) && !is_numeric($data['duration'])) {
+            $this->errors['duration'] = 'Duration must be a number';
         }
 
-        // Method to get errors after validation
-        public function getErrors()
-        {
-            return $this->errors;
-        }      
+        return empty($this->errors);
     }
+
+
+
+    // Method to get errors after validation
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+}

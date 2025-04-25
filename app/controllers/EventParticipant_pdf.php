@@ -123,7 +123,7 @@ tr:nth-child(even) { background-color: #f9f9f9; }
                         <th>Member</th>
                         <th>Membership No</th>
                         <th>NIC</th>
-                        <th>Contact</th>
+                        <th>Email</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -136,7 +136,7 @@ tr:nth-child(even) { background-color: #f9f9f9; }
                     <td>' . ($p->is_member ? 'Yes' : 'No') . '</td>
                     <td>' . htmlspecialchars($p->membership_number ?? '—') . '</td>
                     <td>' . htmlspecialchars($p->nic) . '</td>
-                    <td>' . htmlspecialchars($p->contact_no) . '</td>
+                    <td>' . htmlspecialchars($p->email) . '</td>
                 </tr>
             ';
             }

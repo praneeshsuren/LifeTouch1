@@ -36,7 +36,7 @@ class Manager extends Controller
             'membershipCounts' => $membershipCounts,
             'inventoryCounts' => $inventoryCounts,
         ];
-        
+
         $this->view('manager/manager_dashboard', $data);
     }
 
@@ -459,45 +459,45 @@ class Manager extends Controller
 
             // Handle file upload if a new file is provided
             if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
-            $targetDir = "assets/images/Equipment/";
-            $fileName = time() . "_" . basename($_FILES["file"]["name"]);
-            $targetFile = $targetDir . $fileName;
+                $targetDir = "assets/images/Equipment/";
+                $fileName = time() . "_" . basename($_FILES["file"]["name"]);
+                $targetFile = $targetDir . $fileName;
 
-            if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
-                $updatedData['file'] = $fileName;
-            } else {
-                $_SESSION['message'] = "Failed to upload image.";
-                $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
-                return;
-            }
+                if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
+                    $updatedData['file'] = $fileName;
+                } else {
+                    $_SESSION['message'] = "Failed to upload image.";
+                    $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
+                    return;
+                }
             }
 
             // Validate the data using the model's validate function
             if ($equipmentModel->validate($updatedData)) {
-            // Update the equipment in the database
-            $updateResult = $equipmentModel->update($id, $updatedData, 'equipment_id');
+                // Update the equipment in the database
+                $updateResult = $equipmentModel->update($id, $updatedData, 'equipment_id');
 
-            if ($updateResult === false) {
-                $_SESSION['message'] = "Failed to update equipment.";
-            } else {
-                $_SESSION['message'] = "Equipment updated successfully.";
-            }
+                if ($updateResult === false) {
+                    $_SESSION['message'] = "Failed to update equipment.";
+                } else {
+                    $_SESSION['message'] = "Equipment updated successfully.";
+                }
 
-            // Redirect to the equipment list page after updating
-            redirect('manager/equipment');
+                // Redirect to the equipment list page after updating
+                redirect('manager/equipment');
             } else {
-            // Pass validation errors to the view
-            $this->view('manager/equipment_edit', [
-                'equipment' => $equipment[0],
-                'errors' => $equipmentModel->getErrors()
-            ]);
-            return;
+                // Pass validation errors to the view
+                $this->view('manager/equipment_edit', [
+                    'equipment' => $equipment[0],
+                    'errors' => $equipmentModel->getErrors()
+                ]);
+                return;
             }
         }
 
         // Pass the equipment data to the view for editing
         $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
-        }
+    }
 
     public function membership_plan()
     {
@@ -514,8 +514,9 @@ class Manager extends Controller
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $planData = [
-                'plan' => trim($_POST['plan_name']),
-                'amount' => (float) trim($_POST['amount'])  // Cast to float
+                'plan' => trim($_POST['plan']),
+                'duration' => trim($_POST['duration']),
+                'amount' => trim($_POST['amount'])
             ];
 
             if ($membershipModel->validate($planData)) {
@@ -524,12 +525,12 @@ class Manager extends Controller
                 } else {
                     $_SESSION['error'] = "Failed to add plan.";
                 }
+                redirect('manager/membership_plan');
             } else {
                 $_SESSION['form_errors'] = $membershipModel->getErrors();
                 $_SESSION['form_data'] = $_POST;
+                redirect('manager/membership_plan');
             }
-
-            redirect('manager/membership_plan');
         } else {
             redirect('manager/membership_plan');
         }
@@ -539,38 +540,44 @@ class Manager extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $planId = $_POST['membershipPlan_id'];
-
             $model = new M_Membership_plan();
-            $model->delete($planId, 'membershipPlan_id'); // Specify the primary key column
+
+            if ($model->delete($planId, 'membershipPlan_id')) {
+                $_SESSION['success'] = "Plan deleted successfully";
+            } else {
+                $_SESSION['error'] = "Failed to delete plan";
+            }
 
             redirect('manager/membership_plan');
         }
     }
+
     public function update_plan()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $model = new M_Membership_plan();
             $id = $_POST['membershipPlan_id'];
 
-            if ($model->validate($_POST)) {
-                $model->update($id, $_POST, 'membershipPlan_id');
+            $data = [
+                'plan' => trim($_POST['plan']),
+                'duration' => trim($_POST['duration']),
+                'amount' => trim($_POST['amount'])
+            ];
+
+            if ($model->validate($data)) {
+                if ($model->update($id, $data, 'membershipPlan_id')) {
+                    $_SESSION['success'] = "Plan updated successfully";
+                } else {
+                    $_SESSION['error'] = "Failed to update plan";
+                }
                 redirect('manager/membership_plan');
             } else {
-                // Reload membership plans to keep the table visible
-                $data = [
-                    'membership_plan' => $model->findAll(),
-                    'edit_data' => $_POST,
-                    'edit_errors' => $model->getErrors()
-                ];
-
                 $_SESSION['edit_data'] = $_POST;
                 $_SESSION['edit_errors'] = $model->getErrors();
-                $_SESSION['error'] = "Please fix the highlighted errors.";
-
                 redirect('manager/membership_plan');
             }
         }
-}
+    }
 
 
     public function supplements()
@@ -609,5 +616,5 @@ class Manager extends Controller
             'supplement' => $supplement[0],
             'purchases' => $purchases
         ]);
-        }
+    }
 }

@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/login-style.css?v=<?php echo time(); ?>" />
+
     <style>
         
     </style>
@@ -44,29 +45,29 @@
     </header>
 
     <div id="container">
-        <h1>Start a better shape of you!</h1>
-        <h1>Come join us</h1>
-        <p>Please complete the login process with correct information.</p>
+        
+            <h2 style="color:white">Forgot Password</h2><br>
 
-        <!-- Display error messages if any -->
-        <?php if (!empty($data['error'])): ?>
-            <div class="error-message">
-                <?php echo $data['error']; ?>
-            </div>
-        <?php endif; ?>
+            <?php if (isset($error)): ?>
+                <div class="alert alert-danger"><?php echo $error; ?></div>
+            <?php endif; ?>
 
-        <form action="<?php echo URLROOT; ?>/login/user" method="POST">
-            <div class="input-box">
-                <input type="text" name="username" placeholder="Username" required>
-            </div>
+            <?php if (isset($success)): ?>
+                <div class="alert alert-success"><?php echo $success; ?></div>
+            <?php endif; ?>
 
-            <div class="input-box">
-                <input type="password" name="password" placeholder="Password" required>
-            </div>
+            <form action="<?php echo URLROOT; ?>/login/forgotPassword" method="post">
+                <div class="input-box">
+                    <input type="text" name="username" id="username" class="form-control" placeholder="Username" required>
+                </div>
+                
+                <br><a href="<?php echo URLROOT; ?>/login" style="margin-top: -60px;">Back to Login</a><br>
 
-            <br><a href="<?php echo URLROOT; ?>/login/forgotPassword">Forgot Password?</a><br>
-            <button type="submit" name="submit" class="btn">Login</button>
-        </form>
+                <button type="submit" class="btn" style="width: 150px;">Reset Password</button>
+            </form>
+
+            
+    </div>
 
 
     </div>

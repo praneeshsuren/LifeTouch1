@@ -54,70 +54,70 @@ class Report extends Controller
         $this->view('manager/event_report', $data);
     }
     public function event_payment($event_id = null)
-{
-    // Initialize models
-    $eventModel = new M_Event();
-    $participantModel = new M_JoinEvent();
+    {
+        // Initialize models
+        $eventModel = new M_Event();
+        $participantModel = new M_JoinEvent();
 
-    // Handle form submission
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $event_id = $_POST['event_id'] ?? $event_id;
+        // Handle form submission
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $event_id = $_POST['event_id'] ?? $event_id;
 
-        // Prepare data
-        $postData = [
-            'event_id' => $event_id,
-            'full_name' => $_POST['full_name'] ?? '',
-            'nic' => $_POST['nic'] ?? '',
-            'is_member' => isset($_POST['is_member']) ? 1 : 0,
-            'membership_number' => $_POST['membership_number'] ?? null,
-            'email' => $_POST['email'] ?? ''
-        ];
+            // Prepare data
+            $postData = [
+                'event_id' => $event_id,
+                'full_name' => $_POST['full_name'] ?? '',
+                'nic' => $_POST['nic'] ?? '',
+                'is_member' => isset($_POST['is_member']) ? 1 : 0,
+                'membership_number' => $_POST['membership_number'] ?? null,
+                'email' => $_POST['email'] ?? ''
+            ];
 
-        // Validate and save
-        if ($participantModel->validate($postData)) {
-            if ($participantModel->insert($postData)) {
-                $_SESSION['success'] = "Participant added successfully!";
+            // Validate and save
+            if ($participantModel->validate($postData)) {
+                if ($participantModel->insert($postData)) {
+                    $_SESSION['success'] = "Participant added successfully!";
 
-                // Ensure event_id is valid before redirecting
-                if (!empty($event_id)) {
-                    redirect('report/participant_details/' . $event_id);
+                    // Ensure event_id is valid before redirecting
+                    if (!empty($event_id)) {
+                        redirect('report/participant_details/' . $event_id);
+                    } else {
+                        $_SESSION['error'] = "Missing event ID after save.";
+                        redirect('report/event_payment');
+                    }
+                    return;
                 } else {
-                    $_SESSION['error'] = "Missing event ID after save.";
-                    redirect('report/event_payment');
+                    $_SESSION['error'] = "Failed to add participant. Please try again.";
                 }
-                return;
             } else {
-                $_SESSION['error'] = "Failed to add participant. Please try again.";
+                $_SESSION['form_errors'] = $participantModel->errors;
+                $_SESSION['form_data'] = $postData;
             }
-        } else {
-            $_SESSION['form_errors'] = $participantModel->errors;
-            $_SESSION['form_data'] = $postData;
+
+            // Redirect back to the form
+            if (!empty($event_id)) {
+                redirect('report/event_payment/' . $event_id);
+            } else {
+                redirect('report/event_payment');
+            }
+
+            return;
         }
 
-        // Redirect back to the form
-        if (!empty($event_id)) {
-            redirect('report/event_payment/' . $event_id);
-        } else {
-            redirect('report/event_payment');
-        }
+        // For GET requests
+        $event = $eventModel->first(['event_id' => $event_id]);
 
-        return;
+        $this->view('manager/event_payment', [
+            'event' => $event,
+            'event_id' => $event_id,
+            'errors' => $_SESSION['form_errors'] ?? [],
+            'old' => $_SESSION['form_data'] ?? []
+        ]);
+
+        // Clear session messages
+        unset($_SESSION['form_errors']);
+        unset($_SESSION['form_data']);
     }
-
-    // For GET requests
-    $event = $eventModel->first(['event_id' => $event_id]);
-
-    $this->view('manager/event_payment', [
-        'event' => $event,
-        'event_id' => $event_id,
-        'errors' => $_SESSION['form_errors'] ?? [],
-        'old' => $_SESSION['form_data'] ?? []
-    ]);
-
-    // Clear session messages
-    unset($_SESSION['form_errors']);
-    unset($_SESSION['form_data']);
-}
 
     public function participant_details($event_id)
     {
@@ -134,21 +134,7 @@ class Report extends Controller
 
         $this->view('manager/participant_details', $data);
     }
-    public function participant_update($id)
-    {
-        $model = new M_JoinEvent();
 
-        $data = [
-            'participant_id' => $id,
-            'event_participants' => $model->where(
-                ['participant_id' => $id],
-                [],
-                'id'
-            )
-        ];
-
-        $this->view('manager/participant_details', $data);
-    }
     public function payment_report()
     {
         $paymentModel = new M_Payment();

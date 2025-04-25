@@ -52,7 +52,7 @@ class Home extends Controller
                             $mail->Host = 'smtp.gmail.com';
                             $mail->SMTPAuth = true;
                             $mail->Username = 'amandanethmini100@gmail.com'; // Your Gmail
-                            $mail->Password = 'pitf gsqd eibz xejg'; // App password
+                            $mail->Password = 'niib zlpx xskb bmag'; // App password
                             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                             $mail->Port = 587;
 

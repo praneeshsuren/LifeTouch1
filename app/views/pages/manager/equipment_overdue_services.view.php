@@ -42,6 +42,8 @@
                 <a href="equipment_upcoming_services"> <button class="filter">Upcoming Services</button></a>
                 <a href="equipment_overdue_services"> <button class="filter" style="background-color:#007bff;color:white;">Overdue Services</button></a>
             </div>
+            <a href="<?php echo URLROOT; ?>/manager/report" class="btn" style="float: right; margin-top: -50px;margin-bottom:3px;">Back</a>
+
             <div class="date-filter-container">
                 <div class="left">
                     <label for="startDate">Start Date: </label>

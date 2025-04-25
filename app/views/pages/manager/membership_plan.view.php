@@ -82,7 +82,9 @@
                         <thead>
                             <tr>
                                 <th>Plan Name</th>
+                                <th>Duration</th>
                                 <th>Amount</th>
+                                
                                 <th>Delete</th>
                             </tr>
                         </thead>
@@ -92,9 +94,13 @@
                                     <tr onclick="openEditForm(
                     '<?php echo $plan->membershipPlan_id; ?>',
                     '<?php echo htmlspecialchars($plan->plan); ?>',
+                    '<?php echo htmlspecialchars($plan->duration); ?>',
                     '<?php echo htmlspecialchars($plan->amount); ?>'
+                    
+                    
                 )">
                                         <td><?php echo htmlspecialchars($plan->plan); ?></td>
+                                        <td><?php echo htmlspecialchars($plan->duration); ?></td>
                                         <td><?php echo htmlspecialchars($plan->amount); ?></td>
                                         <td>
                                             <form action="<?php echo URLROOT; ?>/manager/delete_plan" method="POST"
@@ -128,6 +134,13 @@
                                     <?php endif; ?>
                                 </div>
                                 <div class="input-group">
+                                    <label for="edit_amount">Duration</label>
+                                    <input type="text" id="edit_duration" name="duration" required>
+                                    <?php if (isset($_SESSION['edit_errors']['duration'])): ?>
+                                        <span class="error-message"><?php echo $_SESSION['edit_errors']['duration']; ?></span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="input-group">
                                     <label for="edit_amount">Amount</label>
                                     <input type="text" id="edit_amount" name="amount" required>
                                     <?php if (isset($_SESSION['edit_errors']['amount'])): ?>
@@ -149,8 +162,12 @@
                                 <input type="hidden" id="eventIdInput" name="event_id" />
                                 <div class="input-group">
                                     <label for="plan_name">Plan Name</label>
-                                    <input type="text" id="plan_name" name="plan_name" required />
+                                    <input type="text" id="plan_name" name="plan" required />
 
+                                </div>
+                                <div class="input-group">
+                                    <label for="duration">Duration</label>
+                                    <input type="text" id="duration" name="duration" required />
                                 </div>
                                 <div class="input-group">
                                     <label for="amount">Amount</label>
@@ -195,6 +212,7 @@
                 <?php if (isset($_SESSION['edit_data'])): ?>
                     document.getElementById("edit_membershipPlan_id").value = "<?php echo $_SESSION['edit_data']['membershipPlan_id'] ?? ''; ?>";
                     document.getElementById("edit_plan_name").value = "<?php echo $_SESSION['edit_data']['plan'] ?? ''; ?>";
+                    document.getElementById("edit_duration").value = "<?php echo $_SESSION['edit_data']['duration'] ?? ''; ?>";
                     document.getElementById("edit_amount").value = "<?php echo $_SESSION['edit_data']['amount'] ?? ''; ?>";
                 <?php endif; ?>
             <?php else: ?>
@@ -202,9 +220,10 @@
             <?php endif; ?>
         };
         // Open the Edit Form
-        function openEditForm(id, planName, amount) {
+        function openEditForm(id, planName,duration, amount) {
             document.getElementById("edit_membershipPlan_id").value = id;
             document.getElementById("edit_plan_name").value = planName;
+            document.getElementById("edit_duration").value = duration;
             document.getElementById("edit_amount").value = amount;
             document.getElementById("editForm").style.display = "flex";
         }
