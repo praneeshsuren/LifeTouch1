@@ -20,7 +20,42 @@
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
-    
+    <style>
+        /* Row highlighting */
+        .active-row {
+            background-color: #e8f5e9;
+            /* Light green background for active rows */
+        }
+
+        .inactive-row {
+            background-color: #ffebee;
+            /* Light red background for inactive rows */
+        }
+
+        /* Status badges */
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .status.active {
+            background-color: #c8e6c9;
+            /* Green background */
+            color: #256029;
+            /* Dark green text */
+        }
+
+        .status.inactive {
+            background-color: #ffcdd2;
+            /* Red background */
+            color: #c63737;
+            /* Dark red text */
+        }
+    </style>
+
 </head>
 
 <body>
@@ -56,7 +91,8 @@
 
 
                 <div class="user-table-wrapper">
-                <div class="table-scroll-container">
+                    <div class="table-scroll-container">
+                        <!-- In your table section -->
                         <table class='user-table'>
                             <thead>
                                 <tr>
@@ -74,27 +110,27 @@
                             <tbody>
                                 <?php if (!empty($reportData)): ?>
                                     <?php foreach ($reportData as $member) : ?>
-                                        <tr class="<?php echo !$member->is_compliant ? 'non-compliant' : ''; ?>">
+                                        <tr class="<?php echo ($member->subscription_status == 'active') ? 'active-row' : 'inactive-row'; ?>">
                                             <td><?php echo htmlspecialchars($member->member_id); ?></td>
                                             <td><?php echo htmlspecialchars($member->member_name); ?></td>
                                             <td><?php echo htmlspecialchars($member->contact_number); ?></td>
                                             <td><?php echo htmlspecialchars($member->email_address); ?></td>
                                             <td><?php echo htmlspecialchars($member->membership_plan); ?></td>
-                                            <td><?php echo htmlspecialchars($member->membership_start_date); ?></td>
+                                            <td><?php echo date('Y-m-d', strtotime($member->membership_start_date)); ?></td>
                                             <td><?php echo 'Rs. ' . number_format($member->expected_amount, 2); ?></td>
-                                            <td><?php echo htmlspecialchars($member->last_valid_date); ?></td>
+                                            <td><?php echo date('Y-m-d', strtotime($member->last_valid_date)); ?></td>
                                             <td>
-                                                <?php if ($member->is_compliant): ?>
-                                                    <span class="status compliant">Active</span>
+                                                <?php if ($member->subscription_status == 'active'): ?>
+                                                    <span class="status active">Active</span>
                                                 <?php else: ?>
-                                                    <span class="status non-compliant">Expired</span>
+                                                    <span class="status inactive">Inactive</span>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="11" style="text-align: center;">No member records available</td>
+                                        <td colspan="9" style="text-align: center;">No member records available</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -106,7 +142,7 @@
     </main>
 
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const startDateInput = document.getElementById("startDate");
@@ -118,9 +154,9 @@
                 const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
 
                 tableRows.forEach(row => {
-                    if (row.cells.length < 11) return; // Skip header and empty rows
+                    if (row.cells.length < 9) return; // Skip header and empty rows
 
-                    const validDateText = row.cells[9].textContent.trim(); // Valid Until is 10th column
+                    const validDateText = row.cells[7].textContent.trim(); // Valid Until is 8th column (0-indexed 7)
                     const validDate = new Date(validDateText);
 
                     let showRow = true;
