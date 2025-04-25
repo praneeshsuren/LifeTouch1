@@ -11,14 +11,15 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $member = new M_Member;
                         $user = new M_User;
-            
+                        $userRole = $_SESSION['role'];
+                    
                         if (!isset($_POST['membership_plan'])) {
                             $_POST['membership_plan'] = 'Monthly'; // Default value
                         }
-
+                    
                         if ($member->validate($_POST) && $user->validate($_POST)) {
                             $temp = $_POST;
-            
+                    
                             // Set trainer_id based on gender
                             if ($temp['gender'] == 'Male') {
                                 $temp['member_id'] = 'MB/M/';
@@ -27,22 +28,29 @@
                             } else {
                                 $temp['member_id'] = 'MB/O/';
                             }
-            
-                            // Generate a 4-digit trainer ID offset
-                            $offset = str_pad($member->countAll() + 1, 4, '0', STR_PAD_LEFT);
-                            $temp['member_id'] .= $offset;
+                    
+                            // Get the last member_id from the database
+                            $lastId = $member->getLastMemberId();
+                            $lastMemberId = $lastId ? $lastId->id : 0;  // Default if no members exist
+
+                            // Get the last 4 digits of the member_id and increment by 1
+                            $lastMemberOffset = substr($lastMemberId, -4);  // Get the last 4 digits (offset part)
+                            $newOffset = str_pad((int)$lastMemberOffset + 1, 4, '0', STR_PAD_LEFT); // Increment by 1 and pad to 4 digits
+                            $temp['member_id'] .= $newOffset;  // Append the new offset to member_id
+                    
                             $temp['user_id'] = $temp['member_id'];
-            
+                    
                             $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
-
+                    
                             $temp['status'] = 'Active';
-
+                            $temp['id'] = $lastMemberId + 1;
+                            
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                                 $targetDir = "assets/images/Member/";
                                 $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
                                 $targetFile = $targetDir . $fileName;
-
+                    
                                 // Validate the file (e.g., check file type and size) and move it to the target directory
                                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
                                     $temp['image'] = $fileName; // Save the filename for the database
@@ -50,30 +58,47 @@
                                     $errors['file'] = "Failed to upload the file. Please try again.";
                                 }
                             }
-
+                    
                             // If no image uploaded, leave the 'image' key as null (if not set)
                             if (!isset($temp['image'])) {
                                 $temp['image'] = null;
                             }
-
-
+                    
+                            // Insert the new member and user into the database
                             $user->insert($temp);
                             $member->insert($temp);
-            
+                    
                             // Set a session message or flag for success
                             $_SESSION['success'] = "Member has been successfully registered!";
-            
-                            // Redirect to trainers list with success message
-                            redirect('admin/members');
+                    
+                            // Check the user role and redirect accordingly
+                            if ($userRole == 'Admin') {
+                                redirect('admin/members');  // Redirect to admin's members page
+                            } elseif ($userRole == 'Receptionist') {
+                                redirect('receptionist/members');  // Redirect to receptionist's members page
+                            } elseif ($userRole == 'Manager') {
+                                redirect('manager/members');  // Redirect to manager's members page
+                            } else {
+                                // Handle case where the user role is unrecognized
+                                redirect('error/roleNotFound');  // Redirect to an error page if the role is unrecognized
+                            }
+                            $this->view('admin/admin-createMember', $data);
                         } else {
                             // Merge validation errors and pass to the view
                             $data['errors'] = array_merge($user->errors, $member->errors);
-                            $this->view('admin/admin-createMember', $data);
+                            if ($userRole == 'Admin') {
+                                $this->view('admin/admin-createMember', $data);
+                            } elseif ($userRole == 'Receptionist') {
+                                $this->view('receptionist/receptionist-createMember', $data);
+                            } elseif ($userRole == 'Manager') {
+                                $this->view('manager/manager-createMember', $data);
+                            } else {
+                                // Handle case where the user role is unrecognized
+                                redirect('error/roleNotFound');  // Redirect to an error page if the role is unrecognized
+                            }
                         }
                     }
-                    else{
-                        redirect('admin/members');
-                    }
+                    
 
                     break;
 
