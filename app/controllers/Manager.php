@@ -339,7 +339,7 @@ class Manager extends Controller
     }
     public function equipment()
     {
-        $equipmentModel = new M_Equipment(); // Assume this is your equipment model
+        $equipmentModel = new M_Equipment();
         $data['equipment'] = $equipmentModel->findAll(); // Fetch all equipment data
         $this->view('manager/equipment', $data);
     }

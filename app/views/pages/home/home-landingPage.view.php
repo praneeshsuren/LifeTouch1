@@ -163,7 +163,7 @@
                 </div>
                 <div class="input-group checkbox-group" style="display: flex; gap: 10px;">
                     <label for="isMember">Gym Member?</label>
-                    <input type="checkbox" name="is_member" id="isMember" onclick="toggleMembership()">
+                    <input type="checkbox" name="is_member" id="isMember">
                 </div>
 
                 <div class="input-group" id="membershipGroup" style="display: none;">
@@ -319,7 +319,7 @@
             isMemberCheckbox.checked = false;
             membershipGroup.style.display = 'none';
 
-            // Initially assume not a member → show Pay
+            // Initially assume not a member  show Pay
             payNowBtn.style.display = 'inline-block';
             joinBtn.style.display = 'none';
 

@@ -74,9 +74,9 @@
 
         <div class="table-container">
 
-        <div class="filters">
-                <a href="#"><button style="background-color:#007bff;color:white;" class="filter">Online Payment</button></a>
-                <a href="physicalPayment_report"> <button class="filter" >Physical Payment</button></a>
+            <div class="filters">
+                <a href="payment_report"><button class="filter">Online Payment</button></a>
+                <a href="#"> <button style="background-color:#007bff;color:white;" class="filter">Physical Payment</button></a>
             </div>
             <div class="date-filter-container">
                 <div class="left">
@@ -125,12 +125,14 @@
                                             <td><?php echo 'Rs. ' . number_format($member->expected_amount, 2); ?></td>
                                             <td><?php echo date('Y-m-d', strtotime($member->last_valid_date)); ?></td>
                                             <td>
-                                                <?php if ($member->subscription_status == 'active'): ?>
-                                                    <span class="status active">Active</span>
-                                                <?php else: ?>
-                                                    <span class="status inactive">Inactive</span>
-                                                <?php endif; ?>
+                                                <?php
+                                                $status = (strtotime($member->last_valid_date) >= strtotime(date('Y-m-d'))) ? 'active' : 'inactive';
+                                                ?>
+                                                <span class="status <?php echo $status; ?>">
+                                                    <?php echo ucfirst($status); ?>
+                                                </span>
                                             </td>
+
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -198,32 +200,32 @@
             });
         });
     </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const tableRows = document.querySelectorAll(".user-table tbody tr");
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const tableRows = document.querySelectorAll(".user-table tbody tr");
 
-        // Function to filter rows by inactive status
-        function filterInactiveRows() {
-            tableRows.forEach(row => {
-                // Check the status column (the last column, index 8)
-                const statusCell = row.cells[8]; // Status is the 9th column (0-indexed 8)
-                if (statusCell) {
-                    const statusText = statusCell.textContent.trim().toLowerCase();
-                    
-                    // Hide the row if the status is not 'inactive'
-                    if (statusText !== 'inactive') {
-                        row.style.display = 'none';
-                    } else {
-                        row.style.display = ''; // Show the row if status is inactive
+            // Function to filter rows by inactive status
+            function filterInactiveRows() {
+                tableRows.forEach(row => {
+                    // Check the status column (the last column, index 8)
+                    const statusCell = row.cells[8]; // Status is the 9th column (0-indexed 8)
+                    if (statusCell) {
+                        const statusText = statusCell.textContent.trim().toLowerCase();
+
+                        // Hide the row if the status is not 'inactive'
+                        if (statusText !== 'inactive') {
+                            row.style.display = 'none';
+                        } else {
+                            row.style.display = ''; // Show the row if status is inactive
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
 
-        // Call the function to filter rows when the page loads
-        filterInactiveRows();
-    });
-</script>
+            // Call the function to filter rows when the page loads
+            filterInactiveRows();
+        });
+    </script>
 
 
 </body>

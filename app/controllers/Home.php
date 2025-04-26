@@ -45,12 +45,12 @@ class Home extends Controller
                         $eventLocation = $eventDetails->location;
 
 
-                        $mail = new PHPMailer(true);
+                        $mail = new PHPMailer(true);//throw an new exception if something goes wrong
                         try {
                             //Server settings
                             $mail->isSMTP();
-                            $mail->Host = 'smtp.gmail.com';
-                            $mail->SMTPAuth = true;
+                            $mail->Host = 'smtp.gmail.com'; //specify smtp server
+                            $mail->SMTPAuth = true; //ensure that the sender has permission to send emails
                             $mail->Username = 'amandanethmini100@gmail.com'; // Your Gmail
                             $mail->Password = 'niib zlpx xskb bmag'; // App password
                             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;

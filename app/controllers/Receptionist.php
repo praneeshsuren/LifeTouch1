@@ -1,4 +1,5 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -35,7 +36,8 @@ class Receptionist extends Controller
         $this->view('receptionist/receptionist-dashboard', $data);
     }
 
-    public function announcements(){
+    public function announcements()
+    {
 
         $announcementModel = new M_Announcement;
         $announcements = $announcementModel->findAllWithAdminDetails();
@@ -45,7 +47,6 @@ class Receptionist extends Controller
 
 
         $this->view('receptionist/receptionist-announcements', $data);
-        
     }
 
     public function trainers($action = null)
@@ -74,7 +75,7 @@ class Receptionist extends Controller
 
                 $this->view('receptionist/receptionist-trainerSalaryHistory');
                 break;
-            
+
             case 'trainerCalendar':
                 // Load the view to view a trainer's calendar
                 $trainer_id = $_GET['id'];
@@ -155,10 +156,24 @@ class Receptionist extends Controller
                 }
                 break;
 
-                case 'memberPaymentHistory':
-                    $this->view('receptionist/payment_history');
-                    break;
+            case 'memberPaymentHistory':
+                $member_id = $_GET['id'];
 
+                // Create payment model instance
+                $paymentModel = new M_PhysicalPayment(); // Changed to M_Payment since it handles both types
+
+                // Get payment history
+                $payment_history = $paymentModel->getPaymentHistory($member_id);
+
+                // Prepare data for view
+                $data = [
+                    'payment_history' => $payment_history,
+                    'member_id' => $member_id
+                ];
+
+                // Load view with data
+                $this->view('receptionist/members/memberPaymentHistory', $data);
+                break;
             default:
                 // Fetch all members and pass to the view
                 $memberModel = new M_Member;
@@ -172,7 +187,7 @@ class Receptionist extends Controller
                 break;
         }
     }
-    
+
     public function bookings($action = null)
     {
         $bookingModel = new M_Booking();
@@ -301,23 +316,56 @@ class Receptionist extends Controller
         $this->view('receptionist/receptionist-holiday');
     }
 
-    public function payment($action = null)
+    public function payment()
     {
-        $paymentModel = new M_Payment();
-        $payment = $paymentModel->paymentAdmin();
-        $plan_Model = new M_Membership_plan();
-        $plan = $plan_Model->findAll();
+        $plansModel = new M_Membership_plan();
+        $plans = $plansModel->findAll();
 
-        if($action === 'api'){
-            header('Content-Type: application/json');
-            echo json_encode([
-                'payment' => $payment,
-                'plan' => $plan
-            ]);
-            exit;
+        $data = [
+            'plans' => $plans,
+            'error' => '',
+            'success' => ''
+        ];
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $memberId = trim($_POST['member_id']);
+            $planName = trim($_POST['plan']);
+            $startDate = trim($_POST['start_date']);
+            $endDate = trim($_POST['end_date']);
+
+            $planModel = $plansModel->first(['plan' => $planName]);
+
+            if ($planModel) {
+                $planId = $planModel->membershipPlan_id;
+
+                $paymentData = [
+                    'member_id' => $memberId,
+                    'plan_id' => $planId,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate
+                ];
+
+                $physicalPaymentModel = new M_PhysicalPayment();
+                if ($physicalPaymentModel->validate($paymentData)) {
+                    // Only insert if validation passes
+                    if ($physicalPaymentModel->insert($paymentData)) {
+                        $data['success'] = 'Payment record added successfully!';
+                    } else {
+                        $data['error'] = 'Error: Could not add payment record.';
+                    }
+                } else {
+                    // If validation fails, display errors
+                    $data['error'] = implode('<br>', $physicalPaymentModel->getErrors());
+                }
+            } else {
+                $data['error'] = 'Error: Selected membership plan not found.';
+            }
         }
-        $this->view('receptionist/receptionist-payment');
+
+        $this->view('receptionist/receptionist-payment', $data);
     }
+
+
     public function event_payment()
     {
         $eventModel = new M_JoinEvent();
@@ -326,102 +374,90 @@ class Receptionist extends Controller
         $this->view('receptionist/event_payment', $data);
     }
     public function joinEvent()
-{
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Instantiate the model
-        $eventModel = new M_JoinEvent();
-        $eventDetailsModel = new M_Event(); // Instantiate the M_Event model
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $eventModel = new M_JoinEvent();
+            $eventDetailsModel = new M_Event();
 
-        // Collect form data
-        $data = [
-            'event_id' => $_POST['event_id'],
-            'full_name' => $_POST['full_name'],
-            'nic' => $_POST['nic'],
-            'email' => $_POST['email'],
-            'is_member' => $_POST['is_member'],
-            'membership_number' => $_POST['membership_number'] ?? '', // If member, use membership number; otherwise, set it as empty.
-        ];
+            $data = [
+                'event_id' => $_POST['event_id'],
+                'full_name' => $_POST['full_name'],
+                'nic' => $_POST['nic'],
+                'email' => $_POST['email'],
+                'is_member' => $_POST['is_member'],
+                'membership_number' => $_POST['membership_number'] ?? '',
+            ];
 
-        // Validate the data
-        if ($eventModel->validate($data)) {
-            // If validation passes, create the participant
-            if ($eventModel->insert($data)) {
-                
-                // Fetch event details
-                $eventDetails = $eventDetailsModel->getEventById($data['event_id']); // Fetch event details based on event_id
-                if ($eventDetails) {
-                    // Prepare event details for email
-                    $eventName = $eventDetails->name;
-                    $eventDate = date('F j, Y', strtotime($eventDetails->event_date));
-                    $startTime = date('g:i A', strtotime($eventDetails->start_time));
-                    $eventLocation = $eventDetails->location;
+            if ($eventModel->validate($data)) {
+                if ($eventModel->insert($data)) {
+                    $eventDetails = $eventDetailsModel->getEventById($data['event_id']);
+                    if ($eventDetails) {
+                        $eventName = $eventDetails->name;
+                        $eventDate = date('F j, Y', strtotime($eventDetails->event_date));
+                        $startTime = date('g:i A', strtotime($eventDetails->start_time));
+                        $eventLocation = $eventDetails->location;
 
-                    // Send email confirmation
-                    $mail = new PHPMailer(true);
-                    try {
-                        // Server settings
-                        $mail->isSMTP();
-                        $mail->Host = 'smtp.gmail.com';
-                        $mail->SMTPAuth = true;
-                        $mail->Username = 'amandanethmini100@gmail.com'; // Your Gmail
-                        $mail->Password = 'niib zlpx xskb bmag'; // App password
-                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                        $mail->Port = 587;
+                        $mail = new PHPMailer(true);
+                        try {
+                            $mail->isSMTP();
+                            $mail->Host = 'smtp.gmail.com';
+                            $mail->SMTPAuth = true;
+                            $mail->Username = 'amandanethmini100@gmail.com';
+                            $mail->Password = 'niib zlpx xskb bmag';
+                            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                            $mail->Port = 587;
 
-                        // Recipients
-                        $mail->setFrom('amandanethmini100@gmail.com', 'Life Touch Fitness');
-                        $mail->addAddress($data['email'], $data['full_name']);
+                            $mail->setFrom('amandanethmini100@gmail.com', 'Life Touch Fitness');
+                            $mail->addAddress($data['email'], $data['full_name']);
 
-                        // Content
-                        $mail->isHTML(true);
-                        $mail->Subject = 'Confirmation: Event Registration';
-                        $mail->Body    = "
-                        Dear {$data['full_name']},<br><br>
-                        Thank you for registering for the event: <strong>{$eventName}</strong>.<br>
-                        <ul>
-                            <li><strong>Date:</strong> {$eventDate}</li>
-                            <li><strong>Time:</strong> {$startTime}</li>
-                            <li><strong>Location:</strong> {$eventLocation}</li>
-                        </ul>
-                        We look forward to seeing you there!<br><br>
-                        Best regards,<br>
-                        <strong>Life Touch Fitness Team</strong>
-                    ";
+                            $mail->isHTML(true);
+                            $mail->Subject = 'Confirmation: Event Registration';
+                            $mail->Body = "
+                            Dear {$data['full_name']},<br><br>
+                            Thank you for registering for the event: <strong>{$eventName}</strong>.<br>
+                            <ul>
+                                <li><strong>Date:</strong> {$eventDate}</li>
+                                <li><strong>Time:</strong> {$startTime}</li>
+                                <li><strong>Location:</strong> {$eventLocation}</li>
+                            </ul>
+                            We look forward to seeing you there!<br><br>
+                            Best regards,<br>
+                            <strong>Life Touch Fitness Team</strong>
+                        ";
 
-                        // Send the email
-                        $mail->send();
-                        
-                        // Redirect after email is sent
-                        redirect('receptionist/event_payment');
-                        exit();
-                    } catch (Exception $e) {
-                        // Handle email error
-                        $_SESSION['join_errors'] = ['email' => 'Mailer Error: ' . $mail->ErrorInfo];
-                        $_SESSION['form_data'] = $data;
+                            $mail->send();
+
+                            $_SESSION['success'] = 'Registration successful! A confirmation email has been sent.';
+                            redirect('receptionist/event_payment');
+                            exit();
+                        } catch (Exception $e) {
+                            $_SESSION['join_errors'] = ['Mailer Error: ' . $mail->ErrorInfo];
+                            $_SESSION['form_data'] = $data;
+                            redirect('receptionist/event_payment');
+                            exit();
+                        }
+                    } else {
+                        $_SESSION['join_errors'] = ['Event details not found.'];
                         redirect('receptionist/event_payment');
                         exit();
                     }
                 } else {
-                    // Handle case where event details are not found
-                    $_SESSION['join_errors'] = ['event' => 'Event details not found.'];
+                    $_SESSION['join_errors'] = ['Something went wrong while inserting data.'];
                     redirect('receptionist/event_payment');
                     exit();
                 }
             } else {
-                // Handle failure (e.g., show error message)
-                die('Error inserting participant');
+                $_SESSION['join_errors'] = $eventModel->getErrors();
+                $_SESSION['form_data'] = $data;
+                redirect('receptionist/event_payment');
+                exit();
             }
-        } else {
-            // If validation failed, show errors
-            $errors = $eventModel->getErrors();
-            // You can load the view with the error messages
         }
     }
-}
 
 
-
-    public function settings(){
+    public function settings()
+    {
         $user_id = $_SESSION['user_id'];
         $receptionistModel = new M_Receptionist;
         $userModel = new M_User;
@@ -434,34 +470,35 @@ class Receptionist extends Controller
         $this->view('receptionist/receptionist-settings', $data);
     }
 
-    public function updateSettings() {
+    public function updateSettings()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $receptionistModel = new M_Receptionist;
             $userModel = new M_User;
-    
+
             // Sanitize inputs
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    
+
             // Retrieve existing receptionist data to compare
             $receptionist_id = $_POST['user_id'];
             $existingReceptionist = $receptionistModel->findByReceptionistId($receptionist_id);
-    
+
             // Retrieve existing user data to compare (for username check)
             $existingUser = $userModel->findByUserId($receptionist_id); // Assuming findByUserId exists for users table
-    
+
             // Initialize data array to track changes
             $data = [];
-    
+
             // Only include fields that have been updated
             $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address', 'image'];
-    
+
             // Check for changes and add them to the data array
             foreach ($fields as $field) {
                 if (isset($_POST[$field]) && $_POST[$field] !== $existingReceptionist->$field) {
                     $data[$field] = $_POST[$field];
                 }
             }
-    
+
             // Handle email uniqueness check manually if it's updated
             if (isset($_POST['email_address']) && $_POST['email_address'] !== $existingReceptionist->email_address) {
                 if ($receptionistModel->emailExists($_POST['email_address'], $receptionist_id)) {
@@ -474,7 +511,7 @@ class Receptionist extends Controller
                     return; // Prevent further execution if email is already in use
                 }
             }
-    
+
             // Check if the username has changed
             if (isset($_POST['username']) && $_POST['username'] !== $existingUser->username) {
                 if ($userModel->usernameExists($_POST['username'])) {
@@ -489,13 +526,13 @@ class Receptionist extends Controller
                     $data['username'] = $_POST['username'];
                 }
             }
-    
+
             // Handle file upload if exists and if changed
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $targetDir = "assets/images/Receptionist/";
                 $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
                 $targetFile = $targetDir . $fileName;
-    
+
                 // Validate the file (e.g., check file type and size) and move it to the target directory
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
                     $data['image'] = $fileName; // Save the new filename for the database
@@ -503,26 +540,26 @@ class Receptionist extends Controller
                     $errors['file'] = "Failed to upload the file. Please try again.";
                 }
             }
-    
+
             // Only proceed with the update if data exists
             if (!empty($data)) {
 
 
                 // Update receptionist data with the updated values
                 $updatedReceptionist = $receptionistModel->update($receptionist_id, $data, 'receptionist_id');
-    
+
                 // Update user data (if username was changed)
                 if (isset($data['username'])) {
                     $updatedUser = $userModel->update($receptionist_id, ['username' => $data['username']], 'user_id');
                 }
-    
+
                 // Check if the updates were successful
                 if (!$updatedReceptionist && (isset($updatedUser) ? !$updatedUser : true)) {
                     $_SESSION['success'] = "Settings have been successfully updated!";
                 } else {
                     $_SESSION['error'] = "No changes detected or update failed.";
                 }
-    
+
                 redirect('receptionist/settings');
             } else {
                 // If no changes, redirect back
@@ -533,7 +570,4 @@ class Receptionist extends Controller
             redirect('receptionist/settings');
         }
     }
-
 }
-
-?>

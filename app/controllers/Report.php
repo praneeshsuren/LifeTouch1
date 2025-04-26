@@ -156,4 +156,11 @@ class Report extends Controller
         $data['reportData'] = $membershipReport->getMembershipReport();
         $this->view('manager/payment_report', $data);
     }
+    public function physicalPayment_report()
+    {
+        // In your controller
+        $membershipReport = new M_MembershipLatest();
+        $data['reportData'] = $membershipReport->getMembershipReport();
+        $this->view('manager/physicalPayment_report', $data);
+    }
 }

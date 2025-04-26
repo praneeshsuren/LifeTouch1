@@ -43,14 +43,31 @@
         </div>
 
         <div class="table-container" style="width: 800px;text-align: center;">
-           
+            <?php if (!empty($_SESSION['success'])): ?>
+                <div class="success-container" style="color: green; font-size: 16px; margin-bottom: 10px;">
+                    <?php echo htmlspecialchars($_SESSION['success']); ?>
+                </div>
+                <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+
+            <?php if (!empty($_SESSION['join_errors']) && is_array($_SESSION['join_errors'])): ?>
+                <div class="error-container" style="color: red; font-size: 15px; margin-bottom: 10px;">
+                    <?php foreach ($_SESSION['join_errors'] as $error): ?>
+                        <p><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p>
+                    <?php endforeach; ?>
+                </div>
+                <?php unset($_SESSION['join_errors']); ?>
+            <?php endif; ?>
+            
             <div class="user-table-wrapper">
+
+
                 <table class='user-table'>
                     <thead>
                         <tr>
 
                             <th>Event Name</th>
-                            <th>Free or Not</th>
+                            <th>Free or Not (For Members)</th>
 
                         </tr>
                     </thead>

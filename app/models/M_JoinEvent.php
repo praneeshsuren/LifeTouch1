@@ -72,6 +72,16 @@ class M_JoinEvent
             $this->errors['nic'] = "Invalid NIC format. Must be either:
         - 9 digits ending with V  (e.g., 123456789V)
         - 12 digits (e.g., 200123456789)";
+        } else {
+            // Check if NIC already exists in the event participants table
+            $alreadyJoined = $this->query("SELECT * FROM event_participants WHERE event_id = :event_id AND nic = :nic", [
+                'event_id' => $data['event_id'],
+                'nic' => $nic
+            ]);
+
+            if (!empty($alreadyJoined)) {
+                $this->errors['nic'] = "This NIC is already registered for this event.";
+            }
         }
 
 
@@ -84,7 +94,7 @@ class M_JoinEvent
             $memberExists = $this->query("SELECT * FROM member WHERE member_id = :membership_number", [
                 'membership_number' => $data['membership_number']
             ]);
-        
+
             if (empty($memberExists)) {
                 $this->errors['membership_number'] = "Invalid membership number. Please provide a valid one.";
             } else {
@@ -93,7 +103,7 @@ class M_JoinEvent
                     'event_id' => $data['event_id'],
                     'membership_number' => $data['membership_number']
                 ]);
-        
+
                 if (!empty($alreadyJoined)) {
                     $this->errors['membership_number'] = "This gym member is already registered for this event.";
                 }
@@ -103,12 +113,12 @@ class M_JoinEvent
                 $this->errors['membership_number'] = "Only gym members should provide a membership number.";
             }
         }
-        
+
         if (empty($data['email'])) {
             $this->errors['email'] = "Email is required.";
         } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $this->errors['email'] = "Please enter a valid email address.";
-        }        
+        }
 
         // Return true if no errors; otherwise, false
         return empty($this->errors);
