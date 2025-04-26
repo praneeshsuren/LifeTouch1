@@ -4,80 +4,112 @@ class Supplement extends Controller
 {
     public function create_supplement()
     {
-        $errors = []; // Initialize errors array
-        $data = $_POST; // Get POST data
-        $supplement_id = null;
+        $errors = []; 
+    $data = $_POST; 
+    $supplement_id = null;
 
-        // Check if form is submitted via POST
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $supplementModel = new M_Supplements;
-            $supplementPurchaseModel = new M_SupplementPurchases;
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $supplementModel = new M_Supplements;
+        $supplementPurchaseModel = new M_SupplementPurchases;
 
-            // Handle file upload if exists
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $targetDir = "assets/images/Supplement/";
-                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
-                $targetFile = $targetDir . $fileName;
+        // Handle file upload if exists
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $targetDir = "assets/images/Supplement/";
+            $fileName = time() . "_" . basename($_FILES['image']['name']);
+            $targetFile = $targetDir . $fileName;
 
-                // Validate the file (e.g., check file type and size) and move it to the target directory
+            // Validate file type and size
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+            $fileType = mime_content_type($_FILES['image']['tmp_name']);
+            $fileSize = $_FILES['image']['size'];
+
+            if (!in_array($fileType, $allowedTypes)) {
+                $errors['file'] = "Only JPG, PNG, or GIF files are allowed.";
+            } elseif ($fileSize > 2 * 1024 * 1024) { // 2MB max
+                $errors['file'] = "File size must be less than 2MB.";
+            } else {
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $data['file'] = $fileName; // Save the filename for the database
+                    $data['file'] = $fileName;
                 } else {
-                    $errors['file'] = "Failed to upload the file. Please try again.";
-                }
-            }
-
-            // If no image uploaded, leave the 'file' key as null (if not set)
-            if (!isset($data['file'])) {
-                $data['file'] = null;
-            }
-
-            // Validate required fields (for example, 'name' must be provided)
-            if (empty($data['name'])) {
-                $errors['name'] = "Supplement name is required.";
-            }
-
-            // If there are no errors, save data to the database
-            if (empty($errors)) {
-                
-                $supplementModel->insert($data);
-                $supplement_id = $supplementModel->getLastInsertId(); // Get the last inserted supplement ID
-
-                $data['quantity_available'] = $data['quantity'];
-                $data['quantity_sold'] = 0;
-
-                // Insert into the supplements table
-                $supplementModel->insert($data); // Insert the supplement data
-
-                if ($supplement_id) {
-                    // After supplement is inserted, handle supplement purchase data
-                    // Add the purchase data (example values here, you can modify them as per your form)
-                    $purchaseData = [
-                        'supplement_id' => $supplement_id,
-                        'purchase_date' => date('Y-m-d'), // Assume today's date for purchase
-                        'purchase_price' => $data['purchase_price'], // You should collect purchase price from form
-                        'quantity' => $data['quantity'], // You should collect quantity from form
-                        'purchase_shop' => $data['purchase_shop'], // You should collect shop info from form
-                    ];
-
-                    // Insert into the supplement_purchases table
-                    $purchase_result = $supplementPurchaseModel->insert($purchaseData); 
-
-                    // Check if purchase was successfully added
-                    if ($purchase_result) {
-                        redirect('manager/supplements'); // Redirect to a success page
-                        exit;
-                    } else {
-                        $errors['purchase'] = "Failed to create supplement purchase. Please try again.";
-                    }
-                } else {
-                    $errors['general'] = "Failed to create supplement. Please try again.";
+                    $errors['file'] = "Failed to upload the image. Please try again.";
                 }
             }
         }
 
-        // Load the form view with errors (if any)
-        $this->view('manager/manager-createSupplement', ['errors' => $errors]);
+        if (!isset($data['file'])) {
+            $data['file'] = null;
+        }
+
+        // --- Validations ---
+
+        // Validate 'name'
+        if (empty($data['name']) || strlen($data['name']) < 2) {
+            $errors['name'] = "Supplement name is required and must be at least 2 characters.";
+        }
+
+        // Validate 'purchase_date'
+        if (empty($data['purchase_date'])) {
+            $errors['purchase_date'] = "Purchase date is required.";
+        } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['purchase_date'])) {
+            $errors['purchase_date'] = "Purchase date format must be YYYY-MM-DD.";
+        }
+
+        // Validate 'purchase_price'
+        if (empty($data['purchase_price'])) {
+            $errors['purchase_price'] = "Purchase price is required.";
+        } elseif (!is_numeric($data['purchase_price']) || $data['purchase_price'] <= 0) {
+            $errors['purchase_price'] = "Purchase price must be a positive number.";
+        }
+
+        // Validate 'quantity'
+        if (empty($data['quantity'])) {
+            $errors['quantity'] = "Quantity is required.";
+        } elseif (!is_numeric($data['quantity']) || intval($data['quantity']) <= 0) {
+            $errors['quantity'] = "Quantity must be a positive whole number.";
+        }
+
+        // Validate 'purchase_shop'
+        if (empty($data['purchase_shop']) || strlen($data['purchase_shop']) < 2) {
+            $errors['purchase_shop'] = "Purchase shop is required and must be at least 2 characters.";
+        }
+
+        // If no errors, save
+        if (empty($errors)) {
+            $data['quantity_available'] = $data['quantity'];
+            $data['quantity_sold'] = 0;
+
+            // Insert into supplements
+            $supplementModel->insert($data);
+            $supplement_id = $supplementModel->getLastInsertId();
+
+            if ($supplement_id) {
+                // Insert into supplement_purchases
+                $purchaseData = [
+                    'supplement_id' => $supplement_id,
+                    'purchase_date' => $data['purchase_date'],
+                    'purchase_price' => $data['purchase_price'],
+                    'quantity' => $data['quantity'],
+                    'purchase_shop' => $data['purchase_shop'],
+                ];
+
+                $purchase_result = $supplementPurchaseModel->insert($purchaseData);
+
+                if ($purchase_result) {
+                    redirect('manager/supplements'); // Success
+                    exit;
+                } else {
+                    $errors['purchase'] = "Failed to create supplement purchase. Please try again.";
+                }
+            } else {
+                $errors['general'] = "Failed to create supplement. Please try again.";
+            }
+        }
+    }
+
+    // If there were errors or no POST, load the view again with errors
+    $this->view('manager/manager-createSupplement', [
+        'errors' => $errors
+    ]);
     }
 
     public function deletePurchase($purchase_id)
@@ -124,9 +156,9 @@ class Supplement extends Controller
     public function deleteSupplement($supplement_id)
     {
         $supplementModel = new M_Supplements;
-
+        $delete = $supplementModel->delete($supplement_id, 'supplement_id');
         // Delete the supplement record
-        if ($supplementModel->delete($supplement_id)) {
+        if (!$delete) {
             redirect('manager/supplements'); // Redirect to a success page
             exit;
         } else {
