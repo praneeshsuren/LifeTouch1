@@ -56,7 +56,7 @@
               <option value="">-- Choose Equipment --</option>
             </select>
             <div id="selected-equipment">
-              <img id="equipment-image" src="" alt="Equipment Image" style="width: 50px; height: 50px; display: none;" />
+              <img id="equipment-image" src="" alt="Equipment Image" style="width: 100%; height: 100%; display: none;" />
               <p id="equipment-name"></p>
               <p id="equipment-id"></p> <!-- Display equipment ID here -->
             </div>
@@ -180,11 +180,11 @@ function displayWorkouts(workouts) {
         workoutCard.classList.add('workout-card');
 
         // Since equipment info is already part of the workout data (from the view), we can directly access it
-        const { workout_id, workout_name, workout_description, equipment_id, equipment_name, file } = workout;
+        const { workout_id, workout_name, workout_description, equipment_id, equipment_name, image } = workout;
 
         workoutCard.innerHTML = `
             <div class="workout-image">
-                <img src="${file || ''}" alt="Equipment Image" style="width: 50px; height: 50px;" />
+                <img src="<?php echo URLROOT;?>/assets/images/Equipment/${image}" alt="Equipment Image" style="width: 100%; object-fit: cover; overflow: hidden;" />
             </div>
             <div class="workout-details">
                 <h3>${workout_name}</h3>
