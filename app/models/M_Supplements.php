@@ -107,6 +107,12 @@
 
         }
 
+        public function getSupplementById($id)
+        {
+            $data = ['supplement_id' => $id];
+            return $this->first($data);
+        }
+
         
         
 

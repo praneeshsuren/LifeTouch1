@@ -225,6 +225,17 @@ class Supplement extends Controller
             // Validate quantity
             if (empty($data['quantity'])) {
                 $errors['quantity'] = "Quantity is required.";
+            }else {
+                // First, fetch the available quantity from the supplement table using the supplement_id
+                $supplement = $supplementModel->getSupplementById($data['supplement_id']); 
+            
+                if ($supplement) {
+                    if ($data['quantity'] > $supplement->quantity_available) {
+                        $errors['quantity'] = "Quantity cannot be greater than available stock ({$supplement->quantity_available}).";
+                    }
+                } else {
+                    $errors['quantity'] = "Selected supplement not found.";
+                }
             }
 
             // Validate price
