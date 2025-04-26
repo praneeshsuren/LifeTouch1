@@ -52,5 +52,75 @@
             }
         }
 
+        // In M_MembershipSubscriptions class
+
+        public function getExpiredMemberships() {
+            
+            date_default_timezone_set('Asia/Colombo');
+
+            $currentDate = date('Y-m-d');  // Get today's date in Y-m-d format
+            
+            // Query to fetch memberships where the end_date is before today's date
+            $query = "SELECT ms.*, mp.plan, ms.member_id
+                    FROM $this->table ms 
+                    JOIN membership_plan mp ON ms.plan_id = mp.membershipPlan_id
+                    WHERE DATE(ms.end_date) < :current_date AND ms.status = 'active'";  // 'active' ensures we only get active memberships
+
+            $params = [
+                'current_date' => $currentDate
+            ];
+
+            return $this->query($query, $params); // Fetch the expired memberships
+        }
+
+        public function updateMembershipStatus($membershipId, $status) {
+            // Prepare the query to update the membership status
+            $query = "UPDATE $this->table SET status = :status WHERE id = :membership_id";
+        
+            $params = [
+                'status' => $status,
+                'membership_id' => $membershipId
+            ];
+        
+            // Execute the query to update the status
+            return $this->query($query, $params);
+        }
+
+        // In M_MembershipSubscriptions class
+
+        public function getExpiringMemberships() {
+            // Set timezone to Colombo
+            date_default_timezone_set('Asia/Colombo');
+        
+            // Get today's date
+            $currentDate = date('Y-m-d'); // Today's date
+            // Calculate the dates for 1 and 2 days before expiration
+            $oneDayBefore = date('Y-m-d', strtotime('+1 day')); // Tomorrow
+            $twoDaysBefore = date('Y-m-d', strtotime('+2 days')); // Day after tomorrow
+        
+            // Query to fetch memberships where the end_date is exactly tomorrow or the day after
+            $query = "
+                SELECT ms.*, mp.plan, ms.member_id
+                FROM $this->table ms
+                JOIN membership_plan mp ON ms.plan_id = mp.membershipPlan_id
+                WHERE DATE(ms.end_date) IN (:one_day_before, :two_days_before)
+                AND ms.status = 'active'
+            ";
+        
+            // Bind the parameters
+            $params = [
+                'one_day_before' => $oneDayBefore,
+                'two_days_before' => $twoDaysBefore
+            ];
+        
+            // Fetch the memberships that are expiring soon
+            $expiringMemberships = $this->query($query, $params);
+        
+            return $expiringMemberships;
+        }
+        
+
+
+
     }
 ?>

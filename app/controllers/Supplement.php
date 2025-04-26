@@ -199,6 +199,8 @@ class Supplement extends Controller
             // Get data from POST request
             $data = $_POST;
             $supplementSaleModel = new M_SupplementSales;
+            $supplementModel = new M_Supplements;
+            $supplement_id = $data['supplement_id'] ?? null;
 
             // Sanitize and validate the input data
             $data['quantity'] = htmlspecialchars(trim($data['quantity']));
@@ -230,6 +232,17 @@ class Supplement extends Controller
 
                 // Check if insert was successful
                 if ($insertStatus) {
+                    // Update the quantity sold in the supplements table
+                    $supplement = $supplementModel->getSupplement($supplement_id);
+                    $quantity_sold = (int) $supplement->quantity_sold + (int) $data['quantity'];
+                    $quantity_available = (int) $supplement->quantity_available - (int) $data['quantity'];
+                    $supplementModel->update($supplement_id, ['quantity_sold' => $quantity_sold, 'quantity_available' => $quantity_available], 'supplement_id');
+
+                    $message = "Dear Member, you have successfully purchased " . $data['name'] . " Supplement.";
+
+                    // Create a notification for the member
+                    $notificationModel = new M_Notification;
+                    $notificationModel->createNotification($member_id, $message, 'Member');
                     $_SESSION['success'] = "Supplement sale added successfully!";
                     // Redirect to the supplement records page after successful insert
                     redirect('receptionist/members/supplementRecords?id=' . $member_id); 

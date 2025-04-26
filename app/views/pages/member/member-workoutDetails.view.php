@@ -50,12 +50,12 @@
                         <tr>
                             <td class="row-index"><input name="row_no" type="number" value="<?php echo $workout->row_no; ?>" readonly></td>
                             <td class="workout-id-cell"><input name="workout_id" type="text" value="<?php echo $workout->workout_id; ?>" readonly></td>
-                            <td class="workout-id-cell"><input name="workout_name" type="text" value="<?php echo $workout->workout_name; ?>" readonly></td>
+                            <td class="workout-name-cell"><input name="workout_name" type="text" value="<?php echo $workout->workout_name; ?>" readonly></td>
                             <td class="equipment-id-cell"><input name="equipment_id" type="text" value="<?php echo $workout->equipment_id; ?>" readonly></td>
                             <td class="equipment-name-cell"><input type="text" name="equipment_name" value="<?php echo $workout->equipment_name; ?>" readonly></td>
                             <td class="description-cell"><input name="description" type="text" value="<?php echo $workout->description; ?>" readonly></td>
-                            <td><input type="number" name="sets" value="<?php echo $workout->sets; ?>" min="1" readonly></td>
-                            <td><input type="number" name="reps" value="<?php echo $workout->reps; ?>" min="1" readonly></td>
+                            <td class="sets-cell"><input type="number" name="sets" value="<?php echo $workout->sets; ?>" min="1" readonly></td>
+                            <td class="reps-cell"><input type="number" name="reps" value="<?php echo $workout->reps; ?>" min="1" readonly></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -117,12 +117,11 @@
             </form>
         </div>
 
-
+    </main>
 
       
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
-    <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
     <script>
         document.getElementById("downloadPDF").addEventListener("click", function(e) {
             e.preventDefault();

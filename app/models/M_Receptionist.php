@@ -17,7 +17,8 @@
             'gender',
             'email_address',
             'image',
-            'status'
+            'status',
+            'id'
         ];
 
         public function findByReceptionistId($receptionistId){
@@ -88,5 +89,35 @@
             // If there are no errors, return true; otherwise, return false.
             return empty($this->errors);
         }
+
+        public function emailExists($email, $excludeId = null) {
+            $data = ['email_address' => $email];
+        
+            // Prepare conditions for excluding the current receptionist
+            $data_not = [];
+            if ($excludeId) {
+                $data_not['receptionist_id'] = $excludeId;
+            }
+        
+            // Use the where function to query the database
+            $result = $this->where($data, $data_not, 'email_address');
+        
+            // If we found any result, it means the email exists and is used by another receptionist
+            return !empty($result);
+        }
+
+        public function getLastReceptionistId() {
+            // Get the last member's ID from the database
+            $query = "SELECT id FROM {$this->table} ORDER BY id DESC LIMIT 1";
+            $result = $this->query($query);
+        
+            if ($result && !empty($result)) {
+                return $result[0];  // Return the last member record
+            }
+        
+            return null;  // Return null if no records are found
+        }
+
+
       
     }

@@ -122,20 +122,45 @@ class M_Attendance
             SELECT DAYNAME(date) AS day_name, COUNT(*) AS attendance_count
             FROM $this->table
             WHERE time_in IS NOT NULL
-            AND DATE(date) BETWEEN :startOfWeek AND :endOfWeek
+            AND DATE(date) BETWEEN DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND CURDATE()
             GROUP BY DAYNAME(date)
             ORDER BY FIELD(DAYNAME(date), 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
         ";
-    
-        $attendanceByDay = $this->query($queryByDay, [
-            'startOfWeek' => $startOfWeek,
-            'endOfWeek' => $endOfWeek
-        ]);
+
+        $rawAttendance = $this->query($queryByDay);
+
+        if ($rawAttendance === false) {
+            return [
+                'attendance_by_hour' => [],
+                'attendance_by_day' => []
+            ];
+        }
+
+        // Initialize all days to 0
+        $attendanceByDay = array_fill_keys(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], 0);
+
+        // Populate counts from actual query results
+        foreach ($rawAttendance as $attendance) {
+            $day_name = $attendance->day_name;
+            if (isset($attendanceByDay[$day_name])) {
+                $attendanceByDay[$day_name] = (int)$attendance->attendance_count;
+            }
+        }
+
+        // Convert to array of objects like [{ day_name: 'Monday', attendance_count: 15 }, ...]
+        $formattedAttendance = [];
+        foreach ($attendanceByDay as $day => $count) {
+            $formattedAttendance[] = [
+                'day_name' => $day,
+                'attendance_count' => $count
+            ];
+        }
 
         return [
-            'attendance_by_hour' => [],  // No hourly data for "week" period
-            'attendance_by_day' => $attendanceByDay ?? []  // Return attendance by day for the week
+            'attendance_by_hour' => [],
+            'attendance_by_day' => $formattedAttendance
         ];
+
     }
 }
 

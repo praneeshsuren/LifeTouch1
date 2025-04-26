@@ -8,7 +8,7 @@ class M_Announcement
 
     protected $table = 'announcement';
     protected $allowedColumns = [
-        'announcement_id',
+        'id',
         'subject',
         'description',
         'created_by',
@@ -36,7 +36,7 @@ class M_Announcement
     public function findAllWithAdminNames($limit) {
         // SQL query to join announcement and admin tables
         $query = "
-            SELECT a.announcement_id, a.subject, a.description, a.created_by, a.created_date, a.created_time,
+            SELECT a.id, a.subject, a.description, a.created_by, a.created_date, a.created_time,
                     CONCAT(ad.first_name, ' ', ad.last_name) AS admin_name, ad.image
             FROM announcement a
             LEFT JOIN admin ad ON a.created_by = ad.admin_id
@@ -50,21 +50,21 @@ class M_Announcement
 
     public function findAnnouncementById($announcement_id) {
         $sql = "
-            SELECT a.announcement_id, a.subject, a.description, a.created_by, a.created_date, a.created_time,
+            SELECT a.id, a.subject, a.description, a.created_by, a.created_date, a.created_time,
                     CONCAT(ad.first_name, ' ', ad.last_name) AS admin_name
             FROM announcement a
             LEFT JOIN admin ad ON a.created_by = ad.admin_id
-            WHERE a.announcement_id = :announcement_id
+            WHERE a.id = :id
         ";
 
         // Execute the query using the get_row function from the trait
-        return $this->get_row($sql, ['announcement_id' => $announcement_id]);
+        return $this->get_row($sql, ['id' => $announcement_id]);
     }
 
     public function findAllWithAdminDetails() {
         // SQL query to join announcement and admin tables
         $query = "
-            SELECT a.announcement_id, a.subject, a.description, a.created_by, a.created_date, a.created_time, ad.first_name, ad.last_name, ad.email_address, ad.image
+            SELECT a.id, a.subject, a.description, a.created_by, a.created_date, a.created_time, ad.first_name, ad.last_name, ad.email_address, ad.image
             FROM announcement a
             LEFT JOIN admin ad ON a.created_by = ad.admin_id
             ORDER BY a.created_date DESC, a.created_time DESC

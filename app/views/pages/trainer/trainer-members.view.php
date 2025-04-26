@@ -34,9 +34,9 @@
       <div class="user-table-container">
 
           <div class="filters">
-            <button class="filter active">All Users</button>
-            <button class="filter">Active Users</button>
-            <button class="filter">Inactive Users</button>
+            <button class="filter active" name="all">All Users</button>
+            <button class="filter" name="active">Active Users</button>
+            <button class="filter" name="inactive">Inactive Users</button>
           </div>
 
           <div class="user-table-header">
@@ -60,10 +60,36 @@
                       <th>Home Address</th>
                       <th>Email Address</th>
                       <th>Contact Number</th>
+                      <th>Status</th>
                   </tr>
               </thead>
               <tbody>
-                <!-- Data will be dynamically populated by JS -->
+                  <?php if (!empty($data['members'])): ?>
+                    <?php foreach ($data['members'] as $member) : ?>
+                      <tr onclick="window.location.href='<?php echo URLROOT; ?>/trainer/members/viewMember?id=<?php echo $member->member_id; ?>';" style="cursor: pointer;">
+                          <td><?php echo $member->member_id; ?></td>
+                          <td>
+                            <img src="<?php echo URLROOT; ?>/assets/images/Member/<?php echo !empty($member->image) ? $member->image : 'default-placeholder.jpg'; ?>" alt="Member Picture" class="user-image">
+                          </td>
+                          <td><?php echo $member->first_name; ?></td>
+                          <td><?php echo $member->last_name; ?></td>
+                          <td><?php echo $member->NIC_no; ?></td>
+                          <td><?php echo $member->gender; ?></td>
+                          <td><?php echo $member->date_of_birth; ?></td>
+                          <td><?php echo calculateAge($member->date_of_birth); ?></td>
+                          <td><?php echo $member->height; ?></td>
+                          <td><?php echo $member->weight; ?></td>
+                          <td><?php echo $member->home_address; ?></td>
+                          <td><?php echo $member->email_address; ?></td>
+                          <td><?php echo $member->contact_number; ?></td>
+                          <td><?php echo $member->status; ?></td>
+                      </tr>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                      <tr>
+                          <td colspan="13" style="text-align: center;">No members available</td>
+                      </tr>
+                  <?php endif; ?>
               </tbody>
             </table>
           </div>
@@ -74,79 +100,72 @@
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
-
     <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const tableBody = document.querySelector('.user-table tbody');
 
-  // Fetch data from the API
-  fetch('<?php echo URLROOT; ?>/trainer/members/api')
-    .then(response => {
-      console.log('Response Status:', response.status); // Log response status
-      return response.json();
-    })
-    .then(data => {
-      console.log('Fetched Data:', data); // Log the data received
-      if (Array.isArray(data) && data.length > 0) {
-        data.forEach(member => {
-          console.log('Member:', member); // Log each member data
-          const row = document.createElement('tr');
-          row.style.cursor = 'pointer';
-          row.onclick = () => {
-            window.location.href = `<?php echo URLROOT; ?>/trainer/members/userDetails?id=${member.member_id}`;
-          };
+      document.addEventListener('DOMContentLoaded', () => {
+        // Get references to the DOM elements
+        const searchInput = document.querySelector('.search-input');
+        const filterButtons = document.querySelectorAll('.filter');
+        const userRows = document.querySelectorAll('.user-table tbody tr');
+        
+        // Function to filter rows based on active, inactive, or all
+        function filterRows(status) {
+          userRows.forEach(row => {
+            const statusCell = row.cells[13]; // Assuming the status is in the 13th column (index 12)
+            const rowStatus = statusCell.textContent.toLowerCase();
 
-          row.innerHTML = `
-            <td>${member.member_id}</td>
-            <td>
-              <img src="<?php echo URLROOT; ?>/assets/images/member/${member.image || 'default-placeholder.jpg'}" alt="Member Picture" class="user-image">
-            </td>
-            <td>${member.first_name}</td>
-            <td>${member.last_name}</td>
-            <td>${member.NIC_no}</td>
-            <td>${member.gender}</td>
-            <td>${member.date_of_birth}</td>
-            <td>${calculateAge(new Date(member.date_of_birth))}</td>
-            <td>${member.height}</td>
-            <td>${member.weight}</td>
-            <td>${member.home_address}</td>
-            <td>${member.email_address}</td>
-            <td>${member.contact_number}</td>
-          `;
+            // Show all rows if "All Users" is selected
+            if (status === 'all') {
+              row.style.display = '';
+            } 
+            // Show only active users
+            else if (status === 'active' && rowStatus === 'active') {
+              row.style.display = '';
+            } 
+            // Show only inactive users
+            else if (status === 'inactive' && rowStatus === 'inactive') {
+              row.style.display = '';
+            } 
+            // Hide the row if it doesn't match the filter
+            else {
+              row.style.display = 'none';
+            }
+          });
+        }
 
-          tableBody.appendChild(row);
+        // Add event listeners to filter buttons
+        filterButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            // Set the active filter button
+            filterButtons.forEach(b => b.classList.remove('active'));
+            button.classList.add('active');
+
+            // Get the filter type (All, Active, or Inactive)
+            const filterType = button.getAttribute('name'); // Use the 'name' attribute
+            filterRows(filterType);
+          });
         });
-      } else {
-        console.log('No members found.');
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="11" style="text-align: center;">No Members available</td>
-          </tr>
-        `;
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching members:', error); // Log the error
-      tableBody.innerHTML = `
-        <tr>
-          <td colspan="11" style="text-align: center;">Error loading data</td>
-        </tr>
-      `;
-    });
-});
 
-function calculateAge(dob) {
-  const today = new Date();
-  const birthDate = new Date(dob);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-}
+        // Implement search functionality
+        searchInput.addEventListener('input', () => {
+          const searchText = searchInput.value.toLowerCase();
+          
+          userRows.forEach(row => {
+            const rowText = Array.from(row.cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+            if (rowText.includes(searchText)) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        });
 
-</script>
+        // Initially filter to show all users
+        filterRows('all');
+      });
+
+    </script>
+    
 
 
   </body>

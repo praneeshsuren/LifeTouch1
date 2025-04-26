@@ -15,6 +15,13 @@
                     $temp['event_id'] .= $offset;
                     $temp['status'] = 'Ongoing';
 
+                    $message = "A new event has been published: " . $temp['name'];
+                    $userType = 'all'; // Send notification to all users
+
+                    // Notify all users
+                    $notificationModel = new M_Notification;
+                    $notificationModel->notifyAllUsers($message, $userType);
+
                     $eventModel->insert($temp);
                     $_SESSION['success'] = "Event has been successfully published!";
 

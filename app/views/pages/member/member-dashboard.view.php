@@ -234,7 +234,7 @@
             pointHoverRadius: 7,
             borderWidth: 2,
             borderRadius: 10,
-            barThickness: 50
+            barThickness: 30
           }]
         };
 
@@ -356,6 +356,12 @@
         }
 
         return new Date(1970, 0, 1, hr24, min); // Create a new Date object (with fixed date) for comparison
+    }
+
+    function navigateToAnnouncement(id) {
+      const role = "<?php echo $_SESSION['role']; ?>";
+      const url = `<?php echo URLROOT; ?>/${role}/announcements?announcement=${id}#announcement-${id}`;
+      window.location.href = url;
     }
     </script>
 

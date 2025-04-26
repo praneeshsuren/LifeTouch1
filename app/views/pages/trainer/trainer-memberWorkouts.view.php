@@ -47,10 +47,10 @@
         <div class="navbar-container">
           <div class="navbar">
             <ul class="nav-links">
-              <li><a href="#user-details" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
-              <li><a href="#membership-details"><i class="ph ph-calendar-dots"></i>Member Attendance</a></li>
-              <li><a href="#workout-schedules" id="workoutSchedulesLink"><i class="ph ph-notebook"></i>Workout Schedules</a></li>
-              <li><a href="#supplement-records"><i class="ph ph-barbell"></i>Supplement Records</a></li>
+                <li><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
+                <li><a href="" id="attendanceLink"><i class="ph ph-calendar-dots"></i>Attendance Records<span class=""></a></li>
+                <li class="active"><a href="" id="workoutSchedulesLink"><i class="ph ph-notebook"></i>Workout Schedules</a></li>
+                <li><a href="" id="supplementRecordsLink"><i class="ph ph-barbell"></i>Supplement Records</a></li>
             </ul>
           </div>
         </div>
@@ -86,35 +86,36 @@
       </div>
     </main>
 
-    <script src="<?php echo URLROOT; ?>/assets/js/trainer-sidebar.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Function to get URL parameter by name
-        function getUrlParameter(name) {
-          const urlParams = new URLSearchParams(window.location.search);
-          return urlParams.get(name);
-        }
+      document.addEventListener('DOMContentLoaded', () => {
+    // Function to get URL parameter by name
+      function getUrlParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
 
-        // Get the 'id' parameter (member_id) from the URL
-        const memberId = getUrlParameter('id');
+      // Get the 'id' parameter (member_id) from the URL
+      const memberId = getUrlParameter('id');
 
-        if (memberId) {
-          // Update the Create Workout Schedule button with the member ID dynamically
-          const createWorkoutBtn = document.getElementById('createWorkoutBtn');
-          createWorkoutBtn.addEventListener('click', function() {
-            window.location.href = `<?php echo URLROOT; ?>/trainer/members/createWorkoutSchedule?id=${memberId}`;
-          });
+      if (memberId) {
+        // Member ID is available, use it in the navigation link
+        document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/trainer/members/viewMember?id=${memberId}`;
+        document.getElementById('attendanceLink').href = `<?php echo URLROOT; ?>/trainer/members/memberAttendance?id=${memberId}`;
+        document.getElementById('workoutSchedulesLink').href = `<?php echo URLROOT; ?>/trainer/members/workoutSchedules?id=${memberId}`;
+        document.getElementById('supplementRecordsLink').href = `<?php echo URLROOT; ?>/trainer/members/memberSupplements?id=${memberId}`;
+      } else {
+        // No member_id in the URL, show a message or handle accordingly
+        alert('No member selected.');
+      }
 
-          // Also update the navigation links with the member ID
-          const userDetailsLink = document.getElementById('userDetailsLink');
-          userDetailsLink.href = `<?php echo URLROOT; ?>/trainer/members/userDetails?id=${memberId}`;
-
-          const workoutSchedulesLink = document.getElementById('workoutSchedulesLink');
-          workoutSchedulesLink.href = `<?php echo URLROOT; ?>/trainer/members/workoutSchedules?id=${memberId}`;
-        } else {
-          alert('No member selected.');
-        }
+      // Add event listener to the "Create Workout Schedule" button
+      document.getElementById('createWorkoutBtn').addEventListener('click', () => {
+        window.location.href = `<?php echo URLROOT; ?>/trainer/members/createWorkoutSchedule?id=${memberId}`;
       });
+
+      
+  });
     </script>
 
   </body>

@@ -31,11 +31,11 @@
             <div class="announcementsContainer">
                 <?php if (!empty($data['announcements'])): ?>
                 <?php foreach ($data['announcements'] as $announcement): ?>
-                    <div class="announcement-card">
+                    <div class="announcement-card" id="announcement-<?php echo $announcement->id; ?>">
                         <div class="announcementCard-Header">
                             <div class="details">
                                 <div class="profile-img">
-                                    <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                                    <img class="preview-image" src="<?php echo URLROOT; ?>/assets/images/Admin/<?php echo !empty($announcement->image) ? $announcement->image : 'default-placeholder.jpg'; ?>" alt="Admin Profile Picture">
                                 </div>
                                 <div class="name-and-title">
                                     <h3><?php echo $announcement->first_name; ?> <?php echo $announcement->last_name; ?></h3>
@@ -65,5 +65,18 @@
         </main>
 
         <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                const params = new URLSearchParams(window.location.search);
+                const targetId = params.get('announcement');
+                if (targetId) {
+                const targetElement = document.getElementById('announcement-' + targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    targetElement.classList.add('highlight-announcement');
+                }
+                }
+            });
+        </script>
     </body>
 </html>

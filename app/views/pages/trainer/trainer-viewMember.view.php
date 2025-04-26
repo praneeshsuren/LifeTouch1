@@ -51,8 +51,8 @@
           <div class="navbar">
 
             <ul class="nav-links">
-              <li><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
-              <li><a href="" id="memberAttendanceLink"><i class="ph ph-calendar-dots"></i>Member Attendance<span class=""></a></li>
+              <li class="active"><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
+              <li><a href="" id="attendanceLink"><i class="ph ph-calendar-dots"></i>Attendance Records<span class=""></a></li>
               <li><a href="" id="workoutSchedulesLink"><i class="ph ph-notebook"></i>Workout Schedules</a></li>
               <li><a href="" id="supplementRecordsLink"><i class="ph ph-barbell"></i>Supplement Records</a></li>
             </ul>
@@ -71,9 +71,16 @@
 
                 <img src="<?php echo URLROOT; ?>/assets/images/Member/<?php echo !empty($data['member']->image) ? $data['member']->image : 'default-placeholder.jpg'; ?>" 
                     alt="Member Picture" 
-                    id="userImage">
-                <input type="file" name="profile_picture" id="profilePictureInput" accept="image/*" style="display: none;">
-                <button type="button" id="changePictureBtn" class="change-picture-btn">Change Picture</button>
+                    id="profilePicture">
+                <input 
+                  type="file" 
+                  onchange="display_image(this.files[0])" 
+                  name="image" 
+                  id="profilePictureInput" 
+                  accept="image/*" 
+                  style="display: none;"
+                >
+                <button type="button" id="changePictureBtn" class="change-picture-btn" style="display: none;">Change Picture</button>
 
               </div>
 
@@ -163,51 +170,89 @@
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
     <script>
-      document.getElementById('changePictureBtn').addEventListener('click', () => {
-        document.getElementById('profilePictureInput').click();
-      });
+  // Edit button functionality
+  document.getElementById('editBtn').addEventListener('click', () => {
+    // Enable all input fields and the membership plan select
+    const formElements = document.querySelectorAll('#userForm input, #userForm select');
+    formElements.forEach(element => {
+      element.disabled = false;
+    });
 
-      document.getElementById('profilePictureInput').addEventListener('change', function () {
-        const file = this.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            document.getElementById('trainerImage').src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        }
-      });
+    document.getElementById('user_id').disabled = true;
+    // Hide the Edit button, show the Save and Cancel buttons
+    
+    document.getElementById('editBtn').style.display = 'none';
+    document.getElementById('deleteBtn').style.display = 'none';
+    document.getElementById('saveBtn').style.display = 'inline-block';
+    document.getElementById('cancelBtn').style.display = 'inline-block';
+    document.getElementById('changePictureBtn').style.display = 'inline-block';
+  });
 
-      document.querySelectorAll('.nav-links li a').forEach(link => {
-        link.addEventListener('click', function () {
-          document.querySelectorAll('.nav-links li').forEach(item => item.classList.remove('active'));
-          this.parentElement.classList.add('active');
-        });
-      });
+  // Cancel button functionality (reset to disabled)
+  document.getElementById('cancelBtn').addEventListener('click', () => {
+    // Disable all input fields and the membership plan select
+    const formElements = document.querySelectorAll('#userForm input, #userForm select');
+    formElements.forEach(element => {
+      element.disabled = true;
+    });
 
-      document.addEventListener('DOMContentLoaded', () => {
-        // Function to get URL parameter by name
-        function getUrlParameter(name) {
-          const urlParams = new URLSearchParams(window.location.search);
-          return urlParams.get(name);
-        }
+    // Hide the Save and Cancel buttons, show the Edit button
+    document.getElementById('saveBtn').style.display = 'none';
+    document.getElementById('cancelBtn').style.display = 'none';
+    document.getElementById('changePictureBtn').style.display = 'none';
+    document.getElementById('editBtn').style.display = 'inline-block';
+    document.getElementById('deleteBtn').style.display = 'inline-block';
+  });
 
-        // Get the 'id' parameter (member_id) from the URL
-        const memberId = getUrlParameter('id');
+  // Delete button confirmation functionality
+  document.getElementById('deleteBtn').addEventListener('click', function(e) {
+    e.preventDefault(); // Prevent immediate redirect or form submission
 
-        if (memberId) {
-          // Member ID is available, use it in the navigation link
-          const userDetailsLink = document.getElementById('userDetailsLink');
-          userDetailsLink.href = `<?php echo URLROOT; ?>/trainer/members/userDetails?id=${memberId}`;
+    const confirmation = confirm("Are you sure you want to delete this member?");
+    if (confirmation) {
+      // If user clicks "OK", redirect to the delete URL
+      window.location.href = '<?php echo URLROOT; ?>/user/member/deleteMember?id=<?php echo $data['member']->member_id; ?>';
+    }
+  });
 
-          const workoutSchedulesLink = document.getElementById('workoutSchedulesLink');
-          workoutSchedulesLink.href = `<?php echo URLROOT; ?>/trainer/members/workoutSchedules?id=${memberId}`;
+  // Image change functionality
+  document.getElementById('changePictureBtn').addEventListener('click', () => {
+    document.getElementById('profilePictureInput').click();
+  });
 
-        } else {
-          // No member_id in the URL, show a message or handle accordingly
-          alert('No member selected.');
-        }
-      });
-    </script>
+  document.getElementById('profilePictureInput').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('profilePicture').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Function to get URL parameter by name
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // Get the 'id' parameter (member_id) from the URL
+    const memberId = getUrlParameter('id');
+
+    if (memberId) {
+      // Member ID is available, use it in the navigation link
+      document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/trainer/members/viewMember?id=${memberId}`;
+      document.getElementById('attendanceLink').href = `<?php echo URLROOT; ?>/trainer/members/memberAttendance?id=${memberId}`;
+      document.getElementById('workoutSchedulesLink').href = `<?php echo URLROOT; ?>/trainer/members/workoutSchedules?id=${memberId}`;
+      document.getElementById('supplementRecordsLink').href = `<?php echo URLROOT; ?>/trainer/members/memberSupplements?id=${memberId}`;
+    } else {
+      // No member_id in the URL, show a message or handle accordingly
+      alert('No member selected.');
+    }
+  });
+</script>
   </body>
 </html>
