@@ -245,8 +245,18 @@
         public function Payment($action = null) {
             $member_id = $_SESSION['user_id'] ?? null;
             $payment_Model = new M_Payment();
+            $payment = $payment_Model->paymentMember($member_id);
+            $plan_Model = new M_Membership_plan();
+            $plan = $plan_Model->findAll();
 
-            if ($action === 'savePayment'){
+            if($action === 'api'){
+                header('Content-type: application/json');
+                echo json_encode([
+                    'payment' => $payment,
+                    'plan' => $plan
+                ]);
+                exit;
+            } elseif ($action === 'savePayment'){
                 if($_SERVER['REQUEST_METHOD'] === "POST") {
                     header('Content-Type: application/json');
 
@@ -274,8 +284,8 @@
                     ]);
                     exit;
                 }
-               
             }
+            $this->view('member/member-payment');
         }
         
         public function createPayment(){
@@ -349,15 +359,10 @@
             $subscription_Model = new M_Subscription();
             $subscription_Model->deactivateExpiredSubscriptions();
             $memberPlan = $subscription_Model->subscriptionMember($member_id);
-
-            $payment_Model = new M_Payment();
-            $payment = $payment_Model->paymentMember($member_id);
-
             
             if($action === 'api'){
                 header('Content-type: application/json');
                 echo json_encode([
-                    'payment' => $payment,
                     'plan' => $plan,
                     'subscription' => $memberPlan
                 ]);

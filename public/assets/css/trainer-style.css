@@ -185,7 +185,6 @@ main .user-table-container .filters {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
-    margin-top: -4rem;
   }
   
 main .user-table-container .filters .filter {

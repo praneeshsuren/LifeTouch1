@@ -47,9 +47,9 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/membershipPlan">
+                <a href="<?php echo URLROOT; ?>/member/payment">
                     <i class='icon ph-bold ph-credit-card'></i>
-                    <span class="text">Membership</span>
+                    <span class="text">Payment</span>
                 </a>
             </li>
         </ul>

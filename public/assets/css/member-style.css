@@ -861,12 +861,14 @@ main > .searchbar {
     justify-content: center;
     align-items: center;
     flex-wrap:wrap;
-    grid-column: 1/-1;
     gap:10px;
+    background: var(--sidebar-color);
+    padding: 1rem;
+    border-radius: 0.8rem;
 }
 
 .card{
-    background-color: var(--sidebar-color);
+    background-color:#f0f0f0;
     color: hsl(233, 13%, 49%);
     border-radius: 0.8rem;
     width: 200px;
@@ -1817,13 +1819,13 @@ main .workout-container {
 .trainer-bio {
     color: #555;
     font-size: 0.95rem;
+    margin-bottom: 1rem;
 }
 
 .trainer-contact {
     display: flex;
     justify-content: space-between;
     gap: 0.5rem;
-    margin-top: -50px;
 }
 
 .btn {
@@ -2013,7 +2015,6 @@ main .workout-container {
 }
 
 .book-btn {
-    margin-top: -90px;
     text-align: right;
 }
 

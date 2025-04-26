@@ -32,12 +32,6 @@
         </div>
       </div>
 
-      <!-- memberships -->
-      <div class="cards">
-        <div class="card shadow">
-        </div>
-      </div>
-
       <!-- Current Membership Section -->
       <div class="current-membership">
         <h2 class="section-title">
@@ -60,26 +54,12 @@
         </div>
       </div>
 
-      <div class="payment-history">
-      <h2 class="section-title">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-          <line x1="1" y1="10" x2="23" y2="10"></line>
-        </svg>
-        Payment History
-      </h2>
-      <table class="payment-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Membership Plan</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
-        <tbody id="paymentHistoryBody">
-        </tbody>
-      </table>
-    </div>
+      <!-- memberships -->
+      <div class="cards">
+        <div class="card shadow">
+        </div>
+      </div>
+
       <div id="bookingModal" class="modal" >
         <div class="modal-content">
           <span class="close">&times;</span>
@@ -148,19 +128,6 @@
                 } else {
                   console.log("No plan found matching the subscription plan id.");
                 }
-              }
-
-              // console.log('payments:',data.payment);
-              const payment = Array.isArray(data.payment) ? data.payment : [];
-              if(payment.length == 0){
-                console.log("no pyaments found");
-                paymentTable(null);
-              } else{
-                const mergePayment = payment.map(p => {
-                  const selectedPlan = plan.find(s =>s.id === p.plan_id);
-                  return selectedPlan ? { ...p, ...selectedPlan } : p;
-                })
-                paymentTable(mergePayment);
               }
 
             })
@@ -348,31 +315,6 @@
         document.getElementById('progressPercentage').textContent = `${Math.round(progress)}% of membership period completed`;
         document.getElementById('daysRemaining').textContent = `${daysRemain} days remaining`;
       }
-
-      function paymentTable(payment){
-        const tbody = document.getElementById('paymentHistoryBody');
-        tbody.innerHTML = "";
-
-        if (payment.length === 0) {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `<td colspan="4" style="text-align: center;">No payment records found.</td>`;
-          tbody.appendChild(tr);
-          return; 
-        }
-
-        payment.sort((a,b) => new Date(a.start_date) - new Date(b.start_date));
-
-        payment.forEach(payment =>{
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${payment.start_date}</td>
-            <td>${payment.plan}</td>
-            <td>Rs ${payment.amount}.00</td>`;
-
-          tbody.appendChild(tr);
-        });
-      }
-
 
       function paymentModal(){
         const modal = document.getElementById("bookingModal");
