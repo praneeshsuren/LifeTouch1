@@ -48,11 +48,11 @@
                     <i class='arrow ph-bold ph-caret-down'></i>
                 </a>
                 <ul class="sub-menu">
-                    <a href="<?php echo URLROOT; ?>/receptionist/bookings">
-                        <span class="text">Bookings</span>
-                    </a>
                     <a href="<?php echo URLROOT; ?>/receptionist/holiday">
                         <span class="text">Holidays</span>
+                    </a>
+                    <a href="<?php echo URLROOT; ?>/receptionist/timeslot">
+                        <span class="text">Timeslot</span>
                     </a>
                 </ul>
             </li>

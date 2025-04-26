@@ -122,8 +122,8 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Fetched booking data:", data.bookings);
-                    console.log("Fetched holiday data:", data.holidays);
+                    // console.log("Fetched booking data:", data.bookings);
+                    // console.log("Fetched holiday data:", data.holidays);
 
                     holidays = data.holidays;
 

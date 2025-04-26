@@ -59,7 +59,7 @@
             return response.json();
           })
           .then(data => {
-            console.log('Fetched Data:', data); 
+            // console.log('Fetched Data:', data); 
             if (Array.isArray(data) && data.length > 0) {
               const container = document.querySelector('.trainers-grid');
               container.innerHTML = ''; 

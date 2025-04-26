@@ -70,7 +70,6 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const trainerId = urlParams.get('id'); 
-        console.log(trainerId);
         let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; // Default to the current month
         let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
         const dateToday = new Date().toISOString().split('T')[0];
@@ -123,7 +122,7 @@
                     .then(data => {
                         bookings = data.bookings;
                         timeSlots = data.timeSlots;
-                        console.log('Bookings:', bookings);
+                        // console.log('Bookings:', bookings);
                         if (currentYear >= new Date().getFullYear() &&
                             currentMonth >= (new Date().getMonth() + 1) && Array.isArray(bookings) && bookings.length > 0) {
                             markBookings(bookings);
@@ -133,14 +132,14 @@
                             bookDiv.innerHTML = `<div style="text-align: center; color: gray;">No bookings available.</div>`;
                         }
 
-                        console.log('isbooked:', data.isBooked);
-                        console.log('Time Slots:', timeSlots);
+                        // console.log('isbooked:', data.isBooked);
+                        // console.log('Time Slots:', timeSlots);
 
                         holidays = data.holidays.reduce((acc, holiday) => {
                             acc[holiday.date] = holiday.reason;
                             return acc;
                         }, {});
-                        console.log("holidays:",holidays);
+                        // console.log("holidays:",holidays);
 
                         buildCalendar(holidays); // Always build calendar
                     })
@@ -206,13 +205,12 @@
                 }
                 timeSlotsContainer.appendChild(timeSlotBtn);
             });
-            console.log(`Available slots count: ${availableSlotCount}`);
+            // console.log(`Available slots count: ${availableSlotCount}`);
 
             return availableSlotCount; 
         }
 
         function markBookings(bookings) {
-            console.log("b",bookings);
             bookDiv.innerHTML = ''; // Clear existing content
            
             // Filter bookings for "booked" and "pending" statuses
@@ -452,7 +450,7 @@
                 }
                     
                 if (selectedDate in holidays) {
-                    console.log("holiday");
+                    // console.log("holiday");
                     modalBody.innerHTML = `
                         <div style="padding: 80px 0; text-align: center;">
                             <strong>Holiday</strong>
@@ -600,7 +598,7 @@
                     b.timeslot_id == newTimeslot &&
                     (b.status === "booked" || b.status === "pending")
                 );
-                console.log(isSlotTaken);
+                // console.log(isSlotTaken);
 
                 if (isSlotTaken) {
                     alert("This timeslot is already taken (booked or pending). Please choose another one.");

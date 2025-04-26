@@ -171,7 +171,12 @@ main .user-table-container {
     padding: 20px;
     width: 100%;
     height: 100vh;
+    max-width:1300px;
+    max-height:630px; /* Adjust as per your design */
+    overflow-x:hidden; 
+    overflow-y: auto;
 }
+
   
 main .user-table-container .filters {
     display: flex;
@@ -210,10 +215,6 @@ main .user-table-container .user-table-header .search-input {
   }
   
 main .user-table-container .user-table-wrapper {
-    max-width:1300px;
-    max-height:630px; /* Adjust as per your design */
-    overflow-x:hidden; 
-    overflow-y: auto;
     position: relative;
     border: 1px solid #ddd; /* Optional: border around the scrollable area */
     border-radius: 0.5rem;

@@ -543,8 +543,14 @@ main > .searchbar {
 }
 
 /* payment page */
+.cardmain{
+    position: absolute;
+    top: 0;
+    left: 200px;
+}
 .payment-section {
     padding: 20px 0;
+    width: 1000px;
 }
 .payment-wrapper {
     display: grid;
@@ -741,7 +747,7 @@ main > .searchbar {
 .payment-form-group-flex > :not(:last-child) {
     margin-right: 12px;
 }
-.payment-form-submit-button {
+.payment-form-submit-button, .payment-form-cancel-button {
     margin-top: 1rem;
     border-radius: 8px;
     outline: transparent;
@@ -754,6 +760,7 @@ main > .searchbar {
     font-size: 1rem;
     padding: 10px;
     transition: var(--tran-02);
+    color: white;
 }
 
 .payment-form-submit-button:hover {
@@ -761,8 +768,11 @@ main > .searchbar {
 }
 
 .payment-form-submit-button {
-    color: white;
     background-color:  rgba(105,111,221,1);
+}
+
+.payment-form-cancel-button{
+    background-color: #d9d9d9;
 }
 
 .payment-form-submit-button:hover {

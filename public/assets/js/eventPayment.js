@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Initialize Stripe with your publishable key (replace with your actual key if not embedded in HTML)
     const stripe = Stripe(window.STRIPE_PUBLISHABLE_KEY);
-    console.log("Using Stripe public key w:", window.STRIPE_PUBLISHABLE_KEY);
+    // console.log("Using Stripe public key w:", window.STRIPE_PUBLISHABLE_KEY);
 
     const elements = stripe.elements();
 
@@ -94,7 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
           });
           
           const result =  await savePayment.json();
-          console.log("r",result);
           if(result.success) {
             console.log("Payment successful and saved!");
             alert("Payment successful and saved!");
@@ -102,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cardNumber.clear();  // Clear the card number
             cardExpiry.clear();  // Clear the expiry date
             cardCvc.clear();  // Clear the CVV
-            window.location.href = "home?scroll=plans";
+            window.location.href = redirect;
           } else {
             console.log("Payment succeeded, but failed to save payment info");
             alert("Payment succeeded, but failed to save payment info.");

@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Initialize Stripe with your publishable key (replace with your actual key if not embedded in HTML)
     const stripe = Stripe(window.STRIPE_PUBLISHABLE_KEY);
-    console.log("Using Stripe public key w:", window.STRIPE_PUBLISHABLE_KEY);
+    // console.log("Using Stripe public key w:", window.STRIPE_PUBLISHABLE_KEY);
 
     const elements = stripe.elements();
 

@@ -127,8 +127,8 @@
               return response.json();
             })
             .then(data =>{
-              console.log('Plans:',data.plan);
-              console.log("Subscription:", data.subscription);
+              // console.log('Plans:',data.plan);
+              // console.log("Subscription:", data.subscription);
               const plan = Array.isArray(data.plan) ? data.plan : [];
               planCards(plan);
               const subscription = Array.isArray(data.subscription) ? data.subscription[0] : null;
@@ -142,7 +142,7 @@
                   const mergedSubscription = {
                     ...subscription, ...selectedPlan,id: subscription.id
                   };
-                  console.log("me",mergedSubscription);
+                //  console.log("mergedsubscription",mergedSubscription);
                   window.mergedSubscriptions = mergedSubscription;
                   subscriptionTable(window.mergedSubscriptions);
                 } else {
@@ -150,7 +150,7 @@
                 }
               }
 
-              console.log('payments:',data.payment);
+              // console.log('payments:',data.payment);
               const payment = Array.isArray(data.payment) ? data.payment : [];
               if(payment.length == 0){
                 console.log("no pyaments found");
