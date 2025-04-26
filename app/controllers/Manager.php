@@ -114,7 +114,7 @@ class Manager extends Controller
         switch ($action) {
             case 'createMember':
                 // Load the form view to create a member
-                $this->view('manager/member_create');
+                $this->view('manager/manager-createMember');
                 break;
 
             case 'registerMember':
@@ -171,7 +171,7 @@ class Manager extends Controller
                     'member' => $member
                 ];
 
-                $this->view('manager/member_view', $data);
+                $this->view('manager/manager-viewMember', $data);
                 break;
 
             case 'updateMember':
@@ -204,11 +204,11 @@ class Manager extends Controller
                             // Set a success session message
                             $_SESSION['success'] = "Member has been successfully updated!";
                             // Redirect to the trainer view page
-                            redirect('admin/members/viewMember?id=' . $member_id);
+                            redirect('manager/members/viewMember?id=' . $member_id);
                         } else {
                             // Handle update failure (optional)
                             $_SESSION['error'] = "There was an issue updating the member. Please try again.";
-                            redirect('admin/members/viewMember?id=' . $member_id);
+                            redirect('manager/members/viewMember?id=' . $member_id);
                         }
                     } else {
                         // If validation fails, pass errors to the view
@@ -217,11 +217,11 @@ class Manager extends Controller
                             'member' => $_POST // Preserve form data for user correction
                         ];
                         // Render the view with errors and form data
-                        $this->view('admin/admin-viewMember', $data);
+                        $this->view('manager/manager-viewMember', $data);
                     }
                 } else {
                     // Redirect if the request is not a POST request
-                    redirect('admin/members');
+                    redirect('manager/members');
                 }
                 break;
 
@@ -237,11 +237,11 @@ class Manager extends Controller
 
                     $_SESSION['success'] = "Member has been deleted successfully";
 
-                    redirect('admin/members');
+                    redirect('manager/members');
                 } else {
                     // Handle deletion failure
                     $_SESSION['error'] = "There was an issue deleting the member. Please try again.";
-                    redirect('admin/members/viewMember?id=' . $userId);
+                    redirect('manager/members/viewMember?id=' . $userId);
                 }
 
                 break;
@@ -255,83 +255,97 @@ class Manager extends Controller
                     'members' => $members
                 ];
 
-                $this->view('admin/admin-members', $data);
+                $this->view('manager/manager-members', $data);
                 break;
         }
     }
 
-    public function member()
-    {
-        $this->view('manager/member');
-    }
-    public function member_view()
-    {
-        $this->view('manager/member_view');
-    }
-    public function member_edit()
-    {
-        $this->view('manager/member_edit');
-    }
-    public function member_create($action = null)
-    {
+    public function trainers($action = null) {
         switch ($action) {
-            case 'createMember':
-                // Load the form view to create a member
-                $this->view('manager/member_create');
+            case 'createTrainer':
+                // Load the form view to create a trainer
+                $this->view('manager/manager-createTrainer');
                 break;
-
-
-            case 'viewMember':
+    
+            
+            case 'viewTrainer':
                 // Load the view to view a trainer
-                $memberModel = new M_Member;
-                $member = $memberModel->findByMemberId($_GET['id']);
-
+                $trainerModel = new M_Trainer;
+                $trainer = $trainerModel->findByTrainerId($_GET['id']);
+    
                 $data = [
-                    'member' => $member
+                    'trainer' => $trainer
                 ];
+    
+                $this->view('manager/manager-viewTrainer', $data);
+                break;
+            
+            case 'salaryHistory':
 
-                $this->view('admin/admin-viewMember', $data);
+                $trainer_id = $_GET['id'];
+
+                $this->view('manager/manager-trainerSalaryHistory');
                 break;
 
+            case 'trainerCalendar':
 
+                $trainer_id = $_GET['id'];
+
+                $this->view('manager/manager-trainerCalendar');
+                break;
+            
             default:
-                // Fetch all members and pass to the view
-                $memberModel = new M_Member;
-                $members = $memberModel->findAll('created_at');
-
+                // Fetch all trainers and pass to the view
+                $trainerModel = new M_Trainer;
+                $trainers = $trainerModel->findAll('created_at');
+    
                 $data = [
-                    'members' => $members
+                    'trainers' => $trainers
                 ];
-
-                $this->view('admin/admin-members', $data);
+    
+                $this->view('manager/manager-trainers', $data);
                 break;
         }
+    }
+    
+    public function admins($action = null) {
+        switch ($action) {
+            case 'createAdmin':
+                // Load the form view to create a admin
+                $this->view('manager/manager-createAdmin');
+                break;
 
-        $this->view('manager/member_create');
-    }
-    public function trainer()
-    {
-        $this->view('manager/trainer');
-    }
-    public function trainer_create()
-    {
-        $this->view('manager/trainer_create');
-    }
-    public function trainer_view()
-    {
-        $this->view('manager/trainer_view');
-    }
-    public function admin()
-    {
-        $this->view('manager/admin');
-    }
-    public function admin_create()
-    {
-        $this->view('manager/admin_create');
-    }
-    public function admin_view()
-    {
-        $this->view('manager/admin_view');
+            case 'viewAdmin':
+                // Load the view to view a admin
+                $adminModel = new M_Admin;
+                $admin = $adminModel->findByAdminId($_GET['id']);
+    
+                $data = [
+                    'admin' => $admin
+                ];
+    
+                $this->view('manager/manager-viewAdmin', $data);
+                break;
+                
+            case 'salaryHistory':
+                
+                $admin_id = $_GET['id'];
+
+                $this->view('manager/manager-adminSalaryHistory');
+                break;
+    
+            default:
+                // Fetch all admins and pass to the view
+                $adminModel = new M_Admin;
+                $admins = $adminModel->findAll('created_at');
+
+                $data = [
+                    'admins' => $admins
+                ];
+
+                $this->view('manager/manager-admins', $data);
+                break; 
+        }
     }
     public function service_edit()
     {

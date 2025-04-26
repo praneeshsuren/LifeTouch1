@@ -163,4 +163,10 @@ class Report extends Controller
         $data['reportData'] = $membershipReport->getMembershipReport();
         $this->view('manager/physicalPayment_report', $data);
     }
+
+    public function income_report()
+    {
+        
+        $this->view('manager/income_report');
+    }
 }
