@@ -65,9 +65,6 @@
                                 }
                             }
                 
-                            // If no image uploaded, set it to null
-                            $temp['image'] = $temp['image'] ?? null;
-                
                             // Insert the new member and user into the database
                             if (empty($errors)) {
                                 $user->insert($temp);
@@ -192,7 +189,7 @@
                                 }
                     
                                 // Call the update function if no errors
-                                if (empty($errors) && $memberModel->update($member_id, $data, 'member_id')) {
+                                if (empty($errors) && !$memberModel->update($member_id, $data, 'member_id')) {
                                     $_SESSION['success'] = "Member has been successfully updated!";
                                     redirect("{$userRole}/members/viewMember?id={$member_id}");
                                 } else {

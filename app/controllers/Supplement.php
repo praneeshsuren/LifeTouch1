@@ -193,22 +193,34 @@ class Supplement extends Controller
     public function addSupplementSale()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Initialize errors array for validation
             $errors = [];
-            
-            // Get data from POST request
             $data = $_POST;
+
             $supplementSaleModel = new M_SupplementSales;
             $supplementModel = new M_Supplements;
+            
             $supplement_id = $data['supplement_id'] ?? null;
+            $supplement_name = isset($data['name']) ? trim($data['name']) : null;
+            $member_id = $data['member_id'] ?? null;
 
-            // Sanitize and validate the input data
+            // Sanitize and validate inputs
             $data['quantity'] = htmlspecialchars(trim($data['quantity']));
             $data['price_of_a_supplement'] = htmlspecialchars(trim($data['price_of_a_supplement']));
-            $data['sale_date'] = htmlspecialchars(trim($data['sale_date'])); // Add sale_date
+            $data['sale_date'] = htmlspecialchars(trim($data['sale_date']));
 
-            // Retrieve the member_id for redirecting after success
-            $member_id = isset($data['member_id']) ? $data['member_id'] : null;
+            // Validate supplement name
+            if (empty($supplement_name)) {
+                $errors['name'] = "Supplement name is required.";
+            } else {
+                // Check if supplement exists
+                $supplement = $supplementModel->getSupplementByName($supplement_name);
+                if (!$supplement) {
+                    $errors['name'] = "No supplement found with the given name.";
+                } else {
+                    // Supplement exists, update supplement_id in $data
+                    $data['supplement_id'] = $supplement->supplement_id;
+                }
+            }
 
             // Validate quantity
             if (empty($data['quantity'])) {
@@ -220,42 +232,54 @@ class Supplement extends Controller
                 $errors['price_of_a_supplement'] = "Price of a supplement is required.";
             }
 
-            // Validate sale_date
+            // Validate sale date
             if (empty($data['sale_date'])) {
                 $errors['sale_date'] = "Sale date is required.";
             }
 
-            // Proceed with database insertion if no validation errors
+            // If no errors, proceed to insert
             if (empty($errors)) {
-                // Insert the data into the database
                 $insertStatus = $supplementSaleModel->insert($data);
 
-                // Check if insert was successful
                 if ($insertStatus) {
-                    // Update the quantity sold in the supplements table
+                    // Update supplement quantity
                     $supplement = $supplementModel->getSupplement($supplement_id);
                     $quantity_sold = (int) $supplement->quantity_sold + (int) $data['quantity'];
                     $quantity_available = (int) $supplement->quantity_available - (int) $data['quantity'];
-                    $supplementModel->update($supplement_id, ['quantity_sold' => $quantity_sold, 'quantity_available' => $quantity_available], 'supplement_id');
+                    $supplementModel->update($supplement->supplement_id, [
+                        'quantity_sold' => $quantity_sold,
+                        'quantity_available' => $quantity_available
+                    ], 'supplement_id');
 
+                    // Notification
                     $message = "Dear Member, you have successfully purchased " . $data['name'] . " Supplement.";
-
-                    // Create a notification for the member
                     $notificationModel = new M_Notification;
                     $notificationModel->createNotification($member_id, $message, 'Member');
+
                     $_SESSION['success'] = "Supplement sale added successfully!";
-                    // Redirect to the supplement records page after successful insert
-                    redirect('receptionist/members/supplementRecords?id=' . $member_id); 
+                    redirect('receptionist/members/memberSupplements?id=' . $member_id);
                     exit;
                 } else {
                     $_SESSION['error'] = "An error occurred while adding the supplement sale. Please try again.";
+                    redirect('receptionist/members/memberSupplements?id=' . $member_id);
+                    exit;
                 }
             } else {
-                // If validation errors, store them in the session
-                $_SESSION['error'] = "Please fix the errors in the form.";
+                // Validation failed
+                $_SESSION['form_errors'] = $errors; // store errors in session
+                $_SESSION['old_data'] = $data; // store old input in session
+                redirect('receptionist/members/memberSupplements?id=' . $member_id);
+                exit;
             }
         }
+        // If not POST, redirect or show form
+        else {
+            redirect('receptionist/members');
+            exit;
+        }
     }
+
+    
 
 
     public function getSupplements() {

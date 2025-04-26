@@ -92,6 +92,21 @@
                 return null; // No results found
             }
         }
+
+        public function getSupplementByName($name)
+        {
+            $query = "SELECT * FROM $this->table WHERE name LIKE :name";
+
+            // Prepare the data array for parameter binding
+            $data = [
+                'name' => $name
+            ];
+
+            // Use the query method from your Database trait to execute the query
+            $result = $this->query($query, $data);
+
+        }
+
         
         
 
