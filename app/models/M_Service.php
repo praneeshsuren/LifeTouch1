@@ -16,6 +16,19 @@ class M_Service
         'created_time'
     ];
     
+    public function getMonthlyServicePurchaseSum()
+    {
+        $currentMonth = date('Y-m');
+        $query = "SELECT SUM(service_cost) as total FROM {$this->table} WHERE DATE_FORMAT(service_date, '%Y-%m') = :currentMonth";
+        $params = ['currentMonth' => $currentMonth];
+
+        $result = $this->query($query, $params);
+        if (!empty($result)) {
+            return $result[0]->total ?? 0; 
+        }
+        return 0;
+    }
+
     public function getOverdueServices()
     {
         $sql = "SELECT s.*, e.name AS equipment_name

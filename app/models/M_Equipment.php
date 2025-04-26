@@ -18,7 +18,20 @@ class M_Equipment
         'purchase_shop',
     ];
 
-    
+    public function getMonthlyEquipmentPurchaseSum()
+    {
+        $currentMonth = date('Y-m');
+        $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE DATE_FORMAT(purchase_date, '%Y-%m') = :currentMonth";
+        $params = ['currentMonth' => $currentMonth];
+
+        $result = $this->query($query, $params);
+        if (!empty($result)) {
+            return $result[0]->total ?? 0; // <-- use ->total not ['total']
+        }
+        return 0;
+    }
+
+
     // Validate input data
     public function validate($data)
     {
