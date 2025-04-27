@@ -18,6 +18,17 @@
     <title><?php echo APP_NAME; ?></title>
   </head>
   <body>
+    <?php
+      if (isset($_SESSION['success'])) {
+          echo "<script>alert('" . $_SESSION['success'] . "');</script>";
+          unset($_SESSION['success']);
+      }
+
+      if (isset($_SESSION['error'])) {
+          echo "<script>alert('" . $_SESSION['error'] . "');</script>";
+          unset($_SESSION['error']);
+      }
+    ?>
     <section class="sidebar">
         <?php require APPROOT.'/views/components/trainer-sidebar.view.php' ?>
     </section>
@@ -51,25 +62,29 @@
         <h2>Create Workout</h2>
         <form id="createWorkoutForm">
           <div class="form-group">
-            <label for="equipment">Select Equipment:</label>
-            <select id="equipment" name="equipment" required>
-              <option value="">-- Choose Equipment --</option>
-            </select>
-            <div id="selected-equipment">
-              <img id="equipment-image" src="" alt="Equipment Image" style="width: 50px; height: 50px; display: none;" />
-              <p id="equipment-name"></p>
-              <p id="equipment-id"></p> <!-- Display equipment ID here -->
-            </div>
+            <label for="equipment-name">Equipment Name:</label>
+            <input type="text" id="equipment-name" name="equipment-name" placeholder="Enter equipment name" autocomplete="off" />
+            <div id="equipment-suggestions-list" class="suggestions-dropdown" style="display: none;"></div> <!-- Suggestions dropdown -->
+            <small id="equipment-name-error" style="color: red; display: none;">Equipment name is required.</small> <!-- Error message for equipment name -->
           </div>
+
+          <div id="equipmentImageContainer" class="image-container" style="display: none;">
+            <img 
+              id="equipmentImage" class="equipment-image" 
+              alt="Equipment Image">
+          </div>
+          <input type="hidden" id="equipment_id" name="equipment_id" value="" /> <!-- Hidden input for equipment ID -->
 
           <div class="form-group">
             <label for="workout-name">Workout Name:</label>
-            <input type="text" id="workout-name" name="workout-name" placeholder="Enter workout name" required />
+            <input type="text" id="workout-name" name="workout-name" placeholder="Enter workout name"  />
+            <small id="workout-name-error" style="color: red; display: none;">Workout name is Required.</small> <!-- Error message for workout name -->
           </div>
 
           <div class="form-group">
             <label for="workout-description">Description:</label>
-            <textarea id="workout-description" name="workout-description" placeholder="Enter description" required></textarea>
+            <textarea id="workout-description" name="workout-description" placeholder="Enter description" ></textarea>
+            <small id="workout-description-error" style="color: red; display: none;">Description is required.</small> <!-- Error message for description -->
           </div>
 
           <div class="form-actions">
@@ -87,158 +102,197 @@
       let workoutData = [];
 
       document.addEventListener('DOMContentLoaded', function() {
-          // Show the modal when the "Create Workout" button is clicked
-          document.querySelector('.add-workout-btn').addEventListener('click', function() {
-              document.getElementById('createWorkoutModal').style.display = 'flex'; 
-              fetchEquipment();
-              resetModal(); // Reset modal when opened
-          });
-
-          // Close the modal when the close button is clicked
-          document.getElementById('closeModal').addEventListener('click', function() {
-              document.getElementById('createWorkoutModal').style.display = 'none';
-              resetModal(); // Reset modal when closed
-          });
-
-          // Close the modal when the cancel button is clicked
-          document.getElementById('cancelBtn').addEventListener('click', function() {
-              document.getElementById('createWorkoutModal').style.display = 'none';
-              resetModal(); // Reset modal when canceled
-          });
-
-          // Handle form submission
-          document.getElementById('createWorkoutForm').addEventListener('submit', function(event) {
-              event.preventDefault();
-
-              const workoutName = document.getElementById('workout-name').value;
-              const workoutDescription = document.getElementById('workout-description').value;
-              const equipmentId = document.getElementById('equipment').value;
-
-              const workoutData = {
-                  name: workoutName,
-                  description: workoutDescription,
-                  equipment_id: equipmentId
-              };
-
-              fetch('<?php echo URLROOT; ?>/workout/createWorkout', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(workoutData)
-              })
-              .then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      alert('Workout created successfully!');
-                      document.getElementById('createWorkoutModal').style.display = 'none';
-                      resetModal();
-                      fetchWorkouts();  // Refresh workouts list
-                  } else {
-                      alert('Failed to create workout');
-                  }
-              })
-              .catch(error => {
-                  console.error('Error creating workout:', error);
-                  alert('There was an error creating the workout.');
-              });
-          });
-
-          // Fetch workouts when page loads
-          fetchWorkouts();
-      });
-
-      // Fetch equipment data to populate the dropdown
-      function fetchEquipment() {
-          fetch('<?php echo URLROOT; ?>/equipment/api')
-              .then(response => response.json())
-              .then(data => {
-                  equipmentData = data;
-                  populateEquipmentDropdown(data);
-              })
-              .catch(error => console.error('Error fetching equipment:', error));
-      }
-
-      // Fetch workouts from the database
-      function fetchWorkouts() {
-    fetch('<?php echo URLROOT; ?>/workout/api')
-        .then(response => response.json())
-        .then(data => {
-            workoutData = data;
-            displayWorkouts(data);  // Pass the data directly to displayWorkouts
-        })
-        .catch(error => console.error('Error fetching workouts:', error));
-}
-
-// Display workouts as cards
-function displayWorkouts(workouts) {
-    const container = document.getElementById('workouts-container');
-    container.innerHTML = ''; // Clear the container before adding new cards
-
-    workouts.forEach(workout => {
-        const workoutCard = document.createElement('div');
-        workoutCard.classList.add('workout-card');
-
-        // Since equipment info is already part of the workout data (from the view), we can directly access it
-        const { workout_id, workout_name, workout_description, equipment_id, equipment_name, file } = workout;
-
-        workoutCard.innerHTML = `
-            <div class="workout-image">
-                <img src="${file || ''}" alt="Equipment Image" style="width: 50px; height: 50px;" />
-            </div>
-            <div class="workout-details">
-                <h3>${workout_name}</h3>
-                <p><strong>Description:</strong> ${workout_description}</p>
-                <p><strong>Equipment:</strong> ${equipment_name || 'N/A'}</p>
-                <p><strong>Equipment ID:</strong> ${equipment_id || 'N/A'}</p>
-                <p><strong>Workout ID:</strong> ${workout_id}</p>
-            </div>
-        `;
-
-        container.appendChild(workoutCard);
-    });
-}
-
-
-      // Populate the equipment dropdown with fetched equipment
-      function populateEquipmentDropdown(equipment) {
-          const equipmentSelect = document.getElementById('equipment');
-          equipmentSelect.innerHTML = '<option value="">-- Choose Equipment --</option>'; 
-          equipment.forEach(item => {
-              const option = document.createElement('option');
-              option.value = item.equipment_id;
-              option.textContent = item.name;
-              equipmentSelect.appendChild(option);
-          });
-
-          equipmentSelect.addEventListener('change', function() {
-            const selectedEquipmentId = this.value;
-            updateEquipmentDetails(selectedEquipmentId);
+        // Show the modal when the "Create Workout" button is clicked
+        document.querySelector('.add-workout-btn').addEventListener('click', function() {
+            document.getElementById('createWorkoutModal').style.display = 'flex'; 
+            resetModal(); // Reset modal when opened
         });
-      }
 
-      function updateEquipmentDetails(equipmentId) {
-        const selectedEquipment = equipmentData.find(item => item.equipment_id == equipmentId);
+        // Close the modal when the close button is clicked
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('createWorkoutModal').style.display = 'none';
+            resetModal(); // Reset modal when closed
+        });
 
-        if (selectedEquipment) {
-            document.getElementById('equipment-image').style.display = 'block';
-            document.getElementById('equipment-image').src = selectedEquipment.file || '';
-            document.getElementById('equipment-name').textContent = selectedEquipment.name || '';
-            document.getElementById('equipment-id').textContent = selectedEquipment.equipment_id || '';
-        } else {
-            document.getElementById('equipment-image').style.display = 'none';
-            document.getElementById('equipment-name').textContent = '';
-            document.getElementById('equipment-id').textContent = '';
+        window.onclick = function(event) {
+            const modal = document.getElementById('createWorkoutModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+                resetModal(); // Reset modal when clicked outside
+            }
         }
-    }
 
-      // Reset modal content
-      function resetModal() {
-          document.getElementById('equipment-image').style.display = 'none';
-          document.getElementById('equipment-id').textContent = '';
-          document.getElementById('equipment-name').textContent = '';
-          document.getElementById('equipment').value = ''; // Reset dropdown
-      }
+        // Close the modal when the cancel button is clicked
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            document.getElementById('createWorkoutModal').style.display = 'none';
+            resetModal(); // Reset modal when canceled
+        });
+
+        // Handle form submission
+        document.getElementById('createWorkoutForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const workoutName = document.getElementById('workout-name').value.trim();
+            const workoutDescription = document.getElementById('workout-description').value.trim();
+            const equipmentName = document.getElementById('equipment-name').value.trim();
+            const equipmentId = document.getElementById('equipment_id').value.trim();
+
+            // Reset error messages
+            resetErrorMessages();
+
+            let hasError = false;
+
+            // Validate inputs
+            if (!workoutName) {
+                document.getElementById('workout-name-error').style.display = 'block';
+                hasError = true;
+            }
+
+            if (!workoutDescription) {
+                document.getElementById('workout-description-error').style.display = 'block';
+                hasError = true;
+            }
+
+            if (!equipmentName) {
+                document.getElementById('equipment-name-error').style.display = 'block';
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            const workoutData = {
+                name: workoutName,
+                description: workoutDescription,
+                equipment_name: equipmentName,
+                equipment_id: equipmentId
+            };
+
+            // Send data to server
+            fetch('<?php echo URLROOT; ?>/workout/createWorkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(workoutData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Workout created successfully!');
+                    document.getElementById('createWorkoutModal').style.display = 'none';
+                    resetModal();
+                    fetchWorkouts();  // Refresh the workout list
+                } else {
+                    alert(data.message || 'Failed to create workout');
+                }
+            })
+            .catch(error => {
+                console.error('Error creating workout:', error);
+                alert('There was an error creating the workout.');
+            });
+        });
+
+        // Equipment Name Input Suggestion
+        const equipmentNameInput = document.getElementById('equipment-name');
+        const equipmentSuggestionsList = document.getElementById('equipment-suggestions-list');
+        const equipmentImage = document.getElementById('equipmentImage');
+        const equipmentImageContainer = document.getElementById('equipmentImageContainer');
+        const suggestionsDiv = document.getElementById('equipment-suggestions-list');
+        const equipmentIdInput = document.getElementById('equipment_id');
+
+        equipmentNameInput.addEventListener('input', function() {
+            const query = equipmentNameInput.value.trim();
+            if (query.length > 0) {  // Only search after 3 characters
+                fetchEquipmentSuggestions(query);
+            } else {
+                equipmentSuggestionsList.style.display = 'none';  // Hide suggestions if input is less than 3 characters
+                equipmentImageContainer.style.display = 'none';  // Hide image container
+            }
+        });
+
+        function fetchEquipmentSuggestions(query) {
+            fetch(`<?php echo URLROOT; ?>/workout/getEquipmentSuggestions?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    if(suggestionsDiv){
+                        suggestionsDiv.innerHTML = '';  // Clear previous suggestions
+                        if (data.length > 0) {
+                            suggestionsDiv.style.display = 'block'; // Show suggestions
+                            data.forEach(equipment => {
+                                const suggestionItem = document.createElement('div');
+                                suggestionItem.classList.add('suggestion-item');
+                                suggestionItem.textContent = equipment.name;
+                                suggestionItem.addEventListener('click', function() {
+                                    equipmentNameInput.value = equipment.name;
+                                    equipmentIdInput.value = equipment.equipment_id; // Set hidden input value
+                                    equipmentImage.src = "<?php echo URLROOT;?>/assets/images/Equipment/" + equipment.file; // Show image container
+                                    equipmentSuggestionsList.style.display = 'none';  // Hide suggestions
+                                });
+                                suggestionsDiv.appendChild(suggestionItem);
+                            });
+                            equipmentSuggestionsList.style.display = 'block';  // Show suggestions
+                        } else {
+                            equipmentSuggestionsList.style.display = 'none';  // Hide suggestions if no data
+                            equipmentImageContainer.style.display = 'none';  // Hide image container
+                        }
+                    }
+
+                })
+                .catch(error => console.error('Error fetching equipment suggestions:', error));
+        }
+
+        // Fetch all workouts on page load
+        fetchWorkouts();
+
+        // Function to fetch workout data
+        function fetchWorkouts() {
+            fetch('<?php echo URLROOT; ?>/workout/api')
+                .then(response => response.json())
+                .then(data => {
+                    workoutData = data;
+                    displayWorkouts(data);
+                })
+                .catch(error => console.error('Error fetching workouts:', error));
+        }
+
+        function displayWorkouts(workouts) {
+            const container = document.getElementById('workouts-container');
+            container.innerHTML = '';  // Clear existing workouts
+
+            workouts.forEach(workout => {
+                const workoutCard = document.createElement('div');
+                workoutCard.classList.add('workout-card');
+                const { workout_id, workout_name, workout_description, equipment_name, image } = workout;
+
+                workoutCard.innerHTML = `
+                    <div class="workout-image">
+                        <img src="<?php echo URLROOT;?>/assets/images/Equipment/${image}" alt="Equipment Image" />
+                    </div>
+                    <div class="workout-details">
+                        <h3>${workout_name}</h3>
+                        <p><strong>Description:</strong> ${workout_description}</p>
+                        <p><strong>Equipment:</strong> ${equipment_name || 'N/A'}</p>
+                        <p><strong>Workout ID:</strong> ${workout_id}</p>
+                    </div>
+                `;
+                container.appendChild(workoutCard);
+            });
+        }
+
+        function resetModal() {
+            document.getElementById('workout-name').value = '';
+            document.getElementById('workout-description').value = '';
+            document.getElementById('equipment-name').value = '';
+            document.getElementById('equipment-suggestions-list').style.display = 'none';
+        }
+
+        // Reset error messages
+        function resetErrorMessages() {
+            document.getElementById('workout-name-error').style.display = 'none';
+            document.getElementById('workout-description-error').style.display = 'none';
+            document.getElementById('equipment-name-error').style.display = 'none';
+        }
+      });
     </script>
   </body>
 </html>

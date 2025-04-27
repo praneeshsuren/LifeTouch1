@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,656 +12,115 @@
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/member-style.css?v=<?php echo time();?>" />
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/sidebar-greeting.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
-  </head>
-  <body>
-    <section class="sidebar">
-        <?php require APPROOT.'/views/components/member-sidebar.view.php' ?>
-    </section>
-    <main>
-        <div class="title">
-            <h1>View Calendar</h1>
-            <div class="greeting">
-                <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
-            </div>
-        </div>
-        <div class="mainContainer">
-            <div class="calendarContainer">
-                <div class="calendar-header"></div>
-                <table class="calendar">
-                    <thead>
-                        <tr>
-                            <th>Sun</th>
-                            <th>Mon</th>
-                            <th>Tues</th>
-                            <th>Wed</th>
-                            <th>Thur</th>
-                            <th>Fri</th>
-                            <th>Sat</th>
-                        </tr>
-                    </thead>
-                    <tbody class="calendarBody"></tbody>
-                </table>
-                <div class="gotoToday">
-                    <div class="goto">
-                        <input type="text" placeholder="mm/yyyy" class="date-input" />
-                        <button class="gotoBtn">Go</button>
-                    </div>
-                    <button class="todayBtn">Today</button>
-                </div>
-            </div> 
-            <div class="booking-details">
-                <div class="details">
-                    <h2 style="font-size:1.5rem; font-weight:500; padding-top:1rem;text-align:center">Details</h2>
-                    <div class="detail-list"></div>
-                </div>
-            </div>
-        </div>
-        <div id="bookingModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
+</head>
+
+<body>
+    <main class="cardmain"> 
+        <div class="container">
+            <div class="header">
                 <div class="title">
-                    <h3>Booking : <span id="modalDate"></span></h3>
+                    <h1>Life Touch</h1>
                 </div>
-                <div class="bookingModal-body" style = "color:black"></div>
-                    <div class="timeslots"></div>
-                    <div class="bookingForm">
-                        <form id="bookingForm">
-                            <div class="input">
-                                <input type="hidden" value="<?php echo htmlspecialchars($member_id); ?>" name="memberId" required>
-                                <input type="hidden" id="selectedTrainerId"  name="trainerId" required>
-                                <input type="hidden" id="selectedTimeslotId" name="timeslotId" required> 
-                                <input type="hidden" id="date" name="date" required> 
-                                <div class="input-container">
-                                    <div  class="label"><i class="ph ph-calendar"></i>Date</div>
-                                    <div id="selectedDate"></div>
-                                </div>
-                                <div class="input-container">
-                                    <div class="label"><i class="ph ph-clock-countdown"></i>Time</div>
-                                    <div id="selectedTimeslot"></div>
+                <h5 class="secure-payment-title">Secure Payment<i class="ph ph-lock-key" style="float:left;"></i></h5>
+            </div>
+            <section class="payment-section">
+                <div class="payment-wrapper">
+                    <div class="payment-left">
+                        <div class="payment-header">
+                            <div class="payment-header-title">Summary</div>
+                        </div>
+                        <div class="payment-content">
+                            <div class="payment-body">
+                                <div class="payment-summary">
+                                    <div class="payment-summary-item">
+                                        <div id="payment-summary-name" class="payment-summary-name"></div>
+                                        <div id="payment-summary-price"class="payment-summary-price"></div>
+                                    </div>
+                                    <div class="payment-summary-divider"></div>
+                                    <div class="payment-summary-item payment-summary-total">
+                                        <div id="payment-summary-name"class="payment-summary-name">Total</div>
+                                        <div id="payment-summary-total" class="payment-summary-price"></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="book-btn">
-                                <button type="submit" id="btnBook" name="submit">Book</button>
+                        </div>
+
+                    </div>
+                    <div class="payment-right">
+                        <form id="payment-form" class="payment-form">
+                            <h1 class="payment-title">Payment Details</h1>
+                            <div class="payment-form-group">
+                                <label for="card-number-element" class="payment-form-label-required">Card Number</label>
+                                <div id="card-number-element" class="payment-form-control"></div>
+                            </div>
+                            <div class="payment-form-group-flex">
+                                <div class="payment-form-group">
+                                    <label for="card-expiry-element" class="payment-form-label-required">Expiry Date</label>
+                                    <div id="card-expiry-element" class="payment-form-control"></div>
+                                </div>
+                                <div class="payment-form-group">
+                                    <label for="card-cvc-element" class="payment-form-label-required">CVV</label>
+                                    <div id="card-cvc-element" class="payment-form-control"></div>
+                                </div>
+                            </div>
+                            <div id="card-errors" class="card-error"></div>
+                            <input type="hidden" name="member_id" id="member_id"><input type="hidden" name="plan_id" id="package_id"><input type="hidden" id="amount">
+                            <input type="hidden" name="startDate" id="startDate"><input type="hidden" name="endDate" id="endDate"><input type="hidden" name="paymentType" id="payment_type">
+                            <div class="payment-form-group-flex">
+                                <button type="button" class="payment-form-cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'"> Cancel</button>
+                                <button type="submit" class="payment-form-submit-button"> Pay</button>
                             </div>
                         </form>
-                    </div> 
-            </div>
+                    </div>      
+                </div>
+            </section>
+                
         </div>
     </main>
-    <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
-    <!-- <script src="<?php echo URLROOT; ?>/assets/js/member/calendar.js?v=<?php echo time();?>"></script> -->
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const trainerId = urlParams.get('id'); 
-        console.log(trainerId);
-        let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; // Default to the current month
-        let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
-        const dateToday = new Date().toISOString().split('T')[0];
-        const bookDiv = document.querySelector('.detail-list');
-        let holidays = [];
-        let timeSlots = [];
-        let bookings = [];
+        window.STRIPE_PUBLISHABLE_KEY = "<?php echo STRIPE_PUBLISHABLE_KEY; ?>";
+        const createPaymentURL = "<?php echo URLROOT; ?>/member/createPayment";
+        const savePlan = "<?php echo URLROOT; ?>/member/Payment/savePayment";
+        const redirect = "<?php echo URLROOT; ?>/member/membershipPlan";
 
-        document.addEventListener("DOMContentLoaded", () =>{ 
-            if (trainerId) {
-                fetch(`<?php echo URLROOT; ?>/member/Booking/api?id=${trainerId}&month=${currentMonth}&year=${currentYear}`)
-                    .then(response => {
-                        console.log('Response Status:', response.status);
-                        return response.json();
-                    })
-                    .then(data => {
-                        bookings = data.bookings;
-                        timeSlots = data.timeSlots;
-                        console.log('Bookings:', bookings);
-                        if (currentYear >= new Date().getFullYear() &&
-                            currentMonth >= (new Date().getMonth() + 1) && Array.isArray(bookings) && bookings.length > 0) {
-                            markBookings(bookings);
-                        } else if (currentYear < new Date().getFullYear() || currentMonth < (new Date().getMonth() + 1)) {
-                            bookDiv.innerHTML = `<div style="text-align: center; color: gray;">Bookings are not available for past months.</div>`;
-                        } else {
-                            bookDiv.innerHTML = `<div style="text-align: center; color: gray;">No bookings available.</div>`;
-                        }
+        document.addEventListener("DOMContentLoaded", () =>{
+            let plan = [];
+            let session = {}; 
+            fetch(`<?php echo URLROOT?>/member/cardPayment/api`)
+              .then(response => {
+                console.log("Response status:", response.status);
+                return response.json();
+              })
+              .then(data => {
+                plan = data.plan;
+                session = data.session;
+                // console.log("plan:",plan);
+                // console.log("session:",session);
 
-                        console.log('isbooked:', data.isBooked);
-                        console.log('Time Slots:', timeSlots);
+                const selectedPlan = plan.find(p => p.id == session.id);
 
-                        holidays = data.holidays.reduce((acc, holiday) => {
-                            acc[holiday.date] = holiday.reason;
-                            return acc;
-                        }, {});
-                        console.log("holidays:",holidays);
+                if(selectedPlan){
+                    document.getElementById("payment-summary-price").textContent = "Rs " + selectedPlan.amount + ".00";                    document.getElementById("payment-summary-name").textContent = selectedPlan.plan;
+                    document.getElementById("payment-summary-total").textContent = "Rs " + selectedPlan.amount + ".00";
+                    document.getElementById("member_id").value = session.member_id;
+                    document.getElementById("package_id").value = selectedPlan.id;
+                    document.getElementById("amount").value = selectedPlan.amount;
+                    document.getElementById("startDate").value = session.startDate;
+                    document.getElementById("endDate").value = session.endDate;
+                    document.getElementById("payment_type").value = session.type;
 
-                        buildCalendar(holidays); // Always build calendar
-                    })
-                    .catch(error => console.error('Error fetching bookings details:', error));
-            }
-
-            //submit
-            document.getElementById("bookingForm").addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const timeslotId = document.getElementById("selectedTimeslotId").value;
-                const date = document.getElementById('date').value;
-
-                if (!timeslotId) {
-                    alert("timeslot is required");
-                    return;
                 }
-                if(date < dateToday){
-                    alert("You cannot add booking for a past date.");
-                    return;
-                }
-
-                const isSlotTaken = Array.isArray(bookings) && bookings.some(b =>
-                    b.booking_date === date &&
-                    b.timeslot_id == timeslotId &&
-                    (b.status === "booked" || b.status === "pending")
-                );
-
-                if (isSlotTaken) {
-                    alert("This timeslot is already taken (booked or pending). Please choose another one.");
-                    return;
-                }
-
-                const formData = new FormData(this);
-                if (!confirm("Are you sure you want to book this timeslot?")) return;
-                fetch('<?php echo URLROOT; ?>/member/Booking/add',{
-                    method: "POST",
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                    alert("Booking added successfully!");
-                    location.reload();
-                    } else {
-                    alert("Error: " + result.message);
-                    }
-                })
-                .catch(error => console.error("Error inserting booking:", error));
-            });
-
-            buttons(); 
-            bookingModal();
+              })
+              .catch(error => console.error("Error in fetching session data", error));
         });
-
-        //timeslots
-        function displayTimeSlots(timeSlots, bookings = [], selectedDate, selectedTimeslotId = null) {
-            const timeSlotsContainer = document.querySelector('.timeslots');
-            timeSlotsContainer.innerHTML = '';
-
-            const bookedForDate = (bookings || []).filter(b => 
-                b.booking_date === selectedDate && b.status === 'booked'
-            );
-            let availableSlotCount = 0;
-
-            const isToday = new Date(selectedDate).toDateString() === new Date().toDateString();
-
-            timeSlots.forEach(timeSlot => {
-                let timeSlotBtn = document.createElement('button');
-                timeSlotBtn.classList.add('timeslot');
-                timeSlotBtn.dataset.slot = timeSlot.slot;
-                timeSlotBtn.dataset.timeslotId = timeSlot.id;
-                timeSlotBtn.textContent = timeSlot.slot;
-
-                // Check if current timeslot is in the booked list
-                const isBooked = bookedForDate.some(b => parseInt(b.timeslot_id) === parseInt(timeSlot.id));
-                const isSelected = selectedTimeslotId && parseInt(timeSlot.id) === parseInt(selectedTimeslotId);
-                const isPast = isToday && isTimeSlotInPast(timeSlot.slot.split(' - ')[0]);
-
-                if ((isBooked && !isSelected)  || isPast )  {
-                    timeSlotBtn.disabled = true;
-                    timeSlotBtn.style.backgroundColor = 'grey';
-                    timeSlotBtn.style.cursor = 'not-allowed';
-                } else {
-                    availableSlotCount++;
-
-                    if (isSelected) {
-                        timeSlotBtn.style.backgroundColor = 'green';
-                    }
-
-                    timeSlotBtn.addEventListener('click', () => {
-                        const selectedTimeslotInput = document.getElementById('selectedTimeslot');
-                        const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
-                        
-                        document.querySelectorAll('.timeslot').forEach(btn => {
-                            if (!btn.disabled) {
-                                btn.style.backgroundColor = ''; // reset color
-                            }
-                        });
-
-                        // Add green background to selected button
-                        timeSlotBtn.style.backgroundColor = 'green';
-
-                        selectedTimeslotInput.textContent = timeSlot.slot;
-                        selectedTimeslotIdInput.value = timeSlot.id;
-                    });
-                }
-                timeSlotsContainer.appendChild(timeSlotBtn);
-            });
-            console.log(`Available slots count: ${availableSlotCount}`);
-
-            return availableSlotCount; 
-        }
-
-        function markBookings(bookings) {
-            console.log("b",bookings);
-            bookDiv.innerHTML = ''; // Clear existing content
-           
-            // Filter bookings for "booked" and "pending" statuses
-            const filteredBookings = bookings.filter(
-            booking => (booking.status === 'booked' || booking.status === 'pending') && 
-                        new Date(booking.booking_date).getTime() >= new Date(dateToday).getTime()
-            );
-
-            // Group bookings by date
-            const groupedBookings = filteredBookings.reduce((acc, {id, booking_date, slot, status, timeslot_id, trainer_id}) => {
-                if (!acc[booking_date]) acc[booking_date] = [];
-                acc[booking_date].push({ id, slot, status, timeslot_id, trainer_id});
-                return acc;
-            }, {});
-
-            const filteredFutureBookings = {};
-
-            // Go through each date in groupedBookings
-            Object.keys(groupedBookings)
-                .sort((a, b) => new Date(a) - new Date(b))
-                .forEach(date => {
-                    const isToday = new Date(date).toDateString() === new Date().toDateString();
-
-                    // Filter slots: keep all if not today, or future timeslots if today
-                    const futureSlots = groupedBookings[date].filter(booking => {
-                        if (!isToday) return true;
-                        return !isTimeSlotInPast(booking.slot.split(' - ')[0]);
-                    });
-
-                    // Only add if there are future slots remaining
-                    if (futureSlots.length > 0) {
-                        filteredFutureBookings[date] = futureSlots;
-                    }
-                });
-
-            const futureBookings = Object.keys(filteredFutureBookings).sort((a, b) => new Date(a) - new Date(b));
-
-            futureBookings.forEach(date => {
-                const dateHeading = document.createElement('div');
-                dateHeading.classList.add('date-heading');
-                dateHeading.innerText = date;
-                bookDiv.appendChild(dateHeading);
-
-                groupedBookings[date]
-                    .sort((a, b) => convertTo24hrs(a.slot.split(' - ')[0]) - convertTo24hrs(b.slot.split(' - ')[0]))
-                    .forEach(({ id, slot, status, timeslot_id, trainer_id}) => {
-                        const isPast = (new Date(date).toDateString() === new Date().toDateString()) && isTimeSlotInPast(slot.split(' - ')[0]);
-
-                        // Skip if it's a past time slot
-                        if (isPast) return;
-
-                        const timeslotItem = document.createElement('div');
-                        timeslotItem.classList.add('detail');
-
-                        const statusCircle = document.createElement('div');
-                        statusCircle.classList.add(status === 'booked' ? 'booked' : 'pending');
-
-                        const slotText = document.createElement('span');
-                        slotText.style.color = '#757575';
-                        slotText.innerText = slot;
-
-                        const editDtl = document.createElement('div');
-                        editDtl.innerHTML = `
-                            <div class="edit-dlt">
-                                <div class="edit" onclick="editBooking('${id}', '${date}', '${timeslot_id}', '${slot}', '${trainer_id}')">
-                                    <i class="ph ph-eraser"></i>
-                                </div>
-                                <div class="dlt" onclick="dltBooking('${id}')">
-                                    <i class="ph ph-trash-simple"></i>
-                                </div>
-                            </div>
-                        `;
-
-                        timeslotItem.append(statusCircle, slotText, editDtl);
-                        bookDiv.appendChild(timeslotItem);
-                    });
-            });
-        }
-
-        function convertTo24hrs(time){
-            const [hrMin, period] = time.trim().split(' '); //AM,PM
-            let [hr, min] =hrMin.split(':');
-            hr = parseInt(hr, 10);
-            min = parseInt(min, 10);
-            let hr24 = hr;
-            if(period === 'PM' && hr24 < 12) {
-                hr24 +=12;
-            } else if (period === 'AM' && hr24 ===12) {
-                hr24 = 0;
-            }
-            return new Date(1970, 0, 1, hr24, min);
-        }
-
-        function isTimeSlotInPast(timeSlot) {
-            const now = new Date();
-
-            // Convert timeSlot to today's date but with the given time
-            const slotTime = convertTo24hrs(timeSlot);
-            const slotDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), slotTime.getHours(), slotTime.getMinutes());
-
-            return slotDateTime < now;
-        }
-
-        function formatDateToLong(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-        // calender
-        const calendarBody = document.querySelector('.calendarBody');
-        function buildCalendar(holidayData = {}) {
-            const calendarHeader = document.querySelector('.calendar-header');
-            const monthYear = document.querySelector(".monthYear");
-            const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; 
-            const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1);
-            const dayInMonth = new Date(currentYear, currentMonth, 0).getDate(); // Number of days in the month
-            const emptyDays = firstDayOfMonth.getDay(); // Day index of the first day (0-6)
-            const monthYearName = firstDayOfMonth.toLocaleDateString("en-us", { month: "long", year: "numeric" });
-
-            // Calculate previous and next month/year
-            let prevMonth = currentMonth - 1;
-            let nextMonth = currentMonth + 1;
-            let prevYear = currentYear;
-            let nextYear = currentYear;
-
-            if (prevMonth < 1) {
-                prevMonth = 12;
-                prevYear--;
-            }
-            if (nextMonth > 12) {
-                nextMonth = 1;
-                nextYear++;
-            }
-
-            // Update header
-            calendarHeader.innerHTML = `
-                <a class='prevMonth' href='?id=${trainerId}&month=${prevMonth}&year=${prevYear}' aria-label='Previous Month'><i class='ph ph-caret-circle-left'></i></a>
-                <div class='monthYear'>${monthYearName}</div>
-                <a class='nextMonth' href='?id=${trainerId}&month=${nextMonth}&year=${nextYear}' aria-label='Next Month'><i class='ph ph-caret-circle-right'></i></a>
-            `;
-
-            // Build calendar table
-            calendarBody.innerHTML = "";
-            let row = document.createElement("tr");
-
-            // Empty days before the first day of the month
-            for (let i = 0; i < emptyDays; i++) {
-                const emptyCell = document.createElement("td");
-                emptyCell.classList.add("plain");
-                row.appendChild(emptyCell);
-            }
-
-            // Calendar days
-            for (let day = 1; day <= dayInMonth; day++) {
-                if ((emptyDays + day - 1) % 7 === 0) {
-                    calendarBody.appendChild(row);
-                    row = document.createElement("tr");
-                }
-
-                const date = `${currentYear}-${String(currentMonth).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                const dayCell = document.createElement("td");
-                dayCell.classList.add("day");
-                dayCell.dataset.date = date;
-                dayCell.innerText = day;
-
-                if (date === dateToday) {
-                    dayCell.classList.add("today");
-                }
-
-                if(date in holidayData || date < dateToday){
-                    dayCell.classList.add("holiday");
-                }
-
-                row.appendChild(dayCell);
-            }
-
-            // Add remaining empty cells for the last week
-            while (row.children.length < 7) {
-                const emptyCell = document.createElement("td");
-                emptyCell.classList.add("plain");
-                row.appendChild(emptyCell);
-            }
-            calendarBody.appendChild(row);
-        }
-
-        function buttons(){
-            const gotoBtn = document.querySelector(".gotoBtn");
-            const todayBtn = document.querySelector(".todayBtn");
-            const dateInput = document.querySelector(".date-input");
-
-            if(todayBtn){
-                todayBtn.addEventListener("click", ()=>{
-                    const today = new Date();
-                    currentMonth = today.getMonth() + 1;
-                    currentYear = today.getFullYear();
-                    window.location.href =`<?php echo URLROOT; ?>/member/Booking?id=${trainerId}&month=${currentMonth}&year=${currentYear}`;
-                    buildCalendar();
-                });
-            }
-
-            if(dateInput){
-                dateInput.addEventListener("input", (e) => {
-                    // Allow only numbers and slash
-                    dateInput.value = dateInput.value.replace(/[^0-9/]/g, "");
-                
-                    // Limit the input to 7 characters (MM/YYYY)
-                    if (dateInput.value.length > 7) {
-                        dateInput.value = dateInput.value.slice(0, 7);
-                    }
-                });
-            }
-
-            if(gotoBtn){
-                gotoBtn.addEventListener("click", ()=>{
-                    const input = dateInput.value.trim();
-                    const [inputMonth, inputYear] = input.split("/").map(Number);// Split MM/YYYY and convert to numbers
-                    
-                    if (
-                        inputMonth >= 1 && 
-                        inputMonth <= 12 && 
-                        inputYear >= 1900 && 
-                        inputYear <= 2100
-                    ) {
-                        currentMonth = inputMonth;
-                        currentYear = inputYear;
-                        window.location.href =`<?php echo URLROOT; ?>/member/Booking?id=${trainerId}&month=${currentMonth}&year=${currentYear}`;
-                        buildCalendar(); // Build calendar for the new date
-                    } else {
-                        alert("Please enter a valid date in MM/YYYY format.");
-                    }
-                });
-            }
-        }
-
-        const modal = document.getElementById('bookingModal');
-        const closeModal = document.querySelector('.modal .close');
-
-        const modalDate = document.getElementById('modalDate');
-        const selectedDateInput = document.getElementById('selectedDate');
-        const trainerIdInput = document.getElementById('selectedTrainerId');
-        const dateInput = document.getElementById("date");
-        const selectedTimeslotInput = document.getElementById('selectedTimeslot');
-        const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
-              
-        // modal
-        function bookingModal(){
-            calendarBody.addEventListener('click', function (event) {
-                  const clickedElement = event.target;
-
-                // Check if the clicked element is a date box
-                if (clickedElement.classList.contains('day') && !clickedElement.classList.contains('plain')) {
-                    resetBookingModal();
-                    const selectedDate = clickedElement.getAttribute('data-date');
-                    const availableSlotCount = displayTimeSlots(timeSlots, bookings, selectedDate);
-
-                    // Only allow selecting present or future dates
-                    if (selectedDate < dateToday) {
-                        return; 
-                    }
-
-                    const modalBody = document.querySelector('.bookingModal-body');
-                    const formattedDate = formatDateToLong(selectedDate);
-                    modalDate.innerText = formattedDate;
-                    
-                    if (holidays[selectedDate]) {
-                        modalBody.innerHTML = `
-                            <div style="padding: 80px 0; text-align: center;">
-                                <strong>Holiday:</strong> ${holidays[selectedDate]}
-                            </div>`;
-                        document.querySelector(".bookingForm").style.display = "none";
-                        document.querySelector(".timeslots").style.display = "none";  
-                    } else if( availableSlotCount === 0){
-                        modalBody.innerHTML = `
-                            <div style="padding: 80px 0; text-align: center;">
-                                <strong>All time slots are booked for this date.</strong>
-                            </div>`;
-                        document.querySelector(".bookingForm").style.display = "none";
-                        document.querySelector(".timeslots").style.display = "none";
-                    } else {
-                        modalBody.innerHTML = "";
-                        document.querySelector(".bookingForm").style.display = "block";
-                        document.querySelector(".timeslots").style.display = "block";
-
-                        // Fill form values
-                        trainerIdInput.value = trainerId;
-                        selectedDateInput.textContent = formattedDate;
-                        dateInput.value = selectedDate;
-                        selectedTimeslotInput.textContent = "Select timeslot";
-                        selectedTimeslotIdInput.value = "";
-                    }
-
-                    // Show the modal
-                    modal.style.display = 'block';
-                }
-            });
-
-            // Close modal when 'x' is clicked
-            closeModal.addEventListener('click', function () {
-                modal.style.display = 'none';
-            });
-        }
-
-        function dltBooking(id){
-            if (!confirm("Are you sure you want to delete this booking?")) return;
-
-            fetch('<?php echo URLROOT?>/member/Booking/delete',{
-                method: "POST",
-                headers: {
-                    "Content-Type":  "application/x-www-form-urlencoded",
-                },
-                body: `id=${encodeURIComponent(id)}`,
-            })
-            .then(response => response.json())
-            .then(result => { 
-                if (!result.success) {
-                    alert("Booking deleted successfully!");
-                    location.reload();
-                } else {
-                    alert("Error: " + result.message);
-                }
-            })
-            .catch(error => console.error("Error deleting Booking:", error));
-
-        }
-
-        function editBooking(id, date, timeslotid, timeslot ,trainerid){
-            resetBookingModal();
-            modal.style.display = "block";
-
-            trainerIdInput.value= trainerid;
-            const formattedDate = formatDateToLong(date);
-            modalDate.innerText = formattedDate
-            selectedDateInput.textContent = formattedDate;
-            dateInput.value = date;
-            selectedTimeslotInput.textContent = timeslot;
-            selectedTimeslotIdInput.value = timeslotid;
-
-            const editbtn = document.getElementById('btnBook');
-            editbtn.innerText = "Update";  
-
-            displayTimeSlots(timeSlots, bookings, date, timeslotid);
-            
-            editbtn.onclick = function(event) {
-                event.preventDefault(); 
-                const newTimeslot = selectedTimeslotIdInput.value;
-
-                const isSlotTaken = bookings.some(b =>
-                    b.booking_date === date &&
-                    b.timeslot_id == timeslotid &&
-                    b.timeslot_id == newTimeslot &&
-                    (b.status === "booked" || b.status === "pending")
-                );
-                console.log(isSlotTaken);
-
-                if (isSlotTaken) {
-                    alert("This timeslot is already taken (booked or pending). Please choose another one.");
-                    return;
-                }
-
-                if (!confirm("Are you sure you want to update this timeslot?")) return;
-                fetch('<?php echo URLROOT; ?>/member/Booking/edit', {
-                    method :'POST',
-                    headers: {
-                    "Content-type": "application/x-www-form-urlencoded",
-                    },
-                    body: `id=${encodeURIComponent(id)}&timeslot_id=${encodeURIComponent(newTimeslot)}`,
-                })
-                .then(response => response.json())
-                .then(result =>{
-                    console.log(result);
-                    if (!result.success) {
-                        alert("Timeslot updated successfully!");
-                        modal.style.display = "none";
-                        location.reload();
-                    } else {
-                        alert("Error: " + result.message);
-                    }
-                })
-                .catch(error => console.error("Error updating timeslot:", error));
-
-            };
-        }
-
-        function resetBookingModal() {
-            const modalBody = document.querySelector('.bookingModal-body');
-            modalBody.innerHTML = "";
-
-            const selectedTimeslotInput = document.getElementById('selectedTimeslot');
-            const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
-            const dateInput = document.getElementById('date');
-            const selectedDateInput = document.getElementById('selectedDate');
-            const trainerIdInput = document.getElementById('selectedTrainerId');
-            const editbtn = document.getElementById('btnBook');
-
-            selectedTimeslotInput.textContent = "";
-            selectedTimeslotIdInput.value = "";
-            selectedDateInput.textContent = "";
-            dateInput.value = "";
-            trainerIdInput.value = "";
-
-            // Reset button text
-            editbtn.innerText = "Book";
-
-            // Show all booking parts by default
-            document.querySelector(".bookingForm").style.display = "block";
-            document.querySelector(".timeslots").style.display = "block";
-        }
-
     </script>
-    </body>
-</html>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/payment-script.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
+</body>
 
+</html>

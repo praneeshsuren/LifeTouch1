@@ -1,8 +1,9 @@
 <?php
 
 class AutoMarkTimeOut
+
 {
-    public function autoMarkTimeOut()
+    public function index()
     {
         try {
             date_default_timezone_set('Asia/Colombo');
@@ -20,9 +21,9 @@ class AutoMarkTimeOut
                 // Loop through the records and mark the time_out
                 foreach ($records as $record) {
                     $data = ['time_out' => $currentTime];
-    
+                    $update = $attendanceModel->update($record->id, $data, 'id');
                     // Update the attendance record in the database
-                    if ($attendanceModel->updateAttendance($record->id, $data, 'id')) {
+                    if (!$update) {
                         echo "Time out automatically marked for member ID: " . $record->member_id . "\n";
                     } else {
                         echo "Failed to mark time out for member ID: " . $record->member_id . "\n";
@@ -36,7 +37,6 @@ class AutoMarkTimeOut
             echo "Error: " . $e->getMessage();
         }
     }
-    
-
 }
+
 ?>

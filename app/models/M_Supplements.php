@@ -62,7 +62,64 @@
             return $this->query($sql, $data);
         }
         
+        public function countAllSupplements() {
+            // SQL query to count all supplements
+            $sql = "SELECT COUNT(*) as total FROM $this->table";
         
+            // Execute the query and fetch the result
+            $result = $this->get_row($sql);
+        
+            // Return the total count
+            return $result ? $result->total : 0;
+        }
+
+        public function getSupplement($supplementId) {
+            // SQL query to fetch supplements with pagination
+            $query = "SELECT * FROM $this->table WHERE supplement_id = :supplementId";
+        
+            // Prepare the data array for parameter binding
+            $data = [
+                'supplementId' => $supplementId
+            ];
+        
+            // Use the query method from your Database trait to execute the query
+            $result = $this->query($query, $data);
+
+            // Return the result
+            if ($result) {
+                return $result[0]; // Return the first result
+            } else {
+                return null; // No results found
+            }
+        }
+
+        public function getSupplementByName($name)
+        {
+            $query = "SELECT * FROM $this->table WHERE name LIKE :name";
+
+            // Prepare the data array for parameter binding
+            $data = [
+                'name' => $name
+            ];
+
+            // Use the query method from your Database trait to execute the query
+            $result = $this->query($query, $data);
+
+            // Return the result
+            if ($result) {
+                return $result[0]; // Return the first result
+            } else {
+                return null; // No results found
+            }
+
+        }
+
+        public function getSupplementById($id)
+        {
+            $data = ['supplement_id' => $id];
+            return $this->first($data);
+        }
+
         
         
 

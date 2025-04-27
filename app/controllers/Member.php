@@ -104,6 +104,9 @@
                     ];
 
                     $result = $bookingModel->insert($data);
+
+                    $message = $result ? "Booking added successfully!" : "Failed to add booking";
+                    
                     echo json_encode([
                         "success" => $result ? true : false, 
                         "message" => $result ? "bokking added successfully!" : "Failed to add booking"
@@ -249,14 +252,14 @@
             $plan_Model = new M_Membership_plan();
             $plan = $plan_Model->findAll();
 
-            if ($action === 'api') {
-                header('Content-Type: application/json');
+            if($action === 'api'){
+                header('Content-type: application/json');
                 echo json_encode([
                     'payment' => $payment,
                     'plan' => $plan
                 ]);
                 exit;
-            } else if ($action === 'savePayment'){
+            } elseif ($action === 'savePayment'){
                 if($_SERVER['REQUEST_METHOD'] === "POST") {
                     header('Content-Type: application/json');
 
@@ -278,16 +281,17 @@
                         'type' => $type
                     ];
                     $result = $payment_Model->insert($data);
+
+                    $message = $result ? "Payment successful and saved!" : "Payment succeeded, but failed to save payment info";
+                    
                     echo json_encode([
                         "success" => $result ? true : false, 
                         "message" => $result ? "Payment successful and saved!" : "Payment succeeded, but failed to save payment info"
                     ]);
                     exit;
                 }
-               
             }
-            $data = ['member_id' => $member_id];
-            $this->view('member/member-payment',$data); 
+            $this->view('member/member-payment');
         }
         
         public function createPayment(){
@@ -354,11 +358,14 @@
 
         public function membershipPlan($action = null){
             $member_id = $_SESSION['user_id'] ?? null;
+
             $plan_Model = new M_Membership_plan();
             $plan = $plan_Model->findAll();
+
             $subscription_Model = new M_Subscription();
             $subscription_Model->deactivateExpiredSubscriptions();
             $memberPlan = $subscription_Model->subscriptionMember($member_id);
+            
             if($action === 'api'){
                 header('Content-type: application/json');
                 echo json_encode([
@@ -395,7 +402,7 @@
                 $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         
                 // Retrieve existing member data to compare
-                $member_id = $_POST['member_id'];
+                $member_id = $_POST['user_id'];
                 $existingMember = $memberModel->findByMemberId($member_id);
         
                 // Retrieve existing user data to compare (for username check)
@@ -405,7 +412,7 @@
                 $data = [];
         
                 // Only include fields that have been updated
-                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address'];
+                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address', 'image'];
         
                 // Check for changes and add them to the data array
                 foreach ($fields as $field) {
@@ -443,17 +450,16 @@
                 }
         
                 // Handle profile picture upload
-                if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == UPLOAD_ERR_OK) {
-                    $fileTmp = $_FILES['profile_picture']['tmp_name'];
-                    $fileName = basename($_FILES['profile_picture']['name']);
-                    $targetPath = 'public/assets/images/Member/' . $fileName;
+                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                    $targetDir = "assets/images/Member/";
+                    $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                    $targetFile = $targetDir . $fileName;
         
-                    if (move_uploaded_file($fileTmp, $targetPath)) {
-                        $data['image'] = $fileName;
+                    // Validate the file (e.g., check file type and size) and move it to the target directory
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                        $data['image'] = $fileName; // Save the new filename for the database
                     } else {
-                        $_SESSION['error'] = "Failed to upload profile picture.";
-                        redirect('member/settings');
-                        return;
+                        $errors['file'] = "Failed to upload the file. Please try again.";
                     }
                 }
         
@@ -485,6 +491,18 @@
             } else {
                 redirect('member/settings');
             }
+        }
+
+        public function notifications(){
+            $member_id = $_SESSION['user_id'];
+            $notificationModel = new M_Notification;
+            $notifications = $notificationModel->getNotifications($member_id);
+    
+            $data = [
+                'notifications' => $notifications
+            ];
+
+            $this->view('member/member-notifications', $data);
         }
 }
 

@@ -108,12 +108,13 @@
         <h2>Add Supplement</h2>
         <form action="<?php echo URLROOT; ?>/supplement/addSupplementSale" method="POST" enctype="multipart/form-data">
           <label for="supplementName">Supplement Name:</label>
-          <input type="text" id="supplementName" name="name" required>
+          <input type="text" id="supplementName" name="name" >
+          <div id="supplementNameError" class="error-message" style="color: red; display: none;"></div> <!-- Error Message -->
           <div id="suggestions" class="suggestions-dropdown" style="display: none;"></div>
           
           <!-- Hidden input to store the supplement ID -->
           <input type="hidden" id="supplementId" name="supplement_id">
-          <input type="hidden" id="memberId" name="member_id">
+          <input type="hidden" id="memberId" name="member_id"> <!-- Hidden input to store the member ID -->
 
 
           <!-- Image preview container -->
@@ -128,15 +129,15 @@
           <input type="text" id="quantityAvailable" name="quantity_available" readonly>
 
           <label for="quantity">Quantity:</label>
-          <input type="number" id="quantity" name="quantity" required>
+          <input type="number" id="quantity" name="quantity" >
           <div id="quantityError" class="error-message" style="color: red; display: none;"></div> <!-- Error Message -->
 
           <label for="price">Price of a Supplement:</label>
-          <input type="number" id="price" name="price_of_a_supplement" required>
+          <input type="number" id="price" name="price_of_a_supplement" >
           <div id="priceError" class="error-message" style="color: red; display: none;"></div> <!-- Error Message -->
 
           <label for="saleDate">Sold Date:</label>
-          <input type="date" name="sale_date" id="saleDate" required>
+          <input type="date" name="sale_date" id="saleDate" >
           <div id="saleDateError" class="error-message" style="color: red; display: none;"></div> <!-- Error Message -->
 
           <button type="submit" class="submit-btn">Add Supplement</button>
@@ -164,6 +165,8 @@
           document.getElementById('attendanceLink').href = `<?php echo URLROOT; ?>/receptionist/members/memberAttendance?id=${memberId}`;
           document.getElementById('paymentHistoryLink').href = `<?php echo URLROOT; ?>/receptionist/members/memberPaymentHistory?id=${memberId}`;
           document.getElementById('supplementRecordsLink').href = `<?php echo URLROOT; ?>/receptionist/members/memberSupplements?id=${memberId}`;
+          // Set the member ID in the hidden input field
+          document.getElementById('memberId').value = memberId; // Set the member ID in the hidden input
 
         } else {
           // No member_id in the URL, show a message or handle accordingly
@@ -255,6 +258,47 @@
             modal.style.display = "none";
           }
         }
+
+        <?php if (isset($_SESSION['form_errors'])): ?>
+        // Open the modal automatically
+        document.getElementById('addSupplementModal').style.display = "block";
+
+        // Fill previous input values if needed
+        const oldData = <?php echo json_encode($_SESSION['form_old'] ?? []); ?>;
+        if (oldData) {
+            document.getElementById('supplementName').value = oldData.name || '';
+            document.getElementById('quantity').value = oldData.quantity || '';
+            document.getElementById('price').value = oldData.price_of_a_supplement || '';
+            document.getElementById('saleDate').value = oldData.sale_date || '';
+        }
+
+        // Display error messages
+        const errors = <?php echo json_encode($_SESSION['form_errors']); ?>;
+        if (errors.quantity) {
+            const quantityError = document.getElementById('quantityError');
+            quantityError.textContent = errors.quantity;
+            quantityError.style.display = "block";
+        }
+        if(errors.name){
+            const nameError = document.getElementById('supplementNameError');
+            nameError.textContent = errors.name;
+            nameError.style.display = "block";
+        }
+        if (errors.price_of_a_supplement) {
+            const priceError = document.getElementById('priceError');
+            priceError.textContent = errors.price_of_a_supplement;
+            priceError.style.display = "block";
+        }
+        if (errors.sale_date) {
+            const saleDateError = document.getElementById('saleDateError');
+            saleDateError.textContent = errors.sale_date;
+            saleDateError.style.display = "block";
+        }
+    <?php 
+        unset($_SESSION['form_errors']);
+        unset($_SESSION['form_old']);
+    endif; 
+    ?>
 });
 
     </script>
