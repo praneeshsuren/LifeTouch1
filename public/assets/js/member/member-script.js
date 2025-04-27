@@ -59,4 +59,12 @@ modeSwitch.addEventListener('click', () => {
     localStorage.setItem('mode', isDarkMode ? 'dark' : 'light');
 });
 
+// Toggle the sidebar visibility on click of the hamburger icon
+const hamburgerMenu = document.querySelector('.hamburger-menu');
+
+hamburgerMenu.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+});
+
+
 });

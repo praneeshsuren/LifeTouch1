@@ -1,3 +1,7 @@
+<!-- Hamburger Icon for Mobile -->
+<div class="hamburger-menu">
+    <i class="ph-bold ph-list"></i>
+</div>
 <div class="menu-btn">
     <i class="ph-bold ph-caret-left"></i>
 </div>
