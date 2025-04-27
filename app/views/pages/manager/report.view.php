@@ -65,7 +65,7 @@
                     <button class="card-button">More info</button>
                 </a>
             </div>
-            <
+            
                 </div>
 
                 <div class="card" style="margin-top: 35px;">

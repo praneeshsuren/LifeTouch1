@@ -172,15 +172,51 @@ class Manager extends Controller
 
             case 'viewMember':
                 // Load the view to view a trainer
+                $member_id = $_GET['id'];
+
                 $memberModel = new M_Member;
-                $member = $memberModel->findByMemberId($_GET['id']);
+                $member = $memberModel->findByMemberId($member_id);
+
+                $membershipSubscriptionModel = new M_MembershipSubscriptions;
+                $membershipSubscription = $membershipSubscriptionModel->findByMemberId($member_id);
 
                 $data = [
-                    'member' => $member
+                    'member' => $member,
+                    'membershipSubscription' => $membershipSubscription
                 ];
 
                 $this->view('manager/manager-viewMember', $data);
                 break;
+
+            case 'memberSupplements':
+                $memberId = $_GET['id'];
+
+                if ($memberId) {
+
+                    $supplementSalesModel = new M_SupplementSales;
+
+                    // Fetch the supplement records for the member
+                    $supplementRecords = $supplementSalesModel->findByMemberId($memberId);
+
+                    $data = [
+                        'supplements' => $supplementRecords
+                    ];
+
+                    $this->view('manager/manager-memberSupplements', $data);
+                } else {
+                    $_SESSION['error'] = 'Member not found.';
+                    redirect('manager/members');
+                }
+                break;
+
+            case 'memberAttendance':
+                $this->view('manager/manager-memberAttendance');
+                break;
+
+            case 'memberPaymentHistory':
+                $this->view('manager/manager-memberPaymentHistory');
+                break;
+
 
             case 'updateMember':
                 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -632,5 +668,135 @@ class Manager extends Controller
             'supplement' => $supplement[0],
             'purchases' => $purchases
         ]);
+    }
+
+    public function notifications(){
+        // Assuming the user ID is stored in session
+        $userId = $_SESSION['user_id'];
+
+        // Fetch notifications from the Notification model
+        $notificationModel = new M_Notification();
+        $notifications = $notificationModel->getNotifications($userId);
+
+        // Pass notifications to the view
+        $data['notifications'] = $notifications;
+
+        // Load the notifications view
+        $this->view('manager/manager-notifications', $data);
+    }
+
+    public function settings(){
+            
+        $user_id = $_SESSION['user_id'];
+        $managerModel = new M_Manager;
+        $userModel = new M_User;
+        $user = $userModel->findByUserId($user_id);
+        $manager = $managerModel->findByManagerId($user_id);
+        $data = [
+            'manager' => $manager,
+            'user' => $user
+        ];
+
+        $this->view('manager/manager-settings', $data);
+    }
+
+    public function updateSettings() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $managerModel = new M_Manager;
+            $userModel = new M_User;
+    
+            // Sanitize inputs
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    
+            // Retrieve existing admin data to compare
+            $manager_id = $_POST['user_id'];
+            $existingManager = $managerModel->findByManagerId($manager_id);
+    
+            // Retrieve existing user data to compare (for username check)
+            $existingUser = $userModel->findByUserId($manager_id); // Assuming findByUserId exists for users table
+    
+            // Initialize data array to track changes
+            $data = [];
+    
+            // Only include fields that have been updated
+            $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address', 'image'];
+    
+            // Check for changes and add them to the data array
+            foreach ($fields as $field) {
+                if (isset($_POST[$field]) && $_POST[$field] !== $existingManager->$field) {
+                    $data[$field] = $_POST[$field];
+                }
+            }
+    
+            // Handle email uniqueness check manually if it's updated
+            if (isset($_POST['email_address']) && $_POST['email_address'] !== $existingManager->email_address) {
+                if ($managerModel->emailExists($_POST['email_address'], $manager_id)) {
+                    $_SESSION['error'] = "Email is already in use.";
+                    $data = [
+                        'errors' => ['email_address' => 'Email is already in use.'],
+                        'manager' => $_POST
+                    ];
+                    $this->view('manager/manager-settings', $data);
+                    return; // Prevent further execution if email is already in use
+                }
+            }
+    
+            // Check if the username has changed
+            if (isset($_POST['username']) && $_POST['username'] !== $existingUser->username) {
+                if ($userModel->usernameExists($_POST['username'])) {
+                    $_SESSION['error'] = "Username is already taken.";
+                    $data = [
+                        'errors' => ['username' => 'Username is already in use.'],
+                        'admin' => $_POST
+                    ];
+                    $this->view('manager/manager-settings', $data);
+                    return; // Prevent further execution if username is already in use
+                } else {
+                    $data['username'] = $_POST['username'];
+                }
+            }
+    
+            // Handle file upload if exists and if changed
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $targetDir = "assets/images/Manager/";
+                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                $targetFile = $targetDir . $fileName;
+    
+                // Validate the file (e.g., check file type and size) and move it to the target directory
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                    $data['image'] = $fileName; // Save the new filename for the database
+                } else {
+                    $errors['file'] = "Failed to upload the file. Please try again.";
+                }
+            }
+    
+            // Only proceed with the update if data exists
+            if (!empty($data)) {
+
+
+                // Update admin data with the updated values
+                $updatedManager = $managerModel->update($manager_id, $data, 'manager_id');
+    
+                // Update user data (if username was changed)
+                if (isset($data['username'])) {
+                    $updatedUser = $userModel->update($manager_id, ['username' => $data['username']], 'user_id');
+                }
+    
+                // Check if the updates were successful
+                if ($updatedManager && (isset($updatedUser) ? !$updatedUser : true)) {
+                    $_SESSION['success'] = "Settings have been successfully updated!";
+                } else {
+                    $_SESSION['error'] = "No changes detected or update failed.";
+                }
+    
+                redirect('manager/settings');
+            } else {
+                // If no changes, redirect back
+                $_SESSION['error'] = "No changes were made.";
+                redirect('manager/settings');
+            }
+        } else {
+            redirect('manager/settings');
+        }
     }
 }

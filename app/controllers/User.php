@@ -248,7 +248,7 @@
                     }
                 
                     // Begin the deletion process
-                    if (!$userModel->delete($userId, 'user_id')) {
+                    if ($userModel->delete($userId, 'user_id')) {
                         // Set success message if the deletion is successful
                         $_SESSION['success'] = "Member has been deleted successfully.";
                 

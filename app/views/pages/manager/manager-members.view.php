@@ -82,7 +82,7 @@
                     <tr onclick="window.location.href='<?php echo URLROOT; ?>/manager/members/viewMember?id=<?php echo $member->member_id; ?>';" style="cursor: pointer;">
                         <td><?php echo $member->member_id; ?></td>
                         <td>
-                          <img src="<?php echo URLROOT; ?>/assets/images/Member/<?php echo !empty($member->image) ? $member->image : 'default-placeholder.jpg'; ?>" alt="Member Picture" class="user-image">
+                          <img src="<?php echo URLROOT; ?>/assets/images/Member/<?php echo isset($member->image) && $member->image !== null ? htmlspecialchars($member->image) : 'default-placeholder.jpg'; ?>" alt="Member Picture" class="user-image">
                         </td>
                         <td><?php echo $member->first_name; ?></td>
                         <td><?php echo $member->last_name; ?></td>

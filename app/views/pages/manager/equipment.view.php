@@ -25,7 +25,7 @@
 
         <div class="title">
 
-            <h1>View Equipment</h1>
+            <h1>Equipment</h1>
             <div class="greeting">
                 <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
             </div>

@@ -76,7 +76,7 @@
 
             <div class="insight-card card-3">
               <div class="upper">
-                <i class="ph ph-chat-circle-text"></i>
+                <i class="ph ph-barbell"></i>
                 <div class="status-badge">
                   <span>+9.4%</span>
                 </div>
