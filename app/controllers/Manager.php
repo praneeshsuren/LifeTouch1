@@ -14,6 +14,7 @@ class Manager extends Controller
         $memberModel = new M_Member();
         $equipmentModel = new M_Equipment();
         $announcementModel = new M_Announcement;
+        $supplementModel = new M_Supplements();
 
         // Query to group equipment by name and count them
         $inventoryCounts = $equipmentModel->query("
@@ -24,15 +25,22 @@ class Manager extends Controller
             GROUP BY base_name
         ");
 
-
         // Fetch the latest 4 announcements with admin names
         $announcements = $announcementModel->findAllWithAdminNames(4);
+        $members = $memberModel->countAll();
+        $recentMembers = $memberModel->countRecentMembers();
+        $supplementCount = $supplementModel->countAllSupplements();
+        $equipmentCount = $equipmentModel->countAllEquipment();
 
         $data = [
             'announcements' => $announcements,
-            'inventoryCounts' => $inventoryCounts
+            'inventoryCounts' => $inventoryCounts,
+            'members' => $members,
+            'recentMembers' => $recentMembers,
+            'supplementCount' => $supplementCount,
+            'equipmentCount' => $equipmentCount
         ];
-
+        
         $this->view('manager/manager_dashboard', $data);
     }
 

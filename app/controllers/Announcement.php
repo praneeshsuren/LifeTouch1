@@ -51,7 +51,7 @@
                     $announcement_id = $_POST['id'];
 
                     // Call the update function
-                    if (!$announcementModel->update($announcement_id, $data, 'id')) {
+                    if ($announcementModel->update($announcement_id, $data, 'id')) {
                         // Set a success session message
                         $_SESSION['success'] = "Announcement has been successfully updated!";
                         // Redirect to the announcements view page
@@ -84,7 +84,7 @@
 
             $announcement_id = $_POST['id'];
 
-            if (!$announcementModel->delete($announcement_id, 'id')) {
+            if ($announcementModel->delete($announcement_id, 'id')) {
                 
                 $_SESSION['success'] = "Announcement has been deleted successfully";
 
