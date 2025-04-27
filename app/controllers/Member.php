@@ -104,6 +104,9 @@
                     ];
 
                     $result = $bookingModel->insert($data);
+
+                    $message = $result ? "Booking added successfully!" : "Failed to add booking";
+                    
                     echo json_encode([
                         "success" => $result ? true : false, 
                         "message" => $result ? "bokking added successfully!" : "Failed to add booking"
@@ -278,6 +281,9 @@
                         'type' => $type
                     ];
                     $result = $payment_Model->insert($data);
+
+                    $message = $result ? "Payment successful and saved!" : "Payment succeeded, but failed to save payment info";
+                    
                     echo json_encode([
                         "success" => $result ? true : false, 
                         "message" => $result ? "Payment successful and saved!" : "Payment succeeded, but failed to save payment info"

@@ -86,7 +86,6 @@ input:focus {
 
 .save-btn {
   background-color: #28a745;
-  display: none;
 }
 
 .save-btn:hover {
@@ -95,7 +94,6 @@ input:focus {
 
 .cancel-btn {
   background-color: #6c757d;
-  display: none;
 }
 
 .cancel-btn:hover {
@@ -1569,130 +1567,139 @@ main .create-announcement .alert {
   }
 
 main .events-container {
-    grid-column: 1 / -1;
     width: 100%;
+    height: 100vh;
     margin: 1rem auto;
-    padding: 1rem;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 15px;
 }
 
 main .events-container .events-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     margin-bottom: 2rem;
-}
-
-main .events-container .events-header h2 {
-    margin: 0;
-    font-size: 1.75rem;
-    color: #333;
-}
-
-main .events-container .add-event-btn {
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    padding: 0.75rem 1.25rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-main .events-container .add-event-btn:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
-
-main .events-container .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 3rem;
+  }
+  
+main .events-container .search-bar {
+    position: relative;
+    width: 300px;
+    margin-bottom: 1rem;
+  }
+  
+  main .events-container .search-bar input {
     width: 100%;
-}
-
-main .events-container .card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-main .events-container .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
-}
-
-main .events-container .card .card-header {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    text-align: center;
-    border-bottom: 1px solid #e9ecef;
-}
-
-main .events-container .card .card-header h2 {
-    color: #333;
-    font-size: 1.25rem;
-    margin: 0;
+    padding: 10px 40px 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  main .events-container .search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #888;
+  }
+  
+  main .events-container .add-event-btn {
+    background-color: #4CAF50;
+    color: white;
     font-weight: 600;
-}
-
-main .events-container .card .card-body {
-    padding: 1.5rem;
-    flex-grow: 1;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  main .events-container .add-event-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+  }
+  
+  main .events-container .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+  
+  main .events-container .card {
+    background: #ffffff;
+    padding: 1.8rem 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
-}
-
-main .events-container .card .card-body p {
+    justify-content: space-between;
+    min-height: 320px;
+  }
+  
+  main .events-container .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+  
+  main .events-container .card-header h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #222;
+    text-align: center;
+  }
+  
+  main .events-container .card-body {
+    flex-grow: 1;
+  }
+  
+  main .events-container .card-body p {
     font-size: 0.95rem;
-    color: #6c757d;
-    margin: 0.5rem 0;
-    line-height: 1.6;
-}
-
-main .events-container .card .card-body p strong {
-    color: #495057;
-    min-width: 80px;
-    display: inline-block;
-}
-
-main .events-container .card .card-body .view-btn {
-    background-color: #6a5af9;
-    color: #fff;
-    padding: 0.75rem 1.25rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    color: #555;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+  
+  main .events-container .description {
     font-size: 0.9rem;
-    margin-top: auto;
-    align-self: center;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-main .events-container .card .card-body .view-btn:hover {
-    background-color: #5a4af9;
-    transform: scale(1.05);
-}
-
-@media (max-width: 768px) {
-    main .events-container .cards-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-}
+    margin-top: 0.5rem;
+    color: #777;
+  }
+  
+  main .events-container .view-btn {
+    margin-top: 1rem;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 100%;
+  }
+  
+  main .events-container .view-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.03);
+  }
+  
+  main .events-container .no-events-text {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #999;
+    margin-top: 3rem;
+  }
 
 /*Create Event Page*/
 main .create-event-container {
+    margin-top: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;

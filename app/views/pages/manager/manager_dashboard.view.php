@@ -161,17 +161,42 @@
 
         </div>
 
-        <div class="right-column" style="width: 820px; margin-left: -850px;">
-        <div class="doughnut-chart">
-          <div class="upper-text">
-            <h2>Invetory</h2>
-            <p>Invetory distribution</p>
+        <div class="chart-row">
+
+          <div class="bar-chart">
+            
+            <div class="upper">
+              <div class="upper-text">
+                <h2>Inventory</h2>
+                <p>Inventory distribution</p>
+              </div>
+            </div>
+
+            <div class="lower">
+              <canvas id="InventoryChart"></canvas>
+            </div>
+
           </div>
-          <div class="lower" style="width: 700px">
-            <canvas id="chart3"></canvas>
+
+          <div class="line-chart">
+            
+            <div class="upper">
+              <div class="upper-text">
+                <h2>Income</h2>
+                <p>Income distribution</p>
+              </div>
+            </div>
+
+            <div class="lower">
+              <canvas id="IncomeChart"></canvas>
+            </div>
+
           </div>
+
         </div>
+
       </div>
+
     </main>
 
     <!-- SCRIPT -->
