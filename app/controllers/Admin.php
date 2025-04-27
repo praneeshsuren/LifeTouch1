@@ -214,7 +214,7 @@
 
                     $trainer_id = $_GET['id'];
 
-                    $this->view('admin/admin-trainerCalendar');
+                    $this->view('admin/admin-trainerCalendar',['trainer_id' => $trainer_id]);
                     break;
                 
                 default:

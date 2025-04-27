@@ -9,14 +9,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/receptionist-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/trainer-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/sidebar-greeting.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
   </head>
   <body>
     <section class="sidebar">
-        <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
+        <?php require APPROOT.'/views/components/trainer-sidebar.view.php' ?>
     </section>
 
     <main>
@@ -26,9 +27,7 @@
           <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
       </div>
-      <div class="table-container">
-          <div class="filters"></div>
-
+      <div class="user-table-container">
           <div class="user-table-header">
             <input type="text" placeholder="Search by Date" class="search-input">
             <button class="add-user-btn">+</button>
@@ -39,7 +38,7 @@
               <thead>
                   <tr>
                       <th>Date</th>
-                      <th>Reason</th>
+                      <th>Timeslot</th>
                       <th>Action</th>
                   </tr>
               </thead>
@@ -47,7 +46,7 @@
             </table>
           </div>
           <div id="bookingModal" class="bookingModal">
-            <div class="bookingModal-content" >
+            <div class="bookingModal-content" style="height: 200px;">
                 <div class="bookingModalClose">&times;</div>
                 <div class="bookingModal-body" style = "color:black">
                   <form id="holidayForm">
@@ -55,9 +54,11 @@
                       <label for="holidayDate" class="label" ><i class="ph ph-calendar"></i>Date</label>
                       <input type="date" name="holidayDate" id="holidayDate">
                     </div>
-                    <div class="select-wrapper">
-                      <label for="holidayReason" class="label" ><i class="ph ph-pencil-simple-line"></i>Reason</label>
-                      <textarea name="holidayReason" id="holidayReason" rows="6" style="width: 100%; height: 130px; resize: none;"></textarea>
+                    <div class="select-wrapper" style="display:flex; align-items:center; width:200px; gap:10px;">
+                      <label for="holidaySlot" class="label" ><i class="ph ph-calendar"></i>Time Slot</label>
+                      <select id="blocktime">
+                            <option value="fullday">Fullday</option>
+                      </select>
                     </div>
                     <div class="book-btn">
                       <button type="submit" id="submitBtn" name="submit">Add</button>
@@ -70,25 +71,59 @@
       </main>
 
     <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
     <script>
+        const trainerId = '<?php echo isset($_SESSION['user_id']) ? htmlspecialchars($_SESSION['user_id'], ENT_QUOTES, 'UTF-8') : ''; ?>';
+        console.log('Trainer ID:', trainerId);
       const tableBody = document.querySelector('.user-table tbody');
       const searchInput = document.querySelector(".search-input");
       document.addEventListener("DOMContentLoaded", () =>{
         let allHolidays = [];
         let bookings = [];
 
-        fetch('<?php echo URLROOT; ?>/receptionist/holiday/api')
+        fetch('<?php echo URLROOT; ?>/trainer/holiday/api')
           .then(response => {
               console.log("Response Status:", response.status);
               return response.json();
           })
           .then(data =>{
-            // console.log('Holidays:', data.holidays);
-            // console.log('Bookings:', data.bookings);
-            allHolidays = data.holidays; 
-            bookings = data.bookings;
-            renderTable(allHolidays);
+            console.log('Holidays:', data.holidays);
+            console.log('Bookings:', data.bookings);
+            console.log("timeslot:",data.timeslot);
+            allHolidays = Array.isArray(data.holidays) ? data.holidays : []; 
+            bookings =  Array.isArray(data.bookings) ? data.bookings : [];
+            const timeslots = Array.isArray(data.timeslot) ? data.timeslot : [];
+
+            const holidaysWithTimeslots = allHolidays
+                .map(holiday => {
+                    // Determine the slot value
+                    let slotValue = holiday.slot === 'fullday' 
+                        ? 'fullday' 
+                        : null;
+
+                    // If not fullday, find the matching timeslot where holiday.slot equals timeslot.id
+                    if (holiday.slot !== 'fullday') {
+                        const matchingTimeslot = timeslots.find(ts => 
+                             String(ts.id) === String(holiday.slot)
+                        );
+                        slotValue = matchingTimeslot ? matchingTimeslot.slot : 'Invalid';
+                    }
+
+                    // Return null for invalid entries (e.g., no matching timeslot and not fullday)
+                    if (!slotValue) {
+                        return null;
+                    }
+
+                return {
+                    holiday_id: holiday.id,
+                    trainer_id: holiday.trainer_id,
+                    date: holiday.date,
+                    slot: slotValue
+                };
+            })
+            console.log(holidaysWithTimeslots);
+            renderTable(holidaysWithTimeslots);
+            populateTimeslots(timeslots);
           })
           .catch(error => {
             console.error('Error fetching holidays:', error);
@@ -110,8 +145,14 @@
             event.preventDefault();
 
             const holidayDateInput = document.getElementById("holidayDate").value;
+            const holidaySlotInput = document.getElementById("blocktime").value;
+
             if (!holidayDateInput) {
                 alert("Date is required.");
+                return;
+            }
+            if (!holidaySlotInput) {
+                alert("Please select a valid timeslot.");
                 return;
             }
             const today = new Date().toISOString().split("T")[0];
@@ -130,7 +171,7 @@
               const reject = "rejected";
 
               const rejectPromises = conflictingBookings.map(b => {
-                return fetch('<?php echo URLROOT; ?>/receptionist/holiday/conflict',{
+                return fetch('<?php echo URLROOT; ?>/trainer/holiday/conflict',{
                   method :'POST',
                   headers: {
                     "Content-type": "application/x-www-form-urlencoded",
@@ -155,7 +196,7 @@
                   )
                   .then(() => {
                     const formData = new FormData(document.getElementById("holidayForm"));
-                    return fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
+                    return fetch('<?php echo URLROOT; ?>/trainer/holiday/add', {
                       method: "POST",
                       body: formData
                     });
@@ -172,7 +213,12 @@
                   .catch(error => console.error("Error processing:", error));
               } else {
               const formData = new FormData(this);
-              fetch('<?php echo URLROOT; ?>/receptionist/holiday/add', {
+              formData.append("trainer_id",trainerId);
+              formData.append("slot",holidaySlotInput);
+              for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
+              fetch('<?php echo URLROOT; ?>/trainer/holiday/add', {
                   method: "POST",
                   body: formData
               })
@@ -221,11 +267,11 @@
 
               row.innerHTML = `
                   <td class="table-cell">${holiday.date}</td>
-                  <td class="table-cell">${reason}</td>
+                  <td class="table-cell">${holiday.slot}</td>
                   <td class="table-cell">
                     <div class="edit-dlt">
-                      <div class="edit" onclick="editHoliday('${holiday.id}', '${holiday.date}', '${reason}')"><i class="ph ph-eraser"></i></div>
-                      <div class="dlt" onclick="deleteHoliday('${holiday.id}')"><i class="ph ph-trash-simple"></i></div>
+                      <div class="edit" onclick="editHoliday('${holiday.id}', '${holiday.date}', '${holiday.slot}')"><i class="ph ph-eraser"></i></div>
+                      <div class="dlt" onclick="deleteHoliday('${holiday.holiday_id}')"><i class="ph ph-trash-simple"></i></div>
                     </div>
                   </td> 
               `;
@@ -256,7 +302,7 @@
       function deleteHoliday(id){
         if (!confirm("Are you sure you want to delete this holiday?")) return;
 
-        fetch('<?php echo URLROOT; ?>/receptionist/holiday/delete', {
+        fetch('<?php echo URLROOT; ?>/trainer/holiday/delete', {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -298,7 +344,7 @@
             const newReason = holidayReason.value.trim();
             
             if (!confirm("Are you sure you want to update this holiday's reason?")) return;
-              fetch('<?php echo URLROOT; ?>/receptionist/holiday/edit', {
+              fetch('<?php echo URLROOT; ?>/trainer/holiday/edit', {
                 method :'POST',
                 headers: {
                   "Content-type": "application/x-www-form-urlencoded",
@@ -335,6 +381,20 @@
           if (event.target === modal) {
             modal.style.display = 'none';
           }
+        });
+      }
+
+      // Function to populate timeslots
+      function populateTimeslots(timeslots) {
+        const select = document.getElementById('blocktime');
+
+        // Add each timeslot as an option, excluding the booked one
+        timeslots.forEach(slot => {
+        // Skip the booked slot
+            const option = document.createElement('option');
+            option.value = slot.id;
+            option.textContent = slot.slot;
+            select.appendChild(option);
         });
       }
 

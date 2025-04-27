@@ -182,7 +182,7 @@
                     bookingCount.classList.add('booked-count');
                     bookingCount.innerHTML = `
                             <span class="booking-dot"></span>
-                            </span>${bookedBookingsbyDate[date]} booking${bookedBookingsbyDate[date] === 1 ? '' :'s'}</span>
+                            <span>${bookedBookingsbyDate[date]} Booking${bookedBookingsbyDate[date] === 1 ? '' :'s'}</span>
                         `;
                     dayCell.appendChild(bookingCount);
                 }
@@ -250,16 +250,6 @@
                         </div>`;
                     } else if (selectedBookings.length > 0) {
                         selectedBookings.forEach(book => {
-                        // bookedBody.innerHTML += `
-                        //     <div>
-                        //         <table class="trainerviewbtn-profileTable-container">
-                        //             <tr>
-                        //                 <td>${book.member_id}</td>
-                        //                 <td>${book.member_name}</td>
-                        //                 <td>${book.timeslot}</td>
-                        //             </tr>
-                        //         </table>
-                        //     </div>`;
                         const bookingItem = document.createElement('div');
                         bookingItem.classList.add('booking-item');
                         bookingItem.innerHTML = `

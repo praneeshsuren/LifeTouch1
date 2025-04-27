@@ -42,25 +42,6 @@
                 </ul> 
             </li>
             <li>
-                <a href="#">
-                    <i class="ph ph-notebook"></i>
-                    <span class="text">Reservations</span>
-                    <i class='arrow ph-bold ph-caret-down'></i>
-                </a>
-                <ul class="sub-menu">
-                    <li>
-                        <a href="<?php echo URLROOT; ?>/receptionist/bookings">
-                            <span class="text">Bookings</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?php echo URLROOT; ?>/receptionist/holiday">
-                            <span class="text">Holidays</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
                 <a href="<?php echo URLROOT; ?>/receptionist/payment">
                     <i class='icon ph-bold ph-credit-card'></i>
                     <span class="text">Payment</span>
