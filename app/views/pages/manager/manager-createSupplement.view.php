@@ -31,15 +31,24 @@
                 <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
             </div>
         </div>
-        <a href="supplements" class="btn" style="float: right; margin-top: -10px; margin-bottom: 3px;">Back</a>
-        <div class="supplements-container">
+
+        <div class="box">
+            <?php if (!empty($errors)): ?>
+                <div class="error-messages">
+                    <?php foreach ($errors as $error): ?>
+                        <p><?php echo esc($error); ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+            <a href="supplements" class="btn" style="float: right; margin-top: -10px; margin-bottom: 3px;">Back</a>
+
             <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/supplement/create_supplement">
 
 
                 <div>
 
-                    <div class="supplement-image">
-                        <img class="supplement-picture" src="<?php echo URLROOT; ?>/assets/images/dumbell_add.png" alt="Supplement Image">
+                    <div class="profile-img-container">
+                        <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/dumbell_add.png" alt="Supplement Image">
                     </div>
                     <p class="file-upload-text">Click below to select an image</p>
                     <input 
@@ -51,49 +60,38 @@
                     >
                 </div>
 
-                <div class="input-container1">
-                    <p class="label"><i class="ph ph-barbell"></i> Name</p>
-                    <input type="text" id="name" name="name" >
-                    <?php if (!empty($errors['name'])): ?>
-                        <small class="error"><?php echo $errors['name']; ?></small>
-                    <?php endif; ?>
+                <div class="input-container">
+                    <input type="text" id="name" name="name" required>
+                    <label for="name" class="label"><i class="ph ph-barbell"></i>Name</label>
+                    <div class="underline"></div>
                 </div>
 
-                <div class="input-container1">
-                    <p class="label"><i class="ph ph-calendar"></i> Purchase Date</p>
-                    <input type="date" id="purchase_date" name="purchase_date" >
-                    <?php if (!empty($errors['purchase_date'])): ?>
-                        <small class="error"><?php echo $errors['purchase_date']; ?></small>
-                    <?php endif; ?>
+                <div class="input-container">
+                    <input type="date" id="purchase_date" name="purchase_date" required>
+                    <label for="date" class="label"><i class="ph ph-calendar"></i>Purchase Date</label>
+                    <div class="underline"></div>
                 </div>
 
-                <div class="input-container1">
-                    <p class="label"><i class="ph ph-money"></i> Purchase Price of a Supplement</p>
-                    <input type="text" id="purchase_price" name="purchase_price" >
-                    <?php if (!empty($errors['purchase_price'])): ?>
-                        <small class="error"><?php echo $errors['purchase_price']; ?></small>
-                    <?php endif; ?>
+                <div class="input-container">
+                    <input type="text" id="purchase_price" name="purchase_price" required>
+                    <label for="price" class="label"><i class="ph ph-money"></i>Purchase Price of a Supplement</label>
+                    <div class="underline"></div>
                 </div>
 
-                <div class="input-container1">
-                    <p class="label"><i class="ph ph-stack"></i> Quantity</p>
-                    <input type="number" id="quantity" name="quantity" >
-                    <?php if (!empty($errors['quantity'])): ?>
-                        <small class="error"><?php echo $errors['quantity']; ?></small>
-                    <?php endif; ?>
+                <div class="input-container">
+                    <input type="number" id="quantity" name="quantity" required>
+                    <label for="quantity" class="label"><i class="ph ph-stack"></i>Quantity</label>
+                    <div class="underline"></div>
                 </div>
 
-                <div class="input-container1">
-                    <p class="label"><i class="ph ph-money"></i> Purchase Shop</p>
-                    <input type="text" id="purchase_shop" name="purchase_shop" >
-                    <?php if (!empty($errors['purchase_shop'])): ?>
-                        <small class="error"><?php echo $errors['purchase_shop']; ?></small>
-                    <?php endif; ?>
+                <div class="input-container">
+                    <input type="text" id="purchase_shop" name="purchase_shop" required>
+                    <label for="price" class="label"><i class="ph ph-money"></i>Purchase Shop</label>
+                    <div class="underline"></div>
                 </div>
 
-
-                <div class="create-supplement">
-                    <button type="submit" class="save-btn">Save</button>
+                <div class="member-buttons">
+                    <button type="submit" class="edit-button">Save</button>
 
                 </div>
             </form>
@@ -106,7 +104,7 @@
     <script>
         function display_image(file) {
             if (file) {
-                var img = document.querySelector(".supplement-picture");
+                var img = document.querySelector(".profile-img");
                 img.src = URL.createObjectURL(file);
             }
         }

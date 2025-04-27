@@ -35,12 +35,13 @@
             -moz-appearance: none;
             appearance: none;
         }
+
         .error-message {
-        color: red;
-        font-size: 0.9rem;
-        margin-top: 5px;
-        display: block;
-    }
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
 </head>
 
@@ -60,7 +61,7 @@
 
 
             <div class="table-container">
-            
+
                 <?php if (isset($_SESSION['form_errors']['plan'])): ?>
                     <span class="error-message"><?php echo $_SESSION['form_errors']['plan']; ?></span>
                 <?php
@@ -73,8 +74,14 @@
                     unset($_SESSION['form_errors']['amount']);
                     unset($_SESSION['form_data']['amount']);
                 endif; ?>
+                <?php if (isset($_SESSION['form_errors']['duration'])): ?>
+                    <span class="error-message"><?php echo $_SESSION['form_errors']['duration']; ?></span>
+                <?php
+                    unset($_SESSION['form_errors']['duration']);
+                    unset($_SESSION['form_data']['duration']);
+                endif; ?>
 
-                <div class="heading" style="margin-left: 1040px;">
+                <div class="heading" style="margin-right: 2000;">
                     <a href="#" class="newMember-btn" onclick="openForm()"><i class="ph ph-plus"></i> Add Plan</a>
                 </div>
                 <div class="user-table-wrapper">
@@ -82,7 +89,9 @@
                         <thead>
                             <tr>
                                 <th>Plan Name</th>
+                                <th>Duration</th>
                                 <th>Amount</th>
+
                                 <th>Delete</th>
                             </tr>
                         </thead>
@@ -92,15 +101,19 @@
                                     <tr onclick="openEditForm(
                     '<?php echo $plan->membershipPlan_id; ?>',
                     '<?php echo htmlspecialchars($plan->plan); ?>',
+                    '<?php echo htmlspecialchars($plan->duration); ?>',
                     '<?php echo htmlspecialchars($plan->amount); ?>'
-                )">
+                    
+                    
+)">
                                         <td><?php echo htmlspecialchars($plan->plan); ?></td>
+                                        <td><?php echo htmlspecialchars($plan->duration); ?></td>
                                         <td><?php echo htmlspecialchars($plan->amount); ?></td>
                                         <td>
                                             <form action="<?php echo URLROOT; ?>/manager/delete_plan" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this plan?'); event.stopPropagation();">
                                                 <input type="hidden" name="membershipPlan_id" value="<?php echo $plan->membershipPlan_id; ?>">
-                                                <button type="submit" class="plain-x">X</button>
+                                                <button type="submit" class="plain-x" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.5em;">X</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -128,6 +141,13 @@
                                     <?php endif; ?>
                                 </div>
                                 <div class="input-group">
+                                    <label for="edit_amount">Duration</label>
+                                    <input type="text" id="edit_duration" name="duration" required>
+                                    <?php if (isset($_SESSION['edit_errors']['duration'])): ?>
+                                        <span class="error-message"><?php echo $_SESSION['edit_errors']['duration']; ?></span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="input-group">
                                     <label for="edit_amount">Amount</label>
                                     <input type="text" id="edit_amount" name="amount" required>
                                     <?php if (isset($_SESSION['edit_errors']['amount'])): ?>
@@ -149,8 +169,12 @@
                                 <input type="hidden" id="eventIdInput" name="event_id" />
                                 <div class="input-group">
                                     <label for="plan_name">Plan Name</label>
-                                    <input type="text" id="plan_name" name="plan_name" required />
+                                    <input type="text" id="plan_name" name="plan" required />
 
+                                </div>
+                                <div class="input-group">
+                                    <label for="duration">Duration</label>
+                                    <input type="text" id="duration" name="duration" required />
                                 </div>
                                 <div class="input-group">
                                     <label for="amount">Amount</label>
@@ -195,6 +219,7 @@
                 <?php if (isset($_SESSION['edit_data'])): ?>
                     document.getElementById("edit_membershipPlan_id").value = "<?php echo $_SESSION['edit_data']['membershipPlan_id'] ?? ''; ?>";
                     document.getElementById("edit_plan_name").value = "<?php echo $_SESSION['edit_data']['plan'] ?? ''; ?>";
+                    document.getElementById("edit_duration").value = "<?php echo $_SESSION['edit_data']['duration'] ?? ''; ?>";
                     document.getElementById("edit_amount").value = "<?php echo $_SESSION['edit_data']['amount'] ?? ''; ?>";
                 <?php endif; ?>
             <?php else: ?>
@@ -202,9 +227,10 @@
             <?php endif; ?>
         };
         // Open the Edit Form
-        function openEditForm(id, planName, amount) {
+        function openEditForm(id, planName, duration, amount) {
             document.getElementById("edit_membershipPlan_id").value = id;
             document.getElementById("edit_plan_name").value = planName;
+            document.getElementById("edit_duration").value = duration;
             document.getElementById("edit_amount").value = amount;
             document.getElementById("editForm").style.display = "flex";
         }

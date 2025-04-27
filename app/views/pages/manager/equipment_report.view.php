@@ -42,6 +42,7 @@
                 <a href="equipment_upcoming_services"> <button class="filter">Upcoming Services</button></a>
                 <a href="equipment_overdue_services"> <button class="filter">Overdue Services</button></a>
             </div>
+            <a href="<?php echo URLROOT; ?>/manager/report" class="btn" style="float: right; margin-top: -50px;margin-bottom:3px;">Back</a>
 
 
             <div class="date-filter-container">
@@ -57,7 +58,7 @@
             </div>
 
 
-            <div class="download-button" id="downloadPDF">
+            <div class="download-button" id="downloadPDF" style="margin-left: auto;">
                 <div class="download-wrapper">
                     <div class="download-text">Download</div>
                     <span class="download-icon">
@@ -116,46 +117,71 @@
             window.open(pdfUrl, "_blank");
         });
     </script>
-
+    
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const startDateInput = document.getElementById("startDate");
-            const endDateInput = document.getElementById("endDate");
-            const tableRows = document.querySelectorAll(".user-table tbody tr");
+    document.addEventListener("DOMContentLoaded", function() {
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+        const tableRows = document.querySelectorAll(".user-table tbody tr");
 
-            function filterByDate() {
-                const startDate = new Date(startDateInput.value);
-                const endDate = new Date(endDateInput.value);
+        function filterByDate() {
+            const startDateValue = startDateInput.value;
+            const endDateValue = endDateInput.value;
 
-                tableRows.forEach(row => {
-                    const serviceDateText = row.children[1].textContent.trim(); // Service Date is 2nd column
-                    const serviceDate = new Date(serviceDateText);
-
-                    // If no date filters are set, show all
-                    if (!startDateInput.value && !endDateInput.value) {
-                        row.style.display = "";
-                        return;
-                    }
-
-                    let showRow = true;
-
-                    if (startDateInput.value && serviceDate < startDate) {
-                        showRow = false;
-                    }
-
-                    if (endDateInput.value && serviceDate > endDate) {
-                        showRow = false;
-                    }
-
-                    row.style.display = showRow ? "" : "none";
-                });
+            // Validation: Start date after End date
+            if (startDateValue && endDateValue) {
+                const startDate = new Date(startDateValue);
+                const endDate = new Date(endDateValue);
+                if (startDate > endDate) {
+                    alert("Start Date cannot be after End Date!");
+                    return; // Stop, don't filter
+                }
             }
 
-            // Attach event listeners
-            startDateInput.addEventListener("change", filterByDate);
-            endDateInput.addEventListener("change", filterByDate);
-        });
-    </script>
+            // Validation: Future dates
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // reset time for accuracy
+
+            if (startDateValue) {
+                const startDate = new Date(startDateValue);
+                if (startDate > today) {
+                    alert("Dates cannot be in the future!");
+                    return; // Stop, don't filter
+                }
+            }
+
+            if (endDateValue) {
+                const endDate = new Date(endDateValue);
+                if (endDate > today) {
+                    alert("Dates cannot be in the future!");
+                    return; // Stop, don't filter
+                }
+            }
+
+            // If validation passed, filter table
+            tableRows.forEach(row => {
+                const serviceDateText = row.children[1].textContent.trim(); // Service Date is 2nd column
+                const serviceDate = new Date(serviceDateText);
+
+                let showRow = true;
+
+                if (startDateValue && serviceDate < new Date(startDateValue)) {
+                    showRow = false;
+                }
+
+                if (endDateValue && serviceDate > new Date(endDateValue)) {
+                    showRow = false;
+                }
+
+                row.style.display = showRow ? "" : "none";
+            });
+        }
+
+        startDateInput.addEventListener("change", filterByDate);
+        endDateInput.addEventListener("change", filterByDate);
+    });
+</script>
+
     <script>
         document.getElementById("clearDateFilter").addEventListener("click", function() {
             document.getElementById("startDate").value = '';

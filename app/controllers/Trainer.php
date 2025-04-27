@@ -194,8 +194,6 @@
 
                 $result = $bookingModel->update($id, $data);
 
-                $message = $result ? "Booking updated successfully!" : "Failed to update booking";
-
                 echo json_encode(
                     [
                         "success" => $result ? true : false,
@@ -457,21 +455,6 @@
             } else {
                 redirect('trainer/settings');
             }
-        }
-
-        public function notifications(){
-            // Assuming the user ID is stored in session
-            $userId = $_SESSION['user_id'];
-
-            // Fetch notifications from the Notification model
-            $notificationModel = new M_Notification();
-            $notifications = $notificationModel->getNotifications($userId);
-
-            // Pass notifications to the view
-            $data['notifications'] = $notifications;
-
-            // Load the notifications view
-            $this->view('trainer/trainer-notifications', $data);
         }
 
     }

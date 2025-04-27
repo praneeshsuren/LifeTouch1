@@ -77,7 +77,7 @@
               <div class="lower">
                   <p>Total Inquiries</p>
                   <div class="progress">
-                  <h1><?php echo $data['recentContacts'] ?></h1>
+                    <h1>20000</h1>
                     <div class="text-muted">
                       <small>Last 30 days</small>
                     </div>
@@ -95,7 +95,7 @@
               <div class="lower">
                   <p>Total Event Attendees</p>
                   <div class="progress">
-                    <h1><h1><?php echo $data['eventParticipants'] ?></h1></h1>
+                    <h1>20000</h1>
                     <div class="text-muted">
                       <small>Last 30 days</small>
                     </div>

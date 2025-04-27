@@ -68,7 +68,7 @@
             </p>
             <p>
                 <strong>Change Password:</strong>
-                <a href="#" id="changePasswordLink" class="change-password-link">Click here to change password</a>
+                <a href="<?php echo URLROOT; ?>/trainer/changePassword" class="change-password-link">Click here to change password</a>
             </p>
             <p>
                 <strong>First Name:</strong>
@@ -139,58 +139,53 @@
     <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
 
     <script>
-      const editBtn = document.getElementById('editBtn');
-      const saveBtn = document.getElementById('saveBtn');
-      const cancelBtn = document.getElementById('cancelBtn');
-      const form = document.getElementById('settings-form');
-      const inputs = form.querySelectorAll('input');
-      const fileInput = document.getElementById('profilePictureInput');
+    const editBtn = document.getElementById('editBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const form = document.getElementById('settings-form');
+  const inputs = form.querySelectorAll('input');
+  const fileInput = document.getElementById('profilePictureInput');
 
-      // Store original values for cancel
-      let originalValues = {};
-      function cacheOriginalValues() {
-        inputs.forEach(input => {
-          if (input.type !== 'file' && input.name !== 'trainer_id') {
-            originalValues[input.name] = input.value;
-          }
-        });
+  // Store original values for cancel
+  let originalValues = {};
+  function cacheOriginalValues() {
+    inputs.forEach(input => {
+      if (input.type !== 'file' && input.name !== 'trainer_id') {
+        originalValues[input.name] = input.value;
       }
+    });
+  }
 
-      function restoreOriginalValues() {
-        inputs.forEach(input => {
-          if (input.name in originalValues) {
-            input.value = originalValues[input.name];
-          }
-          if (input.name !== 'trainer_id') {
-            input.disabled = true;
-          }
-        });
-        fileInput.disabled = true;
-        saveBtn.style.display = 'none';
-        cancelBtn.style.display = 'none';
-        editBtn.style.display = 'inline-block';
+  function restoreOriginalValues() {
+    inputs.forEach(input => {
+      if (input.name in originalValues) {
+        input.value = originalValues[input.name];
       }
-
-      function enableEditing() {
-        cacheOriginalValues();
-        inputs.forEach(input => {
-          if (input.name !== 'trainer_id') {
-            input.disabled = false;
-          }
-        });
-        fileInput.disabled = false;
-        saveBtn.style.display = 'inline-block';
-        cancelBtn.style.display = 'inline-block';
-        editBtn.style.display = 'none';
+      if (input.name !== 'trainer_id') {
+        input.disabled = true;
       }
+    });
+    fileInput.disabled = true;
+    saveBtn.style.display = 'none';
+    cancelBtn.style.display = 'none';
+    editBtn.style.display = 'inline-block';
+  }
 
-      editBtn.addEventListener('click', enableEditing);
-      cancelBtn.addEventListener('click', restoreOriginalValues);
-      
-      document.getElementById('changePasswordLink').addEventListener('click', function (e) {
-        e.preventDefault();
-        window.location.href = "<?php echo URLROOT; ?>/changePassword";
-      });
+  function enableEditing() {
+    cacheOriginalValues();
+    inputs.forEach(input => {
+      if (input.name !== 'trainer_id') {
+        input.disabled = false;
+      }
+    });
+    fileInput.disabled = false;
+    saveBtn.style.display = 'inline-block';
+    cancelBtn.style.display = 'inline-block';
+    editBtn.style.display = 'none';
+  }
+
+  editBtn.addEventListener('click', enableEditing);
+  cancelBtn.addEventListener('click', restoreOriginalValues);
     </script>
 
   </body>

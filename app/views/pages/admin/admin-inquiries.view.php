@@ -56,14 +56,13 @@
     <script>
         const tbody = document.querySelector('.table tbody');
         document.addEventListener("DOMContentLoaded", () => {
-            fetch('<?php echo URLROOT; ?>/admin/inquiries/api')
+            fetch('<?php echo URLROOT; ?>/home/contact/api')
                 .then(response => {
                     console.log("Response Status:", response.status);
                     return response.json();
                 })
                 .then(data =>{
-                    console.log("inquiries", data.inquiries);
-                    const inquiries = Array.isArray(data.inquiries) ? data.inquiries :[];
+                    const inquiries = Array.isArray(data.contact) ? data.contact :[];
                     if(inquiries.length === 0){
                         renderTable(null);
                     } else {
@@ -96,10 +95,6 @@
                     <td>${i.name}</td>
                     <td>${i.email}</td>
                     <td class="msg">${i.msg}</td>`;
-
-                tr.onclick = () => {
-                    window.location.href =`<?php echo URLROOT; ?>/admin/inquiries/viewInquiry?id=${i.id}`;
-                };
 
                 tbody.appendChild(tr);
             });

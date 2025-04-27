@@ -62,7 +62,7 @@
                             <input type="hidden" name="event_id" id="event_id"><input type="hidden" id="amount"><input type="hidden" id="name" name="name"><input type="hidden" id="nic" name="nic">
                             <input type="hidden" id="contact_no" name="contact_no"><input type="hidden" id="member_id" name="member_id">
                             <div class="payment-form-group-flex">
-                                <button type="button" class="payment-form-cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/home/payment'"> Cancel</button>
+                                <button type="button" class="payment-form-cancel-button" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'"> Cancel</button>
                                 <button type="submit" class="payment-form-submit-button"> Pay</button>
                             </div>
                         </form>
@@ -76,7 +76,6 @@
         window.STRIPE_PUBLISHABLE_KEY = "<?php echo STRIPE_PUBLISHABLE_KEY; ?>";
         const createPaymentURL = "<?php echo URLROOT; ?>/home/createPayment";
         const savePlan = "<?php echo URLROOT; ?>/home/Payment/savePayment";
-        const redirect = "<?php echo URLROOT; ?>/home/payment";
 
         document.addEventListener("DOMContentLoaded", () =>{
             let plan = [];
@@ -89,8 +88,8 @@
               .then(data => {
                 event = data.event;
                 session = data.session;
-                // console.log("event:",event);
-                // console.log("session:",session);
+                console.log("event:",event);
+                console.log("session:",session);
 
                 const selectedEvent = event.find(e => e.event_id.trim() == session.event_id.trim());
 

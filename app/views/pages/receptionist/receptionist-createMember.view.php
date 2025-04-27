@@ -97,7 +97,7 @@
 
             <div class="user-form">
 
-                <form action="<?php echo URLROOT; ?>/user/member/registerMember" method="post" enctype="multipart/form-data">
+                <form action="<?php echo URLROOT; ?>/user/members/registerMember" method="post" enctype="multipart/form-data">
 
                     <div class="form-container">
 
@@ -246,7 +246,7 @@
                                 <div class="input-container">
                                     <div class="input-box1">
                                         <input type="number" id="height" name="height" value="<?php echo $_POST['height'] ?? ''; ?>" step="0.001" required>
-                                        <label class="floating-label">Height (cm)</label>
+                                        <label class="floating-label">Height (m)</label>
                                         <?php if (!empty($data['errors']['height'])): ?>
                                             <span class="invalid-feedback"><?php echo $data['errors']['height']; ?></span>
                                         <?php endif; ?>
@@ -254,18 +254,6 @@
                                 </div>
 
                             </div>
-
-                            <div class="input-container">
-                                <div class="input-box1">
-                                    <textarea id="health-conditions" name="health_conditions" rows="4"></textarea>
-                                    <label for="health-conditions" class="floating-label-textarea">Health Conditions (If Any)</label>
-                                    <?php if (!empty($data['errors']['health_conditions'])): ?>
-                                        <span class="invalid-feedback"><?php echo $data['errors']['health_conditions']; ?></span>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-
-
 
                         </div>
 

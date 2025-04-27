@@ -17,9 +17,7 @@
             'gender',
             'email_address',
             'image',
-            'status',
-            'id',
-            'created_at'
+            'status'
         ];
 
         public function findByAdminId($adminId){
@@ -105,18 +103,6 @@
         
             // If we found any result, it means the email exists and is used by another admin
             return !empty($result);
-        }
-
-        public function getLastAdminId(){
-            // Get the last member's ID from the database
-            $query = "SELECT id FROM {$this->table} ORDER BY id DESC LIMIT 1";
-            $result = $this->query($query);
-        
-            if ($result && !empty($result)) {
-                return $result[0];  // Return the last member record
-            }
-        
-            return null;  // Return null if no records are found
         }
 
       

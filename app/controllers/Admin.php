@@ -9,8 +9,6 @@
         public function index() {
             $announcementModel = new M_Announcement;
             $memberModel = new M_Member;
-            $contactModel = new M_Contact;
-            $eventParticipantsModel = new M_EventParticipants;
         
             // Fetch the latest 4 announcements with admin names
             $announcements = $announcementModel->findAllWithAdminNames(4);
@@ -18,15 +16,11 @@
             // Fetch the All Count of members in the GYM
             $members = $memberModel->countAll();
             $recentMembers = $memberModel->countRecentMembers();
-            $recentContacts = $contactModel->countAllContactsInLast30Days();
-            $eventParticipants = $eventParticipantsModel->countUniqueParticipants();
 
             $data = [
                 'announcements' => $announcements,
                 'members' => $members,
-                'recentMembers' => $recentMembers,
-                'recentContacts' => $recentContacts,
-                'eventParticipants' => $eventParticipants
+                'recentMembers' => $recentMembers
             ];
         
             $this->view('admin/admin-dashboard', $data);
@@ -66,30 +60,9 @@
             }
         }
 
-        public function inquiries($action = null){
-            switch($action) {
-                case 'api':
-                    $inquiries_Model = new M_Contact();
-                    $inquiries = $inquiries_Model->findAll();
-                    header('Content-Type: application/json');
-                    echo json_encode([
-                        'inquiries' => $inquiries
-                    ]);
-                    break;
-                case 'viewInquiryapi':
-                    $inquiries_Model = new M_Contact();
-                    $inquiry = $inquiries_Model->findInquityById($_GET['id']);   
-                    header('Content-Type: application/json');
-                    echo json_encode($inquiry); 
-                    break;
-                case 'viewInquiry' :
-                    $inquiries_Model = new M_Contact();
-                    $this->view('admin/admin-viewInquiry');
-                    break;
-                default:
-                    $this->view('admin/admin-inquiries');
-                    break;
-            }
+        public function inquiries(){
+            
+            $this->view('admin/admin-inquiries');
 
         }
 
@@ -205,6 +178,8 @@
                 
                 case 'salaryHistory':
 
+                    $trainer_id = $_GET['id'];
+
                     $this->view('admin/admin-trainerSalaryHistory');
                     break;
 
@@ -212,7 +187,7 @@
 
                     $trainer_id = $_GET['id'];
 
-                    $this->view('admin/admin-trainerCalendar',['trainer_id' => $trainer_id]);
+                    $this->view('admin/admin-trainerCalendar');
                     break;
                 
                 default:
@@ -496,24 +471,7 @@
             } else {
                 redirect('admin/settings');
             }
-        }
-        
-        public function notifications(){
-            // Assuming the user ID is stored in session
-            $userId = $_SESSION['user_id'];
-
-            // Fetch notifications from the Notification model
-            $notificationModel = new M_Notification();
-            $notifications = $notificationModel->getNotifications($userId);
-
-            // Pass notifications to the view
-            $data['notifications'] = $notifications;
-
-            // Load the notifications view
-            $this->view('admin/admin-notifications', $data);
-        }
-
-
+        }               
         
     }
 

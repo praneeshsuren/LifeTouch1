@@ -5,6 +5,7 @@ class Manager extends Controller
 
     public function __construct()
     {
+        // Check if the user is logged in as a manager
         $this->checkAuth('Manager');
     }
 
@@ -13,7 +14,6 @@ class Manager extends Controller
         $memberModel = new M_Member();
         $equipmentModel = new M_Equipment();
         $announcementModel = new M_Announcement;
-        $supplementModel = new M_Supplements();
 
         // Query to group equipment by name and count them
         $inventoryCounts = $equipmentModel->query("
@@ -24,22 +24,15 @@ class Manager extends Controller
             GROUP BY base_name
         ");
 
+
         // Fetch the latest 4 announcements with admin names
         $announcements = $announcementModel->findAllWithAdminNames(4);
-        $members = $memberModel->countAll();
-        $recentMembers = $memberModel->countRecentMembers();
-        $supplementCount = $supplementModel->countAllSupplements();
-        $equipmentCount = $equipmentModel->countAllEquipment();
 
         $data = [
             'announcements' => $announcements,
-            'inventoryCounts' => $inventoryCounts,
-            'members' => $members,
-            'recentMembers' => $recentMembers,
-            'supplementCount' => $supplementCount,
-            'equipmentCount' => $equipmentCount
+            'inventoryCounts' => $inventoryCounts
         ];
-        
+
         $this->view('manager/manager_dashboard', $data);
     }
 
@@ -121,7 +114,7 @@ class Manager extends Controller
         switch ($action) {
             case 'createMember':
                 // Load the form view to create a member
-                $this->view('manager/member_create');
+                $this->view('manager/manager-createMember');
                 break;
 
             case 'registerMember':
@@ -178,7 +171,7 @@ class Manager extends Controller
                     'member' => $member
                 ];
 
-                $this->view('manager/member_view', $data);
+                $this->view('manager/manager-viewMember', $data);
                 break;
 
             case 'updateMember':
@@ -211,11 +204,11 @@ class Manager extends Controller
                             // Set a success session message
                             $_SESSION['success'] = "Member has been successfully updated!";
                             // Redirect to the trainer view page
-                            redirect('admin/members/viewMember?id=' . $member_id);
+                            redirect('manager/members/viewMember?id=' . $member_id);
                         } else {
                             // Handle update failure (optional)
                             $_SESSION['error'] = "There was an issue updating the member. Please try again.";
-                            redirect('admin/members/viewMember?id=' . $member_id);
+                            redirect('manager/members/viewMember?id=' . $member_id);
                         }
                     } else {
                         // If validation fails, pass errors to the view
@@ -224,11 +217,11 @@ class Manager extends Controller
                             'member' => $_POST // Preserve form data for user correction
                         ];
                         // Render the view with errors and form data
-                        $this->view('admin/admin-viewMember', $data);
+                        $this->view('manager/manager-viewMember', $data);
                     }
                 } else {
                     // Redirect if the request is not a POST request
-                    redirect('admin/members');
+                    redirect('manager/members');
                 }
                 break;
 
@@ -244,11 +237,11 @@ class Manager extends Controller
 
                     $_SESSION['success'] = "Member has been deleted successfully";
 
-                    redirect('admin/members');
+                    redirect('manager/members');
                 } else {
                     // Handle deletion failure
                     $_SESSION['error'] = "There was an issue deleting the member. Please try again.";
-                    redirect('admin/members/viewMember?id=' . $userId);
+                    redirect('manager/members/viewMember?id=' . $userId);
                 }
 
                 break;
@@ -262,83 +255,97 @@ class Manager extends Controller
                     'members' => $members
                 ];
 
-                $this->view('admin/admin-members', $data);
+                $this->view('manager/manager-members', $data);
                 break;
         }
     }
 
-    public function member()
-    {
-        $this->view('manager/member');
-    }
-    public function member_view()
-    {
-        $this->view('manager/member_view');
-    }
-    public function member_edit()
-    {
-        $this->view('manager/member_edit');
-    }
-    public function member_create($action = null)
-    {
+    public function trainers($action = null) {
         switch ($action) {
-            case 'createMember':
-                // Load the form view to create a member
-                $this->view('manager/member_create');
+            case 'createTrainer':
+                // Load the form view to create a trainer
+                $this->view('manager/manager-createTrainer');
                 break;
-
-
-            case 'viewMember':
+    
+            
+            case 'viewTrainer':
                 // Load the view to view a trainer
-                $memberModel = new M_Member;
-                $member = $memberModel->findByMemberId($_GET['id']);
-
+                $trainerModel = new M_Trainer;
+                $trainer = $trainerModel->findByTrainerId($_GET['id']);
+    
                 $data = [
-                    'member' => $member
+                    'trainer' => $trainer
                 ];
+    
+                $this->view('manager/manager-viewTrainer', $data);
+                break;
+            
+            case 'salaryHistory':
 
-                $this->view('admin/admin-viewMember', $data);
+                $trainer_id = $_GET['id'];
+
+                $this->view('manager/manager-trainerSalaryHistory');
                 break;
 
+            case 'trainerCalendar':
 
+                $trainer_id = $_GET['id'];
+
+                $this->view('manager/manager-trainerCalendar');
+                break;
+            
             default:
-                // Fetch all members and pass to the view
-                $memberModel = new M_Member;
-                $members = $memberModel->findAll('created_at');
-
+                // Fetch all trainers and pass to the view
+                $trainerModel = new M_Trainer;
+                $trainers = $trainerModel->findAll('created_at');
+    
                 $data = [
-                    'members' => $members
+                    'trainers' => $trainers
                 ];
-
-                $this->view('admin/admin-members', $data);
+    
+                $this->view('manager/manager-trainers', $data);
                 break;
         }
+    }
+    
+    public function admins($action = null) {
+        switch ($action) {
+            case 'createAdmin':
+                // Load the form view to create a admin
+                $this->view('manager/manager-createAdmin');
+                break;
 
-        $this->view('manager/member_create');
-    }
-    public function trainer()
-    {
-        $this->view('manager/trainer');
-    }
-    public function trainer_create()
-    {
-        $this->view('manager/trainer_create');
-    }
-    public function trainer_view()
-    {
-        $this->view('manager/trainer_view');
-    }
-    public function admin()
-    {
-        $this->view('manager/admin');
-    }
-    public function admin_create()
-    {
-        $this->view('manager/admin_create');
-    }
-    public function admin_view()
-    {
-        $this->view('manager/admin_view');
+            case 'viewAdmin':
+                // Load the view to view a admin
+                $adminModel = new M_Admin;
+                $admin = $adminModel->findByAdminId($_GET['id']);
+    
+                $data = [
+                    'admin' => $admin
+                ];
+    
+                $this->view('manager/manager-viewAdmin', $data);
+                break;
+                
+            case 'salaryHistory':
+                
+                $admin_id = $_GET['id'];
+
+                $this->view('manager/manager-adminSalaryHistory');
+                break;
+    
+            default:
+                // Fetch all admins and pass to the view
+                $adminModel = new M_Admin;
+                $admins = $adminModel->findAll('created_at');
+
+                $data = [
+                    'admins' => $admins
+                ];
+
+                $this->view('manager/manager-admins', $data);
+                break; 
+        }
     }
     public function service_edit()
     {
@@ -346,7 +353,7 @@ class Manager extends Controller
     }
     public function equipment()
     {
-        $equipmentModel = new M_Equipment(); // Assume this is your equipment model
+        $equipmentModel = new M_Equipment();
         $data['equipment'] = $equipmentModel->findAll(); // Fetch all equipment data
         $this->view('manager/equipment', $data);
     }
@@ -414,7 +421,7 @@ class Manager extends Controller
 
         // Pass both the equipment data and service history to the view
         $this->view('manager/equipment_view', [
-            'equipment' => $equipment[0],  // Assuming it's an array, or adjust if it's an object
+            'equipment' => $equipment[0],  
             'services' => $services
         ]);
     }
@@ -428,10 +435,8 @@ class Manager extends Controller
         $result = $equipmentModel->delete($id, 'equipment_id');  // 'equipment_id' is the column to identify the equipment
 
         if ($result === false) {
-            // Handle failure (e.g., redirect to the equipment list with a failure message)
             $_SESSION['message'] = 'Failed to delete equipment.';
         } else {
-            // Handle success (e.g., redirect to the equipment list with a success message)
             $_SESSION['message'] = 'Equipment deleted successfully.';
         }
 
@@ -462,45 +467,45 @@ class Manager extends Controller
 
             // Handle file upload if a new file is provided
             if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
-            $targetDir = "assets/images/Equipment/";
-            $fileName = time() . "_" . basename($_FILES["file"]["name"]);
-            $targetFile = $targetDir . $fileName;
+                $targetDir = "assets/images/Equipment/";
+                $fileName = time() . "_" . basename($_FILES["file"]["name"]);
+                $targetFile = $targetDir . $fileName;
 
-            if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
-                $updatedData['file'] = $fileName;
-            } else {
-                $_SESSION['message'] = "Failed to upload image.";
-                $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
-                return;
-            }
+                if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
+                    $updatedData['file'] = $fileName;
+                } else {
+                    $_SESSION['message'] = "Failed to upload image.";
+                    $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
+                    return;
+                }
             }
 
             // Validate the data using the model's validate function
             if ($equipmentModel->validate($updatedData)) {
-            // Update the equipment in the database
-            $updateResult = $equipmentModel->update($id, $updatedData, 'equipment_id');
+                // Update the equipment in the database
+                $updateResult = $equipmentModel->update($id, $updatedData, 'equipment_id');
 
-            if ($updateResult === false) {
-                $_SESSION['message'] = "Failed to update equipment.";
-            } else {
-                $_SESSION['message'] = "Equipment updated successfully.";
-            }
+                if ($updateResult === false) {
+                    $_SESSION['message'] = "Failed to update equipment.";
+                } else {
+                    $_SESSION['message'] = "Equipment updated successfully.";
+                }
 
-            // Redirect to the equipment list page after updating
-            redirect('manager/equipment');
+                // Redirect to the equipment list page after updating
+                redirect('manager/equipment');
             } else {
-            // Pass validation errors to the view
-            $this->view('manager/equipment_edit', [
-                'equipment' => $equipment[0],
-                'errors' => $equipmentModel->getErrors()
-            ]);
-            return;
+                // Pass validation errors to the view
+                $this->view('manager/equipment_edit', [
+                    'equipment' => $equipment[0],
+                    'errors' => $equipmentModel->getErrors()
+                ]);
+                return;
             }
         }
 
         // Pass the equipment data to the view for editing
         $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
-        }
+    }
 
     public function membership_plan()
     {
@@ -517,8 +522,9 @@ class Manager extends Controller
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             $planData = [
-                'plan' => trim($_POST['plan_name']),
-                'amount' => (float) trim($_POST['amount'])  // Cast to float
+                'plan' => trim($_POST['plan']),
+                'duration' => trim($_POST['duration']),
+                'amount' => trim($_POST['amount'])
             ];
 
             if ($membershipModel->validate($planData)) {
@@ -527,12 +533,12 @@ class Manager extends Controller
                 } else {
                     $_SESSION['error'] = "Failed to add plan.";
                 }
+                redirect('manager/membership_plan');
             } else {
                 $_SESSION['form_errors'] = $membershipModel->getErrors();
                 $_SESSION['form_data'] = $_POST;
+                redirect('manager/membership_plan');
             }
-
-            redirect('manager/membership_plan');
         } else {
             redirect('manager/membership_plan');
         }
@@ -542,38 +548,44 @@ class Manager extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $planId = $_POST['membershipPlan_id'];
-
             $model = new M_Membership_plan();
-            $model->delete($planId, 'membershipPlan_id'); // Specify the primary key column
+
+            if ($model->delete($planId, 'membershipPlan_id')) {
+                $_SESSION['success'] = "Plan deleted successfully";
+            } else {
+                $_SESSION['error'] = "Failed to delete plan";
+            }
 
             redirect('manager/membership_plan');
         }
     }
+
     public function update_plan()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $model = new M_Membership_plan();
             $id = $_POST['membershipPlan_id'];
 
-            if ($model->validate($_POST)) {
-                $model->update($id, $_POST, 'membershipPlan_id');
+            $data = [
+                'plan' => trim($_POST['plan']),
+                'duration' => trim($_POST['duration']),
+                'amount' => trim($_POST['amount'])
+            ];
+
+            if ($model->validate($data)) {
+                if ($model->update($id, $data, 'membershipPlan_id')) {
+                    $_SESSION['success'] = "Plan updated successfully";
+                } else {
+                    $_SESSION['error'] = "Failed to update plan";
+                }
                 redirect('manager/membership_plan');
             } else {
-                // Reload membership plans to keep the table visible
-                $data = [
-                    'membership_plan' => $model->findAll(),
-                    'edit_data' => $_POST,
-                    'edit_errors' => $model->getErrors()
-                ];
-
                 $_SESSION['edit_data'] = $_POST;
                 $_SESSION['edit_errors'] = $model->getErrors();
-                $_SESSION['error'] = "Please fix the highlighted errors.";
-
                 redirect('manager/membership_plan');
             }
         }
-}
+    }
 
 
     public function supplements()
@@ -613,20 +625,4 @@ class Manager extends Controller
             'purchases' => $purchases
         ]);
     }
-
-    public function notifications(){
-        // Assuming the user ID is stored in session
-        $userId = $_SESSION['user_id'];
-
-        // Fetch notifications from the Notification model
-        $notificationModel = new M_Notification();
-        $notifications = $notificationModel->getNotifications($userId);
-
-        // Pass notifications to the view
-        $data['notifications'] = $notifications;
-
-        // Load the notifications view
-        $this->view('manager/manager-notifications', $data);
-    }
-    
 }

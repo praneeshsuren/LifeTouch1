@@ -174,12 +174,7 @@ main .user-table-container {
     padding: 20px;
     width: 100%;
     height: 100vh;
-    max-width:1300px;
-    max-height:630px; /* Adjust as per your design */
-    overflow-x:hidden; 
-    overflow-y: auto;
 }
-
   
 main .user-table-container .filters {
     display: flex;
@@ -194,7 +189,6 @@ main .user-table-container .filters .filter {
     border: none;
     cursor: pointer;
     font-size: 0.9rem;
-    color: black;
   }
   
 main .user-table-container .filters .filter.active {
@@ -217,6 +211,8 @@ main .user-table-container .user-table-header .search-input {
   }
   
 main .user-table-container .user-table-wrapper {
+    height: auto; /* Adjust as per your design */
+    overflow: hidden; /* Hide scrollbar by default */
     position: relative;
     border: 1px solid #ddd; /* Optional: border around the scrollable area */
     border-radius: 0.5rem;
@@ -291,20 +287,6 @@ main .user-table-container .user-table-wrapper::-webkit-scrollbar-thumb:hover {
 main .user-table-container .user-table-wrapper::-webkit-scrollbar-track {
     background: #f1f1f1;
   }
-
-
-.status {
-  width:80px;
-  height:40px;
-  padding: 5px 10px;
-  border-radius: 10px; /* Smooth rounded corners */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white; /* Ensure text is readable */
-  text-align: center;
-  background-color: #007bff;
-}
 
 /* *************View User Page**************** */
 
@@ -500,6 +482,159 @@ main .view-user-container .user-container .details .row > p {
     }
   }
 
+/* booking page */
+main .table-container {
+    margin: 2rem 3rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+  
+main .table-container .filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .filters .filter {
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  
+main .table-container .filters .filter.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+main .table-container .user-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+main .table-container .user-table-header .search-input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    width: 250px;
+  }
+  
+main .table-container .user-table-header .add-user-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+main .table-container .user-table-wrapper {
+    width:1000px;
+    height: auto; /* Adjust as per your design */
+    overflow: hidden; /* Hide scrollbar by default */
+    position: relative;
+    border: 1px solid #ddd; /* Optional: border around the scrollable area */
+    border-radius: 0.5rem;
+    transition: var(--tran-03);
+  }
+
+main .table-container .user-table-wrapper:hover {
+    overflow: auto;
+  }
+
+main .table-container .user-table-wrapper .user-table {
+    width: 100%;
+    border-collapse: collapse;
+    position: relative;
+  }
+  
+main .table-container .user-table-wrapper .user-table th,
+main .table-container .user-table-wrapper .user-table td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    min-width: 100px;
+    text-wrap: nowrap;
+  }
+  
+main .table-container .user-table-wrapper .user-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    position: sticky; /* Makes the header sticky */
+    top: 0; /* Sticks to the top of the container */
+    z-index: 2; /* Ensures it stays above table body */
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+  }
+  
+main .table-container .user-table-wrapper .user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+main .table-container .user-table-wrapper .status-badge {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.active {
+    background-color: #28a745;
+  }
+  
+main .table-container .user-table-wrapper .status-badge.inactive {
+    background-color: #dc3545;
+  }
+
+main .table-container .user-table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 4px;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #888;
+  }
+  
+main .table-container .user-table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+.status {
+    width:80px;
+    height:40px;
+    padding: 5px 10px;
+    border-radius: 10px; /* Smooth rounded corners */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white; /* Ensure text is readable */
+    text-align: center;
+    background-color: #007bff;
+}
+
+/* .pending{ background: linear-gradient(45deg, #FFA500, #FF4500);} */
+/* .booked { background: linear-gradient(45deg, #32CD32, #006400);} */
+/* .rejected{ background: linear-gradient(45deg, #FF0000, #8B0000);} */
+
+
 /* calendar */
 main .calendarContainer {
     grid-column: 1;
@@ -583,7 +718,7 @@ main .calendarContainer {
 }
 
 .calendar td:hover {
-    background-color:  #0056b3;
+    background-color: var(--primary-color);
     color: var(--sidebar-color);
 }
 
@@ -593,7 +728,7 @@ main .calendarContainer {
 }
 
 .calendar td.today {
-    border: 2px solid    #0056b3;
+    border: 2px solid var(--primary-color)
 }
 
 .calendar td.holiday {
@@ -602,47 +737,20 @@ main .calendarContainer {
 }
 
 .calendar td.active{
-    background-color:  #0056b3;
+    background-color: var(--primary-color);
     color: var(--sidebar-color);
 }
 
-.booking-dot {
-  height: 8px;
-  width: 8px;
-  background-color: #4a6fa5;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 3px;
-}
-
 .booked-count {
-    color:  #4a6fa5;
-    width: 100px;
+    background-color: #007bff;
+    color: #fff;
+    width: 40px;
     height: 20px;
     font-size: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 4px auto;
-}
-
-
-.booking-item {
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  background-color: #f8f9fa;
-  border-left: 4px solid #4a6fa5;
-}
-
-.booking-time {
-  font-weight: bold;
-  color: #4a6fa5;
-}
-
-.booking-title {
-  font-size: 16px;
-  margin: 5px 0;
 }
 
 .gotoToday {
@@ -655,13 +763,32 @@ main .calendarContainer {
     padding: 0 20px;
     margin-bottom: 20px;
     color: var(--primary-color);
+    margin-top: 1rem;
+}
+
+.gotoToday .goto{
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid var(--text-color);
+}
+
+.gotoToday .goto input {
+    background-color: var(--sidebar-color);
+    width: 100%;
+    height: 30px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 0 20px;
+    color: var(--text-color);
 }
 
 .gotoToday button {
     padding: 5px 10px;
     border: 1px solid var(--text-color);
     border-radius: 5px;
-    justify-content: flex-end;
     background-color: transparent;
     cursor: pointer;
     color: var(--text-color);
@@ -669,7 +796,13 @@ main .calendarContainer {
 
 .gotoToday button:hover {
     color: #fff;
-    background-color:  #0056b3;
+    background-color: var(--primary-color);
+}
+
+.gotoToday .goto button {
+    border: none;
+    border-left: 1px solid var(--text-color);
+    border-radius: 0;
 }
 
 .bookingModal {
@@ -688,15 +821,15 @@ main .calendarContainer {
     position: absolute;
     top: 30%;
     left: 50%;
-    transform: translate(-30%, -90%); /* Center the modal */
+    transform: translate(-30%, -120%); /* Center the modal */
     background-color:var(--sidebar-color);
     color: var(--text-color);
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 500px; 
-    height: auto; 
-    max-height: 400px;
+    height: 250px;
+    overflow-y: auto; 
     border-radius: 10px;
 }
 
@@ -713,85 +846,6 @@ main .calendarContainer {
     text-decoration: none;
     cursor: pointer;
 }
-
-.modal-header {
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.booking-details {
-  margin-bottom: 20px;
-}
-
-.detail-row {
-  display: flex;
-  margin-bottom: 12px;
-}
-
-.detail-label {
-  width: 120px;
-  font-weight: 500;
-  color: #6c757d;
-}
-
-.detail-value {
-  flex: 1;
-  color: #212529;
-}
-
-.action-button {
-  padding: 10px 16px;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
-}
-
-.modal-footer {
-  padding: 15px 20px;
-  background-color: #f8f9fa;
-  border-top: 1px solid #e9ecef;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-#modalStatusSelect {
-  width: 50%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
-  appearance: none; /* Hide native arrow */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 55 L70 95 L105 55' stroke='%23333' stroke-width='15' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 12px;
-  cursor: pointer;
-  transition: border 0.3s ease, box-shadow 0.3s ease;
-}
-
-#modalStatusSelect:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-  background-color: #fff;
-}
-
 .trainerviewbtn-profileTable-container{
     margin-top:1rem;
     color: var(--hover-btn);
@@ -949,27 +1003,6 @@ main .workouts-container .workouts-header .add-workout-btn:hover{
     100% { opacity: 1; }
 }
 
-.suggestions-dropdown {
-  position: absolute;
-  border: 1px solid #ccc;
-  max-height: 150px;
-  overflow-y: auto;
-  background-color: white;
-  width: 465px;
-  box-sizing: border-box;
-  z-index: 9999;
-}
-
-.suggestion-item  {
-  padding: 8px;
-  cursor: pointer;
-}
-
-.suggestion-item:hover {
-  background-color: #f0f0f0;
-}
-
-
 /* General styling for the workout container */
 .workouts {
     display: flex;
@@ -1060,6 +1093,45 @@ main .user-container .add-workout-btn{
     border: none;
     border-radius: 20px;
     cursor: pointer;
+}
+
+/* General Styles for the Table and Form */
+.workout-schedule-container {
+  margin-top: 2rem;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+/* Table styling */
+#workout-schedule {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: fixed;
+}
+
+#workout-schedule th,
+#workout-schedule td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+#workout-schedule th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+#workout-schedule td {
+  font-size: 0.9rem;
+}
+
+#workout-schedule tr:hover {
+  background-color: #f9f9f9;
 }
 
 /* General Styles for the Table and Form */
@@ -1181,6 +1253,7 @@ button {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 5rem;
 }
 
 button:hover {
@@ -1509,312 +1582,4 @@ main .settings-container .action-buttons button.cancel-btn:hover {
 .error {
   color: red;
   font-size: 0.8em;
-}
-
-
-/* holiday */
-
-.edit-dlt {
-  display: flex;
-  gap: 10px; 
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.edit, .dlt {
-  width: 30px; 
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%; 
-  cursor: pointer;
-  transition: var(--tran-03);
-  color: #FFF;
-}
-
-.edit {
-  background-color: #007bff;
-}
-
-.dlt {
-  background-color: #d9534f; 
-}
-
-.dlt:hover, .edit:hover {
-  transform: scale(1.05);
-  transition: var(--tran-02); 
-}
-
-.edit i, .dlt i {
-  font-size: 18px; 
-}
-
-.select-wrapper {
-  font-size: 15px;
-  margin: 1rem 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 200px;
-}
-
-.select-wrapper label {
-  width:auto;
-  font-size: 16px;
-  align-items: center;
-  color: var(--hover-btn);
-  white-space: nowrap;
-}
-
-.select-wrapper i {
-  margin-right: 8px;
-  font-size: 18px;
-  vertical-align: middle;
-}
-
-.select-wrapper input[type="date"],
-.select-wrapper select {
-  font-size: 15px;
-  width: 100%;
-  background-color: #ccc;
-  padding: 5px;
-  border: none;
-  border-radius: 10px;
-}
-
-.select-btn, .select-option li {
-  display: flex;
-  cursor: pointer;
-  align-items: center;
-}
-.select-btn {
-  height: 35px;
-  padding: 5px 20px;
-  border-radius: 10px;
-  background:#ccc ;
-  justify-content: space-between;
-}
-
-.select-btn i {
-  transition: var(--tran-03);
-}
-
-.select-wrapper.active .select-btn i {
-  transform: rotate(-180deg);
-}
-
-.select-content {
-  display: none;
-  margin-top: 5px;
-  padding: 2px 20px;
-  background: #ccc;
-  border-radius: 10px;
-  overflow-y: auto;
-}
-
-.select-wrapper.active .select-content {
-  display: block;
-}
-
-.select-content .select-search {
-  margin-top: 5px;
-  position: relative;
-}
-
-.select-search input {
-  background: #ccc;
-  height: 35px;
-  width: 100%;
-  outline: none;
-  border-radius: 10px;
-  padding: 0 15px;
-  border: 1px solid #757575;
-}
-
-.select-content .select-option {
-  margin: 5px 0px;
-  max-height: 98px;
-  overflow-y: auto;
-}
-
-.select-option::-webkit-scrollbar {
-  width: 7px;
-}
-
-.select-option::-webkit-scrollbar-track {
-  background: #b3b3b3;
-  border-radius: 20px;
-}
-
-.select-option::-webkit-scrollbar-thumb {
-  background: #757575;
-  border-radius: 20px;
-}
-.select-option li {
-  height: 30px;
-  border-radius: 5px;
-  padding: 0 10px;
-}
-
-.select-option li:hover {
-  background: #b3b3b3;
-}
-
-.book-btn {
-  text-align: right; 
-  position: absolute;
-  right: 20px;
-  bottom: 10px;
-}
-
-.book-btn button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px; 
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 1rem; 
-  transition: var(--tran-03); 
-}
-
-
-
-/* timeslot */
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 30px 20px;
-}
-.availability-section {
-  background-color: white;
-  border-radius:8px;
-  box-shadow:  0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 30px;
-  max-height: 800px;
-  height: auto;
-  overflow: auto;
-}
-
-.form-row {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.form-group {
-  flex: 1;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-}
-
-.btn-primary {
-  background-color:#3a7bd5;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius:8px;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 16px;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #2a6ac1;
-}
-
-.action-buttons {
-  text-align: center;
-}
-
-.current-availability {
-  margin-top: 20px;
-  padding: 15px;
-  background-color:#e6f0ff;
-  border-radius: 8px;
-  overflow-y: auto; 
-}
-
-.current-availability h3 {
-  color: #3a7bd5;
-  margin-bottom: 10px;
-}
-
-.no-data-message {
-  color: #757575;
-  font-style: italic;
-}
-
-.availability-list {
-  display: grid;
-  grid-template-rows: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 15px;
-}
-
-.availability-item {
-  padding: 15px;
-  border-radius:8px;
-  border-left: 4px solid #2a6ac1;
-}
-
-.availability-times {
-  display: flex;
-  flex-wrap: wrap; /* allow wrap to next line if too many */
-  gap: 10px; /* space between time slots */
-}
-
-.availability-time {
-  background-color: white;
-  padding: 5px 10px;
-  border-radius: 4px;
-  margin-bottom: 5px;
-  display: flex;
-  justify-content: space-between;
-  margin-right: 5px;
-  width:200px;
-}
-
-.time-input-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.time-input-group input[type="text"] {
-  width: 100px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.time-input-group select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.delete-timeslot-btn {
-  background-color:transparent;
-  color: var(--text-color);
-  border: none;
-  padding: 6px ;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 15px;
 }

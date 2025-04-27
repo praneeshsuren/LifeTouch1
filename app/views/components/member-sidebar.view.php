@@ -1,3 +1,7 @@
+<!-- Hamburger Icon for Mobile -->
+<div class="hamburger-menu">
+    <i class="ph-bold ph-list"></i>
+</div>
 <div class="menu-btn">
     <i class="ph-bold ph-caret-left"></i>
 </div>
@@ -47,7 +51,7 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/payment">
+                <a href="<?php echo URLROOT; ?>/member/Payment">
                     <i class='icon ph-bold ph-credit-card'></i>
                     <span class="text">Payment</span>
                 </a>
