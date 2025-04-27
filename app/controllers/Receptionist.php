@@ -67,8 +67,6 @@ class Receptionist extends Controller
 
             case 'salaryHistory':
                 // Load the view to view a trainer's salary history
-                $trainer_id = $_GET['id'];
-
                 $this->view('receptionist/receptionist-trainerSalaryHistory');
                 break;
             
@@ -76,7 +74,7 @@ class Receptionist extends Controller
                 // Load the view to view a trainer's calendar
                 $trainer_id = $_GET['id'];
 
-                $this->view('receptionist/receptionist-trainerCalendar');
+                $this->view('receptionist/receptionist-trainerCalendar',['trainer_id' => $trainer_id]);
                 break;
 
             default:
@@ -164,168 +162,6 @@ class Receptionist extends Controller
                 $this->view('receptionist/receptionist-members', $data);
                 break;
         }
-    }
-
-    public function timeslot($action = null)
-    {
-        $timeslotModel = new M_Timeslot();
-        $timeslot = $timeslotModel->findAll();
-
-        if ($action === 'api') {
-            header('Content-Type: application/json');
-            echo json_encode([
-                'timeslot' => $timeslot,
-            ]);
-            exit;
-        } elseif ($action === 'add'){
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                $slot = $_POST['slot'] ?? null;
-
-                $exist = $timeslotModel->first(['slot' => $slot]);
-                if($exist){
-                    echo json_encode(["success" => false, "message" => "A timeslot already exists."]);
-                    exit;
-                }
-
-                $data = [
-                    'slot' => $slot
-                ];
-
-                $result = $timeslotModel->insert($data);
-
-                echo json_encode([
-                    "success" => $result ? true : false,
-                    "message" => $result ? "Timeslot added successfully!" : "Failed to add timeslot"
-                ]);
-                exit;
-
-            }
-        } elseif ($action === "delete") {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $id = $_POST['timeslot_id'];
-
-                if ($timeslotModel->delete($id)) {
-                    echo json_encode(["success" => true, "message" => "Timeslot deleted successfully!"]);
-                    exit;
-                } else {
-                    echo json_encode(["success" => false, "message" => "Error deleting Timeslot."]);
-                    exit;
-                }
-            }
-            echo json_encode(["success" => false, "message" => "Invalid request."]);
-            exit;
-        } 
-        $this->view('receptionist/receptionist-timeslot');
-    }
-
-    public function calendar()
-    {
-        $this->view('receptionist/receptionist-calendar');
-    }
-
-    public function holiday($action = null)
-    {
-        $holidayModal = new M_Holiday();
-        $holidays = $holidayModal->findAll();
-        $bookingModel = new M_Booking();
-        $bookings = $bookingModel->findAll();
-
-        if ($action === 'api') {
-            header('Content-Type: application/json');
-            echo json_encode([
-                'holidays' => $holidays,
-                'bookings' => $bookings
-            ]);
-            exit;
-        } elseif ($action === 'add') {
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                header('Content-Type: application/json');
-
-                $date = $_POST['holidayDate'] ?? null;
-                $reason = isset($_POST['holidayReason']) && $_POST['holidayReason'] !== '' ? $_POST['holidayReason'] : null;
-
-                $existingHoliday = $holidayModal->first(['date' => $date]);
-                if ($existingHoliday) {
-                    echo json_encode(["success" => false, "message" => "A holiday already exists for this date"]);
-                    exit;
-                }
-
-                $data = [
-                    'date' => $date,
-                    'reason' => $reason
-                ];
-
-                $result = $holidayModal->insert($data);
-
-                echo json_encode([
-                    "success" => $result ? true : false,
-                    "message" => $result ? "Holiday added successfully!" : "Failed to add holiday"
-                ]);
-                exit;
-            }
-
-            // Ensure a response is always sent
-            echo json_encode(["success" => false, "message" => "Invalid request"]);
-            exit;
-        } elseif ($action === "delete") {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $id = $_POST['id'];
-
-                if ($holidayModal->delete($id)) {
-                    echo json_encode(["success" => true, "message" => "Holiday deleted successfully!"]);
-                    exit;
-                } else {
-                    echo json_encode(["success" => false, "message" => "Error deleting holiday."]);
-                    exit;
-                }
-            }
-            echo json_encode(["success" => false, "message" => "Invalid request."]);
-            exit;
-        } elseif ($action === 'edit') {
-            header('Content-type: application/json');
-
-            $id = $_POST['id'] ?? null;
-            $reason = isset($_POST['reason']) && $_POST['reason'] !== '' ? $_POST['reason'] : null;
-
-            if (!$id) {
-                echo json_encode(["success" => false, "message" => "Missing required fields"]);
-                exit;
-            }
-
-            $data = ['reason' => $reason];
-            $result = $holidayModal->update($id, $data);
-
-            echo json_encode(
-                [
-                    "success" => $result ? true : false,
-                    "message" => $result ? "Holiday reason updated successfully!" : "Failed to update reason"
-                ]
-            );
-            exit;
-        } elseif ($action === 'conflict') {
-            header('Content-type: application/json');
-
-            $id = $_POST['id'] ?? null;
-            $status = $_POST['status'] ?? null;
-
-            if (!$id && !$status) {
-                echo json_encode(["success" => false, "message" => "Missing required fields"]);
-                exit;
-            }
-
-            $data = ['status' => $status];
-
-            $result = $bookingModel->update($id, $data);
-
-            echo json_encode(
-                [
-                    "success" => $result ? true : false,
-                    "message" => $result ? "Booking  updated successfully!" : "Failed to update "
-                ]
-            );
-            exit;
-        }
-        $this->view('receptionist/receptionist-holiday');
     }
 
     public function payment($action = null)
