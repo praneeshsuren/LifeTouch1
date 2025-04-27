@@ -172,6 +172,9 @@ class Report extends Controller
         $supplymentPurchaseModel = new M_SupplementPurchases();
         $membershipPaymentModel = new M_Payment();
         $eventPaymentModel = new M_EventPayment();
+        $adminSalaryModel = new M_AdminSalary();
+        $trainerSalaryModel = new M_TrainerSalary();
+        $receptionistSalaryModel = new M_ReceptionistSalary();
 
         $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : null;
         $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : null;
@@ -183,12 +186,15 @@ class Report extends Controller
         $supplementPurchaseSum = $supplymentPurchaseModel->getSupplementPurchase($startDate, $endDate);
         $membershipPaymentSum = $membershipPaymentModel->getTotalPayment($startDate, $endDate);
         $eventPaymentSum = $eventPaymentModel->getTotalEventPayment($startDate, $endDate);
+        $adminSalarySum = $adminSalaryModel->getAdminSalarySum($startDate, $endDate);
+        $trainerSalarySum = $trainerSalaryModel->getTrainerSalarySum($startDate, $endDate);
+        $receptionistSalarySum = $receptionistSalaryModel->getReceptionistSalarySum($startDate, $endDate);
 
         // Total Income
         $totalIncome = $membershipPaymentSum + $eventPaymentSum + $supplementSaleseSum;
 
         // Total Expense
-        $totalExpense = $supplementPurchaseSum  + $equipmentPurchaseSum + $servicePurchaseSum;
+        $totalExpense = $supplementPurchaseSum  + $equipmentPurchaseSum + $servicePurchaseSum + $adminSalarySum + $trainerSalarySum + $receptionistSalarySum;
 
 
 
@@ -200,7 +206,10 @@ class Report extends Controller
             'membershipPaymentSum' => $membershipPaymentSum,
             'eventPaymentSum' => $eventPaymentSum,
             'totalIncome' => $totalIncome,
-            'totalExpense' => $totalExpense
+            'totalExpense' => $totalExpense,
+            'adminSalarySum' => $adminSalarySum,
+            'trainerSalarySum' => $trainerSalarySum,
+            'receptionistSalarySum' => $receptionistSalarySum,
         ]);
     }
 }
