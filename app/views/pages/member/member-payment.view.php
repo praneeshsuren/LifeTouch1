@@ -26,82 +26,50 @@
     
     <main>
       <div class="title">
-        <h1>Payment</h1>
+        <h1>Payment History</h1>
         <div class="greeting">
           <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
       </div>
-      <div class="paymentBox">
-        <button id="payBtn" class="trainerviewbtn-Bookreservationbtn" style="float: left; margin-top: 5px;margin-bottom:3px; width:100px;" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'">Membership Plan</button>
-   
-        <!-- Past Payment Details -->
-        <div class="payment-history">
-          <h1 class="payment-title">Payment Details</h1>
-          <table class="paymentHistoryTable">
+
+      <div class="payment-history">
+        <div>
+            <button class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: -10px;margin-bottom:3px;" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'">Purchase Membership Plan</button>
+        </div>
+        <table class="payment-table">
             <thead>
-              <tr>
+            <tr>
                 <th>Date</th>
                 <th>Membership Plan</th>
-                <th>Price</th>
-              </tr>
+                <th>Amount</th>
+            </tr>
             </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-
-        <div id="bookingModal" class="modal">
-          <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="bookingModal-body">
-              <form id="payment-form" class="payment-form" method="POST" action="<?php echo URLROOT; ?>/member/checkout">
-                <h1 class="payment-title">Payment Details</h1>
-                <input type="text" id="member_id" value="<?php echo htmlspecialchars($member_id); ?>" name="member_id" required>
-                <input type="text" name="package_id" id="package_id"><input type="text" name="payment_type" id="payment_type">
-                <div class="payment-form-group">
-                  <input type="text" id="package" placeholder=" " class="payment-form-control" name="package" readonly required />
-                  <label for="package" class="payment-form-label">Package Name</label>
-                </div>
-                <div class="payment-form-group">
-                  <input type="number" id="amount" placeholder=" " class="payment-form-control" name="amount" readonly required />
-                  <label for="amount" class="payment-form-label">Amount</label>
-                </div>
-                <div class="date-row">
-                  <div class="payment-form-group date-field">
-                      <input type="date" id="paymentStartDate" class="payment-form-control" name="paymentStartDate" readonly required />
-                      <label for="paymentStartDate" class="payment-form-label">Start Date</label>
-                  </div>
-
-                  <div class="payment-form-group date-field">
-                      <input type="date" id="paymentExpireDate" class="payment-form-control" name="paymentExpireDate" readonly required />
-                      <label for="paymentExpireDate" class="payment-form-label">Expiry Date</label>
-                  </div>
-                </div>
-                <button type="submit" class="payment-form-submit-button">Proceed</button>
-              </form>
-            </div>
-          </div>
-      </div>
-      </div>
+            <tbody id="paymentHistoryBody">
+            </tbody>
+        </table>
+    </div>
     </main>
       
     <!-- SCRIPT -->
     <script>
-      window.STRIPE_PUBLISHABLE_KEY = "<?php echo STRIPE_PUBLISHABLE_KEY; ?>";
-      const createPaymentURL = "<?php echo URLROOT; ?>/member/createPayment";
-      const savePlan = "<?php echo URLROOT; ?>/member/Payment/savePayment";
-      const redirect = "<?php echo URLROOT; ?>/member/membershipPlan";
-      document.addEventListener("DOMContentLoaded", () =>{ 
+      const today = new Date().toISOString().split("T")[0];
+      const modal = document.getElementById("bookingModal");
+      const closeModal = document.querySelector(".close");
+      document.addEventListener("DOMContentLoaded", () => { 
+       
         fetch(`<?php echo URLROOT; ?>/member/payment/api`)
           .then(response => {
               console.log('Response Status:', response.status);
               return response.json();
             })
             .then(data =>{
-              console.log('payments:',data.payment);
-              console.log("plan:" ,data.plan);
-              const payment = Array.isArray(data.payment) ? data.payment : [];
+              // console.log('Plans:',data.plan);
+              // console.log("Subscription:", data.subscription);
               const plan = Array.isArray(data.plan) ? data.plan : [];
-              
+              const subscription = Array.isArray(data.subscription) ? data.subscription[0] : null;
+
+              // console.log('payments:',data.payment);
+              const payment = Array.isArray(data.payment) ? data.payment : [];
               if(payment.length == 0){
                 console.log("no pyaments found");
                 paymentTable(null);
@@ -112,15 +80,13 @@
                 })
                 paymentTable(mergePayment);
               }
-        
-            })
-            .catch(error => console.error('Error fetching payments details:', error));
 
-          paymentModal();
+            })
+            .catch(error => console.error('Error fetching plans details:', error));            
       });
 
       function paymentTable(payment){
-        tbody = document.querySelector(".paymentHistoryTable tbody");
+        const tbody = document.getElementById('paymentHistoryBody');
         tbody.innerHTML = "";
 
         if (payment.length === 0) {
@@ -143,34 +109,8 @@
         });
       }
 
-      function paymentModal(){
-        const payBtn = document.getElementById('payBtn');
-        const modal = document.getElementById("bookingModal");
-        const closeModal = document.querySelector(".close");
-        const modalContent = document.querySelector(".modal-content");
-
-        const paymentDateInput = document.getElementById("paymentDate");
-        const today = new Date().toISOString().split('T')[0]; // format: YYYY-MM-DD
-        paymentDateInput.value = today;
-
-        payBtn.addEventListener('click', function () {
-          modal.style.display = "block";
-        });
-
-        closeModal.addEventListener('click',function() {
-          modal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-          if (event.target === modal) {
-            modal.style.display = 'none';
-          }
-        });
-      }
     </script>
-    <script src="<?php echo URLROOT; ?>/assets/js/payment-script.js?v=<?php echo time();?>"></script>
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
-
   </body>
 </html>
 

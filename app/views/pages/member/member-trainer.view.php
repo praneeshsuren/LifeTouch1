@@ -68,7 +68,7 @@
                 trainerDiv.classList.add('trainer-card');
                 trainerDiv.innerHTML += `
                   <div class="trainer-image">
-                    <img src="<?php echo URLROOT; ?>/assets/images/Trainer/${trainer.image || 'default-placeholder.jpg'}" alt="${trainer.first_name}'s image"/>
+                    <img src="<?php echo URLROOT; ?>/assets/images/${trainer.image || 'image.png'}" alt="${trainer.first_name}'s image"/>
                   </div>
                   <div class="trainer-info">
                     <h2 class="trainer-name">${trainer.first_name}</h2>
