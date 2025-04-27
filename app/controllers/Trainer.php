@@ -194,6 +194,8 @@
 
                 $result = $bookingModel->update($id, $data);
 
+                $message = $result ? "Booking updated successfully!" : "Failed to update booking";
+
                 echo json_encode(
                     [
                         "success" => $result ? true : false,

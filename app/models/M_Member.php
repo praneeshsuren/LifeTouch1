@@ -21,7 +21,9 @@
             'status',
             'image',
             'membershipPlan_id',
-            'id'
+            'id',
+            'health_conditions',
+            'created_at'
         ];
 
         public function findByMemberId($memberId) {
@@ -50,7 +52,10 @@
 
             if (empty($data['contact_number'])) {
                 $this->errors['contact_number'] = 'Contact number is required';
+            } elseif (!preg_match('/^\d{10}$/', $data['contact_number'])) {
+                $this->errors['contact_number'] = 'Contact number must be a 10-digit number';
             }
+            
 
             if (empty($data['email_address'])) {
                 $this->errors['email_address'] = 'Email address is required';

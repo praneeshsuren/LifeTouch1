@@ -80,4 +80,14 @@ class M_Equipment
         // Return the total count
         return $result ? $result->total : 0;
     }
+
+    public function getSuggestionsByName($query) {
+        $query = "%" . strtolower($query) . "%";
+
+        $sql = "SELECT name, equipment_id, file FROM $this->table WHERE LOWER(name) LIKE :query"; 
+        
+        $data = ['query' => $query];
+        return $this->query($sql, $data);
+    }
+    
 }

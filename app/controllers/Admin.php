@@ -205,8 +205,6 @@
                 
                 case 'salaryHistory':
 
-                    $trainer_id = $_GET['id'];
-
                     $this->view('admin/admin-trainerSalaryHistory');
                     break;
 
@@ -514,6 +512,8 @@
             // Load the notifications view
             $this->view('admin/admin-notifications', $data);
         }
+
+
         
     }
 
