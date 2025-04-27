@@ -213,6 +213,129 @@
             $this->view('trainer/trainer-calendar');
         }
 
+        public function timeslot($action = null) {
+        $trainer_id = $_SESSION['user_id'] ?? null;
+        $timeslotModel = new M_Timeslot();
+        $timeslot = $timeslotModel->getTimeslotsByTrainerId($trainer_id);
+        $holidayModal = new M_Holiday();
+        $holidays = $holidayModal->getHolidaysByTrainerId($trainer_id);
+
+        if ($action === 'api') {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'timeslot' => $timeslot,
+                'holidays' => $holidays
+            ]);
+            exit;
+        } elseif ($action === 'add'){
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                $slot = $_POST['slot'] ?? null;
+                $trainer_id = $_POST['trainer_id'] ?? null;
+
+                $data = [
+                    'slot' => $slot,
+                    'trainer_id' => $trainer_id
+                ];
+
+                $result = $timeslotModel->insert($data);
+
+                echo json_encode([
+                    "success" => $result ? true : false,
+                    "message" => $result ? "Timeslot added successfully!" : "Failed to add timeslot"
+                ]);
+                exit;
+
+            }
+        } elseif ($action === "delete") {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $id = $_POST['timeslot_id'];
+
+                if ($timeslotModel->delete($id)) {
+                    echo json_encode(["success" => true, "message" => "Timeslot deleted successfully!"]);
+                    exit;
+                } else {
+                    echo json_encode(["success" => false, "message" => "Error deleting Timeslot."]);
+                    exit;
+                }
+            }
+            echo json_encode(["success" => false, "message" => "Invalid request."]);
+            exit;
+        } 
+        $this->view('trainer/trainer-timeslot');
+    }
+
+    public function holiday($action = null)
+    {
+        $trainer_id = $_SESSION['user_id'];
+        $holidayModal = new M_Holiday();
+
+        if ($action === 'add') {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                header('Content-Type: application/json');
+
+                $date = $_POST['date'] ?? null;
+                $time = $_POST['slot'] ?? null;
+                $trainer_id = $_POST['trainer_id'] ?? null;
+
+                $data = [
+                    'date' => $date,
+                    'slot' => $time,
+                    'trainer_id' => $trainer_id
+                ];
+
+                $result = $holidayModal->insert($data);
+
+                echo json_encode([
+                    "success" => $result ? true : false,
+                    "message" => $result ? "Holiday added successfully!" : "Failed to add holiday"
+                ]);
+                exit;
+            }
+
+            // Ensure a response is always sent
+            echo json_encode(["success" => false, "message" => "Invalid request"]);
+            exit;
+            } elseif ($action === "delete") {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $id = $_POST['id'];
+
+                    if ($holidayModal->delete($id)) {
+                        echo json_encode(["success" => true, "message" => "Holiday deleted successfully!"]);
+                        exit;
+                    } else {
+                        echo json_encode(["success" => false, "message" => "Error deleting holiday."]);
+                        exit;
+                    }
+                }
+                echo json_encode(["success" => false, "message" => "Invalid request."]);
+                exit;
+            }
+        // }  elseif ($action === 'conflict') {
+        //     header('Content-type: application/json');
+
+        //     $id = $_POST['id'] ?? null;
+        //     $status = $_POST['status'] ?? null;
+
+        //     if (!$id && !$status) {
+        //         echo json_encode(["success" => false, "message" => "Missing required fields"]);
+        //         exit;
+        //     }
+
+        //     $data = ['status' => $status];
+
+        //     $result = $bookingModel->update($id, $data);
+
+        //     echo json_encode(
+        //         [
+        //             "success" => $result ? true : false,
+        //             "message" => $result ? "Booking  updated successfully!" : "Failed to update "
+        //         ]
+        //     );
+        //     exit;
+        // }
+        $this->view('trainer/trainer-holiday');
+    }
+
         public function workouts(){
             $this->view('trainer/trainer-workouts');
         }

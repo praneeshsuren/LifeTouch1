@@ -9,19 +9,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/receptionist-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/trainer-style.css?v=<?php echo time();?>" />
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/sidebar-greeting.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
   </head>
   <body>
     <section class="sidebar">
-        <?php require APPROOT.'/views/components/receptionist-sidebar.view.php' ?>
+        <?php require APPROOT.'/views/components/trainer-sidebar.view.php' ?>
     </section>
 
     <main>
         <div class="title">
-            <h1>Default availability</h1>
+            <h1>Availability</h1>
             <div class="greeting">
                 <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
             </div>
@@ -56,42 +57,83 @@
                         <button type="button" id="set-default-time-btn" class="btn-primary">Set Default Times</button>
                     </div>
                 </div>
+                <div class="add-time-slot-form">
+                    <h3>Set Specific Availability</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                             <label for="holidayDate"><i class="ph ph-calendar"></i>Date</label>
+                            <input type="date" name="holidayDate" id="holidayDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="holidaySlot"><i class="ph ph-calendar"></i>Time Slot</label>
+                            <select id="blocktime"></select>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="button" id="set-specific-time-btn" class="btn-primary">Block Timeslot</button>
+                    </div>
+                </div>
 
                 <div class="current-availability">
                     <h3>Current Default Availability</h3>
-                    <div id="availability-list" class="availability-list">
-                        <!-- Saved availability will be displayed here -->
-                        <p class="no-data-message">No availability scheduled yet</p>
-                    </div>
+                    <div id="availability-list" class="availability-list"></div>
+                </div>
+
+                <div class="current-availability">
+                    <h3>Blocked Details</h3>
+                    <div id="specific-availability-list" class="availability-list"></div>
                 </div>
             </div>
         </div>
       </main>
 
     <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time();?>"></script>
+    <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
     <script>
-        const defaultStartTimeSelect = document.getElementById('start-time');
-        const defaultEndTimeSelect = document.getElementById('end-time');
-        const startPeriodSelect = document.getElementById('start-period');
-        const endPeriodSelect = document.getElementById('end-period');
-        const setDefaultTimeBtn = document.getElementById('set-default-time-btn');
-        const currentAvailabilityDisplay = document.getElementById('current-availability-display');
-        let allTimeslot = [];
-
         document.addEventListener('DOMContentLoaded', () =>{ 
-            fetch('<?php echo URLROOT; ?>/receptionist/timeslot/api')
+            const defaultStartTimeSelect = document.getElementById('start-time');
+            const defaultEndTimeSelect = document.getElementById('end-time');
+            const startPeriodSelect = document.getElementById('start-period');
+            const endPeriodSelect = document.getElementById('end-period');
+            const setDefaultTimeBtn = document.getElementById('set-default-time-btn');
+
+            const holidayDateInput = document.getElementById('holidayDate');
+            const blockTimeSelect = document.getElementById('blocktime');
+            const setSpecificTimeBtn = document.getElementById('set-specific-time-btn');
+
+            const currentAvailabilityDisplay = document.getElementById('current-availability-display');
+
+            let allTimeslots = [];
+            let allHolidays = [];
+
+            const trainerId = '<?php echo isset($_SESSION['user_id']) ? htmlspecialchars($_SESSION['user_id'], ENT_QUOTES, 'UTF-8') : ''; ?>';
+
+            console.log('Trainer ID:', trainerId);
+            fetch('<?php echo URLROOT; ?>/trainer/timeslot/api')
                 .then(response => {
                     console.log('Response Status:', response.status); // Log response status
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Fetched timeslot data:", data.timeslot);
+                    console.log("Fetched timeslot data:", data);
 
                     if (Array.isArray(data.timeslot) && data.timeslot.length > 0){
-                        allTimeslot = data.timeslot;
-                        renderTable(allTimeslot);
+                        allTimeslots = data.timeslot;
+                        renderDefaultTable(allTimeslots);
                     }
+                    if (Array.isArray(data.holidays) && data.holidays.length > 0){
+                        allHolidays = data.holidays;
+                        renderHolidayTable(allHolidays);
+                    }
+                    const blockTimeSelect = document.getElementById('blocktime');
+                    blockTimeSelect.innerHTML = '<option value="fullday">Fullday</option>';
+                    allTimeslots.forEach(timeslot => {
+                        const option = document.createElement('option');
+                        option.value = timeslot.id; // Use timeslot ID as the value
+                        option.textContent = timeslot.slot; // Display the time slot
+                        blockTimeSelect.appendChild(option);
+                    });
+
                 })
                 .catch(error => {
                     console.error('Error fetching timeslot:', error); // Log the error
@@ -137,7 +179,7 @@
                 return start1 <  end2 && start2 < end1;
             }
 
-            function renderTable(timeSlots) {
+            function renderDefaultTable(timeSlots) {
                 const availabilityList = document.getElementById('availability-list');
                 availabilityList.innerHTML = '';
 
@@ -175,6 +217,50 @@
                 });
             }
 
+            // Render specific availability table
+            function renderHolidayTable(timeSlots) {
+                const specificAvailabilityList = document.getElementById('specific-availability-list');
+                specificAvailabilityList.innerHTML = '';
+
+                if (timeSlots.length === 0) {
+                    specificAvailabilityList.innerHTML = '<p class="no-data-message">No specific availability scheduled yet</p>';
+                    return;
+                }
+
+                const groupedByDate = timeSlots.reduce((acc, slot) => {
+                    acc[slot.date] = acc[slot.date] || [];
+                    acc[slot.date].push(slot);
+                    return acc;
+                }, {});
+
+                Object.keys(groupedByDate).forEach(date => {
+                    const slots = groupedByDate[date];
+                    const availabilityItem = document.createElement('div');
+                    availabilityItem.classList.add('availability-item');
+
+                    let timesHTML = slots.map(slot => `
+                        <div class="availability-time">${slot.slot}
+                            <button class="delete-timeslot-btn" data-timeslot-id="${slot.id}" data-type="specific">
+                                <i class="ph ph-x"></i>
+                            </button>
+                        </div>
+                    `).join('');
+
+                    availabilityItem.innerHTML = `
+                        <div class="availability-date">${date}</div>
+                        <div class="availability-times">${timesHTML}</div>
+                    `;
+                    specificAvailabilityList.appendChild(availabilityItem);
+                });
+
+                document.querySelectorAll('.delete-timeslot-btn[data-type="specific"]').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const timeslotId = this.getAttribute('data-timeslot-id');
+                        deleteTimeslot(timeslotId);
+                    });
+                });
+            }
+
             setDefaultTimeBtn.addEventListener("click", function(e){ 
                 e.preventDefault();
 
@@ -182,7 +268,6 @@
                 const endTime = defaultEndTimeSelect.value;
                 const startPeriod = startPeriodSelect.value;
                 const endPeriod = endPeriodSelect.value;
-                console.log(startTime);
 
                 const timePattern = /^(0?[1-9]|1[0-2]):[0-5][0-9]$/;
                 if (!startTime || !endTime || !startPeriod || !endPeriod) {
@@ -197,13 +282,13 @@
                 const timeslot = `${startTime} ${startPeriod} - ${endTime} ${endPeriod}`;
                 // Validate start and end times
                 const startMinutes = parseTimeToMinutes(`${startTime} ${startPeriod}`);
-                    const endMinutes = parseTimeToMinutes(`${endTime} ${endPeriod}`);
-                    if (startMinutes >= endMinutes) {
-                        alert("End time must be after start time.");
-                        return;
-                    }
+                const endMinutes = parseTimeToMinutes(`${endTime} ${endPeriod}`);
+                if (startMinutes >= endMinutes) {
+                    alert("End time must be after start time.");
+                    return;
+                }
 
-                const exist = allTimeslot.some(existingSlot => 
+                const exist = allDefaultTimeslots.some(existingSlot => 
                     normalizeTimeslot(existingSlot.slot) === normalizeTimeslot(timeslot)
                 );
                 if (exist) {
@@ -212,7 +297,7 @@
                 }
 
                 // Check for overlaps
-                const hasOverlap = allTimeslot.some(existingSlot => 
+                const hasOverlap = allDefaultTimeslots.some(existingSlot => 
                     doTimeslotsOverlap(timeslot, existingSlot.slot)
                 );
 
@@ -223,9 +308,13 @@
                 
                 const formData = new FormData();
                 formData.append("slot", timeslot);
+                formData.append("trainer_id", trainerId);
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
                     
                 if (!confirm("Are you sure you want to add this timeslot?")) return;
-                fetch('<?php echo URLROOT; ?>/receptionist/timeslot/add', {
+                fetch('<?php echo URLROOT; ?>/trainer/timeslot/add', {
                     method: "POST",
                     body: formData
                 })
@@ -251,7 +340,7 @@
                     console.log(`${pair[0]}: ${pair[1]}`);
                 }
 
-                fetch('<?php echo URLROOT; ?>/receptionist/timeslot/delete', {
+                fetch('<?php echo URLROOT; ?>/trainer/timeslot/delete', {
                     method: "POST",
                     body: formData
                 })
@@ -269,6 +358,95 @@
                     alert("Error deleting timeslot. Please try again.");
                 });
             }
+
+            setSpecificTimeBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                const date = holidayDateInput.value;
+                const timeslotId = blockTimeSelect.value;
+                const timeslotText = blockTimeSelect.options[blockTimeSelect.selectedIndex].text;
+
+                if (!date) {
+                    alert("Please select a date.");
+                    return;
+                }
+                if (!timeslotId) {
+                    alert("Please select a timeslot or Fullday.");
+                    return;
+                }
+
+                const selectedDate = new Date(date);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                if (selectedDate < today) {
+                    alert("Cannot select a past date.");
+                    return;
+                }
+
+                const exist = allHolidays.some(holiday =>
+                    holiday.date === date && (timeslotId === "fullday" ? holiday.slot === "Fullday" : holiday.slot === timeslotText)
+                );
+                if (exist) {
+                    alert("This timeslot is already blocked for the selected date.");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("date", date);
+                formData.append("slot", timeslotText);
+                formData.append("trainer_id", trainerId);
+    
+
+                if (!confirm("Are you sure you want to block this timeslot?")) return;
+                fetch('<?php echo URLROOT; ?>/trainer/holiday/add', {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.success) {
+                            alert("Timeslot blocked successfully!");
+                            location.reload();
+                        } else {
+                            alert("Error: " + result.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error blocking timeslot:", error);
+                        alert("Error blocking timeslot. Please try again.");
+                    });
+            });
+
+            // delete block time
+            function deleteTimeslot(timeslotId) {
+                if (!confirm("Are you sure you want to delete this timeslot?")) return;
+
+                const formData = new FormData();
+                formData.append("id", timeslotId);
+                for (let pair of formData.entries()) {
+                    console.log(`${pair[0]}: ${pair[1]}`);
+                }
+
+                fetch('<?php echo URLROOT; ?>/trainer/holiday/delete', {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (!result.success) {
+                        alert("Timeslot deleted successfully!");
+                        location.reload();
+                    } else {
+                        alert("Error: " + result.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error deleting timeslot:", error);
+                    alert("Error deleting timeslot. Please try again.");
+                });
+            }
+
+
 
 
         });

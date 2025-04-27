@@ -135,11 +135,19 @@
                         // console.log('isbooked:', data.isBooked);
                         // console.log('Time Slots:', timeSlots);
 
-                        holidays = data.holidays.reduce((acc, holiday) => {
-                            acc[holiday.date] = holiday.reason;
-                            return acc;
-                        }, {});
-                        // console.log("holidays:",holidays);
+                        if (Array.isArray(data.holidays)) {
+                            holidays = data.holidays.reduce((acc, holiday) => {
+                                if(acc[holiday.date]) {
+                                    acc[holiday.date].push(holiday.slot);
+                                } else {
+                                    acc[holiday.date] = [holiday.slot];
+                                }
+                                return acc;
+                            }, {});
+                            console.log("holidays:", holidays);
+                        } else {
+                            console.warn("No holidays data found or holidays is not an array.");
+                        }
 
                         buildCalendar(holidays); // Always build calendar
                     })
@@ -151,7 +159,12 @@
         });
 
         //timeslots
-        function displayTimeSlots(timeSlots, bookings = [], selectedDate, selectedTimeslotId = null) {
+        function normalizeSlot(slot) {
+            if (!slot) return slot;
+            return slot.trim().toLowerCase().replace(/\s+/g, ' ');
+        }
+
+        function displayTimeSlots(timeSlots, bookings = [], selectedDate, selectedTimeslotId = null, holidays = {}) {
             const timeSlotsContainer = document.querySelector('.timeslots');
             if (!timeSlotsContainer) {
                 console.error('Timeslots container not found in the DOM');
@@ -165,7 +178,8 @@
 
             let availableSlotCount = 0;
             const isToday = new Date(selectedDate).toDateString() === new Date().toDateString();
-
+            const holidaySlots = holidays[selectedDate] || [];
+            console.log("d",holidaySlots);
             timeSlots.forEach(timeSlot => {
                 let timeSlotBtn = document.createElement('div');
                 timeSlotBtn.classList.add('time-slot');
@@ -178,7 +192,16 @@
                 const isSelected = selectedTimeslotId && parseInt(timeSlot.id) === parseInt(selectedTimeslotId);
                 const isPast = isToday && isTimeSlotInPast(timeSlot.slot.split(' - ')[0]);
 
-                if ((isBooked && !isSelected)  || isPast )  {
+                let isHolidayBlocked = false;
+                if(holidaySlots) {
+                    isHolidayBlocked = holidaySlots.some(holidaySlot => 
+                        normalizeSlot(holidaySlot) === normalizeSlot(timeSlot.slot)
+                    );
+                    console.log("ts",timeSlot.slot);
+                    console.log("bl", isHolidayBlocked);
+                }
+
+                if ((isBooked && !isSelected)  || isPast || isHolidayBlocked )  {
                     timeSlotBtn.classList.add("booked");
                 } else {
                     availableSlotCount++;
@@ -397,7 +420,7 @@
                     dayCell.classList.add("today");
                 }
 
-                if(date in holidayData || date < dateToday){
+                if(date in holidays && (holidays[date]  && holidays[date] == 'Fullday')|| date < dateToday){
                     dayCell.classList.add("holiday");
                 }
 
@@ -445,19 +468,22 @@
                 modalDate.innerText = formattedDate;
     
                 if(!holidays[selectedDate]){
+                    console.log("no");
                     modalBody.innerHTML = bookingTemplate;
                     availableSlotCount = displayTimeSlots(timeSlots, bookings, selectedDate);
                 }
                     
-                if (selectedDate in holidays) {
-                    // console.log("holiday");
+                if (selectedDate in holidays && (holidays[selectedDate]  && holidays[selectedDate] == 'Fullday')) {
+                    console.log("holiday");
                     modalBody.innerHTML = `
                         <div style="padding: 80px 0; text-align: center;">
                             <strong>Holiday</strong>
                         </div>`;
                 } else {
+                    console.log("t");
+                    console.log(holidays[selectedDate]);
                     modalBody.innerHTML = bookingTemplate;
-                    availableSlotCount = displayTimeSlots(timeSlots, bookings, selectedDate);
+                    availableSlotCount = displayTimeSlots(timeSlots, bookings, selectedDate, null, holidays);
 
                     if( availableSlotCount === 0){
                         modalBody.innerHTML = `
@@ -586,7 +612,7 @@
             const editbtn = document.getElementById('btnBook');
             editbtn.innerText = "Update";  
 
-            displayTimeSlots(timeSlots, bookings, date, timeslotid);
+            displayTimeSlots(timeSlots, bookings, date, timeslotid, null, holidays);
             
             editbtn.onclick = function(event) {
                 event.preventDefault(); 
