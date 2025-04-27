@@ -65,7 +65,7 @@
                             <input type="date" name="holidayDate" id="holidayDate">
                         </div>
                         <div class="form-group">
-                            <label for="holidaySlot"><i class="ph ph-calendar"></i>Time Slot</label>
+                            <label for="holidaySlot"><i class="ph ph-clock"></i></i>Time Slot</label>
                             <select id="blocktime"></select>
                         </div>
                     </div>
@@ -105,6 +105,7 @@
 
             let allTimeslots = [];
             let allHolidays = [];
+            let allBookings = [];
 
             const trainerId = '<?php echo isset($_SESSION['user_id']) ? htmlspecialchars($_SESSION['user_id'], ENT_QUOTES, 'UTF-8') : ''; ?>';
 
@@ -124,6 +125,10 @@
                     if (Array.isArray(data.holidays) && data.holidays.length > 0){
                         allHolidays = data.holidays;
                         renderHolidayTable(allHolidays);
+                    }
+                    if (Array.isArray(data.bookings) && data.bookingslength > 0){
+                        allBookings = data.bookings;
+                        console.log("bookings:",allBookings);
                     }
                     const blockTimeSelect = document.getElementById('blocktime');
                     blockTimeSelect.innerHTML = '<option value="fullday">Fullday</option>';
@@ -397,7 +402,7 @@
                 formData.append("trainer_id", trainerId);
     
 
-                if (!confirm("Are you sure you want to block this timeslot?")) return;
+                if (!confirm("Are you sure you want to block this timeslot? This will reject any existing bookings for the selected timeslot or day.")) return;
                 fetch('<?php echo URLROOT; ?>/trainer/holiday/add', {
                     method: "POST",
                     body: formData
