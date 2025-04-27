@@ -167,19 +167,24 @@ main .announcementsContainer .announcement-card .announcementCard-Footer i{
 
 /* Users */
 main .user-table-container {
-    margin-top: 2rem;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 100%;
-    height: 100vh;
+  margin-top: 2rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  height: 100vh;
+  max-width:1300px;
+  max-height:630px; /* Adjust as per your design */
+  overflow-x:hidden; 
+  overflow-y: auto;
 }
-  
+
 main .user-table-container .filters {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
+    margin-top: -5rem;
   }
   
 main .user-table-container .filters .filter {
@@ -189,6 +194,7 @@ main .user-table-container .filters .filter {
     border: none;
     cursor: pointer;
     font-size: 0.9rem;
+    color: black;
   }
   
 main .user-table-container .filters .filter.active {
@@ -717,92 +723,95 @@ main .calendarContainer {
     border: 1px solid #ddd; 
 }
 
+
 .calendar td:hover {
-    background-color: var(--primary-color);
-    color: var(--sidebar-color);
+  background-color:  #0056b3;
+  color: var(--sidebar-color);
 }
 
 .calendar td.plain {
-    pointer-events: none; /* Disable interaction */
-    cursor: default; 
+  pointer-events: none; /* Disable interaction */
+  cursor: default; 
 }
 
 .calendar td.today {
-    border: 2px solid var(--primary-color)
+  border: 2px solid    #0056b3;
 }
 
 .calendar td.holiday {
-  background-color:rgb(224, 224, 224, 0.5);
-  color: var(--text-color);
+background-color:rgb(224, 224, 224, 0.5);
+color: var(--text-color);
 }
 
 .calendar td.active{
-    background-color: var(--primary-color);
-    color: var(--sidebar-color);
+  background-color:  #0056b3;
+  color: var(--sidebar-color);
+}
+
+.booking-dot {
+height: 8px;
+width: 8px;
+background-color: #4a6fa5;
+border-radius: 50%;
+display: inline-block;
+margin-right: 3px;
 }
 
 .booked-count {
-    background-color: #007bff;
-    color: #fff;
-    width: 40px;
-    height: 20px;
-    font-size: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 4px auto;
+  color:  #4a6fa5;
+  width: 100px;
+  height: 20px;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4px auto;
+}
+
+
+.booking-item {
+padding: 15px;
+margin-bottom: 10px;
+border-radius: 5px;
+background-color: #f8f9fa;
+border-left: 4px solid #4a6fa5;
+}
+
+.booking-time {
+font-weight: bold;
+color: #4a6fa5;
+}
+
+.booking-title {
+font-size: 16px;
+margin: 5px 0;
 }
 
 .gotoToday {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content:space-between;
-    gap: 5px;
-    padding: 0 20px;
-    margin-bottom: 20px;
-    color: var(--primary-color);
-    margin-top: 1rem;
-}
-
-.gotoToday .goto{
-    display: flex;
-    align-items: center;
-    border-radius: 5px;
-    overflow: hidden;
-    border: 1px solid var(--text-color);
-}
-
-.gotoToday .goto input {
-    background-color: var(--sidebar-color);
-    width: 100%;
-    height: 30px;
-    outline: none;
-    border: none;
-    border-radius: 5px;
-    padding: 0 20px;
-    color: var(--text-color);
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+  gap: 5px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  color: var(--primary-color);
 }
 
 .gotoToday button {
-    padding: 5px 10px;
-    border: 1px solid var(--text-color);
-    border-radius: 5px;
-    background-color: transparent;
-    cursor: pointer;
-    color: var(--text-color);
+  padding: 5px 10px;
+  border: 1px solid var(--text-color);
+  border-radius: 5px;
+  justify-content: flex-end;
+  background-color: transparent;
+  cursor: pointer;
+  color: var(--text-color);
 }
 
 .gotoToday button:hover {
-    color: #fff;
-    background-color: var(--primary-color);
-}
-
-.gotoToday .goto button {
-    border: none;
-    border-left: 1px solid var(--text-color);
-    border-radius: 0;
+  color: #fff;
+  background-color:  #0056b3;
 }
 
 .bookingModal {
@@ -821,14 +830,15 @@ main .calendarContainer {
     position: absolute;
     top: 30%;
     left: 50%;
-    transform: translate(-30%, -120%); /* Center the modal */
+    transform: translate(-30%, -100%); /* Center the modal */
     background-color:var(--sidebar-color);
     color: var(--text-color);
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 500px; 
-    height: 250px;
+    height: auto;
+    max-height: 500px;
     overflow-y: auto; 
     border-radius: 10px;
 }
@@ -846,6 +856,86 @@ main .calendarContainer {
     text-decoration: none;
     cursor: pointer;
 }
+
+.modal-header {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.booking-details {
+  margin-bottom: 20px;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.detail-label {
+  width: 120px;
+  font-weight: 500;
+  color: #6c757d;
+}
+
+.detail-value {
+  flex: 1;
+  color: #212529;
+}
+
+.action-button {
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  margin-top: -0.5rem;
+}
+
+.modal-footer {
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+#modalStatusSelect {
+  width: 50%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  appearance: none; /* Hide native arrow */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 55 L70 95 L105 55' stroke='%23333' stroke-width='15' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  cursor: pointer;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+#modalStatusSelect:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  background-color: #fff;
+}
+
 .trainerviewbtn-profileTable-container{
     margin-top:1rem;
     color: var(--hover-btn);
@@ -1256,9 +1346,9 @@ button {
   margin-top: 5rem;
 }
 
-button:hover {
+/* button:hover {
   background-color: #0056b3;
-}
+} */
 
 #add-row {
   background-color: #28a745;
@@ -1582,4 +1672,162 @@ main .settings-container .action-buttons button.cancel-btn:hover {
 .error {
   color: red;
   font-size: 0.8em;
+}
+
+
+/* timeslot */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+.availability-section {
+  background-color: white;
+  border-radius:8px;
+  box-shadow:  0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+  max-height: 800px;
+  height: auto;
+  overflow: auto;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.btn-primary {
+  background-color:#3a7bd5;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius:8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 16px;
+  transition: background-color 0.2s;
+  margin-top: -3rem;
+}
+
+.btn-primary:hover {
+  background-color: #2a6ac1;
+}
+
+.action-buttons {
+  text-align: center;
+}
+
+.current-availability {
+  height: auto;
+  margin-top: 20px;
+  padding: 15px;
+  background-color:#e6f0ff;
+  border-radius: 8px;
+  overflow-y: auto; 
+}
+
+.current-availability h3 {
+  color: #3a7bd5;
+  margin-bottom: 10px;
+}
+
+.no-data-message {
+  color: #757575;
+  font-style: italic;
+}
+
+.availability-list {
+  display: grid;
+  grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 15px;
+}
+
+.availability-item {
+  height: auto;
+  padding: 15px;
+  border-radius:8px;
+  border-left: 4px solid #2a6ac1;
+}
+
+.availability-times {
+  display: flex;
+  flex-wrap: wrap; /* allow wrap to next line if too many */
+  gap: 10px; /* space between time slots */
+}
+
+.availability-time {
+  background-color: white;
+  padding: 5px 10px;
+  border-radius: 4px; 
+  display: flex;
+  justify-content: space-between;
+  margin-right: 5px;
+  width:200px;
+  height: 40px;
+}
+
+.availability-date {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #2a6ac1; 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.time-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time-input-group input[type="text"] {
+  width: 100px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.time-input-group select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.delete-timeslot-btn {
+  background-color:transparent;
+  color: var(--text-color);
+  border: none;
+  padding: 0 3px ;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 15px;
+  margin-top: -0.5rem;
+}
+
+.delete-row-btn:hover{
+  background-color: transparent !important;
 }

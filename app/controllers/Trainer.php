@@ -250,7 +250,7 @@
                 }
             } elseif ($action === "delete") {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $id = $_POST['timeslot_id'];
+                    $id = $_POST['id'];
 
                     if ($timeslotModel->delete($id)) {
                         echo json_encode(["success" => true, "message" => "Timeslot deleted successfully!"]);
@@ -294,7 +294,6 @@
                     exit;
                 }
 
-                // Ensure a response is always sent
                 echo json_encode(["success" => false, "message" => "Invalid request"]);
                 exit;
                 } elseif ($action === "delete") {

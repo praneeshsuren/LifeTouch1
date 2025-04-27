@@ -803,7 +803,16 @@ span {
 }
 
  /* event payment */
+ .container{
+    position: absolute;
+    top: 50px !important;
+    left: 200px;
+    height: auto;
+    z-index: 1;
+    padding: 1.5rem 2rem;
+}
  .payment-section {
+    width: 1000px;
     padding: 20px 0;
 }
 .payment-wrapper {
