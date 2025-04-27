@@ -73,6 +73,11 @@ class WorkoutSchedule extends Controller
                 }
 
                 $_SESSION['success'] = 'Workout schedule created successfully.';
+
+                $message = 'Dear member, a new Workout Schedule has been added to your Profile. Please check your Workout Schedules Page for details.';
+
+                $notificationModel = new M_Notification;
+                $notificationModel->createNotification($member_id, $message, 'Member');
                 redirect('trainer/members/workoutSchedules?id=' . $member_id);
                 return;
 

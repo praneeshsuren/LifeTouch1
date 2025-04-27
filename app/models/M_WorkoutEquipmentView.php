@@ -13,6 +13,7 @@
             'workout_description',
             'equipment_id',
             'equipment_name',
+            'image'
         ];
 
         public function getByWorkoutId($workoutId) {

@@ -1,7 +1,10 @@
 <?php
 class Service extends Controller
 {
+    public function __construct()
+    {
 
+    }
     public function index()
     {
         $this->view('manager/manager_dashboard');
@@ -109,4 +112,6 @@ class Service extends Controller
         header("Location: $referer");
         exit;
     }
+
 }
+?>

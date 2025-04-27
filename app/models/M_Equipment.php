@@ -87,4 +87,24 @@ class M_Equipment
     {
         return $this->errors;
     }
+    public function countAllEquipment()
+    {
+        // SQL query to count all equipment
+        $sql = "SELECT COUNT(*) as total FROM $this->table";
+
+        // Execute the query and fetch the result
+        $result = $this->get_row($sql);
+
+        // Return the total count
+        return $result ? $result->total : 0;
+    }
+
+    public function getSuggestionsByName($query) {
+        $query = "%" . strtolower($query) . "%";
+
+        $sql = "SELECT name, equipment_id, file FROM $this->table WHERE LOWER(name) LIKE :query"; 
+        
+        $data = ['query' => $query];
+        return $this->query($sql, $data);
+    }
 }
