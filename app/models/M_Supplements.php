@@ -105,6 +105,13 @@
             // Use the query method from your Database trait to execute the query
             $result = $this->query($query, $data);
 
+            // Return the result
+            if ($result) {
+                return $result[0]; // Return the first result
+            } else {
+                return null; // No results found
+            }
+
         }
 
         public function getSupplementById($id)

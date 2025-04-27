@@ -1003,6 +1003,27 @@ main .workouts-container .workouts-header .add-workout-btn:hover{
     100% { opacity: 1; }
 }
 
+.suggestions-dropdown {
+  position: absolute;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: white;
+  width: 465px;
+  box-sizing: border-box;
+  z-index: 9999;
+}
+
+.suggestion-item  {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+
+
 /* General styling for the workout container */
 .workouts {
     display: flex;

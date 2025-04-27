@@ -101,40 +101,98 @@
             </div>
 
             <div class="service-form">
-                <h2>Add Purchase</h2>
-                <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/supplement/createPurchase">
-                    <input type="hidden" name="supplement_id" value="<?php echo htmlspecialchars($supplement->supplement_id); ?>">
+    <h2>Add Purchase</h2>
+    <form id="purchase-form" method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/supplement/createPurchase">
+        <input type="hidden" name="supplement_id" value="<?php echo htmlspecialchars($supplement->supplement_id); ?>">
 
-                    <div class="input-container">
-                        <label for="service_date">Purchase Date:</label>
-                        <input type="date" id="service_date" name="purchase_date" required>
-                    </div>
-                    <div class="input-container">
-                        <label for="service_cost">Purchase Price:</label>
-                        <input type="number" id="service_cost" name="purchase_price" required>
-                    </div>
-                    <div class="input-container">
-                        <label for="service_cost">Quantity:</label>
-                        <input type="number" id="service_cost" name="quantity" required>
-                    </div>
-                    <div class="input-container">
-                        <label for="service_cost">Purchase Place:</label>
-                        <input type="text" id="service_cost" name="purchase_shop">
-                    </div>
-                    <div class="button-container">
-                        <button class="edit-button">Add Purchase</button>
-                    </div>
-                </form>
-            </div>
-
-            </div>
+        <!-- Purchase Date -->
+        <div class="input-container">
+            <label for="service_date">Purchase Date:</label>
+            <input type="date" id="service_date" name="purchase_date" value="<?php echo isset($data['purchase_date']) ? htmlspecialchars($data['purchase_date']) : ''; ?>">
+            <div class="error" id="error-purchase_date"></div>
         </div>
+
+        <!-- Purchase Price -->
+        <div class="input-container">
+            <label for="service_cost">Purchase Price:</label>
+            <input type="number" id="service_cost" name="purchase_price" value="<?php echo isset($data['purchase_price']) ? htmlspecialchars($data['purchase_price']) : ''; ?>">
+            <div class="error" id="error-purchase_price"></div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="input-container">
+            <label for="service_cost">Quantity:</label>
+            <input type="number" id="service_cost" name="quantity" value="<?php echo isset($data['quantity']) ? htmlspecialchars($data['quantity']) : ''; ?>">
+            <div class="error" id="error-quantity"></div>
+        </div>
+
+        <!-- Purchase Place -->
+        <div class="input-container">
+            <label for="service_cost">Purchase Place:</label>
+            <input type="text" id="service_cost" name="purchase_shop" value="<?php echo isset($data['purchase_shop']) ? htmlspecialchars($data['purchase_shop']) : ''; ?>">
+            <div class="error" id="error-purchase_shop"></div>
+        </div>
+
+        <div class="button-container">
+            <button type="submit" class="edit-button">Add Purchase</button>
+        </div>
+    </form>
+</div>
+
+
     </main>
-
-    <script>
-
-    </script>
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
+    <script>
+    document.getElementById("purchase-form").addEventListener("submit", function(event) {
+        // Clear previous errors
+        clearErrors();
+
+        let hasErrors = false;
+
+        // Get form values
+        const purchaseDate = document.getElementById("service_date").value;
+        const purchasePrice = document.getElementById("service_cost").value;
+        const quantity = document.getElementById("service_cost").value;
+        const purchaseShop = document.getElementById("service_cost").value;
+
+        // Validate Purchase Date
+        if (!purchaseDate) {
+            hasErrors = true;
+            document.getElementById("error-purchase_date").textContent = "Purchase date is required.";
+        }
+
+        // Validate Purchase Price
+        if (!purchasePrice || purchasePrice <= 0) {
+            hasErrors = true;
+            document.getElementById("error-purchase_price").textContent = "Purchase price is required and must be greater than 0.";
+        }
+
+        // Validate Quantity
+        if (!quantity || quantity <= 0) {
+            hasErrors = true;
+            document.getElementById("error-quantity").textContent = "Quantity is required and must be greater than 0.";
+        }
+
+        // Validate Purchase Shop
+        if (!purchaseShop) {
+            hasErrors = true;
+            document.getElementById("error-purchase_shop").textContent = "Purchase place is required.";
+        }
+
+        // If there are errors, prevent form submission
+        if (hasErrors) {
+            event.preventDefault();
+        }
+    });
+
+    function clearErrors() {
+        // Reset error messages
+        const errorElements = document.querySelectorAll(".error");
+        errorElements.forEach(function(errorElement) {
+            errorElement.textContent = "";
+        });
+    }
+</script>
 </body>
 
 </html>

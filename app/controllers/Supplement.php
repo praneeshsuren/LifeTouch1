@@ -12,27 +12,17 @@ class Supplement extends Controller
         $supplementModel = new M_Supplements;
         $supplementPurchaseModel = new M_SupplementPurchases;
 
-        // Handle file upload if exists
+        // Handle file upload if exists and if changed
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             $targetDir = "assets/images/Supplement/";
-            $fileName = time() . "_" . basename($_FILES['image']['name']);
+            $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
             $targetFile = $targetDir . $fileName;
 
-            // Validate file type and size
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
-            $fileType = mime_content_type($_FILES['image']['tmp_name']);
-            $fileSize = $_FILES['image']['size'];
-
-            if (!in_array($fileType, $allowedTypes)) {
-                $errors['file'] = "Only JPG, PNG, or GIF files are allowed.";
-            } elseif ($fileSize > 2 * 1024 * 1024) { // 2MB max
-                $errors['file'] = "File size must be less than 2MB.";
+            // Validate the file (e.g., check file type and size) and move it to the target directory
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                $data['file'] = $fileName; // Save the new filename for the database
             } else {
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $data['file'] = $fileName;
-                } else {
-                    $errors['file'] = "Failed to upload the image. Please try again.";
-                }
+                $errors['file'] = "Failed to upload the file. Please try again.";
             }
         }
 
@@ -217,10 +207,14 @@ class Supplement extends Controller
                     $errors['update'] = "Failed to update supplement quantity.";
                 }
             }
+            
+            $this->view('manager/manager-viewSupplement', [
+                'errors' => $errors,
+                'data' => $data
+            ]);
         }
-
-        $this->view('manager/manager-createSupplement', ['errors' => $errors]);
     }
+
 
     public function addSupplementSale()
     {

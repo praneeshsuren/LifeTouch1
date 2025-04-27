@@ -108,7 +108,7 @@
         <h2>Add Supplement</h2>
         <form action="<?php echo URLROOT; ?>/supplement/addSupplementSale" method="POST" enctype="multipart/form-data">
           <label for="supplementName">Supplement Name:</label>
-          <input type="text" id="supplementName" name="name" required>
+          <input type="text" id="supplementName" name="name" >
           <div id="supplementNameError" class="error-message" style="color: red; display: none;"></div> <!-- Error Message -->
           <div id="suggestions" class="suggestions-dropdown" style="display: none;"></div>
           
@@ -129,15 +129,15 @@
           <input type="text" id="quantityAvailable" name="quantity_available" readonly>
 
           <label for="quantity">Quantity:</label>
-          <input type="number" id="quantity" name="quantity" required>
+          <input type="number" id="quantity" name="quantity" >
           <div id="quantityError" class="error-message" style="color: red; display: none;"></div> <!-- Error Message -->
 
           <label for="price">Price of a Supplement:</label>
-          <input type="number" id="price" name="price_of_a_supplement" required>
+          <input type="number" id="price" name="price_of_a_supplement" >
           <div id="priceError" class="error-message" style="color: red; display: none;"></div> <!-- Error Message -->
 
           <label for="saleDate">Sold Date:</label>
-          <input type="date" name="sale_date" id="saleDate" required>
+          <input type="date" name="sale_date" id="saleDate" >
           <div id="saleDateError" class="error-message" style="color: red; display: none;"></div> <!-- Error Message -->
 
           <button type="submit" class="submit-btn">Add Supplement</button>
