@@ -493,6 +493,8 @@
             // Load the notifications view
             $this->view('admin/admin-notifications', $data);
         }
+
+        
         
     }
 
