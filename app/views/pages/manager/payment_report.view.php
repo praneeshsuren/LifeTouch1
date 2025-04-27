@@ -20,7 +20,34 @@
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
-    
+    <style>
+        .active-row {
+            background-color: #e8f5e9;
+        }
+
+        .inactive-row {
+            background-color: #ffebee;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .status.active {
+            background-color: #c8e6c9;
+            color: #256029;
+        }
+
+        .status.inactive {
+            background-color: #ffcdd2;
+            color: #c63737;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -31,7 +58,7 @@
 
     <main>
         <div class="title">
-            <h1>Equipment Service Report</h1>
+            <h1>Membership Plan Report</h1>
             <div class="greeting">
                 <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
             </div>
@@ -39,7 +66,10 @@
 
         <div class="table-container">
 
-
+        <div class="filters">
+                <a href="#"><button style="background-color:#007bff;color:white;" class="filter">Online Payment</button></a>
+                <a href="physicalPayment_report"> <button class="filter" >Physical Payment</button></a>
+            </div>
             <div class="date-filter-container">
                 <div class="left">
                     <label for="startDate">Start Date: </label>
@@ -50,13 +80,15 @@
                     <input type="date" class="date-input" id="endDate" placeholder="End Date">
                 </div>
                 <button id="clearDateFilter" class="filter">Clear Date Filter</button>
+                <a href="<?php echo URLROOT; ?>/manager/report" class="btn" style="position: absolute; top: 90px; right: 60px;">Back</a>
+
             </div>
 
             <div class="table-container">
 
 
                 <div class="user-table-wrapper">
-                <div class="table-scroll-container">
+                    <div class="table-scroll-container">
                         <table class='user-table'>
                             <thead>
                                 <tr>
@@ -66,9 +98,7 @@
                                     <th>Email</th>
                                     <th>Membership Plan</th>
                                     <th>Start Date</th>
-                                    <th>Expected Amount</th>
-                                    <th>Total Paid</th>
-                                    <th>Last Payment</th>
+                                    <th>Amount</th>
                                     <th>Valid Until</th>
                                     <th>Status</th>
                                 </tr>
@@ -76,29 +106,27 @@
                             <tbody>
                                 <?php if (!empty($reportData)): ?>
                                     <?php foreach ($reportData as $member) : ?>
-                                        <tr class="<?php echo !$member->is_compliant ? 'non-compliant' : ''; ?>">
+                                        <tr class="<?php echo ($member->subscription_status == 'active') ? 'active-row' : 'inactive-row'; ?>">
                                             <td><?php echo htmlspecialchars($member->member_id); ?></td>
                                             <td><?php echo htmlspecialchars($member->member_name); ?></td>
                                             <td><?php echo htmlspecialchars($member->contact_number); ?></td>
                                             <td><?php echo htmlspecialchars($member->email_address); ?></td>
                                             <td><?php echo htmlspecialchars($member->membership_plan); ?></td>
-                                            <td><?php echo htmlspecialchars($member->membership_start_date); ?></td>
+                                            <td><?php echo date('Y-m-d', strtotime($member->membership_start_date)); ?></td>
                                             <td><?php echo 'Rs. ' . number_format($member->expected_amount, 2); ?></td>
-                                            <td><?php echo 'Rs. ' . number_format($member->total_paid, 2); ?></td>
-                                            <td><?php echo htmlspecialchars($member->last_payment_date); ?></td>
-                                            <td><?php echo htmlspecialchars($member->last_valid_date); ?></td>
+                                            <td><?php echo date('Y-m-d', strtotime($member->last_valid_date)); ?></td>
                                             <td>
-                                                <?php if ($member->is_compliant): ?>
-                                                    <span class="status compliant">Active</span>
+                                                <?php if ($member->subscription_status == 'active'): ?>
+                                                    <span class="status active">Active</span>
                                                 <?php else: ?>
-                                                    <span class="status non-compliant">Expired</span>
+                                                    <span class="status inactive">Inactive</span>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="11" style="text-align: center;">No member records available</td>
+                                        <td colspan="9" style="text-align: center;">No member records available</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -110,48 +138,87 @@
     </main>
 
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
-    
+
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const startDateInput = document.getElementById("startDate");
-            const endDateInput = document.getElementById("endDate");
-            const tableRows = document.querySelectorAll(".user-table tbody tr");
+    document.addEventListener("DOMContentLoaded", function() {
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+        const tableRows = document.querySelectorAll(".user-table tbody tr");
 
-            function filterByDate() {
-                const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
-                const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+        // Function to validate dates
+        function validateDates() {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            const today = new Date();
 
-                tableRows.forEach(row => {
-                    if (row.cells.length < 11) return; // Skip header and empty rows
+            let isValid = true;
 
-                    const validDateText = row.cells[9].textContent.trim(); // Valid Until is 10th column
-                    const validDate = new Date(validDateText);
-
-                    let showRow = true;
-
-                    if (startDate && validDate < startDate) {
-                        showRow = false;
-                    }
-
-                    if (endDate && validDate > endDate) {
-                        showRow = false;
-                    }
-
-                    row.style.display = showRow ? "" : "none";
-                });
+            // Check if start date is in the future
+            if (startDate > today) {
+                alert("Start date cannot be in the future.");
+                startDateInput.value = ''; // Clear the start date field
+                isValid = false;
             }
 
-            // Attach event listeners
-            startDateInput.addEventListener("change", filterByDate);
-            endDateInput.addEventListener("change", filterByDate);
+            // Check if end date is in the future
+            if (endDate > today) {
+                alert("End date cannot be in the future.");
+                endDateInput.value = ''; // Clear the end date field
+                isValid = false;
+            }
 
-            document.getElementById("clearDateFilter").addEventListener("click", function() {
-                startDateInput.value = '';
-                endDateInput.value = '';
-                tableRows.forEach(row => row.style.display = "");
+            // Ensure that start date is earlier than end date
+            if (startDate && endDate && startDate >= endDate) {
+                alert("Start date must be before the end date.");
+                endDateInput.value = ''; // Clear the end date field
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Function to filter the rows based on the selected dates
+        function filterByDate() {
+            // Ensure the dates are valid before filtering
+            if (!validateDates()) {
+                return; // Stop filtering if dates are invalid
+            }
+
+            const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
+            const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+
+            tableRows.forEach(row => {
+                if (row.cells.length < 9) return; // Skip header and empty rows
+
+                const validDateText = row.cells[7].textContent.trim(); // Valid Until is 8th column (0-indexed 7)
+                const validDate = new Date(validDateText);
+
+                let showRow = true;
+
+                if (startDate && validDate < startDate) {
+                    showRow = false;
+                }
+
+                if (endDate && validDate > endDate) {
+                    showRow = false;
+                }
+
+                row.style.display = showRow ? "" : "none";
             });
+        }
+
+        // Attach event listeners
+        startDateInput.addEventListener("change", filterByDate);
+        endDateInput.addEventListener("change", filterByDate);
+
+        document.getElementById("clearDateFilter").addEventListener("click", function() {
+            startDateInput.value = '';
+            endDateInput.value = '';
+            tableRows.forEach(row => row.style.display = "");
         });
-    </script>
+    });
+</script>
+
     <script>
         document.getElementById("clearDateFilter").addEventListener("click", function() {
             document.getElementById("startDate").value = '';
@@ -161,6 +228,32 @@
             });
         });
     </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const tableRows = document.querySelectorAll(".user-table tbody tr");
+
+        // Function to filter rows by inactive status
+        function filterInactiveRows() {
+            tableRows.forEach(row => {
+                // Check the status column (the last column, index 8)
+                const statusCell = row.cells[8]; // Status is the 9th column (0-indexed 8)
+                if (statusCell) {
+                    const statusText = statusCell.textContent.trim().toLowerCase();
+                    
+                    // Hide the row if the status is not 'inactive'
+                    if (statusText !== 'inactive') {
+                        row.style.display = 'none';
+                    } else {
+                        row.style.display = ''; // Show the row if status is inactive
+                    }
+                }
+            });
+        }
+
+        // Call the function to filter rows when the page loads
+        filterInactiveRows();
+    });
+</script>
 
 
 </body>

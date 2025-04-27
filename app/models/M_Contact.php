@@ -10,14 +10,8 @@
             'id',
             'name',
             'email',
-            'msg',
-            'created_at'
+            'msg'
         ];
-
-        public function findInquityById($inquiryId) {
-            $data = ['id' => $inquiryId];
-            return $this->first($data);
-        }
 
         public function validate($data) {
             $this->errors = [];
@@ -40,18 +34,5 @@
         public function getErrors()
         {
             return $this->errors;
-        }
-        
-        public function countAllContactsInLast30Days() {
-            $date30DaysAgo = date('Y-m-d H:i:s', strtotime('-30 days'));
-
-            $query = "SELECT COUNT(*) as total FROM {$this->table} WHERE created_at >= :date30DaysAgo";
-
-            $result = $this->query($query, ['date30DaysAgo' => $date30DaysAgo]);
-
-            if ($result && !empty($result)) {
-                return $result[0]->total;
-            }
-            return 0;
-        }
+        }      
     }

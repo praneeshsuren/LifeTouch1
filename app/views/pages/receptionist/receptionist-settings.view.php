@@ -76,7 +76,7 @@
                   </p>
                   <p>
                       <strong>Change Password:</strong>
-                      <a href="#" id="changePasswordLink" class="change-password-link">Click here to change password</a>
+                      <a href="<?php echo URLROOT; ?>/receptionist/changePassword" class="change-password-link">Click here to change password</a>
                   </p>
                   <p>
                       <strong>First Name:</strong>
@@ -213,12 +213,6 @@
 
         editBtn.addEventListener('click', enableEditing);
         cancelBtn.addEventListener('click', restoreOriginalValues);
-
-        document.getElementById('changePasswordLink').addEventListener('click', function (e) {
-            e.preventDefault();
-            window.location.href = "<?php echo URLROOT; ?>/changePassword";
-        });
-        
     </script>
 
   </body>

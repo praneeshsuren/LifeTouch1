@@ -30,8 +30,9 @@
 
       </div>
 
-      <div class="user-table-container">
-          <div class="filters" >
+      <div class="table-container">
+
+          <div class="filters">
             <button class="filter active">ALL</button>
             <button class="filter">Booked</button>
             <button class="filter">Pending</button>
@@ -59,42 +60,21 @@
           </div>
           <div id="bookingModal" class="bookingModal">
             <div class="bookingModal-content" >
-                <div class="modal-header">
-                    <h2 class="modal-title">Booking Request</h2>
-                    <div class="bookingModalClose">&times;</div>
-                </div>
-
+                <div class="bookingModalClose">&times;</div>
                 <div class="bookingModal-body" style = "color:black">
                     <form id="bookingForm">
-                        <div class="booking-details">
-                            <div class="detail-row" style="margin-top:5px;">
-                                <div class="detail-label">Name:</div>
-                                <div class="detail-value"  id="modalMemberName"></div>
-                            </div>
-                            <div class="detail-row">
-                                <div class="detail-label">Date:</div>
-                                <div class="detail-value"  id="modalBookingDate" ></div>
-                            </div>
-
-    
-                            <div class="detail-row">
-                                <div class="detail-label">Time:</div>
-                                <div class="detail-value"  id="modalTimeslot" ></div>
-                            </div>
-
-                            <div class="detail-row">
-                                <div class="detail-label">Status</div>
-                                <div class="detail-value">
-                                    <select id="modalStatusSelect">
-                                        <option value="pending">Pending</option>
-                                        <option value="booked">Confirm</option>
-                                        <option value="rejected">Reject</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="action-button" type="submit" id="submitBtn" name="submit">Save</button>
+                        <p><strong>Member Name:</strong> <span id="modalMemberName"></span></p>
+                        <p><strong>Booking Date:</strong> <span id="modalBookingDate"></span></p>
+                        <p><strong>Timeslot:</strong> <span id="modalTimeslot"></span></p>
+                        <p><strong>Status:</strong>
+                            <select id="modalStatusSelect">
+                                <option value="pending">Pending</option>
+                                <option value="booked">Booked</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </p>
+                        <div class="book-btn">
+                            <button type="submit" id="submitBtn" name="submit">Confirm</button>
                         </div>
                     </form>
                 </div>
@@ -122,8 +102,8 @@
                     return response.json();
                 })
                 .then(data => {
-                    // console.log("Fetched booking data:", data.bookings);
-                    // console.log("Fetched holiday data:", data.holidays);
+                    console.log("Fetched booking data:", data.bookings);
+                    console.log("Fetched holiday data:", data.holidays);
 
                     holidays = data.holidays;
 
@@ -334,6 +314,8 @@
                     })
                     .catch(error => console.error("Error updating booking:", error));
                 });
+
+              
 
                 closeModal.addEventListener('click',function() {
                     modal.style.display = 'none';

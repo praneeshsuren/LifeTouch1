@@ -38,61 +38,37 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="name">Event Name</label>
-                            <input type="text" id="name" name="name"  placeholder="Enter event name" >
-                            <?php if (!empty($errors['name'])): ?>
-                                <small class="error"><?php echo $errors['name']; ?></small>
-                            <?php endif; ?>
-
+                            <input type="text" id="name" name="name" required placeholder="Enter event name">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" rows="4" placeholder="Describe your event" ></textarea>
-                            <?php if (!empty($errors['description'])): ?>
-                                <small class="error"><?php echo $errors['description']; ?></small>
-                            <?php endif; ?>
-
+                            <textarea id="description" name="description" rows="4" placeholder="Describe your event"></textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="event_date">Event Date</label>
-                            <input type="date" id="event_date" name="event_date" >
-                            <?php if (!empty($errors['event_date'])): ?>
-                                <small class="error"><?php echo $errors['event_date']; ?></small>
-                            <?php endif; ?>
-
+                            <input type="date" id="event_date" name="event_date" required>
                         </div>
 
                         <div class="form-group">
                             <label for="start_time">Start Time</label>
-                            <input type="time" id="start_time" name="start_time" >
-                            <?php if (!empty($errors['start_time'])): ?>
-                                <small class="error"><?php echo $errors['start_time']; ?></small>
-                            <?php endif; ?>
+                            <input type="time" id="start_time" name="start_time" required>
                         </div>
 
                         <div class="form-group">
                             <label for="duration">Duration (hours)</label>
-                            <input type="number" id="duration" name="duration" min="0.5" step="0.5" >
-                            <?php if (!empty($errors['duration'])): ?>
-                                <small class="error"><?php echo $errors['duration']; ?></small>
-                            <?php endif; ?>
+                            <input type="number" id="duration" name="duration" min="0.5" step="0.5" required>
                         </div>
 
                         <div class="form-group">
                             <label for="location">Location</label>
-                            <input type="text" id="location" name="location"  placeholder="Enter venue or address" >
-                            <?php if (!empty($errors['location'])): ?>
-                                <small class="error"><?php echo $errors['location']; ?></small>
-                            <?php endif; ?>
+                            <input type="text" id="location" name="location" required placeholder="Enter venue or address">
                         </div>
 
                         <div class="form-group">
                             <label for="price">Ticket Price ($)</label>
-                            <input type="number" id="price" name="price" min="0" step="0.01" placeholder="0.00" >
-                            <?php if (!empty($errors['price'])): ?>
-                                <small class="error"><?php echo $errors['price']; ?></small>
-                            <?php endif; ?>
+                            <input type="number" id="price" name="price" min="0" step="0.01" placeholder="0.00">
                         </div>
 
                         <div class="form-group checkbox-group">
@@ -103,7 +79,7 @@
 
                     <div class="form-actions">
                         <button type="submit" class="btn submit-btn">Create Event</button>
-                        <button type="reset" class="btn reset-btn">Reset</button>
+                        <button type="reset" class="btn reset-btn">Cancel</button>
                     </div>
                 </form>
             </div>

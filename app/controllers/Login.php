@@ -1,4 +1,7 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 class Login extends Controller
 {
@@ -10,222 +13,382 @@ class Login extends Controller
 
     public function user()
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            // Check if username and password fields are set
+            if (!isset($_POST['username']) || !isset($_POST['password']) || empty($_POST['username']) || empty($_POST['password'])) {
+                $data['error'] = 'Username and password are required.';
+                $this->view('home/home-login', $data);
+                return;
+            }
+
+            $user = new M_User;
+            $data = [
+                'username' => trim($_POST['username']),
+                'password' => $_POST['password']
+            ];
+
+            // Fetch the user details based on username
+            $userDetails = $user->first(['username' => $data['username']]);
+
+            if ($userDetails) {
+                // Verify the password
+                if (password_verify($data['password'], $userDetails->password)) {
+                    // Store user_id in session
+                    $_SESSION['user_id'] = $userDetails->user_id;
+
+                    // Check if the user is a trainer or member based on the user_id prefix
+                    $rolePrefix = substr($userDetails->user_id, 0, 2); // 'TN' for trainer, 'MB' for member
+
+                    if ($rolePrefix === 'MB') {
+                        // Fetch additional member details
+                        $member = new M_Member;
+                        $memberDetails = $member->findByMemberId($userDetails->user_id);
+
+                        if ($memberDetails) {
+                            // Store the member details in session
+                            $_SESSION['role'] = 'Member';
+                            $_SESSION['first_name'] = $memberDetails->first_name;
+                            $_SESSION['last_name'] = $memberDetails->last_name;
+                            $_SESSION['image'] = $memberDetails->image;
+                            $_SESSION['last_activity'] = time();
+
+                            // Redirect to member dashboard
+                            redirect('member');
+                        } else {
+                            // Handle the case where member details are not found
+                            $data['error'] = 'Member details not found.';
+                            $this->view('home/home-login', $data);
+                        }
+                    } elseif ($rolePrefix === 'TN') {
+                        // Fetch additional trainer details
+                        $trainer = new M_Trainer;
+                        $trainerDetails = $trainer->findByTrainerId($userDetails->user_id);
+
+                        if ($trainerDetails) {
+                            // Store the trainer details in session
+                            $_SESSION['role'] = 'Trainer';
+                            $_SESSION['first_name'] = $trainerDetails->first_name;
+                            $_SESSION['last_name'] = $trainerDetails->last_name;
+                            $_SESSION['image'] = $trainerDetails->image;
+
+                            // Redirect to trainer dashboard
+                            redirect('trainer');
+                        } else {
+                            // Handle the case where trainer details are not found
+                            $data['error'] = 'Trainer details not found.';
+                            $this->view('home/home-login', $data);
+                        }
+                    } elseif ($rolePrefix === 'MR') {
+                        // Fetch additional member details
+                        $manager = new M_Manager;
+                        $managerDetails = $manager->findByManagerId($userDetails->user_id);
+
+                        if ($managerDetails) {
+                            // Store the member details in session
+                            $_SESSION['role'] = 'Manager';
+                            $_SESSION['first_name'] = $managerDetails->first_name;
+                            $_SESSION['last_name'] = $managerDetails->last_name;
+                            $_SESSION['image'] = $managerDetails->image;
+
+                            // Redirect to member dashboard
+                            redirect('manager');
+                        } else {
+                            // Handle the case where member details are not found
+                            $data['error'] = 'Manager details not found.';
+                            $this->view('home/home-login', $data);
+                        }
+                    } elseif ($rolePrefix === 'RT') {
+                        // Fetch additional member details
+                        $receptionist = new M_Receptionist;
+                        $receptionistDetails = $receptionist->findByReceptionistId($userDetails->user_id);
+
+                        if ($receptionistDetails) {
+                            // Store the member details in session
+                            $_SESSION['role'] = 'Receptionist';
+                            $_SESSION['first_name'] = $receptionistDetails->first_name;
+                            $_SESSION['last_name'] = $receptionistDetails->last_name;
+                            $_SESSION['image'] = $receptionistDetails->image;
+
+                            // Redirect to member dashboard
+                            redirect('receptionist');
+                        } else {
+                            // Handle the case where member details are not found
+                            $data['error'] = 'Receptionist details not found.';
+                            $this->view('home/home-login', $data);
+                        }
+                    } elseif ($rolePrefix === 'AD') {
+                        // Fetch additional member details
+                        $admin = new M_Admin;
+                        $adminDetails = $admin->findByAdminId($userDetails->user_id);
+
+                        if ($adminDetails) {
+                            // Store the member details in session
+                            $_SESSION['role'] = 'Admin';
+                            $_SESSION['first_name'] = $adminDetails->first_name;
+                            $_SESSION['last_name'] = $adminDetails->last_name;
+                            $_SESSION['image'] = $adminDetails->image;
+
+                            // Redirect to member dashboard
+                            redirect('admin');
+                        } else {
+                            // Handle the case where member details are not found
+                            $data['error'] = 'Admin details not found.';
+                            $this->view('home/home-login', $data);
+                        }
+                    } else {
+                        // Handle invalid user role prefix
+                        $data['error'] = 'Invalid user role.';
+                        $this->view('home/home-login', $data);
+                    }
+                } else {
+                    // Handle invalid password
+                    $data['error'] = 'Invalid username or password.';
+                    $this->view('home/home-login', $data);
+                }
+            } else {
+                // Handle user not found
+                $data['error'] = 'Invalid username or password.';
+                $this->view('home/home-login', $data);
+            }
+        } else {
+            // Redirect to the login page if the request is not POST
             redirect('login');
         }
-
-        $username = trim($_POST['username'] ?? '');
-        $password = $_POST['password'] ?? '';
-
-        if (empty($username) || empty($password)) {
-            return $this->view('home/home-login', ['error' => 'Username and password are required.']);
-        }
-
-        $userModel = new M_User;
-        $userDetails = $userModel->first(['username' => $username]);
-
-        if (!$userDetails || !password_verify($password, $userDetails->password)) {
-            return $this->view('home/home-login', ['error' => 'Invalid username or password.']);
-        }
-
-        // Securely reset session before login
-        session_unset();
-        session_destroy();
-        session_start();
-        session_regenerate_id(true);
-
-        $_SESSION['user_id'] = $userDetails->user_id;
-        $_SESSION['last_activity'] = time();
-
-        $rolePrefix = substr($userDetails->user_id, 0, 2);
-
-        $roles = [
-            'MB' => ['Member', 'M_Member', 'findByMemberId', 'member'],
-            'TN' => ['Trainer', 'M_Trainer', 'findByTrainerId', 'trainer'],
-            'MR' => ['Manager', 'M_Manager', 'findByManagerId', 'manager'],
-            'RT' => ['Receptionist', 'M_Receptionist', 'findByReceptionistId', 'receptionist'],
-            'AD' => ['Admin', 'M_Admin', 'findByAdminId', 'admin']
-        ];
-
-        if (!array_key_exists($rolePrefix, $roles)) {
-            return $this->view('home/home-login', ['error' => 'Invalid user role.']);
-        }
-
-        list($role, $modelClass, $findMethod, $redirectPath) = $roles[$rolePrefix];
-
-        $model = new $modelClass;
-        $details = $model->$findMethod($userDetails->user_id);
-
-        if (!$details) {
-            return $this->view('home/home-login', ['error' => "$role details not found."]);
-        }
-
-        $_SESSION['role'] = $role;
-        $_SESSION['first_name'] = $details->first_name;
-        $_SESSION['last_name'] = $details->last_name;
-        $_SESSION['image'] = $details->image;
-
-        redirect($redirectPath);
     }
-
 
     public function logout()
     {
+        // Destroy the session
         session_destroy();
-        session_start();
-        $_SESSION['success'] = 'You have been logged out successfully.';
+        // Redirect to login page with a success message
+        $_SESSION['message'] = 'You have been logged out successfully.';
         redirect('login');
     }
 
-    public function requestReset() {
+    public function forgotPassword()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Get JSON data from request
-            $json = file_get_contents('php://input');
-            $data = json_decode($json, true);
-    
-            $username = $data['username'] ?? '';
-    
-            // Initialize models
+            $username = trim($_POST['username']);
+
+            if (empty($username)) {
+                $this->view('home/forgot_password', ['error' => 'Please enter your username']);
+                return;
+            }
+
             $userModel = new M_User();
-            $memberModel = new M_Member();
-            $trainerModel = new M_Trainer();
-            $adminModel = new M_Admin();
-            $managerModel = new M_Manager();
-            $receptionistModel = new M_Receptionist();
-    
-            // Check if username exists in users table
             $user = $userModel->first(['username' => $username]);
+
             if (!$user) {
-                echo json_encode(['success' => false, 'message' => 'Username not found']);
+                $this->view('home/forgot_password', ['error' => 'Username not found']);
                 return;
             }
-    
-            // Get user details based on user_id and role
-            $email = null;
-            $userType = null;
-            $userId = $user->user_id;
-    
-            // Check each table for the user
-            if ($member = $memberModel->first(['member_id' => $userId])) {
-                $email = $member->email_address;
-                $userType = 'member';
-            } elseif ($trainer = $trainerModel->first(['trainer_id' => $userId])) {
-                $email = $trainer->email_address;
-                $userType = 'trainer';
-            } elseif ($admin = $adminModel->first(['admin_id' => $userId])) {
-                $email = $admin->email_address;
-                $userType = 'admin';
-            } elseif ($manager = $managerModel->first(['manager_id' => $userId])) {
-                $email = $manager->email_address;
-                $userType = 'manager';
-            } elseif ($receptionist = $receptionistModel->first(['receptionist_id' => $userId])) {
-                $email = $receptionist->email_address;
-                $userType = 'receptionist';
-            }
-    
+
+            // Get user's email from appropriate table
+            $email = $this->getUserEmail($user->user_id);
+
             if (!$email) {
-                echo json_encode(['success' => false, 'message' => 'Email address not found for this user']);
+                $this->view('home/forgot_password', ['error' => 'Email address not found for this user']);
                 return;
             }
-    
-            // Generate reset token (you'll need to implement this)
+
+            // Generate and save reset token
             $resetToken = bin2hex(random_bytes(32));
             $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
-    
-            // Save token to database (you'll need a password_reset_tokens table)
-            $this->saveResetToken($userId, $resetToken, $expires);
-    
-            // Send email (implement this function)
-            $this->sendResetEmail($email, $resetToken, $userType);
-    
-            echo json_encode(['success' => true, 'message' => 'Password reset link has been sent to your email']);
+
+            if (!$this->saveResetToken($user->user_id, $resetToken, $expires)) {
+                $this->view('home/forgot_password', ['error' => 'Failed to generate reset token']);
+                return;
+            }
+
+            // Send reset email
+            if ($this->sendResetEmail($email, $resetToken)) {
+                $this->view('home/forgot_password', ['success' => 'Password reset link has been sent to your email']);
+            } else {
+                $this->view('home/forgot_password', ['error' => 'Failed to send reset email']);
+            }
+        } else {
+            $this->view('home/forgot_password');
         }
     }
-    
-    private function saveResetToken($userId, $token, $expires) {
-        // Create a password_reset_tokens table if you haven't already
-        // Columns: id, user_id, token, expires_at, used (boolean)
-        $db = new Database();
-        $db->query("INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (:user_id, :token, :expires_at)");
-        $db->bind(':user_id', $userId);
-        $db->bind(':token', $token);
-        $db->bind(':expires_at', $expires);
-        return $db->execute();
+
+    private function getUserEmail($userId)
+    {
+        $prefix = substr($userId, 0, 2);
+
+        switch ($prefix) {
+            case 'MB': // Member
+                $model = new M_Member();
+                $field = 'member_id';
+                break;
+            case 'TN': // Trainer
+                $model = new M_Trainer();
+                $field = 'trainer_id';
+                break;
+            case 'AD': // Admin
+                $model = new M_Admin();
+                $field = 'admin_id';
+                break;
+            case 'MR': // Manager
+                $model = new M_Manager();
+                $field = 'manager_id';
+                break;
+            case 'RT': // Receptionist
+                $model = new M_Receptionist();
+                $field = 'receptionist_id';
+                break;
+            default:
+                return null;
+        }
+
+        $user = $model->first([$field => $userId]);
+        return $user->email_address ?? null;
     }
-    
-    private function sendResetEmail($email, $token, $userType) {
-        $resetLink = URLROOT . "/login/resetPassword?token=$token&type=$userType";
-        
-        $subject = "Password Reset Request";
-        $message = "You have requested to reset your password. Click the link below to proceed:\n\n";
-        $message .= $resetLink . "\n\n";
-        $message .= "This link will expire in 1 hour.\n";
-        $message .= "If you didn't request this, please ignore this email.";
-        
-        // Use your preferred email sending method here
-        mail($email, $subject, $message);
+
+    use Database; 
+
+
+    private function saveResetToken($userId, $token, $expires)
+    {
+        // No need to instantiate Database - just use the methods directly
+        // Delete any existing tokens for this user
+        $this->query("DELETE FROM password_reset_tokens WHERE user_id = :user_id", [':user_id' => $userId]);
+
+        // Insert new token
+        return $this->query(
+            "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (:user_id, :token, :expires_at)",
+            [
+                ':user_id' => $userId,
+                ':token' => $token,
+                ':expires_at' => $expires
+            ]
+        );
     }
-    public function resetPassword() {
-        $token = $_GET['token'] ?? '';
-        $userType = $_GET['type'] ?? '';
-    
-        // Verify token
-        $db = new Database();
-        $db->query("SELECT * FROM password_reset_tokens WHERE token = :token AND used = 0 AND expires_at > NOW()");
-        $db->bind(':token', $token);
-        $tokenData = $db->single();
-    
-        if (!$tokenData) {
-            $this->view('login/reset_password', ['error' => 'Invalid or expired token']);
+
+    public function resetPassword()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $token = $_POST['token'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
+
+        // Validate inputs
+        if (empty($token) || empty($password) || empty($confirm_password)) {
+            $this->view('home/reset_password', [
+                'error' => 'All fields are required',
+                'token' => $token
+            ]);
             return;
         }
-    
-        // Show reset form
-        $this->view('login/reset_password', ['token' => $token, 'userType' => $userType]);
-    }
-    
-    public function processReset() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $token = $_POST['token'] ?? '';
-            $userType = $_POST['userType'] ?? '';
-            $password = $_POST['password'] ?? '';
-            $confirm_password = $_POST['confirm_password'] ?? '';
-    
-            // Validate passwords match
-            if ($password !== $confirm_password) {
-                $this->view('login/reset_password', [
-                    'token' => $token,
-                    'userType' => $userType,
-                    'error' => 'Passwords do not match'
-                ]);
-                return;
-            }
-    
-            // Verify token again
-            $db = new Database();
-            $db->query("SELECT * FROM password_reset_tokens WHERE token = :token AND used = 0 AND expires_at > NOW()");
-            $db->bind(':token', $token);
-            $tokenData = $db->single();
-    
-            if (!$tokenData) {
-                $this->view('login/reset_password', ['error' => 'Invalid or expired token']);
-                return;
-            }
-    
-            // Update password in users table
-            $userModel = new M_User();
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $userModel->update($tokenData->user_id, ['password' => $hashedPassword], 'user_id');
-    
+
+        if ($password !== $confirm_password) {
+            $this->view('home/reset_password', [
+                'error' => 'Passwords do not match',
+                'token' => $token
+            ]);
+            return;
+        }
+
+        if (strlen($password) < 8) {
+            $this->view('home/reset_password', [
+                'error' => 'Password must be at least 8 characters',
+                'token' => $token
+            ]);
+            return;
+        }
+
+        // Verify token and get user ID
+        $tokenData = $this->get_row(
+            "SELECT * FROM password_reset_tokens 
+             WHERE token = :token AND used = 0 AND expires_at > NOW()",
+            [':token' => $token]
+        );
+
+        if (!$tokenData) {
+            $this->view('home/reset_password', [
+                'error' => 'Invalid or expired token'
+            ]);
+            return;
+        }
+
+        // Update user password
+        $userModel = new M_User();
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $updateResult = $userModel->updatePassword($tokenData->user_id, $hashedPassword);
+
+        if ($updateResult) {
             // Mark token as used
-            $db->query("UPDATE password_reset_tokens SET used = 1 WHERE token = :token");
-            $db->bind(':token', $token);
-            $db->execute();
+            $this->query(
+                "UPDATE password_reset_tokens SET used = 1 WHERE token = :token",
+                [':token' => $token]
+            );
+
+            // Redirect to login page or a success page
+            header("Location: /LifeTouch1/public/login?success=Password reset successfully. Please log in.");
+            exit; // Make sure the redirect happens and no further code executes
+        } else {
+            $this->view('home/reset_password', [
+                'error' => 'Failed to update password',
+                'token' => $token
+            ]);
+        }
+    } else {
+        // Show form for password reset
+        $token = $_GET['token'] ?? '';
+
+        if (empty($token)) {
+            $this->view('home/reset_password', ['error' => 'Invalid reset link']);
+            return;
+        }
+
+        $tokenData = $this->get_row(
+            "SELECT * FROM password_reset_tokens 
+             WHERE token = :token AND used = 0 AND expires_at > NOW()",
+            [':token' => $token]
+        );
+
+        if (!$tokenData) {
+            $this->view('home/reset_password', ['error' => 'Invalid or expired token']);
+            return;
+        }
+
+        $this->view('home/reset_password', ['token' => $token]);
+    }
+}
+
     
-            // Redirect to login with success message
-            $_SESSION['success'] = 'Password has been reset successfully. Please login with your new password.';
-            redirect('login');
+
+
+    private function sendResetEmail($toEmail, $token)
+    {
+        $mail = new PHPMailer(true);
+
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'amandanethmini100@gmail.com';
+            $mail->Password   = 'niib zlpx xskb bmag'; // Use App Password if 2FA enabled
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            // Recipients
+            $mail->setFrom('amandanethmini100@gmail.com', APP_NAME);
+            $mail->addAddress($toEmail);
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Password Reset Request - ' . APP_NAME;
+            $mail->Body    = "Click here to reset your password: <a href='" . URLROOT . "/login/resetPassword?token=$token'>Reset Password</a>";
+
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            return false;
         }
     }
     
+
 }

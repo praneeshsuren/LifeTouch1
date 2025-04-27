@@ -46,33 +46,29 @@
       <!-- Events Container -->
       <div class="events-container">
         <div class="events-header">
-          <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search events..." />
-            <i class="ph ph-magnifying-glass search-icon"></i>
-          </div>
-          <button class="btn add-event-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/events/createEvent'">+ Add New Event</button>
+            <h2>Upcoming Events</h2>
+            <button class="btn add-event-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/events/createEvent'">+ Add New Event</button>
         </div>
-
         <?php if (!empty($data['events'])): ?>
-          <div class="cards-grid" id="eventsGrid">
-            <?php foreach ($data['events'] as $event): ?>
-              <div class="card">
-                <div class="card-header">
-                  <h2><?php echo $event->name; ?></h2>
+          <div class="cards-grid">
+              <?php foreach ($data['events'] as $event): ?>
+                <div class="card">
+                    <div class="card-header">
+                        <h2><?php echo $event->name; ?></h2>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Date:</strong> <?php echo $event->event_date; ?></p>
+                        <p><strong>Time:</strong> <?php echo $event->start_time; ?></p>
+                        <p><strong>Duration:</strong> <?php echo $event->duration; ?> hours</p>
+                        <p><strong>Location:</strong> <?php echo $event->location; ?></p>
+                        <p><?php echo $event->description; ?></p>
+                        <button class="btn view-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/events/viewEvent?id=<?php echo $event->event_id; ?>';">View</button>
+                    </div>
                 </div>
-                <div class="card-body">
-                  <p><strong>Date:</strong> <?php echo $event->event_date; ?></p>
-                  <p><strong>Time:</strong> <?php echo $event->start_time; ?></p>
-                  <p><strong>Duration:</strong> <?php echo $event->duration; ?> hours</p>
-                  <p><strong>Location:</strong> <?php echo $event->location; ?></p>
-                  <p class="description"><?php echo $event->description; ?></p>
-                  <button class="btn view-btn" onclick="window.location.href='<?php echo URLROOT; ?>/admin/events/viewEvent?id=<?php echo $event->event_id; ?>';">View</button>
-                </div>
-              </div>
-            <?php endforeach; ?>
+              <?php endforeach; ?>
           </div>
         <?php else: ?>
-          <p class="no-events-text">No Events Available</p>
+          <p>No Events Available</p>
         <?php endif; ?>
       </div>
       
@@ -80,23 +76,6 @@
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/admin-script.js?v=<?php echo time(); ?>"></script>
-    <script>
-      // Live Search Functionality
-      const searchInput = document.getElementById('searchInput');
-      const eventCards = document.querySelectorAll('#eventsGrid .card');
-
-      searchInput.addEventListener('input', function() {
-        const query = this.value.toLowerCase();
-        eventCards.forEach(card => {
-          const title = card.querySelector('h2').innerText.toLowerCase();
-          if (title.includes(query)) {
-            card.style.display = "block";
-          } else {
-            card.style.display = "none";
-          }
-        });
-      });
-    </script>
 
   </body>
 </html>

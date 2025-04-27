@@ -21,7 +21,19 @@ class M_Event
         'created_at',
         'updated_at'
     ];
+    public function getEventById($event_id)
+{
+    $query = "SELECT * FROM event WHERE event_id = :event_id";
+    $result = $this->query($query, ['event_id' => $event_id]);
 
+    if (!empty($result)) {
+        return (object) $result[0]; // 
+    }
+
+    return null;
+}
+
+    
     public function findByEventId($eventId) {
         $data = ['event_id' => $eventId];
         return $this->first($data);  // Use the `first` method to get the first matching record
@@ -29,69 +41,14 @@ class M_Event
 
     public function validate($data)
     {
+
         $this->errors = [];
 
-        // Validate Event Name
-        if (isset($data['name'])) {
-            if (empty(trim($data['name']))) {
-                $this->errors['name'] = "Event name is required.";
-            }
-        }
-
-        // Validate Description
-        if (isset($data['description'])) {
-            if (empty(trim($data['description']))) {
-                $this->errors['description'] = "Description is required.";
-            }
-        }
-
-        // Validate Event Date
-        if (isset($data['event_date'])) {
-            if (empty($data['event_date'])) {
-                $this->errors['event_date'] = "Event date is required.";
-            } elseif (strtotime($data['event_date']) < strtotime(date('Y-m-d'))) {
-                $this->errors['event_date'] = "Event date must be today or a future date.";
-            }
-        }
-
-        // Validate Start Time
-        if (isset($data['start_time'])) {
-            if (empty($data['start_time'])) {
-                $this->errors['start_time'] = "Start time is required.";
-            }
-        }
-
-        // Validate Duration
-        if (isset($data['duration'])) {
-            if (empty($data['duration'])) {
-                $this->errors['duration'] = "Duration is required.";
-            } elseif (!is_numeric($data['duration']) || $data['duration'] <= 0) {
-                $this->errors['duration'] = "Duration must be a positive number.";
-            }
-        }
-
-        // Validate Location
-        if (isset($data['location'])) {
-            if (empty(trim($data['location']))) {
-                $this->errors['location'] = "Location is required.";
-            }
-        }
-
-        // Validate Price
-        if (isset($data['price'])) {
-            if ($data['price'] === '') {
-                $this->errors['price'] = "Ticket price is required.";
-            } elseif (!is_numeric($data['price']) || $data['price'] < 0) {
-                $this->errors['price'] = "Ticket price must be a non-negative number.";
-            }
-        }
-
         return empty($this->errors);
+
     }
-
-
     // Removed invalid variable declaration
-    public function getEventById($event_id)
+    public function getEventByIdd($event_id)
     {
         $query = "SELECT * FROM event WHERE event_id = :event_id";
         $result = $this->query($query, ['event_id' => $event_id], true);

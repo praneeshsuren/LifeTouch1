@@ -39,7 +39,7 @@ trait Model
         $query = rtrim($query, " AND ");
 
         // Add ordering if necessary
-        $query .= " ORDER BY $order_column $this->order_type LIMIT $this->limit OFFSET $this->offset";
+        $query .= " ORDER BY $order_column $this->order_type";
 
         // Merge the data for binding parameters
         $data = array_merge($data, $data_not);

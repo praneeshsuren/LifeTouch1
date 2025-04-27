@@ -221,7 +221,9 @@
                     }
                 });
             }
-            
+
+
+
             // Navigate to the previous month
             document.getElementById('prevMonth').addEventListener('click', () => {
                 if (currentMonth === 0) {

@@ -37,7 +37,8 @@
         </div>
 
         <div class="table-container">
-
+            <a href="<?php echo URLROOT; ?>/manager/report" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
+            <br><br><br>
             <div class="user-table-wrapper">
                 <table class='user-table'>
                     <thead>

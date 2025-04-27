@@ -4,8 +4,8 @@
 <div class="head">
     <div class="user-img">
         <img src="<?php echo URLROOT; ?>/assets/images/<?php echo $_SESSION['role'] ?>/<?php echo !empty($_SESSION['image']) ? $_SESSION['image'] : 'default-placeholder.jpg'; ?>"
-        alt="User Picture"
-        id="userImage">
+            alt="User Picture"
+            id="userImage">
     </div>
     <div class="user-details">
         <p class="post"><?php echo $_SESSION['role'] ?></p>
@@ -30,17 +30,17 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a href="<?php echo URLROOT; ?>/manager/member">
+                        <a href="<?php echo URLROOT; ?>/manager/members">
                             <span class="text">Members</span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo URLROOT; ?>/manager/trainer">
+                        <a href="<?php echo URLROOT; ?>/manager/trainers">
                             <span class="text">Trainers</span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo URLROOT; ?>/manager/admin">
+                        <a href="<?php echo URLROOT; ?>/manager/admins">
                             <span class="text">Admin</span>
                         </a>
                     </li>
@@ -66,7 +66,7 @@
             </li>
             <li>
                 <a href="<?php echo URLROOT; ?>/manager/membership_plan">
-                <i class="ph ph-clock-user"></i>
+                    <i class="ph ph-clock-user"></i>
                     <span class="text">Membership Plans</span>
                 </a>
             </li>

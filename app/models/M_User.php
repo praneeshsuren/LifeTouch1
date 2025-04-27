@@ -13,6 +13,18 @@ class M_User
         'password'
     ];
 
+    public function updatePassword($userId, $hashedPassword)
+{
+    return $this->query(
+        "UPDATE users SET password = :password WHERE user_id = :user_id",
+        [
+            ':password' => $hashedPassword,
+            ':user_id' => $userId
+        ]
+    );
+}
+
+    
     public function usernameExists($username)
     {
         $query = "SELECT * FROM {$this->table} WHERE username = :username LIMIT 1";
@@ -67,15 +79,5 @@ class M_User
     {
         $data = ['user_id' => $user_id];
         return $this->first($data);
-    }
-
-    public function updatePassword($user_id, $new_password)
-    {
-        $data = [
-            'user_id' => $user_id,
-            'password' => $new_password
-        ];
-
-        return $this->update($user_id, $data, 'user_id');
     }
 }

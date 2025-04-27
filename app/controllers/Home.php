@@ -1,5 +1,9 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
 class Home extends Controller
 {
     public function index()
@@ -18,37 +22,83 @@ class Home extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $joinModel = new M_JoinEvent();
+            $eventModel = new M_Event();
 
             $data = [
-                'event_id'      => $_POST['event_id'],
-                'full_name'     => trim($_POST['full_name']),
-                'nic'           => trim($_POST['nic']),
-                'is_member'     => isset($_POST['is_member']) ? 1:0,
+                'event_id'          => $_POST['event_id'],
+                'full_name'         => trim($_POST['full_name']),
+                'nic'               => trim($_POST['nic']),
+                'is_member'         => isset($_POST['is_member']) ? 1 : 0,
                 'membership_number' => $_POST['membership_number'] ?? null,
-                'contact_no'    => trim($_POST['contact_no']),
-                
+                'email'             => trim($_POST['email']),
             ];
-           
-           // ACTUALLY PERFORM VALIDATION
-        if ($joinModel->validate($data)) {
-            if ($joinModel->insert($data)) {
-                // success
-                redirect('home?scroll=plans');
+
+            if ($joinModel->validate($data)) {
+                if ($joinModel->insert($data)) {
+                    // Fetch event details
+                    $eventDetails = $eventModel->getEventById($data['event_id']);
+
+                    if ($eventDetails) {
+                        $eventName = $eventDetails->name;
+                        $eventDate = date('F j, Y', strtotime($eventDetails->event_date));
+                        $startTime = date('g:i A', strtotime($eventDetails->start_time));
+                        $eventLocation = $eventDetails->location;
+
+
+                        $mail = new PHPMailer(true);//throw an new exception if something goes wrong
+                        try {
+                            //Server settings
+                            $mail->isSMTP();
+                            $mail->Host = 'smtp.gmail.com'; //specify smtp server
+                            $mail->SMTPAuth = true; //ensure that the sender has permission to send emails
+                            $mail->Username = 'amandanethmini100@gmail.com'; // Your Gmail
+                            $mail->Password = 'niib zlpx xskb bmag'; // App password
+                            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                            $mail->Port = 587;
+
+                            //Recipients
+                            $mail->setFrom('amandanethmini100@gmail.com', 'Life Touch Fitness');
+                            $mail->addAddress($data['email'], $data['full_name']);
+
+                            //Content
+                            $mail->isHTML(true);
+                            $mail->Subject = 'Confirmation: Event Registration';
+                            $mail->Body    = "
+                            Dear {$data['full_name']},<br><br>
+                            Thank you for registering for the event: <strong>{$eventName}</strong>.<br>
+                            <ul>
+                                <li><strong>Date:</strong> {$eventDate}</li>
+                                <li><strong>Time:</strong> {$startTime}</li>
+                                <li><strong>Location:</strong> {$eventLocation}</li>
+                            </ul>
+                            We look forward to seeing you there!<br><br>
+                            Best regards,<br>
+                            <strong>Life Touch Fitness Team</strong>
+                        ";
+
+                            $mail->send();
+                            redirect('home?scroll=plans');
+                        } catch (Exception $e) {
+                            $_SESSION['join_errors'] = ['email' => 'Mailer Error: ' . $mail->ErrorInfo];
+                            $_SESSION['form_data'] = $data;
+                            redirect('home?scroll=plans');
+                        }
+                    }
+                } else {
+                    $_SESSION['join_errors'] = ['database' => 'Failed to save registration'];
+                    $_SESSION['form_data'] = $data;
+                    redirect('home?scroll=plans');
+                }
             } else {
-                $_SESSION['join_errors'] = ['database' => 'Failed to save registration'];
+                $_SESSION['join_errors'] = $joinModel->getErrors();
                 $_SESSION['form_data'] = $data;
                 redirect('home?scroll=plans');
             }
         } else {
-            // Store validation errors from model
-            $_SESSION['join_errors'] = $joinModel->getErrors();
-            $_SESSION['form_data'] = $data;
             redirect('home?scroll=plans');
         }
-    } else {
-        redirect('home?scroll=plans');
     }
-}
+
 
 public function checkout(){
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -174,7 +224,14 @@ public function Payment($action = null) {
 
 public function  contact($action = null) {
     $contact_Model = new M_Contact();
-    if ($action === 'add') {
+    $contact = $contact_Model->findAll();
+    if ($action === 'api') {
+        header('Content-Type: application/json');
+        echo json_encode([
+            'contact' => $contact
+        ]);
+        exit;
+    } elseif ($action === 'add') {
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
             header('Content-Type: application/json');
 

@@ -31,36 +31,32 @@
           <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
       </div>
-
-      <!-- Current Membership Section -->
-      <div class="current-membership">
-        <h2 class="section-title">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 6L9 17l-5-5"></path>
-          </svg>
-          Your Current Membership
-        </h2>
-        <div class="membership-details" id="membershipDetails">
-          <!-- Dynamically populated -->
-        </div>
-        <div class="membership-progress">
-          <div class="progress-bar-container">
-            <div class="progress-bar" id="progressBar"></div>
-          </div>
-          <div class="progress-text" id="progressText">
-            <span id="progressPercentage"></span>
-            <span id="daysRemaining"></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- memberships -->
       <div class="cards">
         <div class="card shadow">
         </div>
       </div>
-
-      <div id="bookingModal" class="modal" >
+      <div class="paymentBox">
+        <div class="payment-history">
+          <h1 class="payment-title">Your Latest Plan</h1>
+          <table class="paymentHistoryTable">
+            <thead>
+              <tr>
+                <th>Membership plan</th>
+                <th>Price</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          
+        </div>
+        <div>
+          <button type="submit" id ="renew-btn" class="payment-form-submit-button">Renew</button>
+        </div>
+      </div>
+      <div id="bookingModal" class="modal">
         <div class="modal-content">
           <span class="close">&times;</span>
           <div class="bookingModal-body">
@@ -107,8 +103,8 @@
               return response.json();
             })
             .then(data =>{
-              // console.log('Plans:',data.plan);
-              // console.log("Subscription:", data.subscription);
+              console.log('Plans:',data.plan);
+              console.log("Subscription:", data.subscription);
               const plan = Array.isArray(data.plan) ? data.plan : [];
               planCards(plan);
               const subscription = Array.isArray(data.subscription) ? data.subscription[0] : null;
@@ -122,14 +118,13 @@
                   const mergedSubscription = {
                     ...subscription, ...selectedPlan,id: subscription.id
                   };
-                //  console.log("mergedsubscription",mergedSubscription);
+                  console.log("me",mergedSubscription);
                   window.mergedSubscriptions = mergedSubscription;
                   subscriptionTable(window.mergedSubscriptions);
                 } else {
                   console.log("No plan found matching the subscription plan id.");
                 }
               }
-
             })
             .catch(error => console.error('Error fetching plans details:', error));
 
@@ -152,6 +147,25 @@
 
           submitButton.disabled = true;
           this.submit();
+        });
+
+        const renewBtn = document.getElementById("renew-btn");
+        renewBtn.addEventListener("click", function (e) {
+
+          if(!window.mergedSubscriptions){
+            alert("You have no active subscription to renew.");
+            return;
+          }
+          const expiry = calculateExpiryDate(today,window.mergedSubscriptions.plan);
+      
+          document.getElementById('package').value =window.mergedSubscriptions.plan;
+          document.getElementById('amount').value = window.mergedSubscriptions.amount;
+          document.getElementById('paymentStartDate').value = today;
+          document.getElementById('paymentExpireDate').value = expiry;
+          document.getElementById('package_id').value = window.mergedSubscriptions.plan_id
+          document.getElementById('payment_type').value = 'renew';  
+
+          bookingModal.style.display = 'block';
         });
       });
 
@@ -218,102 +232,26 @@
         });
       }
 
-      function subscriptionTable(currentMembership){
-        const membershipDetails = document.getElementById('membershipDetails');
-        const progressBarContainer = document.querySelector('.progress-bar-container');
-        const progressText = document.getElementById('progressText');
-        const progressBar = document.getElementById('progressBar');
-        // Case 1: No membership
-        if (!currentMembership) {
-          membershipDetails.innerHTML = `
-            <div class="no-membership-message">
-              <div class="no-membership-text">You have no active membership.</div>
-            </div>
-          `;
-          progressBarContainer.style.display = 'none';
-          progressText.style.display = 'none';
+      function subscriptionTable(subscription){
+        tbody = document.querySelector(".paymentHistoryTable tbody");
+        tbody.innerHTML = "";
+
+        if (!subscription) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td colspan="4" style="text-align: center;">No subscription records found.</td>`;
+          tbody.appendChild(tr);
           return;
+        } else {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${subscription.plan}</td>
+            <td>Rs ${subscription.amount}.00</td>
+            <td>${subscription.start_date}</td>
+            <td>${subscription.end_date}</td>
+            <td>${subscription.status}</td>`;
+
+          tbody.appendChild(tr);
         }
-
-        // Case 3: Active membership (original behavior)
-        const statusClass = currentMembership.status.toLowerCase() === 'inactive' ? 'status-inactive' : 'status-active';
-        const billingLabel = currentMembership.status.toLowerCase() === 'inactive' ? 'End Date' : 'Next Billing';
-
-        membershipDetails.innerHTML = `
-          <div class="detail-item">
-            <div class="detail-label">Plan</div>
-            <div class="detail-value">${currentMembership.plan}</div>
-          </div>
-          <div class="detail-item">
-            <div class="detail-label">Status</div>
-            <div class="detail-value">
-              <span class="status-badge ${statusClass}">${currentMembership.status}</span>
-            </div>
-          </div>
-          <div class="detail-item">
-            <div class="detail-label">Start Date</div>
-            <div class="detail-value">${currentMembership.start_date}</div>
-          </div>
-          <div class="detail-item">
-            <div class="detail-label">${billingLabel}</div>
-            <div class="detail-value">${currentMembership.end_date}</div>
-          </div>
-          ${currentMembership.status.toLowerCase() === 'inactive' ? `
-            <div class="inactive-membership-message">
-              <button class="renew-plan-button">Renew Plan</button>
-            </div>
-          ` : ''}
-        `;
-
-        // Case 2: Inactive membership
-        if (currentMembership.status.toLowerCase() === 'inactive') {
-          progressBarContainer.style.display = 'block';
-          progressText.style.display = 'flex';
-          progressText.style.display = 'none';
-          progressBar.classList.add('progress-inactive'); 
-          progressBar.style.width = '100%';
-
-          const renewPlanButton = membershipDetails.querySelector('.renew-plan-button');
-          if (renewPlanButton) {
-            renewPlanButton.addEventListener('click', () => {
-              if(!window.mergedSubscriptions){
-                alert("You have no active subscription to renew.");
-                return;
-              }
-              const expiry = calculateExpiryDate(today,window.mergedSubscriptions.plan);
-          
-              document.getElementById('package').value =window.mergedSubscriptions.plan;
-              document.getElementById('amount').value = window.mergedSubscriptions.amount;
-              document.getElementById('paymentStartDate').value = today;
-              document.getElementById('paymentExpireDate').value = expiry;
-              document.getElementById('package_id').value = window.mergedSubscriptions.plan_id
-              document.getElementById('payment_type').value = 'renew';  
-
-              bookingModal.style.display = 'block';
-            });
-          }
-          return;
-        }
-
-        // active
-        progressBarContainer.style.display = 'block';
-        progressText.style.display = 'flex';
-
-        // Calculate and display progress
-        const startDate = new Date(currentMembership.start_date);
-        const endDate = new Date(currentMembership.end_date);
-        const now = new Date();
-        now.setHours(0,0,0,0);
-        startDate.setHours(0,0,0,0);
-        endDate.setHours(0,0,0,0);
-        
-        const todalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 *24));
-        const pastDays = Math.ceil((now - startDate)/ (1000 * 60 * 60 *24));
-        const progress = Math.min(100, Math.max(0, (pastDays / todalDays) * 100));
-        const daysRemain = Math.max(0, todalDays - pastDays);
-        document.getElementById('progressBar').style.width = `${progress}%`;
-        document.getElementById('progressPercentage').textContent = `${Math.round(progress)}% of membership period completed`;
-        document.getElementById('daysRemaining').textContent = `${daysRemain} days remaining`;
       }
 
       function paymentModal(){

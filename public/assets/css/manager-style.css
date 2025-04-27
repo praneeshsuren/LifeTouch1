@@ -69,7 +69,6 @@ body.dark {
 
 .user-img img {
     width: 100%;
-    height: 100%;
     object-fit: cover;
 }
 
@@ -435,12 +434,12 @@ main > .title > .greeting > .bell-container:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
-main > .title > .greeting > .bell-container .notification-icon {
+main > .title > .greeting > .bell-container .notification {
     font-size: 1.5rem; /* Size of the bell icon */
     color: var(--text-color); /* Adjust the bell color */
 }
 
-main > .title > .greeting > .bell-container:hover .notification-icon {
+main > .title > .greeting > .bell-container:hover .notification {
     transform: scale(1.3); /* Pop out effect */
     animation: vibrate 0.3s ease-in-out infinite; /* Vibrate effect */
 }
@@ -731,93 +730,350 @@ body.dark form button:hover {
 }
 
 /*Announcement Main*/
-/* Announcements Page */
-main .announcementsContainer{
-    margin-top: 2rem;
-    padding-bottom: 2rem;
+main .announcements-container{
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 2rem;
+}
+
+main .announcements-container .searchBar {
     width: 100%;
-}
-
-main .announcementsContainer .announcement-card{
-    background-color: var(--sidebar-color);
-    width: 90%;
-    padding: 2rem 2rem;
-    border-radius: 1.5rem;
-    display: block;
-}
-
-main .announcementsContainer .announcement-card .announcementCard-Header{
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
+    margin-top: 1rem;
+    z-index: 1000;
 }
 
-main .announcementsContainer .announcement-card .announcementCard-Header .details{
+main .announcements-container .searchBar input[type="text"] {
+    width: 100%;
+    max-width: 400px; /* Limit maximum width for better layout on large screens */
+    padding: 0.75rem 1rem; /* Padding for a comfortable input size */
+    border: 1px solid #ddd; /* Light border for input */
+    border-radius: 2rem; /* Rounded edges for the input box */
+    font-size: 1rem; /* Comfortable font size */
+    color: #495057; /* Dark gray text */
+    background-color: #ffffff; /* White background for contrast */
+    outline: none; /* Remove outline on focus */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+    transition: all 0.3s ease; /* Smooth transition for hover/focus */
+    margin-left: 3rem;
+}
+
+main .announcements-container .searchBar input[type="text"]:focus {
+    border-color: var(--primary-color); /* Primary purple-blue border on focus */
+    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4); /* Glow effect */
+}
+
+main .announcements-container .heading{
     display: flex;
     align-items: center;
-    width: 92%;
+    justify-content: space-between;
+    width: 80%;
 }
 
-main .announcementsContainer .announcement-card .announcementCard-Header .details .profile-img{
+main .announcements-container .table-container {
+    width: 80%;
+    height: 100%;
+    padding: 2rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    background-color: var(--sidebar-color);
+}
+
+main .announcements-container .table-container .heading {
     display: flex;
-    margin-left: 0.5rem;
-    width: 4.5rem;
-    height: 4.5rem;
-    border-radius: 50%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    width: 100%;
 }
 
-main .announcementsContainer .announcement-card .announcementCard-Header .details .profile-img img{
+main .announcements-container .table-container .heading .btn {
+    padding: 12px 30px;
+    background-color: var(--primary-color); /* Purple-blue button background */
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 3rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none;
+    text-wrap: nowrap;
+}
+
+main .announcements-container .table-container .heading .btn:hover {
+    transform: scale(1.05);
+}
+
+/* Table Scrolling */
+main .announcements-container .table-container .table-scroll {
+    border: 1px solid #ddd;
+}
+
+main .announcements-container .table-container .table-scroll table {
+    width: 100%;
+    height: 100%; /* Adjust the height as needed */
+    border-collapse: collapse;
+    overflow-y: auto;
+}
+
+main .announcements-container .table-container .table-scroll table tbody tr:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+main .announcements-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+main .announcements-container table thead {
+    background-color: #f1f1f1;
+}
+
+main .announcements-container table thead td {
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+}
+
+main .announcements-container table tbody tr {
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.2s ease;
+}
+
+main .announcements-container table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+main .announcements-container table td {
+    padding: 1rem;
+}
+
+main .announcements-container table td a {
+    color: #007bff;
+    margin-right: 10px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+main .announcements-container table td a:hover {
+    color: #0056b3;
+}
+
+main .announcements-container table tbody tr td[colspan] {
+    text-align: center;
+    vertical-align: middle;
+    height: 100px; /* Set a height for the row to make the message more prominent */
+    color: #6c757d; /* Optional: Add a soft color for the message */
+    font-size: 1rem; /* Adjust font size */
+    font-style: italic; /* Optional: Italicize the message for emphasis */
+}
+
+/* Profile Pic and Info */
+.profile-pic {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic img {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
+    margin-right: 10px;
+}
+
+.person-info h4 {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.person-info small {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    main {
+        margin-left: 200px;
+        padding: 15px;
+    }
+
+    main .announcements-container .heading h2 {
+        font-size: 16px;
+    }
+
+    main .announcements-container .heading .btn {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    main .announcements-container table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+/* Modal */
+main .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+main .modal-content {
+    background: white;
+    padding: 3rem;
+    border-radius: 25px;
+    width: 35%;
+    overflow: hidden; /* Prevent overflow */
+    max-height: 80vh; /* Limit height to viewport */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+main .modal-content .details{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+main .modal-content .details .profile-img{
+    display: flex;
+    width: 4.75rem;
+}
+
+main .modal-content .details .profile-img img{
+    border-radius: 50%;
+    width: 100%;
     object-fit: cover;
 }
 
-main .announcementsContainer .announcement-card .announcementCard-Header .details .name-and-title{
+main .modal-content .details .name-and-title{
     margin-left: 1rem;
+    width: 100%;
     display: block;
     color: var(--hover-btn);
     text-align: left;
 }
 
-main .announcementsContainer .announcement-card .announcementCard-Header .details .name-and-title h3{
+main .modal-content .details .name-and-title h3{
+    font-size: 1rem;
     margin-bottom: 5px
 }
 
-main .announcementsContainer .announcement-card .description{
-    margin-top: 1.5rem;
-    margin-left: 1rem;
-    color: var(--hover-btn);
+main .modal-content h3{
+    margin: 10px 0;
+}
+
+main .modal-content #modalSubject{
+    font-size: 1.4rem;
+    width: 100%;
+}
+
+main .modal-body p {
+    margin: 5px 0;
+    color: #555;
     text-align: left;
 }
 
-main .announcementsContainer .announcement-card .announcementCard-Footer{
+main .modal-content #modalDescription{
+    margin: 2.5rem 0;
+    width: 100%;
+    font-size: 1rem;
+    height: auto; /* Allow dynamic height */
+    resize: vertical;  /* Allow vertical resizing */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    width: 100%;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar {
+    width: 8px;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+main .modal-content #modalDescription::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+main .modal-body .date-time{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 1.5rem;
-    margin-left: 0.5rem;
     color: var(--hover-btn);
 }
 
-main .announcementsContainer .announcement-card .announcementCard-Footer .announcement-time{
+main .modal-body .date-time .announcement-date{
     display: flex;
     align-items: center;
 }
 
-main .announcementsContainer .announcement-card .announcementCard-Footer .announcement-date{
+main .modal-body .date-time .announcement-time{
     display: flex;
     align-items: center;
 }
 
-main .announcementsContainer .announcement-card .announcementCard-Footer i{
+main .modal-body .date-time i{
     font-size: 1.2rem;
-    margin-right: 0.5rem;
+    margin-right: 6px;
+}
+
+main .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+main .modal-body .modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 2rem;
+}
+
+
+.heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #444;
+}
+
+/* Dark Mode for .heading */
+body.dark .heading {
+    color: #CCC;
 }
 
 
@@ -3037,114 +3293,3 @@ main .retrieve-users .searchBar .add-user a button:hover {
   .delete-row-btn:hover {
     background-color: darkred;
   }
-
-form {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    font-family: 'Poppins', sans-serif;
-}
-
-.supplement-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.supplement-picture {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px dashed #ccc;
-    padding: 10px;
-    transition: all 0.3s ease;
-}
-
-.supplement-picture:hover {
-    border-color: #7D5FFF;
-}
-
-.file-upload-text {
-    text-align: center;
-    font-size: 14px;
-    color: #666;
-    margin-top: 10px;
-}
-
-.file-upload-input {
-    display: block;
-    margin: 15px auto;
-    text-align: center;
-}
-
-.input-container1 {
-    margin-bottom: 20px;
-}
-
-.label {
-    display: block;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 8px;
-    font-size: 15px;
-}
-
-.input-container1 input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    font-size: 14px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.input-container1 input:focus {
-    outline: none;
-    border-color: #7D5FFF;
-    box-shadow: 0 0 8px rgba(125, 95, 255, 0.3);
-    background-color: #fff;
-}
-
-.create-supplement {
-    text-align: center;
-    margin-top: 30px;
-}
-
-.save-btn {
-    background-color: #7D5FFF;
-    color: #fff;
-    padding: 12px 28px;
-    font-size: 16px;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.save-btn:hover {
-    background-color: #5a3fe7;
-}
-
-/* Responsive improvements */
-@media (max-width: 600px) {
-    form {
-        padding: 20px;
-    }
-    
-    .supplement-picture {
-        width: 120px;
-        height: 120px;
-    }
-}
-
-.error {
-    color: red;
-    font-size: 0.8em;
-}

@@ -37,7 +37,9 @@
         </div>
 
         <div class="table-container">
-        <div class="download-button" id="downloadPDF">
+
+            
+            <div class="download-button" id="downloadPDF" style="margin-left: 10px;">
                 <div class="download-wrapper">
                     <div class="download-text">Download</div>
                     <span class="download-icon">
@@ -47,16 +49,18 @@
                     </span>
                 </div>
             </div>
+            <a href="<?php echo URLROOT; ?>/report/event_report" class="btn" style="position: absolute; top: 90px; right: 60px;">Back</a>
+
             <div class="user-table-wrapper">
-                
+
                 <table class='user-table'>
                     <thead>
                         <tr>
                             <th>Full Name</th>
-                            <th>Is Member</th>
+                            <th>Is a Gym Member</th>
                             <th>Membership Number</th>
                             <th>NIC</th>
-                            <th>Contact</th>
+                            <th>Email</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,7 +71,7 @@
                                     <td><?php echo $participant->is_member ? 'Yes' : 'No'; ?></td>
                                     <td><?php echo htmlspecialchars($participant->membership_number ?? '—'); ?></td>
                                     <td><?php echo htmlspecialchars($participant->nic); ?></td>
-                                    <td><?php echo htmlspecialchars($participant->contact_no); ?></td>
+                                    <td><?php echo htmlspecialchars($participant->email); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -78,7 +82,7 @@
                     </tbody>
                 </table>
 
-                </table>
+
             </div>
         </div>
     </main>
@@ -88,21 +92,23 @@
 
 
     <script>
-    // Ensure this is set *before* the click handler
-    const eventId = <?php echo json_encode($data['event_id'] ?? null); ?>;
-</script>
+        // Ensure this is set *before* the click handler
+        const eventId = <?php echo json_encode($data['event_id'] ?? null); ?>;
+    </script>
 
-<script>
-    document.getElementById("downloadPDF").addEventListener("click", function(event) {
-        event.preventDefault();
-        const eventId = <?php echo json_encode($data['event_id']); ?>;
-        
-        // Open in new tab/window
-        window.open(
-            `<?php echo URLROOT; ?>/EventParticipant_pdf/index/${eventId}`,
-            '_blank' // This makes it open in a new tab
-        );
-    });
-</script>
+    <script>
+        document.getElementById("downloadPDF").addEventListener("click", function(event) {
+            event.preventDefault();
+            const eventId = <?php echo json_encode($data['event_id']); ?>;
+
+            // Open in new tab/window
+            window.open(
+                `<?php echo URLROOT; ?>/EventParticipant_pdf/index/${eventId}`,
+                '_blank' // This makes it open in a new tab
+            );
+        });
+    </script>
+
 </body>
+
 </html>

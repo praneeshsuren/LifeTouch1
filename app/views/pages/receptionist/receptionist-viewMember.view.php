@@ -206,7 +206,7 @@
     </div>
 
   </main>
-  
+
   <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time(); ?>"></script>
   <script>
   // Edit button functionality

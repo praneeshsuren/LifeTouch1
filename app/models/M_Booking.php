@@ -39,7 +39,7 @@
                 b.*, 
                 m.member_id AS member_id, 
                 CONCAT(m.first_name, ' ', m.last_name) AS member_name, 
-                ts.slot AS timeslot
+                ts.slot AS timeslot, m.image
                 FROM booking AS b
                 JOIN timeslot ts ON b.timeslot_id = ts.id
                 JOIN member m ON b.member_id = m.member_id
@@ -47,51 +47,6 @@
             ";
 
             return $this->query($query, ['trainer_id' => $trainer_id]);
-        }
-
-        public function getTrainerCalendarMonth($trainer_id, $month, $year){
-            $startOfMonth = date('Y-m-01', strtotime("$year-$month-01"));
-            $endOfMonth = date('Y-m-t', strtotime("$year-$month-01"));
-   
-            $query = "
-                SELECT 
-                b.*, 
-                m.member_id AS member_id, 
-                CONCAT(m.first_name, ' ', m.last_name) AS member_name, 
-                ts.slot AS timeslot
-                FROM booking AS b
-                JOIN timeslot ts ON b.timeslot_id = ts.id
-                JOIN member m ON b.member_id = m.member_id
-                WHERE b.trainer_id = :trainer_id AND DATE(b.booking_date) BETWEEN :startOfMonth AND :endOfMonth
-                ORDER BY b.booking_date ASC
-            ";
-
-            $params = [
-                'trainer_id' => $trainer_id,
-                'startOfMonth' => $startOfMonth,
-                'endOfMonth' => $endOfMonth
-            ];
-
-            $bookingData = $this->query($query, $params);
-
-            // Initialize empty  array
-            $bookingByDate = [];
-            
-            // If no records found, return an empty object instead of null or an error
-            if (!empty($bookingData)) {
-                foreach ($bookingData as $booking) {
-                    $bookingDate = $booking->booking_date;
-                    if (!isset($bookingByDate[$bookingDate])) {
-                        $bookingByDate[$bookingDate] = [];
-                    }
-                    $bookingByDate[$bookingDate][] = [
-                        'member_name' => $booking->member_name,
-                        'timeslot' => $booking->timeslot
-                    ];
-                }
-            }
-
-            return $bookingByDate;
         }
 
         public function bookingsForMember($member_id){

@@ -88,7 +88,7 @@
                                         <td>
 
                                             </a> <a href="<?php echo URLROOT; ?>/service/deleteService/<?php echo $service->service_id; ?>" onclick="return confirm('Are you sure you want to delete this equipment?');">
-                                                <button style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.2em;">X</button>
+                                                <button style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.5em;">X</button>
                                             </a>
                                         </td>
                                     </tr>
@@ -109,7 +109,7 @@
                     <div class="alert">
                         <ul>
                             <?php foreach ($_SESSION['form_errors'] as $field => $error): ?>
-                                </strong> <?php echo $error; ?>
+                                </strong> <?php echo $error; ?><br>
                             <?php endforeach; ?>
                         </ul>
                     </div>
@@ -122,21 +122,21 @@
 
                     <div class="input-container">
                         <label for="service_date">Service Date:</label>
-                        <input type="date" id="service_date" name="service_date" required>
+                        <input type="date" id="service_date" name="service_date" value="<?php echo isset($_SESSION['form_data']['service_date']) ? htmlspecialchars($_SESSION['form_data']['service_date']) : ''; ?>" required>
                         <?php if (!empty($errors['service_date'])): ?>
                             <div class="error"><?php echo $errors['service_date']; ?></div>
                         <?php endif; ?>
                     </div>
                     <div class="input-container">
                         <label for="next_service_date">Next service Date:</label>
-                        <input type="date" id="next_service_date" name="next_service_date" required>
+                        <input type="date" id="next_service_date" name="next_service_date" value="<?php echo isset($_SESSION['form_data']['next_service_date']) ? htmlspecialchars($_SESSION['form_data']['next_service_date']) : ''; ?>" required>
                         <?php if (!empty($errors['next_service_date'])): ?>
                             <div class="error"><?php echo $errors['next_service_date']; ?></div>
                         <?php endif; ?>
                     </div>
                     <div class="input-container">
                         <label for="service_cost">Service Cost:</label>
-                        <input type="text" id="service_cost" name="service_cost" required>
+                        <input type="text" id="service_cost" name="service_cost" value="<?php echo isset($_SESSION['form_data']['service_cost']) ? htmlspecialchars($_SESSION['form_data']['service_cost']) : ''; ?>" required>
                         <?php if (!empty($errors['service_cost'])): ?>
                             <div class="error"><?php echo $errors['service_cost']; ?></div>
                         <?php endif; ?>
@@ -154,6 +154,11 @@
     <script>
 
     </script>
+    <?php
+    unset($_SESSION['form_data']);
+    unset($_SESSION['form_errors']);
+    ?>
+
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
 </body>
 

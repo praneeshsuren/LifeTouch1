@@ -29,7 +29,7 @@ class EventParticipant_pdf extends Controller
 
             // Get event data
             $eventModel = new M_Event();
-            $eventArr = $eventModel->getEventById($event_id);
+            $eventArr = $eventModel->getEventByIdd($event_id);
             $event = $eventArr[0] ?? null;
 
 
@@ -104,7 +104,8 @@ class EventParticipant_pdf extends Controller
                 table { width: 100%; border-collapse: collapse; margin-top: 20px; }
                 th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
                 th { background-color:rgb(130, 165, 205); color: white; }
-                tr:nth-child(even) { background-color: #f9f9f9;.footer { margin-top: 30px; font-size: 12px; text-align: center; }
+tr:nth-child(even) { background-color: #f9f9f9; }
+.footer { margin-top: 30px; font-size: 12px; text-align: center; }
 }
             </style>
         </head>
@@ -122,7 +123,7 @@ class EventParticipant_pdf extends Controller
                         <th>Member</th>
                         <th>Membership No</th>
                         <th>NIC</th>
-                        <th>Contact</th>
+                        <th>Email</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -135,7 +136,7 @@ class EventParticipant_pdf extends Controller
                     <td>' . ($p->is_member ? 'Yes' : 'No') . '</td>
                     <td>' . htmlspecialchars($p->membership_number ?? '—') . '</td>
                     <td>' . htmlspecialchars($p->nic) . '</td>
-                    <td>' . htmlspecialchars($p->contact_no) . '</td>
+                    <td>' . htmlspecialchars($p->email) . '</td>
                 </tr>
             ';
             }

@@ -18,7 +18,26 @@ class M_Equipment
         'purchase_shop',
     ];
 
+    public function getEquipmentPurchaseSum($startDate = null, $endDate = null)
+    {
+        if ($startDate && $endDate) {
+            $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE purchase_date BETWEEN :startDate AND :endDate";
+            $params = ['startDate' => $startDate, 'endDate' => $endDate];
+        } else {
+            $currentMonth = date('Y-m');
+            $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE DATE_FORMAT(purchase_date, '%Y-%m') = :currentMonth";
+            $params = ['currentMonth' => $currentMonth];
+        }
     
+        $result = $this->query($query, $params);
+        if (!empty($result)) {
+            return $result[0]->total ?? 0;
+        }
+        return 0;
+    }
+    
+
+
     // Validate input data
     public function validate($data)
     {
@@ -68,26 +87,4 @@ class M_Equipment
     {
         return $this->errors;
     }
-
-    public function countAllEquipment()
-    {
-        // SQL query to count all equipment
-        $sql = "SELECT COUNT(*) as total FROM $this->table";
-
-        // Execute the query and fetch the result
-        $result = $this->get_row($sql);
-
-        // Return the total count
-        return $result ? $result->total : 0;
-    }
-
-    public function getSuggestionsByName($query) {
-        $query = "%" . strtolower($query) . "%";
-
-        $sql = "SELECT name, equipment_id, file FROM $this->table WHERE LOWER(name) LIKE :query"; 
-        
-        $data = ['query' => $query];
-        return $this->query($sql, $data);
-    }
-    
 }

@@ -524,12 +524,12 @@ main > .title > .greeting > .bell-container:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
-main > .title > .greeting > .bell-container .notification-icon {
+main > .title > .greeting > .bell-container .notification {
     font-size: 1.5rem; /* Size of the bell icon */
     color: var(--text-color); /* Adjust the bell color */
 }
 
-main > .title > .greeting > .bell-container:hover .notification-icon {
+main > .title > .greeting > .bell-container:hover .notification {
     transform: scale(1.3); /* Pop out effect */
     animation: vibrate 0.3s ease-in-out infinite; /* Vibrate effect */
 }
@@ -1174,14 +1174,11 @@ main .announcementsContainer .announcement-card .announcementCard-Header .detail
     display: flex;
     margin-left: 0.5rem;
     width: 4.5rem;
-    height: 4.5rem;
-    border-radius: 50%;
 }
 
 main .announcementsContainer .announcement-card .announcementCard-Header .details .profile-img img{
     border-radius: 50%;
     width: 100%;
-    height: 100%;
     object-fit: cover;
 }
 
@@ -1519,45 +1516,70 @@ main .calendarContainer {
     color: var(--sidebar-color);
 }
 
-.booking-dot {
-    height: 8px;
-    width: 8px;
-    background-color: #4a6fa5;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 3px;
-  }
-  
-  .booked-count {
-      color:  #4a6fa5;
-      width: 100px;
-      height: 20px;
-      font-size: 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 4px auto;
-  }
-  
-  
-  .booking-item {
-    padding: 15px;
-    margin-bottom: 10px;
+.booked-count {
+    background-color: #007bff;
+    color: white;
+    width: 40px;
+    height: 20px;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px auto;
+}
+
+.gotoToday {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    gap: 5px;
+    padding: 0 20px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    margin-top: 0.5rem;
+}
+
+.gotoToday .goto{
+    display: flex;
+    align-items: center;
     border-radius: 5px;
-    background-color: #f8f9fa;
-    border-left: 4px solid #4a6fa5;
-  }
-  
-  .booking-time {
-    font-weight: bold;
-    color: #4a6fa5;
-  }
-  
-  .booking-title {
-    font-size: 16px;
-    margin: 5px 0;
-  }
-  
+    overflow: hidden;
+    border: 1px solid var(--text-color);
+}
+
+.gotoToday .goto input {
+    background-color: var(--sidebar-color);
+    width: 100%;
+    height: 30px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding: 0 20px;
+    color: var(--text-color);
+}
+
+.gotoToday button {
+    padding: 5px 10px;
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
+    background-color: transparent;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.gotoToday button:hover {
+    color: #fff;
+    background-color: var(--primary-color);
+}
+
+.gotoToday .goto button {
+    border: none;
+    border-left: 1px solid var(--text-color);
+    border-radius: 0;
+}
+
 .bookingModal {
     display:none; /* Hidden by default */
     position: fixed;
@@ -1597,6 +1619,193 @@ main .calendarContainer {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+.trainerviewbtn-profileTable-container{
+    margin-top:1rem;
+    color: var(--hover-btn);
+}
+
+.trainerviewbtn-profileTable-container table{
+    width: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.trainerviewbtn-profileTable-container tr{
+    display: grid;
+    grid-template-columns: 110px 160px 180px; 
+}
+
+.trainerviewbtn-profileTable-container td{
+    border-bottom: 1px solid var(--body-color);
+    word-break: break-word;
+}
+
+.trainerviewbtn-profileTable-container tr:hover{
+    background-color: var(--body-color);
+}
+
+.book-btn {
+    text-align: right; 
+    margin:auto;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.book-btn button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px; 
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem; 
+    transition: var(--tran-03); 
+}
+
+/* holiday */
+.select-wrapper {
+    font-size: 15px;
+    margin: 1rem 0;
+}
+
+.select-wrapper label {
+    width: 120px;
+    font-size: 16px;
+    align-items: center;
+    color: var(--hover-btn);
+}
+
+.select-wrapper i {
+    margin-right: 8px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.select-wrapper input[type="date"] {
+    font-size: 15px;
+    width: 100%;
+    background-color: #ccc;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+}
+
+.select-btn, .select-option li {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+.select-btn {
+    height: 35px;
+    padding: 5px 20px;
+    border-radius: 10px;
+    background:#ccc ;
+    justify-content: space-between;
+}
+
+.select-btn i {
+    transition: var(--tran-03);
+}
+
+.select-wrapper.active .select-btn i {
+    transform: rotate(-180deg);
+}
+
+.select-content {
+    display: none;
+    margin-top: 5px;
+    padding: 2px 20px;
+    background: #ccc;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+.select-wrapper.active .select-content {
+    display: block;
+}
+
+.select-content .select-search {
+    margin-top: 5px;
+    position: relative;
+}
+
+.select-search input {
+    background: #ccc;
+    height: 35px;
+    width: 100%;
+    outline: none;
+    border-radius: 10px;
+    padding: 0 15px;
+    border: 1px solid #757575;
+}
+
+.select-content .select-option {
+    margin: 5px 0px;
+    max-height: 98px;
+    overflow-y: auto;
+}
+
+.select-option::-webkit-scrollbar {
+    width: 7px;
+}
+
+.select-option::-webkit-scrollbar-track {
+    background: #b3b3b3;
+    border-radius: 20px;
+}
+
+.select-option::-webkit-scrollbar-thumb {
+    background: #757575;
+    border-radius: 20px;
+}
+.select-option li {
+    height: 30px;
+    border-radius: 5px;
+    padding: 0 10px;
+}
+
+.select-option li:hover {
+    background: #b3b3b3;
+}
+
+
+.edit-dlt {
+    display: flex;
+    gap: 10px; 
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.edit, .dlt {
+    width: 30px; 
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; 
+    cursor: pointer;
+    transition: var(--tran-03);
+    color: #FFF;
+}
+
+.edit {
+    background-color: #007bff;
+}
+
+.dlt {
+    background-color: #d9534f; 
+}
+
+.dlt:hover, .edit:hover {
+    transform: scale(1.05);
+    transition: var(--tran-02); 
+}
+
+.edit i, .dlt i {
+    font-size: 18px; 
 }
 
 /*User Table*/

@@ -90,31 +90,24 @@
     <script>
       document.addEventListener('DOMContentLoaded', () => {
     // Function to get URL parameter by name
-      function getUrlParameter(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-      }
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
 
-      // Get the 'id' parameter (member_id) from the URL
-      const memberId = getUrlParameter('id');
+    // Get the 'id' parameter (member_id) from the URL
+    const memberId = getUrlParameter('id');
 
-      if (memberId) {
-        // Member ID is available, use it in the navigation link
-        document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/trainer/members/viewMember?id=${memberId}`;
-        document.getElementById('attendanceLink').href = `<?php echo URLROOT; ?>/trainer/members/memberAttendance?id=${memberId}`;
-        document.getElementById('workoutSchedulesLink').href = `<?php echo URLROOT; ?>/trainer/members/workoutSchedules?id=${memberId}`;
-        document.getElementById('supplementRecordsLink').href = `<?php echo URLROOT; ?>/trainer/members/memberSupplements?id=${memberId}`;
-      } else {
-        // No member_id in the URL, show a message or handle accordingly
-        alert('No member selected.');
-      }
-
-      // Add event listener to the "Create Workout Schedule" button
-      document.getElementById('createWorkoutBtn').addEventListener('click', () => {
-        window.location.href = `<?php echo URLROOT; ?>/trainer/members/createWorkoutSchedule?id=${memberId}`;
-      });
-
-      
+    if (memberId) {
+      // Member ID is available, use it in the navigation link
+      document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/trainer/members/viewMember?id=${memberId}`;
+      document.getElementById('attendanceLink').href = `<?php echo URLROOT; ?>/trainer/members/memberAttendance?id=${memberId}`;
+      document.getElementById('workoutSchedulesLink').href = `<?php echo URLROOT; ?>/trainer/members/workoutSchedules?id=${memberId}`;
+      document.getElementById('supplementRecordsLink').href = `<?php echo URLROOT; ?>/trainer/members/memberSupplements?id=${memberId}`;
+    } else {
+      // No member_id in the URL, show a message or handle accordingly
+      alert('No member selected.');
+    }
   });
     </script>
 
