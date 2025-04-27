@@ -181,19 +181,3 @@ button[type="submit"]:hover {
 .delete-btn:focus {
     outline: none;
 }
-
-/* Tooltip on hover over the delete button */
-.delete-btn:hover::after {
-    content: "Delete Salary Payment";
-    position: absolute;
-    background-color: #333;
-    color: white;
-    padding: 5px;
-    border-radius: 4px;
-    font-size: 12px;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0.8;
-    z-index: 1;
-}
