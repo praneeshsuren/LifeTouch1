@@ -77,9 +77,7 @@
         <?php if (isset($success)): ?>
             <div class="alert alert-success">
                 <?php echo $success; ?>
-                <?php if (isset($sent_email)): ?>
-                    <br><small>Email sent to: <?php echo htmlspecialchars($sent_email); ?></small>
-                <?php endif; ?>
+                
             </div>
         <?php endif; ?>
 

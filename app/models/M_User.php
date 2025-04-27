@@ -13,11 +13,17 @@ class M_User
         'password'
     ];
 
-    public function updatePassword($userId, $newPassword)
-    {
-        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-        return $this->update($userId, ['password' => $hashedPassword], 'user_id');
-    }
+    public function updatePassword($userId, $hashedPassword)
+{
+    return $this->query(
+        "UPDATE users SET password = :password WHERE user_id = :user_id",
+        [
+            ':password' => $hashedPassword,
+            ':user_id' => $userId
+        ]
+    );
+}
+
     
     public function usernameExists($username)
     {

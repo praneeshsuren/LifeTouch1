@@ -41,18 +41,16 @@
         <div class="login-container">
             <h2 style="color:white">Reset Password</h2>
 
-            <!-- Display error message -->
-            <?php if (isset($error) && !empty($error)): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($error); ?></div>
-            <?php endif; ?>
+            <?php if (isset($error)): ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php endif; ?>
 
-            <!-- Display success message -->
-            <?php if (isset($success) && !empty($success)): ?>
-                <div class="alert alert-success"><?= htmlspecialchars($success); ?></div>
-                <div class="text-center">
-                    <a href="<?php echo URLROOT; ?>/login" class="btn">Go to Login</a>
-                </div>
-            <?php else: ?>
+        <?php if (isset($success)): ?>
+            <div class="alert alert-success">
+                <?php echo $success; ?>
+                
+            </div>
+        <?php endif; ?>
                 <form action="<?php echo URLROOT; ?>/login/resetPassword" method="post">
                     <input type="hidden" name="token" value="<?php echo htmlspecialchars($token ?? ''); ?>">
 
@@ -68,10 +66,11 @@
 
                     <button type="submit" class="btn">Reset Password</button>
                 </form>
-            <?php endif; ?>
+           
         </div>
     </div>
 
     <script src="<?php echo URLROOT; ?>/assets/js/login-script.js"></script>
 </body>
+
 </html>

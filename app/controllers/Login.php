@@ -381,7 +381,6 @@ class Login extends Controller
             $mail->isHTML(true);
             $mail->Subject = 'Password Reset Request - ' . APP_NAME;
             $mail->Body    = "Click here to reset your password: <a href='" . URLROOT . "/login/resetPassword?token=$token'>Reset Password</a>";
-            $mail->AltBody = "Copy this link to reset your password: " . URLROOT . "/login/resetPassword?token=$token";
 
             $mail->send();
             return true;
