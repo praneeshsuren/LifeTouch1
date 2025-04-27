@@ -166,22 +166,56 @@ class Receptionist extends Controller
         }
     }
 
-    public function bookings($action = null)
+    public function timeslot($action = null)
     {
-        $bookingModel = new M_Booking();
-        $bookings = $bookingModel->bookingsForAdmin();
-        $holidayModal = new M_Holiday();
-        $holidays = $holidayModal->findAll();
+        $timeslotModel = new M_Timeslot();
+        $timeslot = $timeslotModel->findAll();
 
         if ($action === 'api') {
             header('Content-Type: application/json');
             echo json_encode([
-                'bookings' => $bookings,
-                'holidays' => $holidays
+                'timeslot' => $timeslot,
             ]);
             exit;
-        }
-        $this->view('receptionist/receptionist-booking');
+        } elseif ($action === 'add'){
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                $slot = $_POST['slot'] ?? null;
+
+                $exist = $timeslotModel->first(['slot' => $slot]);
+                if($exist){
+                    echo json_encode(["success" => false, "message" => "A timeslot already exists."]);
+                    exit;
+                }
+
+                $data = [
+                    'slot' => $slot
+                ];
+
+                $result = $timeslotModel->insert($data);
+
+                echo json_encode([
+                    "success" => $result ? true : false,
+                    "message" => $result ? "Timeslot added successfully!" : "Failed to add timeslot"
+                ]);
+                exit;
+
+            }
+        } elseif ($action === "delete") {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $id = $_POST['timeslot_id'];
+
+                if ($timeslotModel->delete($id)) {
+                    echo json_encode(["success" => true, "message" => "Timeslot deleted successfully!"]);
+                    exit;
+                } else {
+                    echo json_encode(["success" => false, "message" => "Error deleting Timeslot."]);
+                    exit;
+                }
+            }
+            echo json_encode(["success" => false, "message" => "Invalid request."]);
+            exit;
+        } 
+        $this->view('receptionist/receptionist-timeslot');
     }
 
     public function calendar()

@@ -174,14 +174,7 @@ public function Payment($action = null) {
 
 public function  contact($action = null) {
     $contact_Model = new M_Contact();
-    $contact = $contact_Model->findAll();
-    if ($action === 'api') {
-        header('Content-Type: application/json');
-        echo json_encode([
-            'contact' => $contact
-        ]);
-        exit;
-    } elseif ($action === 'add') {
+    if ($action === 'add') {
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
             header('Content-Type: application/json');
 

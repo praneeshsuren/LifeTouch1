@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <main> 
+    <main class="cardmain"> 
         <div class="container">
             <div class="header">
                 <div class="title">
@@ -98,8 +98,8 @@
               .then(data => {
                 plan = data.plan;
                 session = data.session;
-                console.log("plan:",plan);
-                console.log("session:",session);
+                // console.log("plan:",plan);
+                // console.log("session:",session);
 
                 const selectedPlan = plan.find(p => p.id == session.id);
 

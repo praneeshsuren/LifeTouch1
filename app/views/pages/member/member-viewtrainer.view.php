@@ -40,14 +40,14 @@
             const trainerId = urlParams.get('id'); 
             if (trainerId) {
                 const apiUrl = `<?php echo URLROOT; ?>/member/Trainer/viewTrainerapi?id=${trainerId}`;  // This will be replaced by PHP when rendering the page
-            console.log("API URL:", apiUrl);
-            fetch(apiUrl)
+            
+                fetch(apiUrl)
                     .then(response => {
                         console.log('Response Status:', response.status); // Log response status
                         return response.json();
                     })
                     .then(trainer => {
-                        console.log('Fetched Data:', trainer); 
+                        // console.log('Fetched Data:', trainer); 
                         fetchTrainerDetails(trainer, trainerId);
                     })
                     .catch(error => console.error('Error fetching trainer details:', error));
@@ -60,7 +60,7 @@
 
             const bookigbuttonDiv = document.createElement('div');
             bookigbuttonDiv.innerHTML=`
-                <button class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: -10px;margin-bottom:3px;">Booking Reservation</button>
+                <button class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: -10px;margin-bottom:3px;">Schedule</button>
             `;
                         
             const bookingbutton = bookigbuttonDiv.querySelector('.trainerviewbtn-Bookreservationbtn');

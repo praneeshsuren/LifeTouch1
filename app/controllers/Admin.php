@@ -66,9 +66,30 @@
             }
         }
 
-        public function inquiries(){
-            
-            $this->view('admin/admin-inquiries');
+        public function inquiries($action = null){
+            switch($action) {
+                case 'api':
+                    $inquiries_Model = new M_Contact();
+                    $inquiries = $inquiries_Model->findAll();
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'inquiries' => $inquiries
+                    ]);
+                    break;
+                case 'viewInquiryapi':
+                    $inquiries_Model = new M_Contact();
+                    $inquiry = $inquiries_Model->findInquityById($_GET['id']);   
+                    header('Content-Type: application/json');
+                    echo json_encode($inquiry); 
+                    break;
+                case 'viewInquiry' :
+                    $inquiries_Model = new M_Contact();
+                    $this->view('admin/admin-viewInquiry');
+                    break;
+                default:
+                    $this->view('admin/admin-inquiries');
+                    break;
+            }
 
         }
 

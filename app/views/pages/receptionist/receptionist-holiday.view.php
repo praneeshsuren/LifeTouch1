@@ -84,8 +84,8 @@
               return response.json();
           })
           .then(data =>{
-            console.log('Holidays:', data.holidays);
-            console.log('Bookings:', data.bookings);
+            // console.log('Holidays:', data.holidays);
+            // console.log('Bookings:', data.bookings);
             allHolidays = data.holidays; 
             bookings = data.bookings;
             renderTable(allHolidays);

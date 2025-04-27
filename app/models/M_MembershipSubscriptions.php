@@ -21,7 +21,7 @@
             $query = "
                 SELECT p.plan, COUNT(s.id) AS count
                 FROM $this->table s
-                JOIN membership_plan p ON s.plan_id = p.membershipPlan_id
+                JOIN membership_plan p ON s.plan_id = p.id
                 GROUP BY p.plan
             ";
             
@@ -38,7 +38,7 @@
         public function findByMemberId($memberId) {
             $query = "SELECT ms.*, mp.plan FROM 
                     $this->table ms 
-                    JOIN membership_plan mp ON ms.plan_id = mp.membershipPlan_id 
+                    JOIN membership_plan mp ON ms.plan_id = mp.id 
                     WHERE ms.member_id = :member_id";
             
             $params = [

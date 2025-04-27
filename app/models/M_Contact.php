@@ -14,6 +14,11 @@
             'created_at'
         ];
 
+        public function findInquityById($inquiryId) {
+            $data = ['id' => $inquiryId];
+            return $this->first($data);
+        }
+
         public function validate($data) {
             $this->errors = [];
 

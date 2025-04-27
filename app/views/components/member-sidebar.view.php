@@ -47,7 +47,7 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/member/Payment">
+                <a href="<?php echo URLROOT; ?>/member/payment">
                     <i class='icon ph-bold ph-credit-card'></i>
                     <span class="text">Payment</span>
                 </a>
