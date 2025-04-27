@@ -157,22 +157,27 @@ class Receptionist extends Controller
                 break;
 
             case 'memberPaymentHistory':
-                $member_id = $_GET['id'];
+                $memberId = $_GET['id'];
+                if ($memberId) {
 
-                // Create payment model instance
-                $paymentModel = new M_PhysicalPayment(); // Changed to M_Payment since it handles both types
+                    // Create payment model instance
+                    $paymentModel = new M_PhysicalPayment(); // Changed to M_Payment since it handles both types
 
-                // Get payment history
-                $payment_history = $paymentModel->getPaymentHistory($member_id);
+                    // Get payment history
+                    $payment_history = $paymentModel->getPaymentHistory($memberId);
 
-                // Prepare data for view
-                $data = [
-                    'payment_history' => $payment_history,
-                    'member_id' => $member_id
-                ];
+                    // Prepare data for view
+                    $data = [
+                        'payment_history' => $payment_history,
+                        'member_id' => $memberId
+                    ];
 
-                // Load view with data
-                $this->view('receptionist/members/memberPaymentHistory', $data);
+                    // Load view with data
+                    $this->view('receptionist/receptionist-memberPaymentHistory', $data);
+                } else {
+                    $_SESSION['error'] = 'Member not found.';
+                    redirect('receptionist/members');
+                }
                 break;
             default:
                 // Fetch all members and pass to the view

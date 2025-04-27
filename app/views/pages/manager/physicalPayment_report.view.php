@@ -156,7 +156,45 @@
             const endDateInput = document.getElementById("endDate");
             const tableRows = document.querySelectorAll(".user-table tbody tr");
 
+            // Function to validate dates
+            function validateDates() {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+                const today = new Date();
+
+                let isValid = true;
+
+                // Check if start date is in the future
+                if (startDate > today) {
+                    alert("Start date cannot be in the future.");
+                    startDateInput.value = ''; // Clear the start date field
+                    isValid = false;
+                }
+
+                // Check if end date is in the future
+                if (endDate > today) {
+                    alert("End date cannot be in the future.");
+                    endDateInput.value = ''; // Clear the end date field
+                    isValid = false;
+                }
+
+                // Ensure that start date is earlier than end date
+                if (startDate && endDate && startDate >= endDate) {
+                    alert("Start date must be before the end date.");
+                    endDateInput.value = ''; // Clear the end date field
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            // Function to filter the rows based on the selected dates
             function filterByDate() {
+                // Ensure the dates are valid before filtering
+                if (!validateDates()) {
+                    return; // Stop filtering if dates are invalid
+                }
+
                 const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
                 const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
 
@@ -191,6 +229,7 @@
             });
         });
     </script>
+
     <script>
         document.getElementById("clearDateFilter").addEventListener("click", function() {
             document.getElementById("startDate").value = '';

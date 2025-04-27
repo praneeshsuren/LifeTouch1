@@ -108,7 +108,6 @@
                         type="file"
                         class="file-upload-input"
                         name="image"
-                        required
                         accept="image/jpg, image/jpeg, image/png"
                         style="display: block; margin: 0 auto;" />
                 </div>

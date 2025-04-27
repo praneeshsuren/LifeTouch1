@@ -21,18 +21,14 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
     <style>
-        /* Row highlighting */
         .active-row {
             background-color: #e8f5e9;
-            /* Light green background for active rows */
         }
 
         .inactive-row {
             background-color: #ffebee;
-            /* Light red background for inactive rows */
         }
 
-        /* Status badges */
         .status {
             padding: 5px 10px;
             border-radius: 20px;
@@ -43,16 +39,12 @@
 
         .status.active {
             background-color: #c8e6c9;
-            /* Green background */
             color: #256029;
-            /* Dark green text */
         }
 
         .status.inactive {
             background-color: #ffcdd2;
-            /* Red background */
             color: #c63737;
-            /* Dark red text */
         }
     </style>
 
@@ -97,7 +89,6 @@
 
                 <div class="user-table-wrapper">
                     <div class="table-scroll-container">
-                        <!-- In your table section -->
                         <table class='user-table'>
                             <thead>
                                 <tr>
@@ -149,46 +140,85 @@
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const startDateInput = document.getElementById("startDate");
-            const endDateInput = document.getElementById("endDate");
-            const tableRows = document.querySelectorAll(".user-table tbody tr");
+    document.addEventListener("DOMContentLoaded", function() {
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+        const tableRows = document.querySelectorAll(".user-table tbody tr");
 
-            function filterByDate() {
-                const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
-                const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+        // Function to validate dates
+        function validateDates() {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            const today = new Date();
 
-                tableRows.forEach(row => {
-                    if (row.cells.length < 9) return; // Skip header and empty rows
+            let isValid = true;
 
-                    const validDateText = row.cells[7].textContent.trim(); // Valid Until is 8th column (0-indexed 7)
-                    const validDate = new Date(validDateText);
-
-                    let showRow = true;
-
-                    if (startDate && validDate < startDate) {
-                        showRow = false;
-                    }
-
-                    if (endDate && validDate > endDate) {
-                        showRow = false;
-                    }
-
-                    row.style.display = showRow ? "" : "none";
-                });
+            // Check if start date is in the future
+            if (startDate > today) {
+                alert("Start date cannot be in the future.");
+                startDateInput.value = ''; // Clear the start date field
+                isValid = false;
             }
 
-            // Attach event listeners
-            startDateInput.addEventListener("change", filterByDate);
-            endDateInput.addEventListener("change", filterByDate);
+            // Check if end date is in the future
+            if (endDate > today) {
+                alert("End date cannot be in the future.");
+                endDateInput.value = ''; // Clear the end date field
+                isValid = false;
+            }
 
-            document.getElementById("clearDateFilter").addEventListener("click", function() {
-                startDateInput.value = '';
-                endDateInput.value = '';
-                tableRows.forEach(row => row.style.display = "");
+            // Ensure that start date is earlier than end date
+            if (startDate && endDate && startDate >= endDate) {
+                alert("Start date must be before the end date.");
+                endDateInput.value = ''; // Clear the end date field
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Function to filter the rows based on the selected dates
+        function filterByDate() {
+            // Ensure the dates are valid before filtering
+            if (!validateDates()) {
+                return; // Stop filtering if dates are invalid
+            }
+
+            const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
+            const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+
+            tableRows.forEach(row => {
+                if (row.cells.length < 9) return; // Skip header and empty rows
+
+                const validDateText = row.cells[7].textContent.trim(); // Valid Until is 8th column (0-indexed 7)
+                const validDate = new Date(validDateText);
+
+                let showRow = true;
+
+                if (startDate && validDate < startDate) {
+                    showRow = false;
+                }
+
+                if (endDate && validDate > endDate) {
+                    showRow = false;
+                }
+
+                row.style.display = showRow ? "" : "none";
             });
+        }
+
+        // Attach event listeners
+        startDateInput.addEventListener("change", filterByDate);
+        endDateInput.addEventListener("change", filterByDate);
+
+        document.getElementById("clearDateFilter").addEventListener("click", function() {
+            startDateInput.value = '';
+            endDateInput.value = '';
+            tableRows.forEach(row => row.style.display = "");
         });
-    </script>
+    });
+</script>
+
     <script>
         document.getElementById("clearDateFilter").addEventListener("click", function() {
             document.getElementById("startDate").value = '';

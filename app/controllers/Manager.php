@@ -421,7 +421,7 @@ class Manager extends Controller
 
         // Pass both the equipment data and service history to the view
         $this->view('manager/equipment_view', [
-            'equipment' => $equipment[0],  // Assuming it's an array, or adjust if it's an object
+            'equipment' => $equipment[0],  
             'services' => $services
         ]);
     }
@@ -435,10 +435,8 @@ class Manager extends Controller
         $result = $equipmentModel->delete($id, 'equipment_id');  // 'equipment_id' is the column to identify the equipment
 
         if ($result === false) {
-            // Handle failure (e.g., redirect to the equipment list with a failure message)
             $_SESSION['message'] = 'Failed to delete equipment.';
         } else {
-            // Handle success (e.g., redirect to the equipment list with a success message)
             $_SESSION['message'] = 'Equipment deleted successfully.';
         }
 

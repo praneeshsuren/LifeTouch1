@@ -245,9 +245,8 @@ class Login extends Controller
         return $user->email_address ?? null;
     }
 
-    use Database; // Add this line to use the Database trait
+    use Database; 
 
-    // ... rest of your controller code ...
 
     private function saveResetToken($userId, $token, $expires)
     {
@@ -266,9 +265,75 @@ class Login extends Controller
         );
     }
 
-    // Similarly update other methods that use Database
     public function resetPassword()
-    {
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $token = $_POST['token'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
+
+        // Validate inputs
+        if (empty($token) || empty($password) || empty($confirm_password)) {
+            $this->view('home/reset_password', [
+                'error' => 'All fields are required',
+                'token' => $token
+            ]);
+            return;
+        }
+
+        if ($password !== $confirm_password) {
+            $this->view('home/reset_password', [
+                'error' => 'Passwords do not match',
+                'token' => $token
+            ]);
+            return;
+        }
+
+        if (strlen($password) < 8) {
+            $this->view('home/reset_password', [
+                'error' => 'Password must be at least 8 characters',
+                'token' => $token
+            ]);
+            return;
+        }
+
+        // Verify token and get user ID
+        $tokenData = $this->get_row(
+            "SELECT * FROM password_reset_tokens 
+             WHERE token = :token AND used = 0 AND expires_at > NOW()",
+            [':token' => $token]
+        );
+
+        if (!$tokenData) {
+            $this->view('home/reset_password', [
+                'error' => 'Invalid or expired token'
+            ]);
+            return;
+        }
+
+        // Update user password
+        $userModel = new M_User();
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $updateResult = $userModel->updatePassword($tokenData->user_id, $hashedPassword);
+
+        if ($updateResult) {
+            // Mark token as used
+            $this->query(
+                "UPDATE password_reset_tokens SET used = 1 WHERE token = :token",
+                [':token' => $token]
+            );
+
+            // Redirect to login page or a success page
+            header("Location: /LifeTouch1/public/login?success=Password reset successfully. Please log in.");
+            exit; // Make sure the redirect happens and no further code executes
+        } else {
+            $this->view('home/reset_password', [
+                'error' => 'Failed to update password',
+                'token' => $token
+            ]);
+        }
+    } else {
+        // Show form for password reset
         $token = $_GET['token'] ?? '';
 
         if (empty($token)) {
@@ -276,9 +341,9 @@ class Login extends Controller
             return;
         }
 
-        // Use get_row from the trait
         $tokenData = $this->get_row(
-            "SELECT * FROM password_reset_tokens WHERE token = :token AND used = 0 AND expires_at > NOW()",
+            "SELECT * FROM password_reset_tokens 
+             WHERE token = :token AND used = 0 AND expires_at > NOW()",
             [':token' => $token]
         );
 
@@ -289,6 +354,8 @@ class Login extends Controller
 
         $this->view('home/reset_password', ['token' => $token]);
     }
+}
+
     
 
 

@@ -148,11 +148,6 @@
                     const endDate = new Date(today);
                     endDate.setMonth(endDate.getMonth() + durationMonths);
 
-                    // Fix for months like January 31 + 1 month => March 3
-                    if (endDate.getDate() !== today.getDate()) {
-                        endDate.setDate(0); // Move to last day of previous month
-                    }
-
                     const formattedEndDate = endDate.toISOString().split('T')[0];
                     endDateInput.value = formattedEndDate;
                 }

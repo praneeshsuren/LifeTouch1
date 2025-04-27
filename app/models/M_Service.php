@@ -15,19 +15,30 @@ class M_Service
         'service_cost',
         'created_time'
     ];
-    
-    public function getMonthlyServicePurchaseSum()
+
+    public function getMonthlyServicePaymentSum($startDate = null, $endDate = null)
     {
-        $currentMonth = date('Y-m');
-        $query = "SELECT SUM(service_cost) as total FROM {$this->table} WHERE DATE_FORMAT(service_date, '%Y-%m') = :currentMonth";
-        $params = ['currentMonth' => $currentMonth];
+        // If no dates provided, default to the current month
+        $startDate = $startDate ? $startDate : date('Y-m-01');
+        $endDate = $endDate ? $endDate : date('Y-m-t');
+
+        $query = "SELECT SUM(service_cost) as total 
+              FROM {$this->table} 
+              WHERE service_date BETWEEN :startDate AND :endDate";
+
+        $params = [
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ];
 
         $result = $this->query($query, $params);
+
         if (!empty($result)) {
-            return $result[0]->total ?? 0; 
+            return $result[0]->total ?? 0;
         }
         return 0;
     }
+
 
     public function getOverdueServices()
     {
@@ -79,7 +90,7 @@ class M_Service
         // Validate service_cost
         if (empty($data['service_cost'])) {
             $this->errors['service_cost'] = "Service cost is required";
-        } elseif (!is_numeric($data['service_cost'])) {
+        } elseif (!is_numeric($data['service_cost']) || $data['service_cost'] <= 0) {
             $this->errors['service_cost'] = "Service cost must be a valid number";
         }
 
@@ -87,6 +98,8 @@ class M_Service
             $this->errors['next_service_date'] = "Next service date is required";
         } elseif (strtotime($data['next_service_date']) <= strtotime($data['service_date'])) {
             $this->errors['next_service_date'] = "Next service date must be after the service date";
+        } elseif (strtotime($data['next_service_date']) <= strtotime(date('Y-m-d'))) {
+            $this->errors['next_service_date'] = "Next service date must be future date";
         }
 
         return empty($this->errors);

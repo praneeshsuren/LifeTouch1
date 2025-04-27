@@ -17,34 +17,38 @@ class M_EventPayment
         'number',
         'member_id'
     ];
-    public function getTotalEventPaymentForThisMonth()
-    {
-        $currentMonth = date('Y-m');
+    public function getTotalEventPayment($startDate = null, $endDate = null)
+{
+    // Use provided dates or default to current month if not provided
+    $startDate = $startDate ? $startDate : date('Y-m-01'); // Default to the first day of the current month
+    $endDate = $endDate ? $endDate : date('Y-m-t'); // Default to the last day of the current month
 
-        // Sum physical event payments
-        $query1 = "SELECT SUM(e.price) as total
+    // Sum physical event payments
+    $query1 = "SELECT SUM(e.price) as total
                FROM eventphyisicalpayment ep
                JOIN event e ON ep.event_id = e.event_id
-               WHERE DATE_FORMAT(ep.created_at, '%Y-%m') = :currentMonth";
+               WHERE ep.created_at BETWEEN :startDate AND :endDate";
 
-        // Sum online event payments
-        $query2 = "SELECT SUM(e.price) as total
+    // Sum online event payments
+    $query2 = "SELECT SUM(e.price) as total
                FROM eventpayment ep
                JOIN event e ON ep.event_id = e.event_id
                WHERE ep.status = 'succeeded'
-                 AND DATE_FORMAT(ep.created_at, '%Y-%m') = :currentMonth";
+                 AND ep.created_at BETWEEN :startDate AND :endDate";
 
-        $params = ['currentMonth' => $currentMonth];
+    $params = ['startDate' => $startDate, 'endDate' => $endDate];
 
-        $physical = $this->query($query1, $params);
-        $online = $this->query($query2, $params);
+    // Execute the queries
+    $physical = $this->query($query1, $params);
+    $online = $this->query($query2, $params);
 
-        $physicalTotal = !empty($physical) ? ($physical[0]->total ?? 0) : 0;
-        $onlineTotal = !empty($online) ? ($online[0]->total ?? 0) : 0;
+    // If no results are returned, set totals to 0
+    $physicalTotal = !empty($physical) ? ($physical[0]->total ?? 0) : 0;
+    $onlineTotal = !empty($online) ? ($online[0]->total ?? 0) : 0;
 
-        return $physicalTotal + $onlineTotal;
-    }
-
+    // Return the sum of both physical and online event payments
+    return $physicalTotal + $onlineTotal;
+}
 
     public function validate($data)
     {

@@ -35,12 +35,13 @@
             -moz-appearance: none;
             appearance: none;
         }
+
         .error-message {
-        color: red;
-        font-size: 0.9rem;
-        margin-top: 5px;
-        display: block;
-    }
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
 </head>
 
@@ -60,7 +61,7 @@
 
 
             <div class="table-container">
-            
+
                 <?php if (isset($_SESSION['form_errors']['plan'])): ?>
                     <span class="error-message"><?php echo $_SESSION['form_errors']['plan']; ?></span>
                 <?php
@@ -73,8 +74,14 @@
                     unset($_SESSION['form_errors']['amount']);
                     unset($_SESSION['form_data']['amount']);
                 endif; ?>
+                <?php if (isset($_SESSION['form_errors']['duration'])): ?>
+                    <span class="error-message"><?php echo $_SESSION['form_errors']['duration']; ?></span>
+                <?php
+                    unset($_SESSION['form_errors']['duration']);
+                    unset($_SESSION['form_data']['duration']);
+                endif; ?>
 
-                <div class="heading" style="margin-left: 1390px;">
+                <div class="heading" style="margin-right: 2000;">
                     <a href="#" class="newMember-btn" onclick="openForm()"><i class="ph ph-plus"></i> Add Plan</a>
                 </div>
                 <div class="user-table-wrapper">
@@ -84,7 +91,7 @@
                                 <th>Plan Name</th>
                                 <th>Duration</th>
                                 <th>Amount</th>
-                                
+
                                 <th>Delete</th>
                             </tr>
                         </thead>
@@ -98,7 +105,7 @@
                     '<?php echo htmlspecialchars($plan->amount); ?>'
                     
                     
-                )">
+)">
                                         <td><?php echo htmlspecialchars($plan->plan); ?></td>
                                         <td><?php echo htmlspecialchars($plan->duration); ?></td>
                                         <td><?php echo htmlspecialchars($plan->amount); ?></td>
@@ -106,7 +113,7 @@
                                             <form action="<?php echo URLROOT; ?>/manager/delete_plan" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this plan?'); event.stopPropagation();">
                                                 <input type="hidden" name="membershipPlan_id" value="<?php echo $plan->membershipPlan_id; ?>">
-                                                <button type="submit" class="plain-x">X</button>
+                                                <button type="submit" class="plain-x" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.5em;">X</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -220,7 +227,7 @@
             <?php endif; ?>
         };
         // Open the Edit Form
-        function openEditForm(id, planName,duration, amount) {
+        function openEditForm(id, planName, duration, amount) {
             document.getElementById("edit_membershipPlan_id").value = id;
             document.getElementById("edit_plan_name").value = planName;
             document.getElementById("edit_duration").value = duration;

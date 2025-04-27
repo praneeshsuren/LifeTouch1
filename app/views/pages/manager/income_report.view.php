@@ -34,7 +34,21 @@
             </div>
 
         </div>
+
         <div class="create-announcement">
+        <a href="<?php echo URLROOT; ?>/manager/report" class="btn" style="float: right; margin-top: -30px;margin-bottom:3px;">Back</a>
+
+        <div class="date-filter-container">
+                <div class="left">
+                    <label for="startDate">Start Date: </label>
+                    <input type="date" class="date-input" id="startDate" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>" placeholder="Start Date">
+                </div>
+                <div class="right">
+                    <label for="endDate">End Date: </label>
+                    <input type="date" class="date-input" id="endDate" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>" placeholder="End Date">
+                </div>
+                <button id="clearDateFilter" class="filter">Clear Date Filter</button>
+            </div><br>
             <div class="wrap">
                 <div class="card green">
                     <div class="icon-container">
@@ -113,8 +127,46 @@
             </div>
         </div>
     </main>
+    <script>
+    document.getElementById('startDate').addEventListener('change', applyDateFilter);
+    document.getElementById('endDate').addEventListener('change', applyDateFilter);
+    document.getElementById('clearDateFilter').addEventListener('click', function () {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('start_date');
+        url.searchParams.delete('end_date');
+        window.location.href = url.toString();
+    });
+
+    function applyDateFilter() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+
+        // Validation: No future dates
+        if ((startDate && startDate > today) || (endDate && endDate > today)) {
+            alert('Dates cannot be in the future!');
+            return;
+        }
+
+        // Validation: Start date must be <= End date
+        if (startDate && endDate && startDate > endDate) {
+            alert('Start Date cannot be after End Date!');
+            return;
+        }
+
+        const url = new URL(window.location.href);
+        if (startDate) {
+            url.searchParams.set('start_date', startDate);
+        }
+        if (endDate) {
+            url.searchParams.set('end_date', endDate);
+        }
+        window.location.href = url.toString();
+    }
+</script>
 
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
+
 </body>
 
 </html>

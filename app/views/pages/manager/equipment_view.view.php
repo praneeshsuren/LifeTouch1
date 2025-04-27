@@ -88,7 +88,7 @@
                                         <td>
 
                                             </a> <a href="<?php echo URLROOT; ?>/service/deleteService/<?php echo $service->service_id; ?>" onclick="return confirm('Are you sure you want to delete this equipment?');">
-                                                <button style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.2em;">X</button>
+                                                <button style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.5em;">X</button>
                                             </a>
                                         </td>
                                     </tr>

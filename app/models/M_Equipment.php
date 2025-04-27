@@ -18,18 +18,24 @@ class M_Equipment
         'purchase_shop',
     ];
 
-    public function getMonthlyEquipmentPurchaseSum()
+    public function getEquipmentPurchaseSum($startDate = null, $endDate = null)
     {
-        $currentMonth = date('Y-m');
-        $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE DATE_FORMAT(purchase_date, '%Y-%m') = :currentMonth";
-        $params = ['currentMonth' => $currentMonth];
-
+        if ($startDate && $endDate) {
+            $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE purchase_date BETWEEN :startDate AND :endDate";
+            $params = ['startDate' => $startDate, 'endDate' => $endDate];
+        } else {
+            $currentMonth = date('Y-m');
+            $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE DATE_FORMAT(purchase_date, '%Y-%m') = :currentMonth";
+            $params = ['currentMonth' => $currentMonth];
+        }
+    
         $result = $this->query($query, $params);
         if (!empty($result)) {
-            return $result[0]->total ?? 0; // <-- use ->total not ['total']
+            return $result[0]->total ?? 0;
         }
         return 0;
     }
+    
 
 
     // Validate input data

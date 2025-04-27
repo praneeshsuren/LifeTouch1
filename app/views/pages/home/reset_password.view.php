@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo APP_NAME; ?></title>
+    <title><?php echo APP_NAME; ?> - Reset Password</title>
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,6 @@
 </head>
 
 <body>
-    <!-- Display session error message -->
     <?php if (isset($_SESSION['error']) && !empty($_SESSION['error'])): ?>
         <div class="alert alert-danger" id="error-message" style="display:block;">
             <?= htmlspecialchars($_SESSION['error']); ?>
@@ -42,31 +41,37 @@
         <div class="login-container">
             <h2 style="color:white">Reset Password</h2>
 
-            <!-- Display error message dynamically -->
+            <!-- Display error message -->
             <?php if (isset($error) && !empty($error)): ?>
                 <div class="alert alert-danger"><?= htmlspecialchars($error); ?></div>
             <?php endif; ?>
 
-            <form action="<?php echo URLROOT; ?>/login/processReset" method="post">
-                <input type="hidden" name="token" value="<?php echo $token; ?>">
-
-                <div class="input-box">
-                    <label for="password">New Password</label>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="New password" required minlength="8">
+            <!-- Display success message -->
+            <?php if (isset($success) && !empty($success)): ?>
+                <div class="alert alert-success"><?= htmlspecialchars($success); ?></div>
+                <div class="text-center">
+                    <a href="<?php echo URLROOT; ?>/login" class="btn">Go to Login</a>
                 </div>
+            <?php else: ?>
+                <form action="<?php echo URLROOT; ?>/login/resetPassword" method="post">
+                    <input type="hidden" name="token" value="<?php echo htmlspecialchars($token ?? ''); ?>">
 
-                <div class="input-box">
-                    <label for="confirm_password">Confirm New Password</label>
-                    <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm password" required minlength="8">
-                </div>
+                    <div class="input-box">
+                        <label for="password">New Password</label>
+                        <input type="password" name="password" id="password" class="form-control" placeholder="New password (min 8 characters)" required minlength="8">
+                    </div>
 
-                <button type="submit" class="btn">Reset Password</button>
-            </form>
+                    <div class="input-box">
+                        <label for="confirm_password">Confirm New Password</label>
+                        <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm password" required minlength="8">
+                    </div>
+
+                    <button type="submit" class="btn">Reset Password</button>
+                </form>
+            <?php endif; ?>
         </div>
     </div>
 
     <script src="<?php echo URLROOT; ?>/assets/js/login-script.js"></script>
-
 </body>
-
 </html>

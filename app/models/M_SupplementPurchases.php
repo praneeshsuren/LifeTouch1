@@ -17,18 +17,29 @@ class M_SupplementPurchases
         'purchase_shop'
     ];
 
-    public function getMonthlySupplementPurchase()
+    public function getSupplementPurchase($startDate = null, $endDate = null)
     {
-        $currentMonth = date('Y-m');
-        $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE DATE_FORMAT(purchase_date, '%Y-%m') = :currentMonth";
-        $params = ['currentMonth' => $currentMonth];
+        // If no start and end date provided, default to current month
+        $startDate = $startDate ? $startDate : date('Y-m-01');
+        $endDate = $endDate ? $endDate : date('Y-m-t');
+
+        $query = "SELECT SUM(purchase_price) as total 
+              FROM {$this->table} 
+              WHERE purchase_date BETWEEN :startDate AND :endDate";
+
+        $params = [
+            'startDate' => $startDate,
+            'endDate' => $endDate
+        ];
 
         $result = $this->query($query, $params);
+
         if (!empty($result)) {
             return $result[0]->total ?? 0;
         }
         return 0;
     }
+
 
     public function getSupplementId($purchase_id)
     {

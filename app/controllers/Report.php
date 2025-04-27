@@ -165,39 +165,42 @@ class Report extends Controller
     }
 
     public function income_report()
-{
-    $equipmentModel = new M_Equipment(); 
-    $serviceModel = new M_Service(); 
-    $supplymentSaleseModel = new M_SupplementSales(); 
-    $supplymentPurchaseModel = new M_SupplementPurchases();
-    $membershipPaymentModel = new M_Payment();
-    $eventPaymentModel = new M_EventPayment(); 
+    {
+        $equipmentModel = new M_Equipment();
+        $serviceModel = new M_Service();
+        $supplymentSaleseModel = new M_SupplementSales();
+        $supplymentPurchaseModel = new M_SupplementPurchases();
+        $membershipPaymentModel = new M_Payment();
+        $eventPaymentModel = new M_EventPayment();
 
-    $equipmentPurchaseSum = $equipmentModel->getMonthlyEquipmentPurchaseSum();
-    $servicePurchaseSum = $serviceModel->getMonthlyServicePurchaseSum();
-    $supplementSaleseSum = $supplymentSaleseModel->getMonthlySupplementSales();
-    $supplementPurchaseSum = $supplymentPurchaseModel->getMonthlySupplementPurchase();
-    $membershipPaymentSum = $membershipPaymentModel->getTotalPaymentForThisMonth();
-    $eventPaymentSum = $eventPaymentModel->getTotalEventPaymentForThisMonth(); 
-
-    // Total Income
-    $totalIncome = $membershipPaymentSum + $eventPaymentSum + $supplementSaleseSum;
-
-    // Total Expense
-    $totalExpense = $supplementPurchaseSum  + $equipmentPurchaseSum + $servicePurchaseSum;
+        $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : null;
+        $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : null;
 
 
-    $this->view('manager/income_report', [
-        'equipmentPurchaseSum' => $equipmentPurchaseSum,
-        'servicePurchaseSum' => $servicePurchaseSum,
-        'supplementSaleseSum' => $supplementSaleseSum,
-        'supplementPurchaseSum' => $supplementPurchaseSum,
-        'membershipPaymentSum' => $membershipPaymentSum,
-        'eventPaymentSum' => $eventPaymentSum,
-        'totalIncome' => $totalIncome,
-        'totalExpense' => $totalExpense
-    ]);
-}
+        $equipmentPurchaseSum = $equipmentModel->getEquipmentPurchaseSum($startDate, $endDate);
+        $servicePurchaseSum = $serviceModel->getMonthlyServicePaymentSum($startDate, $endDate);
+        $supplementSaleseSum = $supplymentSaleseModel->getSupplementSales($startDate, $endDate);
+        $supplementPurchaseSum = $supplymentPurchaseModel->getSupplementPurchase($startDate, $endDate);
+        $membershipPaymentSum = $membershipPaymentModel->getTotalPayment($startDate, $endDate);
+        $eventPaymentSum = $eventPaymentModel->getTotalEventPayment($startDate, $endDate);
+
+        // Total Income
+        $totalIncome = $membershipPaymentSum + $eventPaymentSum + $supplementSaleseSum;
+
+        // Total Expense
+        $totalExpense = $supplementPurchaseSum  + $equipmentPurchaseSum + $servicePurchaseSum;
 
 
+
+        $this->view('manager/income_report', [
+            'equipmentPurchaseSum' => $equipmentPurchaseSum,
+            'servicePurchaseSum' => $servicePurchaseSum,
+            'supplementSaleseSum' => $supplementSaleseSum,
+            'supplementPurchaseSum' => $supplementPurchaseSum,
+            'membershipPaymentSum' => $membershipPaymentSum,
+            'eventPaymentSum' => $eventPaymentSum,
+            'totalIncome' => $totalIncome,
+            'totalExpense' => $totalExpense
+        ]);
+    }
 }

@@ -130,16 +130,6 @@
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/receptionist-script.js?v=<?php echo time(); ?>"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.clickable-row').forEach(function(row) {
-                row.addEventListener('click', function() {
-                    const eventId = this.getAttribute('data-event-id');
-                    if (eventId) {
-                        // window.location.href = "<?php echo URLROOT; ?>/event/join/" + eventId;
-                    }
-                });
-            });
-        });
 
         document.addEventListener('DOMContentLoaded', function() {
             const memberSelect = document.getElementById('is_member');

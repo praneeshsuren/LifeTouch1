@@ -17,18 +17,28 @@ class M_SupplementSales
         'sale_date',
     ];
 
-    public function getMonthlySupplementSales()
-    {
-        $currentMonth = date('Y-m');
-        $query = "SELECT SUM(price_of_a_supplement) as total FROM {$this->table} WHERE DATE_FORMAT(sale_date, '%Y-%m') = :currentMonth";
-        $params = ['currentMonth' => $currentMonth];
+    public function getSupplementSales($startDate = null, $endDate = null)
+{
+    // If no dates are provided, default to the current month
+    $startDate = $startDate ? $startDate : date('Y-m-01');
+    $endDate = $endDate ? $endDate : date('Y-m-t');
 
-        $result = $this->query($query, $params);
-        if (!empty($result)) {
-            return $result[0]->total ?? 0; 
-        }
-        return 0;
+    $query = "SELECT SUM(price_of_a_supplement) as total 
+              FROM {$this->table} 
+              WHERE sale_date BETWEEN :startDate AND :endDate";
+
+    $params = [
+        'startDate' => $startDate,
+        'endDate' => $endDate
+    ];
+
+    $result = $this->query($query, $params);
+
+    if (!empty($result)) {
+        return $result[0]->total ?? 0;
     }
+    return 0;
+}
 
     public function findByMemberId($member_id)
     {

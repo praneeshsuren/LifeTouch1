@@ -38,10 +38,7 @@
 
         <div class="table-container">
 
-            <div class="filters">
-                <a href="#"><button class="filter" style="background-color:#007bff;color:white;">Summary</button></a>
-                <a href="<?php echo URLROOT; ?>/report/event_payment/<?php echo $data['event_id']; ?>"> <button class="filter">Add Participant</button></a>
-            </div>
+            
             <div class="download-button" id="downloadPDF" style="margin-left: 10px;">
                 <div class="download-wrapper">
                     <div class="download-text">Download</div>
@@ -60,7 +57,7 @@
                     <thead>
                         <tr>
                             <th>Full Name</th>
-                            <th>Is Member</th>
+                            <th>Is a Gym Member</th>
                             <th>Membership Number</th>
                             <th>NIC</th>
                             <th>Email</th>

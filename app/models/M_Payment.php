@@ -18,33 +18,39 @@ class M_Payment
         'end_date',
     ];
 
-    public function getTotalPaymentForThisMonth()
+    public function getTotalPayment($startDate = null, $endDate = null)
     {
-        $currentMonth = date('Y-m');
+        // Use provided dates or default to current month if not provided
+        $startDate = $startDate ? $startDate : date('Y-m-01'); // Default to the first day of the current month
+        $endDate = $endDate ? $endDate : date('Y-m-t'); // Default to the last day of the current month
 
         // Sum online payments
         $query1 = "SELECT SUM(mp.amount) as total
                FROM payment p
                JOIN membership_plan mp ON p.plan_id = mp.membershipPlan_id
                WHERE p.status = 'succeeded' 
-                 AND DATE_FORMAT(p.start_date, '%Y-%m') = :currentMonth";
+                 AND p.start_date BETWEEN :startDate AND :endDate";
 
         // Sum physical payments
         $query2 = "SELECT SUM(mp.amount) as total
                FROM physical_payment pp
                JOIN membership_plan mp ON pp.plan_id = mp.membershipPlan_id
-               WHERE DATE_FORMAT(pp.start_date, '%Y-%m') = :currentMonth";
+               WHERE pp.start_date BETWEEN :startDate AND :endDate";
 
-        $params = ['currentMonth' => $currentMonth];
+        $params = ['startDate' => $startDate, 'endDate' => $endDate];
 
+        // Execute the queries
         $online = $this->query($query1, $params);
         $physical = $this->query($query2, $params);
 
+        // If no results are returned, set totals to 0
         $onlineTotal = !empty($online) ? ($online[0]->total ?? 0) : 0;
         $physicalTotal = !empty($physical) ? ($physical[0]->total ?? 0) : 0;
 
+        // Return the sum of both online and physical payments
         return $onlineTotal + $physicalTotal;
     }
+
 
 
     public function paymentMember($member_id)
