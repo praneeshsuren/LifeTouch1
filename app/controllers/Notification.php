@@ -111,6 +111,50 @@ class Notification extends Controller
         echo "Two Days After: $twoDaysBefore\n";
     }
 
+    public function markAsRead($notificationId) {
+        // Instantiate the notification model
+        $notificationModel = new M_Notification();
+        
+        // Mark the notification as read
+        $result = $notificationModel->markAsRead($notificationId);
+        
+        if ($result) {
+            echo "Notification marked as read.";
+            // Redirect back to the same page
+        $referer = $_SERVER['HTTP_REFERER'];
+        header("Location: $referer");
+        exit;
+        } else {
+            echo "Failed to mark notification as read.";
+            // Redirect back to the same page
+        $referer = $_SERVER['HTTP_REFERER'];
+        header("Location: $referer");
+        exit;
+        }
+    }
+
+    public function markAllAsRead($memberId) {
+        // Instantiate the notification model
+        $notificationModel = new M_Notification();
+        
+        // Mark all notifications as read for the member
+        $result = $notificationModel->markAllAsRead($memberId);
+        
+        if ($result) {
+            echo "All notifications marked as read.";
+            // Redirect back to the same page
+        $referer = $_SERVER['HTTP_REFERER'];
+        header("Location: $referer");
+        exit;
+        } else {
+            echo "Failed to mark all notifications as read.";
+            // Redirect back to the same page
+        $referer = $_SERVER['HTTP_REFERER'];
+        header("Location: $referer");
+        exit;
+        }
+    }
+
 }
 
 ?>

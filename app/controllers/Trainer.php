@@ -212,7 +212,42 @@
         }
 
         public function workouts(){
-            $this->view('trainer/trainer-workouts');
+
+            $workoutView = new M_WorkoutEquipmentView;
+            $workout = $workoutView->findAll();
+
+            // Pass the workout data to the view
+            $data = [
+                'workouts' => $workout
+            ];
+            // Load the view and pass the data
+            $this->view('trainer/trainer-workouts', $data);
+        }
+
+        public function viewWorkout(){
+            $workout_id = $_GET['id'] ?? null;
+
+            if (!$workout_id) {
+                $_SESSION['error'] = 'Workout not found.';
+                redirect('trainer/workouts');
+                return;
+            }
+            $workout = new M_WorkoutEquipmentView;
+            $workoutDetails = $workout->getByWorkoutId($workout_id);
+
+
+            if (!$workoutDetails) {
+                $_SESSION['error'] = 'Workout not found.';
+                redirect('trainer/workouts');
+                return;
+            }
+
+
+            $data = [
+                'workout' => $workoutDetails 
+            ];
+
+            $this->view('trainer/trainer-viewWorkout', $data);
         }
 
         public function settings(){
