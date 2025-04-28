@@ -111,10 +111,10 @@ class Notification extends Controller
         echo "Two Days After: $twoDaysBefore\n";
     }
 
-    public function markAsRead($notificationId) {
+    public function markAsRead() {
         // Instantiate the notification model
         $notificationModel = new M_Notification();
-        
+        $notificationId = $_GET['notificationId']; // Get the notification ID from the request
         // Mark the notification as read
         $result = $notificationModel->markAsRead($notificationId);
         
@@ -133,12 +133,13 @@ class Notification extends Controller
         }
     }
 
-    public function markAllAsRead($memberId) {
+    public function markAllAsRead() {
         // Instantiate the notification model
         $notificationModel = new M_Notification();
+        $userId = $_GET['userId']; // Get the member ID from the request
         
         // Mark all notifications as read for the member
-        $result = $notificationModel->markAllAsRead($memberId);
+        $result = $notificationModel->markAllAsRead($userId);
         
         if ($result) {
             echo "All notifications marked as read.";
