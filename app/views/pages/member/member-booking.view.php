@@ -70,8 +70,8 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const trainerId = urlParams.get('id'); 
-        let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; // Default to the current month
-        let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
+        let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; 
+        let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); 
         const dateToday = new Date().toISOString().split('T')[0];
 
         const bookDiv = document.querySelector('.detail-list');
@@ -158,6 +158,23 @@
 
         });
 
+        function parseTimeToMinutes(timeStr) {
+            if (!timeStr) return 0;
+            const [timePart, period] = timeStr.trim().split(' ');
+            let [hours, minutes] = timePart.split(':').map(Number);
+            if (period === 'PM' && hours !== 12) hours += 12;
+            if (period === 'AM' && hours === 12) hours = 0;
+            return hours * 60 + minutes;
+        }
+
+        function sortTimeslots(timeslots) {
+            return [...timeslots].sort((a, b) => {
+                const startTimeA = a.slot.split(' - ')[0];
+                const startTimeB = b.slot.split(' - ')[0];
+                return parseTimeToMinutes(startTimeA) - parseTimeToMinutes(startTimeB);
+            });
+        }
+
         //timeslots
         function normalizeSlot(slot) {
             if (!slot) return slot;
@@ -172,6 +189,8 @@
             }
             timeSlotsContainer.innerHTML = '';
 
+            const sortedTimeSlots = sortTimeslots(timeSlots);
+
             const bookedForDate = (bookings || []).filter(b => 
                 b.booking_date === selectedDate && b.status === 'booked'
             );
@@ -179,15 +198,14 @@
             let availableSlotCount = 0;
             const isToday = new Date(selectedDate).toDateString() === new Date().toDateString();
             const holidaySlots = holidays[selectedDate] || [];
-            console.log("d",holidaySlots);
-            timeSlots.forEach(timeSlot => {
+
+            sortedTimeSlots.forEach(timeSlot => {
                 let timeSlotBtn = document.createElement('div');
                 timeSlotBtn.classList.add('time-slot');
                 timeSlotBtn.dataset.slot = timeSlot.slot;
                 timeSlotBtn.dataset.timeslotId = timeSlot.id;
                 timeSlotBtn.textContent = timeSlot.slot;
 
-                // Check if current timeslot is in the booked list
                 const isBooked = bookedForDate.some(b => parseInt(b.timeslot_id) === parseInt(timeSlot.id));
                 const isSelected = selectedTimeslotId && parseInt(timeSlot.id) === parseInt(selectedTimeslotId);
                 const isPast = isToday && isTimeSlotInPast(timeSlot.slot.split(' - ')[0]);
@@ -214,12 +232,10 @@
                         const selectedTimeslotInput = document.getElementById('selectedTimeslot');
                         const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
                         
-                        // Reset the "selected" class on all time slots
                         document.querySelectorAll('.time-slot').forEach(btn => {
                             btn.classList.remove("selected");
                         });
 
-                        // Add "selected" class to the clicked time slot
                         timeSlotBtn.classList.add("selected");
 
                         selectedTimeslotInput.textContent = timeSlot.slot;
@@ -228,21 +244,19 @@
                 }
                 timeSlotsContainer.appendChild(timeSlotBtn);
             });
-            // console.log(`Available slots count: ${availableSlotCount}`);
+            console.log(`Available slots count: ${availableSlotCount}`);
 
             return availableSlotCount; 
         }
 
         function markBookings(bookings) {
-            bookDiv.innerHTML = ''; // Clear existing content
+            bookDiv.innerHTML = ''; 
            
-            // Filter bookings for "booked" and "pending" statuses
             const filteredBookings = bookings.filter(
             booking => (booking.status === 'booked' || booking.status === 'pending') && 
                         new Date(booking.booking_date).getTime() >= new Date(dateToday).getTime()
             );
 
-            // Group bookings by date
             const groupedBookings = filteredBookings.reduce((acc, {id, booking_date, slot, status, timeslot_id, trainer_id}) => {
                 if (!acc[booking_date]) acc[booking_date] = [];
                 acc[booking_date].push({ id, slot, status, timeslot_id, trainer_id});
@@ -251,19 +265,16 @@
 
             const filteredFutureBookings = {};
 
-            // Go through each date in groupedBookings
             Object.keys(groupedBookings)
                 .sort((a, b) => new Date(a) - new Date(b))
                 .forEach(date => {
                     const isToday = new Date(date).toDateString() === new Date().toDateString();
 
-                    // Filter slots: keep all if not today, or future timeslots if today
                     const futureSlots = groupedBookings[date].filter(booking => {
                         if (!isToday) return true;
                         return !isTimeSlotInPast(booking.slot.split(' - ')[0]);
                     });
 
-                    // Only add if there are future slots remaining
                     if (futureSlots.length > 0) {
                         filteredFutureBookings[date] = futureSlots;
                     }
@@ -282,7 +293,6 @@
                     .forEach(({ id, slot, status, timeslot_id, trainer_id}) => {
                         const isPast = (new Date(date).toDateString() === new Date().toDateString()) && isTimeSlotInPast(slot.split(' - ')[0]);
 
-                        // Skip if it's a past time slot
                         if (isPast) return;
 
                         const timeslotItem = document.createElement('div');
@@ -295,7 +305,7 @@
                                 break;
                             case 'pending':
                             default:
-                                statusClass = 'status-pending'; // Default to pending for unknown or undefined statuses
+                                statusClass = 'status-pending';
                         }
 
                         const statusCircle = document.createElement('div');
@@ -328,7 +338,7 @@
         }
 
         function convertTo24hrs(time){
-            const [hrMin, period] = time.trim().split(' '); //AM,PM
+            const [hrMin, period] = time.trim().split(' '); 
             let [hr, min] =hrMin.split(':');
             hr = parseInt(hr, 10);
             min = parseInt(min, 10);
@@ -344,7 +354,6 @@
         function isTimeSlotInPast(timeSlot) {
             const now = new Date();
 
-            // Convert timeSlot to today's date but with the given time
             const slotTime = convertTo24hrs(timeSlot);
             const slotDateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), slotTime.getHours(), slotTime.getMinutes());
 
@@ -359,18 +368,16 @@
                 year: 'numeric'
             });
         }
-        // calender
 
         function buildCalendar(holidayData = {}) {
             const calendarHeader = document.querySelector('.calendar-header');
             const monthYear = document.querySelector(".monthYear");
             const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; 
             const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1);
-            const dayInMonth = new Date(currentYear, currentMonth, 0).getDate(); // Number of days in the month
-            const emptyDays = firstDayOfMonth.getDay(); // Day index of the first day (0-6)
+            const dayInMonth = new Date(currentYear, currentMonth, 0).getDate();
+            const emptyDays = firstDayOfMonth.getDay(); 
             const monthYearName = firstDayOfMonth.toLocaleDateString("en-us", { month: "long", year: "numeric" });
 
-            // Calculate previous and next month/year
             let prevMonth = currentMonth - 1;
             let nextMonth = currentMonth + 1;
             let prevYear = currentYear;
@@ -385,25 +392,21 @@
                 nextYear++;
             }
 
-            // Update header
             calendarHeader.innerHTML = `
                 <a class='prevMonth' href='?id=${trainerId}&month=${prevMonth}&year=${prevYear}' aria-label='Previous Month'><i class='ph ph-caret-circle-left'></i></a>
                 <div class='monthYear'>${monthYearName}</div>
                 <a class='nextMonth' href='?id=${trainerId}&month=${nextMonth}&year=${nextYear}' aria-label='Next Month'><i class='ph ph-caret-circle-right'></i></a>
             `;
 
-            // Build calendar table
             calendarBody.innerHTML = "";
             let row = document.createElement("tr");
 
-            // Empty days before the first day of the month
             for (let i = 0; i < emptyDays; i++) {
                 const emptyCell = document.createElement("td");
                 emptyCell.classList.add("plain");
                 row.appendChild(emptyCell);
             }
 
-            // Calendar days
             for (let day = 1; day <= dayInMonth; day++) {
                 if ((emptyDays + day - 1) % 7 === 0) {
                     calendarBody.appendChild(row);
@@ -427,7 +430,6 @@
                 row.appendChild(dayCell);
             }
 
-            // Add remaining empty cells for the last week
             while (row.children.length < 7) {
                 const emptyCell = document.createElement("td");
                 emptyCell.classList.add("plain");
@@ -450,16 +452,13 @@
             }
         }
             
-        // modal
         calendarBody.addEventListener('click', function (event) {
             const clickedElement = event.target;
 
-            // Check if the clicked element is a date box
             if (clickedElement.classList.contains('day') && !clickedElement.classList.contains('plain')) {
                 const selectedDate = clickedElement.getAttribute('data-date');
                 let availableSlotCount = 0;
             
-                // Only allow selecting present or future dates
                 if (selectedDate < dateToday) {
                     return; 
                 }
@@ -486,7 +485,7 @@
                     if( availableSlotCount === 0){
                         modalBody.innerHTML = `
                             <div style="padding: 80px 0; text-align: center;">
-                                <strong>All time slots are booked for this date.</strong>
+                                <strong>No available slots</strong>
                             </div>`;
                     } else {
                         const selectedDateInput = document.getElementById('selectedDate');
@@ -494,14 +493,13 @@
                         const dateInput = document.getElementById("date");
                         const selectedTimeslotInput = document.getElementById('selectedTimeslot');
                         const selectedTimeslotIdInput = document.getElementById('selectedTimeslotId');
-                        // Fill form values
+
                         trainerIdInput.value = trainerId;
                         selectedDateInput.textContent = formattedDate;
                         dateInput.value = selectedDate;
                         selectedTimeslotInput.textContent = "Select timeslot";
                         selectedTimeslotIdInput.value = "";
 
-                         //submit
                         document.getElementById("bookingForm").addEventListener('submit', function(e) {
                             e.preventDefault();
 
@@ -548,12 +546,11 @@
                     }
                 }
 
-                // Show the modal
+
                 bookingModal.style.display = 'block';
             }
         });
 
-            // Close modal when 'x' is clicked
         closeModal.addEventListener('click', function () {
             bookingModal.style.display = 'none';
         });
@@ -622,7 +619,7 @@
                     b.timeslot_id == newTimeslot &&
                     (b.status === "booked" || b.status === "pending")
                 );
-                // console.log(isSlotTaken);
+                console.log(isSlotTaken);
 
                 if (isSlotTaken) {
                     alert("This timeslot is already taken (booked or pending). Please choose another one.");
@@ -640,7 +637,7 @@
                 .then(response => response.json())
                 .then(result =>{
                     console.log(result);
-                    if (!result.success) {
+                    if (result.success) {
                         alert("Timeslot updated successfully!");
                         bookingModal.style.display = "none";
                         location.reload();

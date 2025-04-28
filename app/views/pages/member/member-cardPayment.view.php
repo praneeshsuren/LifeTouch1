@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <main class="cardmain"> 
+<main class="cardmain"> 
         <div class="container">
             <div class="header">
                 <div class="title">

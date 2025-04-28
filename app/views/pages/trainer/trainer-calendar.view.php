@@ -13,16 +13,6 @@
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/sidebar-greeting.css?v=<?php echo time();?>" />
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function(){
-            (function() {
-                var savedMode = localStorage.getItem('mode');
-                if (savedMode === 'dark') {
-                document.body.classList.add('dark');
-                }
-            })();
-          });
-    </script>
     <title><?php echo APP_NAME; ?></title>
   </head>
   <body>
@@ -69,8 +59,8 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const trainerId = urlParams.get('id'); 
-        let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; // Default to the current month
-        let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); // Default to the current year
+        let currentMonth = parseInt(urlParams.get('month')) || new Date().getMonth() + 1; 
+        let currentYear = parseInt(urlParams.get('year')) || new Date().getFullYear(); 
         const dateToday = new Date().toISOString().split('T')[0];
         let bookedBookings = [];
         let holidays = [];
@@ -79,12 +69,12 @@
 
             fetch('<?php echo URLROOT; ?>/trainer/bookings/api')
                 .then(response => {
-                    console.log('Response Status:', response.status); // Log response status
+                    console.log('Response Status:', response.status); 
                     return response.json();
                 })
                 .then(data => {
-                    // console.log("Fetched booking data:", data.bookings);
-                    // console.log("Fetched holiday data:", data.holidays);
+                    console.log("Fetched booking data:", data.bookings);
+                    console.log("Fetched holiday data:", data.holidays);
                      
                     holidays = data.holidays.reduce((acc, holiday) => {
                         acc[holiday.date] = holiday.reason;
@@ -106,7 +96,7 @@
                     bookingModal();
                 })
                 .catch(error => {
-                    console.error('Error fetching bookings:', error); // Log the error
+                    console.error('Error fetching bookings:', error); 
                     tableBody.innerHTML = `
                         <tr>
                             <td colspan="11" style="text-align: center;">Error loading data</td>
@@ -123,11 +113,10 @@
             const monthYear = document.querySelector(".monthYear");
             const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]; 
             const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1);
-            const dayInMonth = new Date(currentYear, currentMonth, 0).getDate(); // Number of days in the month
-            const emptyDays = firstDayOfMonth.getDay(); // Day index of the first day (0-6)
+            const dayInMonth = new Date(currentYear, currentMonth, 0).getDate(); 
+            const emptyDays = firstDayOfMonth.getDay();
             const monthYearName = firstDayOfMonth.toLocaleDateString("en-us", { month: "long", year: "numeric" });
 
-            // Calculate previous and next month/year
             let prevMonth = currentMonth - 1;
             let nextMonth = currentMonth + 1;
             let prevYear = currentYear;
@@ -142,25 +131,25 @@
                 nextYear++;
             }
 
-            // Update header
+
             calendarHeader.innerHTML = `
                 <a class='prevMonth' href='?id=${trainerId}&month=${prevMonth}&year=${prevYear}' aria-label='Previous Month'><i class='ph ph-caret-circle-left'></i></a>
                 <div class='monthYear'>${monthYearName}</div>
                 <a class='nextMonth' href='?id=${trainerId}&month=${nextMonth}&year=${nextYear}' aria-label='Next Month'><i class='ph ph-caret-circle-right'></i></a>
             `;
 
-            // Build calendar table
+
             calendarBody.innerHTML = "";
             let row = document.createElement("tr");
 
-            // Empty days before the first day of the month
+
             for (let i = 0; i < emptyDays; i++) {
                 const emptyCell = document.createElement("td");
                 emptyCell.classList.add("plain");
                 row.appendChild(emptyCell);
             }
 
-            // Calendar days
+
             for (let day = 1; day <= dayInMonth; day++) {
                 if ((emptyDays + day - 1) % 7 === 0) {
                     calendarBody.appendChild(row);
@@ -190,7 +179,7 @@
                 row.appendChild(dayCell);
             }
 
-            // Add remaining empty cells for the last week
+
             while (row.children.length < 7) {
                 const emptyCell = document.createElement("td");
                 emptyCell.classList.add("plain");
@@ -225,16 +214,15 @@
                 const modalDate = document.getElementById('modalDate');
                 const clickedElement = event.target;
 
-                // Check if the clicked element is a date box
                 if (clickedElement.classList.contains('day') && !clickedElement.classList.contains('plain')) {
                     const selectedDate = clickedElement.getAttribute('data-date');
                     const selectedDay = selectedDate.split('-')[2];
                     const currentMonthYear = document.querySelector('.monthYear').innerText;
     
-                    // Set the modal's input
+
                     modalDate.innerText = `${selectedDay} ${currentMonthYear}`;
 
-                    // booked booking details
+
                     const bookedBody = document.querySelector('.bookingModal-body');
                     const selectedBookings = bookedBookings.filter(booking => booking.booking_date === selectedDate);
                     let selectedHoliday = holidays[selectedDate] === null ? "N/A" : holidays[selectedDate];
@@ -259,12 +247,11 @@
                         bookedBody.innerHTML = `<div style="padding-top: 80px; padding-bottom:75px; text-align: center;">No bookings for this date.</div>`;
                     }
                     
-                    // Show the modal
+         
                     modal.style.display = 'block';
                 }
             });
 
-            // Close modal when 'x' is clicked
             closeModal.addEventListener('click', function () {
                 modal.style.display = 'none';
             });

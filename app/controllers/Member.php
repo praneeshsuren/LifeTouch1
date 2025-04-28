@@ -74,7 +74,7 @@
             
             if ($action === 'api') {
                 $timeslotModel = new M_Timeslot();
-                $timeSlots = $timeslotModel->findAll();
+                $timeSlots = $timeslotModel->getTimeslotsByTrainerId($trainer_id);
                 $bookings = $bookingModel->getBookingsByMonthAndYear($member_id, $trainer_id, $month, $year);
                 $isBooked = $bookingModel->isBooked($trainer_id);
                 $holidayModal = new M_Holiday();
