@@ -2,7 +2,7 @@
 
     class Workout extends Controller{
 
-        public function api(){
+          public function api(){
 
             $workoutView = new M_WorkoutEquipmentView;
             $workout = $workoutView->findAll();
@@ -75,7 +75,63 @@
                 }
         }
 
-        
+        public function updateWorkout() {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+              // Get raw POST data
+              $data = json_decode(file_get_contents('php://input'), true);
+          
+              // Validate required fields
+              if (empty($data['name']) || empty($data['description']) || empty($data['equipment'])) {
+                echo json_encode(['success' => false, 'message' => 'All fields are required.']);
+                return;
+              }
+          
+              // Get the workout ID from the URL parameter
+              if (!isset($_GET['id'])) {
+                echo json_encode(['success' => false, 'message' => 'Workout ID is missing.']);
+                return;
+              }
+          
+              $workoutId = $_GET['id'];
+          
+              // Update the workout in the database
+              $workoutModel = new M_Workout;
+              $result = $workoutModel->update($workoutId, $data, 'workout_id');
+          
+              if ($result) {
+                echo json_encode(['success' => true, 'message' => 'Workout updated successfully.']);
+              } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to update workout.']);
+              }
+            } else {
+              echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+            }
+        }
+
+        public function deleteWorkout() {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+              if (!isset($_GET['id'])) {
+                echo json_encode(['success' => false, 'message' => 'Workout ID is missing.']);
+                return;
+              }
+          
+              $workoutId = $_GET['id'];
+          
+              // Delete the workout from the database
+              $workoutModel = new M_Workout;
+              $result = $workoutModel->delete($workoutId, 'workout_id');
+          
+              if ($result) {
+                echo json_encode(['success' => true, 'message' => 'Workout deleted successfully.']);
+              } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to delete workout.']);
+              }
+            } else {
+              echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+            }
+        }
+          
+          
 
     }
 

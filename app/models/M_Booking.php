@@ -63,6 +63,7 @@
                 JOIN timeslot ts ON b.timeslot_id = ts.id
                 JOIN member m ON b.member_id = m.member_id
                 WHERE b.trainer_id = :trainer_id AND DATE(b.booking_date) BETWEEN :startOfMonth AND :endOfMonth
+                AND b.status = 'booked'
                 ORDER BY b.booking_date ASC
             ";
 
@@ -74,10 +75,8 @@
 
             $bookingData = $this->query($query, $params);
 
-            // Initialize empty  array
             $bookingByDate = [];
             
-            // If no records found, return an empty object instead of null or an error
             if (!empty($bookingData)) {
                 foreach ($bookingData as $booking) {
                     $bookingDate = $booking->booking_date;
@@ -155,37 +154,31 @@
                 $this->errors['status'] = 'Invalid status value';
             }
     
-            // If there are no errors, return true; otherwise, return false.
             return empty($this->errors);
         }
 
-        // Method to get errors after validation
         public function getErrors()
         {
             return $this->errors;
         }
 
         public function findCountByTrainerId($trainer_id) {
-            // Get the current date and calculate the date 30 days ago
             $date = date('Y-m-d');
             $date_30_days_ago = date('Y-m-d', strtotime('-30 days', strtotime($date)));
         
-            // Correct the query to count only 'booked' schedules within the last 30 days
             $query = "SELECT COUNT(*) AS count 
                       FROM $this->table 
                       WHERE trainer_id = :trainer_id 
                       AND created_at >= :date_30_days_ago 
                       AND status = 'booked'";
         
-            // Prepare data for the query
             $data = [
                 'trainer_id' => $trainer_id,
                 'date_30_days_ago' => $date_30_days_ago
             ];
         
-            // Execute the query and return the count
             $result = $this->query($query, $data);
-            return $result ? $result[0]->count : 0; // Return 0 if no bookings found
+            return $result ? $result[0]->count : 0; 
         }
         
     

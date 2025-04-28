@@ -46,14 +46,20 @@
 
         <div class="settings-container">
       <form id="settings-form" method="POST" action="<?php echo URLROOT; ?>/member/updateSettings" enctype="multipart/form-data">
-    <input type="hidden" name="user_id" value="<?php echo $data['member']->member_id; ?>">
+        <input type="hidden" name="user_id" value="<?php echo $data['member']->member_id; ?>">
 
     <div class="details">
         <!-- Profile Picture -->
         <div class="profile-picture">
             <img src="<?php echo URLROOT; ?>/assets/images/Member/<?php echo !empty($data['member']->image) ? $data['member']->image : 'default-placeholder.jpg'; ?>" alt="Profile Picture" id="userImage">
-            <input type="file" name="profile_picture" id="profilePictureInput" accept="image/*" style="display: none;" disabled>
-            <button type="button" id="changePictureBtn" class="change-picture-btn">Change Picture</button>
+            <input 
+                type="file" 
+                name="image" 
+                id="profilePictureInput" 
+                accept="image/*" 
+                style="display: none;"
+            >
+            <button type="button" id="changePictureBtn" class="change-picture-btn" style="display: none;">Change Picture</button>
         </div>
 
         <!-- User Details -->
@@ -139,53 +145,77 @@
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
 
     <script>
+        // Image change functionality
+        document.getElementById('changePictureBtn').addEventListener('click', () => {
+          document.getElementById('profilePictureInput').click();
+        });
+
+        document.getElementById('profilePictureInput').addEventListener('change', function() {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              document.getElementById('profilePicture').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
     const editBtn = document.getElementById('editBtn');
-  const saveBtn = document.getElementById('saveBtn');
-  const cancelBtn = document.getElementById('cancelBtn');
-  const form = document.getElementById('settings-form');
-  const inputs = form.querySelectorAll('input');
-  const fileInput = document.getElementById('profilePictureInput');
+    const changePictureBtn = document.getElementById('changePictureBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const form = document.getElementById('settings-form');
+    const inputs = form.querySelectorAll('input');
+    const fileInput = document.getElementById('profilePictureInput');
 
-  // Store original values for cancel
-  let originalValues = {};
-  function cacheOriginalValues() {
-    inputs.forEach(input => {
-      if (input.type !== 'file' && input.name !== 'member_id') {
-        originalValues[input.name] = input.value;
-      }
-    });
-  }
+    // Store original values for cancel
+    let originalValues = {};
+    function cacheOriginalValues() {
+        inputs.forEach(input => {
+        if (input.type !== 'file' && input.name !== 'member_id') {
+            originalValues[input.name] = input.value;
+        }
+        });
+    }
 
-  function restoreOriginalValues() {
-    inputs.forEach(input => {
-      if (input.name in originalValues) {
-        input.value = originalValues[input.name];
-      }
-      if (input.name !== 'member_id') {
-        input.disabled = true;
-      }
-    });
-    fileInput.disabled = true;
-    saveBtn.style.display = 'none';
-    cancelBtn.style.display = 'none';
-    editBtn.style.display = 'inline-block';
-  }
+    function restoreOriginalValues() {
+        inputs.forEach(input => {
+        if (input.name in originalValues) {
+            input.value = originalValues[input.name];
+        }
+        if (input.name !== 'member_id') {
+            input.disabled = true;
+        }
+        });
+        fileInput.disabled = true;
+        saveBtn.style.display = 'none';
+        cancelBtn.style.display = 'none';
+        changePictureBtn.style.display = 'none';
+        editBtn.style.display = 'inline-block';
+    }
 
-  function enableEditing() {
-    cacheOriginalValues();
-    inputs.forEach(input => {
-      if (input.name !== 'member_id') {
-        input.disabled = false;
-      }
-    });
-    fileInput.disabled = false;
-    saveBtn.style.display = 'inline-block';
-    cancelBtn.style.display = 'inline-block';
-    editBtn.style.display = 'none';
-  }
+    function enableEditing() {
+        cacheOriginalValues();
+        inputs.forEach(input => {
+        if (input.name !== 'member_id') {
+            input.disabled = false;
+        }
+        });
+        fileInput.disabled = false;
+        changePictureBtn.style.display = 'inline-block';
+        saveBtn.style.display = 'inline-block';
+        cancelBtn.style.display = 'inline-block';
+        editBtn.style.display = 'none';
+    }
 
-  editBtn.addEventListener('click', enableEditing);
-  cancelBtn.addEventListener('click', restoreOriginalValues);
+    editBtn.addEventListener('click', enableEditing);
+    cancelBtn.addEventListener('click', restoreOriginalValues);
+
+    document.getElementById('changePasswordLink').addEventListener('click', function (e) {
+            e.preventDefault();
+            window.location.href = "<?php echo URLROOT; ?>/changePassword";
+        });
     </script>
 </body>
 

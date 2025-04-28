@@ -174,7 +174,6 @@
 
             $supplementSalesModel = new M_SupplementSales;
 
-            // Fetch the supplement records for the member
             $supplementRecords = $supplementSalesModel->findByMemberId($member_id);
     
             $data = [
@@ -190,7 +189,6 @@
             $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
             $schedules = $workoutScheduleDetailsModel->findAllSchedulesByMemberId($member_id);
     
-            // Sort schedules in descending order by created_at
             usort($schedules, function ($a, $b) {
                 return strtotime($b->created_at) - strtotime($a->created_at);
             });
@@ -209,7 +207,6 @@
             $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
             $schedules = $workoutScheduleDetailsModel->findAllSchedulesByMemberId($member_id);
     
-            // Sort schedules in descending order by created_at
             usort($schedules, function ($a, $b) {
                 return strtotime($a->created_at) - strtotime($b->created_at);
             });
@@ -252,11 +249,16 @@
             $plan_Model = new M_Membership_plan();
             $plan = $plan_Model->findAll();
 
+            $subscription_Model = new M_Subscription();
+            $subscription_Model->deactivateExpiredSubscriptions();
+            $memberPlan = $subscription_Model->subscriptionMember($member_id);
+
             if($action === 'api'){
                 header('Content-type: application/json');
                 echo json_encode([
                     'payment' => $payment,
-                    'plan' => $plan
+                    'plan' => $plan,
+                    'subscription' => $memberPlan
                 ]);
                 exit;
             } elseif ($action === 'savePayment'){
@@ -297,7 +299,6 @@
         public function createPayment(){
             \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
-             // Read the incoming JSON from the frontend
             $jsonStr = file_get_contents('php://input');
             $jsonObj = json_decode($jsonStr);
 
@@ -305,14 +306,12 @@
             $currency = 'lkr';
 
             try {
-                // Create a Payment Intent using Stripe's API
                 $paymentIntent = \Stripe\PaymentIntent::create([
                     'amount' => $amount,
                     'currency' => $currency,
                     'payment_method_types' => ['card'],
                 ]);
 
-                // Respond with the client secret for the frontend to handle
                 echo json_encode([
                     'clientSecret' => $paymentIntent->client_secret,
                 ]);
@@ -336,7 +335,6 @@
                     'session' => $_SESSION['payment_data'],
                 ]);
             } else {
-                // Direct page access fallback
                 header('Location: ' . URLROOT . '/member/membershipPlan');
                 exit;
             }

@@ -40,9 +40,6 @@
 
           <div class="user-table-header">
             <input type="text" placeholder="Search" class="search-input">
-            <button class="add-user-btn" onclick="window.location.href='<?php echo URLROOT; ?>/receptionist/calendar'">
-                <i class="ph ph-calendar-dots"></i>
-            </button>
           </div>
           
           <div class="user-table-wrapper">

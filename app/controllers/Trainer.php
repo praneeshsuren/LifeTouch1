@@ -211,8 +211,168 @@
             $this->view('trainer/trainer-calendar');
         }
 
+        public function timeslot($action = null) {
+            $trainer_id = $_SESSION['user_id'] ?? null;
+            $timeslotModel = new M_Timeslot();
+            $timeslot = $timeslotModel->getTimeslotsByTrainerId($trainer_id);
+            $holidayModal = new M_Holiday();
+            $holidays = $holidayModal->getHolidaysByTrainerId($trainer_id);
+            $bookingModel = new M_Booking();
+            $bookings = $bookingModel->bookingsForTrainer($trainer_id);
+
+
+            if ($action === 'api') {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'timeslot' => $timeslot,
+                    'holidays' => $holidays,
+                    'bookings' =>$bookings
+                ]);
+                exit;
+            } elseif ($action === 'add'){
+                if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                    $slot = $_POST['slot'] ?? null;
+                    $trainer_id = $_POST['trainer_id'] ?? null;
+
+                    $data = [
+                        'slot' => $slot,
+                        'trainer_id' => $trainer_id
+                    ];
+
+                    $result = $timeslotModel->insert($data);
+
+                    echo json_encode([
+                        "success" => $result ? true : false,
+                        "message" => $result ? "Timeslot added successfully!" : "Failed to add timeslot"
+                    ]);
+                    exit;
+
+                }
+            } elseif ($action === "delete") {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $id = $_POST['id'];
+
+                    if ($timeslotModel->delete($id)) {
+                        echo json_encode(["success" => true, "message" => "Timeslot deleted successfully!"]);
+                        exit;
+                    } else {
+                        echo json_encode(["success" => false, "message" => "Error deleting Timeslot."]);
+                        exit;
+                    }
+                }
+                echo json_encode(["success" => false, "message" => "Invalid request."]);
+                exit;
+            } 
+            $this->view('trainer/trainer-timeslot');
+        }
+
+        public function holiday($action = null)
+        {
+            $trainer_id = $_SESSION['user_id'];
+            $holidayModal = new M_Holiday();
+            
+            if ($action === 'add') {
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                    header('Content-Type: application/json');
+
+                    $date = $_POST['date'] ?? null;
+                    $time = $_POST['slot'] ?? null;
+                    $trainer_id = $_POST['trainer_id'] ?? null;
+
+                    $data = [
+                        'date' => $date,
+                        'slot' => $time,
+                        'trainer_id' => $trainer_id
+                    ];
+
+                    $result = $holidayModal->insert($data);
+
+                    echo json_encode([
+                        "success" => $result ? true : false,
+                        "message" => $result ? "Holiday added successfully!" : "Failed to add holiday"
+                    ]);
+                    exit;
+                }
+
+                echo json_encode(["success" => false, "message" => "Invalid request"]);
+                exit;
+                } elseif ($action === "delete") {
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                        $id = $_POST['id'];
+
+                        if ($holidayModal->delete($id)) {
+                            echo json_encode(["success" => true, "message" => "Holiday deleted successfully!"]);
+                            exit;
+                        } else {
+                            echo json_encode(["success" => false, "message" => "Error deleting holiday."]);
+                            exit;
+                        }
+                    }
+                    echo json_encode(["success" => false, "message" => "Invalid request."]);
+                    exit;
+                }
+            // }  elseif ($action === 'conflict') {
+            //     header('Content-type: application/json');
+
+            //     $id = $_POST['id'] ?? null;
+            //     $status = $_POST['status'] ?? null;
+
+            //     if (!$id && !$status) {
+            //         echo json_encode(["success" => false, "message" => "Missing required fields"]);
+            //         exit;
+            //     }
+
+            //     $data = ['status' => $status];
+
+            //     $result = $bookingModel->update($id, $data);
+
+            //     echo json_encode(
+            //         [
+            //             "success" => $result ? true : false,
+            //             "message" => $result ? "Booking  updated successfully!" : "Failed to update "
+            //         ]
+            //     );
+            //     exit;
+            // }
+        }
+
         public function workouts(){
-            $this->view('trainer/trainer-workouts');
+
+            $workoutView = new M_WorkoutEquipmentView;
+            $workout = $workoutView->findAll();
+
+            // Pass the workout data to the view
+            $data = [
+                'workouts' => $workout
+            ];
+            // Load the view and pass the data
+            $this->view('trainer/trainer-workouts', $data);
+        }
+
+        public function viewWorkout(){
+            $workout_id = $_GET['id'] ?? null;
+
+            if (!$workout_id) {
+                $_SESSION['error'] = 'Workout not found.';
+                redirect('trainer/workouts');
+                return;
+            }
+            $workout = new M_WorkoutEquipmentView;
+            $workoutDetails = $workout->getByWorkoutId($workout_id);
+
+
+            if (!$workoutDetails) {
+                $_SESSION['error'] = 'Workout not found.';
+                redirect('trainer/workouts');
+                return;
+            }
+
+
+            $data = [
+                'workout' => $workoutDetails 
+            ];
+
+            $this->view('trainer/trainer-viewWorkout', $data);
         }
 
         public function settings(){
@@ -249,8 +409,15 @@
                 $data = [];
         
                 // Only include fields that have been updated
-                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address'];
+                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address', 'image'];
         
+                // Check for changes and add them to the data array
+                foreach ($fields as $field) {
+                    if (isset($_POST[$field]) && $_POST[$field] !== $existingTrainer->$field) {
+                        $data[$field] = $_POST[$field];
+                    }
+                }
+
                 // Check for changes and add them to the data array
                 foreach ($fields as $field) {
                     if (isset($_POST[$field]) && $_POST[$field] !== $existingTrainer->$field) {
@@ -286,18 +453,17 @@
                     }
                 }
         
-                // Handle profile picture upload
-                if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == UPLOAD_ERR_OK) {
-                    $fileTmp = $_FILES['profile_picture']['tmp_name'];
-                    $fileName = basename($_FILES['profile_picture']['name']);
-                    $targetPath = 'public/assets/images/Member/' . $fileName;
+                // Handle file upload if exists and if changed
+                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                    $targetDir = "assets/images/Admin/";
+                    $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                    $targetFile = $targetDir . $fileName;
         
-                    if (move_uploaded_file($fileTmp, $targetPath)) {
-                        $data['image'] = $fileName;
+                    // Validate the file (e.g., check file type and size) and move it to the target directory
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                        $data['image'] = $fileName; // Save the new filename for the database
                     } else {
-                        $_SESSION['error'] = "Failed to upload profile picture.";
-                        redirect('trainer/settings');
-                        return;
+                        $errors['file'] = "Failed to upload the file. Please try again.";
                     }
                 }
         
@@ -314,7 +480,7 @@
                     }
         
                     // Check if the updates were successful
-                    if (!$updatedTrainer && (isset($updatedUser) ? !$updatedUser : true)) {
+                    if ($updatedTrainer && (isset($updatedUser) ? !$updatedUser : true)) {
                         $_SESSION['success'] = "Settings have been successfully updated!";
                     } else {
                         $_SESSION['error'] = "No changes detected or update failed.";
@@ -329,6 +495,21 @@
             } else {
                 redirect('trainer/settings');
             }
+        }
+
+        public function notifications(){
+            // Assuming the user ID is stored in session
+            $userId = $_SESSION['user_id'];
+
+            // Fetch notifications from the Notification model
+            $notificationModel = new M_Notification();
+            $notifications = $notificationModel->getNotifications($userId);
+
+            // Pass notifications to the view
+            $data['notifications'] = $notifications;
+
+            // Load the notifications view
+            $this->view('trainer/trainer-notifications', $data);
         }
 
     }

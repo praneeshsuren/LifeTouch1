@@ -31,13 +31,13 @@
                 <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
             </div>
         </div>
+
         <a href="supplements" class="btn" style="float: right; margin-top: -10px; margin-bottom: 3px;">Back</a>
+
         <div class="supplements-container">
+        <div class="supplement-create-form">
             <form method="post" enctype="multipart/form-data" action="<?php echo URLROOT; ?>/supplement/create_supplement">
-
-
                 <div>
-
                     <div class="supplement-image">
                         <img class="supplement-picture" src="<?php echo URLROOT; ?>/assets/images/dumbell_add.png" alt="Supplement Image">
                     </div>
@@ -97,6 +97,7 @@
 
                 </div>
             </form>
+        </div>
         </div>
 
     </main>

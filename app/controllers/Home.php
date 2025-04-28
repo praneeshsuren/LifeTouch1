@@ -114,7 +114,6 @@ public function checkout(){
             'session' => $_SESSION['payment_data'],
         ]);
     } else {
-        // Direct page access fallback
         redirect('home?scroll=plans');
     }
 }

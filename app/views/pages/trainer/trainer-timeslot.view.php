@@ -120,24 +120,27 @@
 
                     if (Array.isArray(data.timeslot) && data.timeslot.length > 0){
                         allTimeslots = data.timeslot;
-                        renderDefaultTable(allTimeslots);
+                        const sortedTimeslots = sortTimeslots(allTimeslots);
+                        renderDefaultTable(sortedTimeslots);
+
+                        const blockTimeSelect = document.getElementById('blocktime');
+                        blockTimeSelect.innerHTML = '<option value="fullday">Fullday</option>';
+                        sortedTimeslots.forEach(timeslot => {
+                            const option = document.createElement('option');
+                            option.value = timeslot.id; // Use timeslot ID as the value
+                            option.textContent = timeslot.slot; // Display the time slot
+                            blockTimeSelect.appendChild(option);
+                        });
                     }
                     if (Array.isArray(data.holidays) && data.holidays.length > 0){
                         allHolidays = data.holidays;
-                        renderHolidayTable(allHolidays);
+                        const sortedHolidays = sortHolidays(allHolidays);
+                        renderHolidayTable(sortedHolidays);;
                     }
                     if (Array.isArray(data.bookings) && data.bookingslength > 0){
                         allBookings = data.bookings;
                         console.log("bookings:",allBookings);
                     }
-                    const blockTimeSelect = document.getElementById('blocktime');
-                    blockTimeSelect.innerHTML = '<option value="fullday">Fullday</option>';
-                    allTimeslots.forEach(timeslot => {
-                        const option = document.createElement('option');
-                        option.value = timeslot.id; // Use timeslot ID as the value
-                        option.textContent = timeslot.slot; // Display the time slot
-                        blockTimeSelect.appendChild(option);
-                    });
 
                 })
                 .catch(error => {
@@ -154,6 +157,44 @@
                 if (period === 'PM' && hours !== 12) hours += 12;
                 if (period === 'AM' && hours === 12) hours = 0;
                 return hours * 60 + minutes;
+            }
+
+            function sortTimeslots(timeslots) {
+                return [...timeslots].sort((a, b) => {
+                    // Extract start time from slot (e.g., "10:00 AM" from "10:00 AM - 12:00 PM")
+                    const startTimeA = a.slot.split(' - ')[0];
+                    const startTimeB = b.slot.split(' -they - ')[0];
+                    // Convert to minutes and compare
+                    return parseTimeToMinutes(startTimeA) - parseTimeToMinutes(startTimeB);
+                });
+            }
+
+            function sortHolidays(holidays) {
+                return [...holidays].sort((a, b) => {
+                    // Compare dates first
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    if (dateA < dateB) return -1;
+                    if (dateA > dateB) return 1;
+
+                    // If dates are equal, compare slot start times
+                    const isFullDayA = a.slot === 'Fullday';
+                    const isFullDayB = b.slot === 'Fullday';
+
+                    // Place Fullday last for the same date
+                    if (isFullDayA && !isFullDayB) return 1;
+                    if (!isFullDayA && isFullDayB) return -1;
+
+                    // If neither is Fullday, compare start times
+                    if (!isFullDayA && !isFullDayB) {
+                        const startTimeA = a.slot.split(' - ')[0];
+                        const startTimeB = b.slot.split(' - ')[0];
+                        return parseTimeToMinutes(startTimeA) - parseTimeToMinutes(startTimeB);
+                    }
+
+                    // If both are Fullday, no further sorting needed
+                    return 0;
+                });
             }
 
             // Helper function to normalize timeslot to standardized AM/PM format
@@ -261,7 +302,7 @@
                 document.querySelectorAll('.delete-timeslot-btn[data-type="specific"]').forEach(button => {
                     button.addEventListener('click', function() {
                         const timeslotId = this.getAttribute('data-timeslot-id');
-                        deleteTimeslot(timeslotId);
+                        deleteblkTimeslot(timeslotId);
                     });
                 });
             }
@@ -293,7 +334,7 @@
                     return;
                 }
 
-                const exist = allDefaultTimeslots.some(existingSlot => 
+                const exist = allTimeslots.some(existingSlot => 
                     normalizeTimeslot(existingSlot.slot) === normalizeTimeslot(timeslot)
                 );
                 if (exist) {
@@ -302,7 +343,7 @@
                 }
 
                 // Check for overlaps
-                const hasOverlap = allDefaultTimeslots.some(existingSlot => 
+                const hasOverlap = allTimeslots.some(existingSlot => 
                     doTimeslotsOverlap(timeslot, existingSlot.slot)
                 );
 
@@ -340,7 +381,7 @@
                 if (!confirm("Are you sure you want to delete this timeslot?")) return;
 
                 const formData = new FormData();
-                formData.append("timeslot_id", timeslotId);
+                formData.append("id", timeslotId);
                 for (let pair of formData.entries()) {
                     console.log(`${pair[0]}: ${pair[1]}`);
                 }
@@ -351,7 +392,7 @@
                 })
                 .then(response => response.json())
                 .then(result => {
-                    if (!result.success) {
+                    if (result.success) {
                         alert("Timeslot deleted successfully!");
                         location.reload();
                     } else {
@@ -423,7 +464,7 @@
             });
 
             // delete block time
-            function deleteTimeslot(timeslotId) {
+            function deleteblkTimeslot(timeslotId) {
                 if (!confirm("Are you sure you want to delete this timeslot?")) return;
 
                 const formData = new FormData();
@@ -438,7 +479,7 @@
                 })
                 .then(response => response.json())
                 .then(result => {
-                    if (!result.success) {
+                    if (result.success) {
                         alert("Timeslot deleted successfully!");
                         location.reload();
                     } else {

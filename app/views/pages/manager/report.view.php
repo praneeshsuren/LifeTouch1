@@ -66,6 +66,10 @@
                 </a>
             </div>
 
+            
+                </div>
+
+
 
             <div class="card">
                 <div class="card-details">

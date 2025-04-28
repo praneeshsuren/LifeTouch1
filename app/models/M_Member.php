@@ -28,7 +28,7 @@
 
         public function findByMemberId($memberId) {
             $data = ['member_id' => $memberId];
-            return $this->first($data);  // Use the `first` method to get the first matching record
+            return $this->first($data);  
         }
 
         public function validate($data){
@@ -91,7 +91,6 @@
                 $this->errors['NIC_no'] = 'NIC number cannot exceed 12 characters';
             }
 
-            // If there are no errors, return true; otherwise, return false.
             return empty($this->errors);
             
         }

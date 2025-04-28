@@ -1,53 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <!-- STYLESHEET -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/calendar-style.css?v=<?php echo time();?>" />
-    <!-- ICONS -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <title><?php echo APP_NAME; ?></title>
-  </head>
-  <body>
-    <section class="sidebar">
-      <?php require APPROOT.'/views/components/manager_sidebar.view.php' ?>
-    </section>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+  <!-- STYLESHEET -->
+  <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/admin-style.css?v=<?php echo time();?>" />
+  <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/components/calendar-style.css?v=<?php echo time();?>" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <title><?php echo APP_NAME; ?></title>
+</head>
 
-    <main>
+<body>
 
-      <div class="title">
+  <section class="sidebar">
+    <?php require APPROOT . '/views/components/manager_sidebar.view.php' ?>
+  </section>
 
-        <h1>Trainer Calendar</h1>
-        <div class="greeting">
-          <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
-        </div>
-        
+  <main>
+    <div class="title">
+      <h1>Attendance Records</h1>
+      <div class="greeting">
+        <?php require APPROOT . '/views/components/user-greeting.view.php' ?>
       </div>
+    </div>
 
-      <div class="view-user-container">
-
-        <div class="navbar-container">
-
-          <div class="navbar">
-
-            <ul class="nav-links">
-
-              <li><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
-              <li><a href="" id="salaryHistoryLink"><i class="ph ph-money"></i>Salary History</a></li>
-              <li class="active"><a href="" id="trainerCalendarLink"><i class="ph ph-barbell"></i>Trainer Calendar</a></li>
-
-            </ul>
-
-          </div>
-
+    <div class="view-user-container">
+      <div class="navbar-container">
+        <div class="navbar">
+          <ul class="nav-links">
+            <li><a href="" id="userDetailsLink"><i class="ph ph-user"></i>User Details</a></li>
+            <li class="active"><a href="" id="attendanceLink"><i class="ph ph-calendar-dots"></i>Attendance Records</a></li>
+            <li><a href="" id="paymentHistoryLink"><i class="ph ph-money"></i>Payment History</a></li>
+            <li><a href="" id="supplementRecordsLink"><i class="ph ph-barbell"></i>Supplement Records</a></li>
+          </ul>
         </div>
+      </div>
 
         <div class="user-container">
             <div class="calendar-container">
@@ -74,49 +64,45 @@
                 </div>
             </div>
         </div>
+        
+    </div>
 
-      </div>
+  </main>
 
-    </main>
-
-    <!-- SCRIPT -->
-    <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time();?>"></script>
-
-    <script>    
+  <!-- SCRIPT -->
+  <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
+  <script>
         document.addEventListener('DOMContentLoaded', () => {
             const currentDate = new Date();
             let currentMonth = currentDate.getMonth(); // 0 for January, 11 for December
             let currentYear = currentDate.getFullYear();
 
-            // Function to get URL parameter by name
+            let attendanceData = {}; // This will hold the attendance data for each day
+
             function getUrlParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
             }
 
-            // Get the 'id' parameter (member_id) from the URL
-            const trainerId = getUrlParameter('id');
-
-            if (trainerId) {
-            // Member ID is available, use it in the navigation link
-            document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/manager/trainers/viewTrainer?id=${trainerId}`;
-            document.getElementById('salaryHistoryLink').href = `<?php echo URLROOT; ?>/manager/trainers/salaryHistory?id=${trainerId}`;
-            document.getElementById('trainerCalendarLink').href = `<?php echo URLROOT; ?>/manager/trainers/trainerCalendar?id=${trainerId}`;
+            const memberId = getUrlParameter('id');
+            if (memberId) {
+                document.getElementById('userDetailsLink').href = `<?php echo URLROOT; ?>/manager/members/viewMember?id=${memberId}`;
+                document.getElementById('attendanceLink').href = `<?php echo URLROOT; ?>/manager/members/memberAttendance?id=${memberId}`;
+                document.getElementById('paymentHistoryLink').href = `<?php echo URLROOT; ?>/manager/members/memberPaymentHistory?id=${memberId}`;
+                document.getElementById('supplementRecordsLink').href = `<?php echo URLROOT; ?>/manager/members/memberSupplements?id=${memberId}`;
             } else {
-            // No member_id in the URL, show a message or handle accordingly
-            alert('No member selected.');
+                alert('No member selected.');
             }
 
-            function fetchBooking(month, year) {
-                fetch(`<?php echo URLROOT; ?>/Calendar/trainerCalendar?id=${trainerId}&month=${month + 1}&year=${year}`)
+            function fetchAttendance(month, year) {
+                fetch(`<?php echo URLROOT; ?>/Attendance/getAttendance?member_id=${memberId}&month=${month + 1}&year=${year}`)
                     .then(response => response.json())
                     .then(data => {
-                        if (data.bookings === undefined) {
+                        if (data.attendanceByDate === undefined) {
                             console.error("Invalid JSON response");
                             alert("Error: No data available for this month.");
                         } else {
-                            bookingData = data.bookings;
-                            // console.log("bookings",bookingData);
+                            attendanceData = data.attendanceByDate;
                             generateCalendar(month, year);
                         }
                     })
@@ -124,9 +110,9 @@
                         console.error('Error fetching attendance data:', error);
                         alert('Error fetching attendance data');
                     });
-            }   
-          fetchBooking(currentMonth,currentYear);    
-          
+            }
+
+
             // Generate calendar for the selected month
             function generateCalendar(month, year) {
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -149,15 +135,15 @@
                     cell.className = 'calendar-cell';
 
                     const header = `<div class="date">${day}</div>`;
-                    const logs = bookingData[dateStr] || [];
+                    const logs = attendanceData[dateStr] || [];
 
                     let summary = '';
                     if (logs.length > 0) {
                         const lastLog = logs[logs.length - 1];
                         summary = `
-                        <div class="booked-count">
-                            <span class="booking-dot"></span>
-                            <span>${logs.length} Booking${logs.length === 1 ? '' :'s'}</span>
+                        <div class="attendance-time">
+                            <span class="in">In: ${lastLog.time_in}</span>
+                            <span class="out">Out: ${lastLog.time_out}</span>
                         </div>`;
                     }
 
@@ -165,7 +151,7 @@
 
                     // Add event listener to show modal for full attendance logs
                     if (logs.length > 0) {
-                        cell.addEventListener('click', () => showBookingModal(logs, dateStr));
+                        cell.addEventListener('click', () => showAttendanceModal(logs, dateStr));
                     }
 
                     calendarGrid.appendChild(cell);
@@ -182,7 +168,7 @@
                 document.getElementById('monthLabel').textContent = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
             }
 
-            function showBookingModal(logs, dateStr) {
+            function showAttendanceModal(logs, dateStr) {
                 const modal = document.createElement('div');
                 modal.className = 'attendance-modal';
 
@@ -190,8 +176,8 @@
                 const tableRows = logs.map((r, index) => `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${r.member_name}</td>
-                        <td>${r.timeslot}</td>
+                        <td>${r.time_in}</td>
+                        <td>${r.time_out}</td>
                     </tr>
                 `).join('');
 
@@ -204,8 +190,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Member Name</th>
-                                    <th>Timeslot</th>
+                                    <th>Time-in</th>
+                                    <th>Time-out</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -236,15 +222,17 @@
                 });
             }
 
-             // Navigate to the previous month
-             document.getElementById('prevMonth').addEventListener('click', () => {
+
+
+            // Navigate to the previous month
+            document.getElementById('prevMonth').addEventListener('click', () => {
                 if (currentMonth === 0) {
                     currentMonth = 11;
                     currentYear--;
                 } else {
                     currentMonth--;
                 }
-                fetchBooking(currentMonth, currentYear);
+                fetchAttendance(currentMonth, currentYear);
             });
 
             // Navigate to the next month
@@ -255,12 +243,12 @@
                 } else {
                     currentMonth++;
                 }
-                fetchBooking(currentMonth, currentYear);
+                fetchAttendance(currentMonth, currentYear);
             });
 
+            // Initial fetch for the current month
+            fetchAttendance(currentMonth, currentYear);
         });
-    </script>
-
-
-  </body>
+  </script>
+</body>
 </html>
