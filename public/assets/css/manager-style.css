@@ -69,6 +69,7 @@ body.dark {
 
 .user-img img {
     width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
@@ -434,12 +435,12 @@ main > .title > .greeting > .bell-container:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
-main > .title > .greeting > .bell-container .notification {
+main > .title > .greeting > .bell-container .notification-icon {
     font-size: 1.5rem; /* Size of the bell icon */
     color: var(--text-color); /* Adjust the bell color */
 }
 
-main > .title > .greeting > .bell-container:hover .notification {
+main > .title > .greeting > .bell-container:hover .notification-icon {
     transform: scale(1.3); /* Pop out effect */
     animation: vibrate 0.3s ease-in-out infinite; /* Vibrate effect */
 }
@@ -730,598 +731,117 @@ body.dark form button:hover {
 }
 
 /*Announcement Main*/
-main .announcements-container{
+main .announcementsContainer{
+    margin-top: 2rem;
+    padding-bottom: 2rem;
     display: flex;
     align-items: center;
     flex-direction: column;
-}
-
-main .announcements-container .searchBar {
+    gap: 2rem;
     width: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 1rem;
-    z-index: 1000;
 }
 
-main .announcements-container .searchBar input[type="text"] {
-    width: 100%;
-    max-width: 400px; /* Limit maximum width for better layout on large screens */
-    padding: 0.75rem 1rem; /* Padding for a comfortable input size */
-    border: 1px solid #ddd; /* Light border for input */
-    border-radius: 2rem; /* Rounded edges for the input box */
-    font-size: 1rem; /* Comfortable font size */
-    color: #495057; /* Dark gray text */
-    background-color: #ffffff; /* White background for contrast */
-    outline: none; /* Remove outline on focus */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
-    transition: all 0.3s ease; /* Smooth transition for hover/focus */
-    margin-left: 3rem;
-}
-
-main .announcements-container .searchBar input[type="text"]:focus {
-    border-color: var(--primary-color); /* Primary purple-blue border on focus */
-    box-shadow: 0 0 6px rgba(105, 92, 254, 0.4); /* Glow effect */
-}
-
-main .announcements-container .heading{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 80%;
-}
-
-main .announcements-container .table-container {
-    width: 80%;
-    height: 100%;
-    padding: 2rem;
-    padding-left: 4rem;
-    padding-right: 4rem;
+main .announcementsContainer .announcement-card{
     background-color: var(--sidebar-color);
+    width: 90%;
+    padding: 2rem 2rem;
+    border-radius: 1.5rem;
+    display: block;
 }
 
-main .announcements-container .table-container .heading {
+main .announcementsContainer .announcement-card .announcementCard-Header{
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
     width: 100%;
 }
 
-main .announcements-container .table-container .heading .btn {
-    padding: 12px 30px;
-    background-color: var(--primary-color); /* Purple-blue button background */
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 3rem;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    text-decoration: none;
-    text-wrap: nowrap;
-}
-
-main .announcements-container .table-container .heading .btn:hover {
-    transform: scale(1.05);
-}
-
-/* Table Scrolling */
-main .announcements-container .table-container .table-scroll {
-    border: 1px solid #ddd;
-}
-
-main .announcements-container .table-container .table-scroll table {
-    width: 100%;
-    height: 100%; /* Adjust the height as needed */
-    border-collapse: collapse;
-    overflow-y: auto;
-}
-
-main .announcements-container .table-container .table-scroll table tbody tr:hover {
-    background-color: #f8f9fa;
-    cursor: pointer;
-}
-
-main .announcements-container table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-main .announcements-container table thead {
-    background-color: #f1f1f1;
-}
-
-main .announcements-container table thead td {
-    font-weight: 600;
-    padding: 1rem;
-    text-align: left;
-}
-
-main .announcements-container table tbody tr {
-    border-bottom: 1px solid #e9ecef;
-    transition: background-color 0.2s ease;
-}
-
-main .announcements-container table tbody tr:hover {
-    background-color: #f8f9fa;
-}
-
-main .announcements-container table td {
-    padding: 1rem;
-}
-
-main .announcements-container table td a {
-    color: #007bff;
-    margin-right: 10px;
-    font-size: 18px;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-main .announcements-container table td a:hover {
-    color: #0056b3;
-}
-
-main .announcements-container table tbody tr td[colspan] {
-    text-align: center;
-    vertical-align: middle;
-    height: 100px; /* Set a height for the row to make the message more prominent */
-    color: #6c757d; /* Optional: Add a soft color for the message */
-    font-size: 1rem; /* Adjust font size */
-    font-style: italic; /* Optional: Italicize the message for emphasis */
-}
-
-/* Profile Pic and Info */
-.profile-pic {
+main .announcementsContainer .announcement-card .announcementCard-Header .details{
     display: flex;
     align-items: center;
+    width: 92%;
 }
 
-.profile-pic img {
-    width: 40px;
-    height: 40px;
+main .announcementsContainer .announcement-card .announcementCard-Header .details .profile-img{
+    display: flex;
+    margin-left: 0.5rem;
+    width: 4.5rem;
+    height: 4.5rem;
     border-radius: 50%;
-    margin-right: 10px;
 }
 
-.person-info h4 {
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.person-info small {
-    font-size: 12px;
-    color: #6c757d;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .sidebar {
-        width: 200px;
-    }
-
-    main {
-        margin-left: 200px;
-        padding: 15px;
-    }
-
-    main .announcements-container .heading h2 {
-        font-size: 16px;
-    }
-
-    main .announcements-container .heading .btn {
-        font-size: 12px;
-        padding: 6px 10px;
-    }
-
-    main .announcements-container table td {
-        font-size: 14px;
-        padding: 8px;
-    }
-}
-
-/* Modal */
-main .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
+main .announcementsContainer .announcement-card .announcementCard-Header .details .profile-img img{
+    border-radius: 50%;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
-
-main .modal-content {
-    background: white;
-    padding: 3rem;
-    border-radius: 25px;
-    width: 35%;
-    overflow: hidden; /* Prevent overflow */
-    max-height: 80vh; /* Limit height to viewport */
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-main .modal-content .details{
-    display: flex;
-    align-items: center;
-    width: 100%;
-}
-
-main .modal-content .details .profile-img{
-    display: flex;
-    width: 4.75rem;
-}
-
-main .modal-content .details .profile-img img{
-    border-radius: 50%;
-    width: 100%;
     object-fit: cover;
 }
 
-main .modal-content .details .name-and-title{
+main .announcementsContainer .announcement-card .announcementCard-Header .details .name-and-title{
     margin-left: 1rem;
-    width: 100%;
     display: block;
     color: var(--hover-btn);
     text-align: left;
 }
 
-main .modal-content .details .name-and-title h3{
-    font-size: 1rem;
+main .announcementsContainer .announcement-card .announcementCard-Header .details .name-and-title h3{
     margin-bottom: 5px
 }
 
-main .modal-content h3{
-    margin: 10px 0;
-}
-
-main .modal-content #modalSubject{
-    font-size: 1.4rem;
-    width: 100%;
-}
-
-main .modal-body p {
-    margin: 5px 0;
-    color: #555;
+main .announcementsContainer .announcement-card .description{
+    margin-top: 1.5rem;
+    margin-left: 1rem;
+    color: var(--hover-btn);
     text-align: left;
 }
 
-main .modal-content #modalDescription{
-    margin: 2.5rem 0;
-    width: 100%;
-    font-size: 1rem;
-    height: auto; /* Allow dynamic height */
-    resize: vertical;  /* Allow vertical resizing */
-    overflow-y: auto;  /* Enable vertical scrolling */
-    width: 100%;
-}
-
-main .modal-content #modalDescription::-webkit-scrollbar {
-    width: 8px;
-}
-
-main .modal-content #modalDescription::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-main .modal-content #modalDescription::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-
-main .modal-content #modalDescription::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-main .modal-body .date-time{
+main .announcementsContainer .announcement-card .announcementCard-Footer{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-top: 1.5rem;
+    margin-left: 0.5rem;
     color: var(--hover-btn);
 }
 
-main .modal-body .date-time .announcement-date{
+main .announcementsContainer .announcement-card .announcementCard-Footer .announcement-time{
     display: flex;
     align-items: center;
 }
 
-main .modal-body .date-time .announcement-time{
+main .announcementsContainer .announcement-card .announcementCard-Footer .announcement-date{
     display: flex;
     align-items: center;
 }
 
-main .modal-body .date-time i{
+main .announcementsContainer .announcement-card .announcementCard-Footer i{
     font-size: 1.2rem;
-    margin-right: 6px;
+    margin-right: 0.5rem;
 }
 
-main .close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    cursor: pointer;
-}
-
-main .modal-body .modal-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 2rem;
-}
-
-
-.heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #444;
-}
-
-/* Dark Mode for .heading */
-body.dark .heading {
-    color: #CCC;
-}
-
-
-.btn {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    margin-top: 1rem;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-    text-align: center;
-}
-
-.btn:hover {
-    color: var(--text-color);
-    background: var(--primary-color-light);
-}
-
-body.dark .btn {
-    background-color: #636363;
-}
-
-
-
-.table {
-    margin-top: 10px;
-    width: 800px;
-    border-collapse: collapse;
-    margin-left: auto;
-    margin-right: auto;
-
-}
-
-
-thead td {
-    font-weight: 600;
-    color: #333;
-}
-
-/* Dark Mode for .heading */
-body.dark thead td {
-    color: #CCC;
-}
-
-table tbody tr:last-child {
-    border-bottom: none;
-}
-
-td {
-    padding: 9px 30px;
-    font-size: 15px;
-}
-
-/* Dark Mode for .tr */
-body.dark .list tr {
-    color: #CCC;
-}
-
-
-td i {
-    padding: 7px;
-    color: #fff;
-    border-radius: 50px;
-}
-
-.list th,
-.list td {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    text-align: left;
-}
-
-.list tbody tr:hover {
-    background: #f1f1f1;
-}
-
-body.dark .list tbody tr:hover {
-    background-color: #4d4d4dd3;
-}
-
-
-.person {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-    padding: 10px;
-
-}
-
-.person img.preview-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 15px;
-    object-fit: cover;
-}
-
-.person-info h4 {
-    margin: 0;
-    font-size: 16px;
-    color: #333;
-}
-
-/* Dark Mode for h4 */
-body.dark .person-info h4 {
-    color: #CCC;
-}
-
-
-.person-info small {
-    display: block;
-    color: #2693FF;
-    font-size: 14px;
-    margin-top: 4px;
-}
-
-.last-announcement table tbody td:last-child {
-    white-space: nowrap;
-}
-
-.ph-eye {
-    background: #32bea6;
-    cursor: pointer;
-}
-
-.ph-pen {
-    background: #63b4f4;
-    cursor: pointer;
-}
-
-.ph-trash {
-    background: #ed5564;
-    cursor: pointer;
-}
-
-@media (max-width: 1090px) {
-    .tables {
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+    main {
         grid-template-columns: 1fr;
-        padding: 0 10px;
     }
 
-    .last-announcement {
+    main .recent-announcements {
+        grid-column: 1;
+        grid-row: 3;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    main {
+        left: 0;
         width: 100%;
-        padding: 10px;
+        padding: 1rem;
     }
 
-    .table {
-        width: 100%;
-        margin-top: 10px;
+    main .insights {
+        grid-template-columns: 1fr;
     }
-
-    .search input {
-        padding: 0 20px;
-        font-size: 14px;
-    }
-
-    .heading {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .btn {
-        margin-top: 10px;
-    }
-
-    .list td,
-    .list th {
-        padding: 8px;
-    }
-}
-
-@media (max-width: 768px) {
-    .tables {
-        padding: 0 5px;
-    }
-
-
-    .last-announcement {
-        padding: 5px;
-    }
-
-    .list td,
-    .list th {
-        padding: 6px;
-    }
-}
-
-/*end of the announcement_main*/
-/*announcemt_view*/
-.announcement {
-    width: 100%;
-    max-width: 800px;
-    margin: 20px auto;
-    font-family: 'Poppins', sans-serif;
-    color: #777676;
-    background: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.announcement-header {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-}
-
-.announcement-bg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.title-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: #7a7a7a;
-}
-
-.announcement-title {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0;
-}
-
-.subtitle {
-    font-size: 14px;
-    margin-top: 10px;
-}
-
-.announcement-content {
-    padding: 20px;
-}
-
-.announcement-content p {
-    margin: 5px 0;
-    line-height: 1.6;
-}
-
-body.dark .announcement {
-    background-color: #333;
-    color: #fff;
 }
 
 /*report*/
@@ -3409,4 +2929,236 @@ main .retrieve-users .searchBar .add-user a button:hover {
 .error {
     color: red;
     font-size: 0.8em;
+}
+
+/* Settings Page */
+main .settings-container {
+    margin-top: 1rem;
+    background-color: var(--sidebar-color);
+    padding: 2rem;
+    border-radius: 20px;
+}
+
+main .settings-container .details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+main .settings-container .details .profile-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the profile picture */
+    justify-content: space-between;
+    gap: 15px;
+}
+
+main .settings-container .details .profile-picture img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+}
+
+main .settings-container .details .change-picture-btn {
+    margin: 0;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+main .settings-container .details .change-picture-btn:hover {
+    background-color: #0056b3;
+}
+
+main .settings-container .details p {
+    margin-bottom: 1rem;
+}
+
+main .settings-container .details .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%; /* Ensures full width for the fields */
+}
+
+main .settings-container .details .row > p {
+    flex: 1; /* Makes sure the input fields are evenly distributed */
+}
+
+main .settings-container .details p {
+    margin-bottom: 1rem;
+}
+
+main .settings-container .details p strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1rem;
+}
+
+main .settings-container .details input,
+main .settings-container .details select {
+    width: 100%; /* Ensure the input takes full width */
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #555;
+}
+
+main .settings-container .details input[disabled],
+main .settings-container .details select[disabled] {
+    background-color: #f9f9f9;
+    color: #999;
+}
+
+main .settings-container .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+main .settings-container .action-buttons button {
+    padding: 12px 24px; /* Adjust padding for better button size */
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+main .settings-container .action-buttons button.save-btn {
+    background-color: #4CAF50; /* Green for save button */
+    color: white;
+}
+
+main .settings-container .action-buttons button.save-btn:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+main .settings-container .action-buttons button.cancel-btn {
+    background-color: #f44336; /* Red for cancel button */
+    color: white;
+}
+
+main .settings-container .action-buttons button.cancel-btn:hover {
+    background-color: #e53935; /* Darker red on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .details {
+        flex-direction: column;
+    }
+
+    .title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    main .settings-container .details .row {
+        flex-direction: column; /* Stack fields in a column on small screens */
+    }
+
+    main .settings-container .details .row > p {
+        flex: unset; /* Removes the equal width constraint on smaller screens */
+    }
+
+    .inquiries-container {
+        min-width: 500px;
+        max-width: 850px;
+    }
+}
+
+/* Table container */
+.supplement-table {
+    width: 100%;
+    height: auto; /* Adjust as per your design */
+    overflow: hidden; /* Hide scrollbar by default */
+    position: relative;
+    border-radius: 0.5rem;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+/* Table styling */
+.supplement-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+}
+
+.supplement-table table thead tr{
+    background-color: #007bff;
+    color: #fff;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+
+/* Table Header Styling */
+.supplement-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+/* Table Cell Styling */
+.supplement-table td {
+    padding: 12px;
+    text-align: left;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+/* Image Styling */
+.supplement-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Row Hover Effect */
+.supplement-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Alternate Row Color */
+.supplement-table tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+/* Table Footer or No Records Message */
+.supplement-table p {
+    font-size: 16px;
+    color: #777;
+}
+
+/* Price Column Styling */
+.supplement-table td:last-child {
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* Responsive Styling for Table */
+@media screen and (max-width: 768px) {
+    .supplement-table table {
+        font-size: 14px;
+    }
+    .supplement-table th, .supplement-table td {
+        padding: 8px;
+    }
 }

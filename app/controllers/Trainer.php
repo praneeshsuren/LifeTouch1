@@ -212,7 +212,42 @@
         }
 
         public function workouts(){
-            $this->view('trainer/trainer-workouts');
+
+            $workoutView = new M_WorkoutEquipmentView;
+            $workout = $workoutView->findAll();
+
+            // Pass the workout data to the view
+            $data = [
+                'workouts' => $workout
+            ];
+            // Load the view and pass the data
+            $this->view('trainer/trainer-workouts', $data);
+        }
+
+        public function viewWorkout(){
+            $workout_id = $_GET['id'] ?? null;
+
+            if (!$workout_id) {
+                $_SESSION['error'] = 'Workout not found.';
+                redirect('trainer/workouts');
+                return;
+            }
+            $workout = new M_WorkoutEquipmentView;
+            $workoutDetails = $workout->getByWorkoutId($workout_id);
+
+
+            if (!$workoutDetails) {
+                $_SESSION['error'] = 'Workout not found.';
+                redirect('trainer/workouts');
+                return;
+            }
+
+
+            $data = [
+                'workout' => $workoutDetails 
+            ];
+
+            $this->view('trainer/trainer-viewWorkout', $data);
         }
 
         public function settings(){
@@ -249,8 +284,15 @@
                 $data = [];
         
                 // Only include fields that have been updated
-                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address'];
+                $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address', 'image'];
         
+                // Check for changes and add them to the data array
+                foreach ($fields as $field) {
+                    if (isset($_POST[$field]) && $_POST[$field] !== $existingTrainer->$field) {
+                        $data[$field] = $_POST[$field];
+                    }
+                }
+
                 // Check for changes and add them to the data array
                 foreach ($fields as $field) {
                     if (isset($_POST[$field]) && $_POST[$field] !== $existingTrainer->$field) {
@@ -286,18 +328,17 @@
                     }
                 }
         
-                // Handle profile picture upload
-                if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == UPLOAD_ERR_OK) {
-                    $fileTmp = $_FILES['profile_picture']['tmp_name'];
-                    $fileName = basename($_FILES['profile_picture']['name']);
-                    $targetPath = 'public/assets/images/Member/' . $fileName;
+                // Handle file upload if exists and if changed
+                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                    $targetDir = "assets/images/Admin/";
+                    $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                    $targetFile = $targetDir . $fileName;
         
-                    if (move_uploaded_file($fileTmp, $targetPath)) {
-                        $data['image'] = $fileName;
+                    // Validate the file (e.g., check file type and size) and move it to the target directory
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                        $data['image'] = $fileName; // Save the new filename for the database
                     } else {
-                        $_SESSION['error'] = "Failed to upload profile picture.";
-                        redirect('trainer/settings');
-                        return;
+                        $errors['file'] = "Failed to upload the file. Please try again.";
                     }
                 }
         
@@ -314,7 +355,7 @@
                     }
         
                     // Check if the updates were successful
-                    if (!$updatedTrainer && (isset($updatedUser) ? !$updatedUser : true)) {
+                    if ($updatedTrainer && (isset($updatedUser) ? !$updatedUser : true)) {
                         $_SESSION['success'] = "Settings have been successfully updated!";
                     } else {
                         $_SESSION['error'] = "No changes detected or update failed.";
@@ -329,6 +370,21 @@
             } else {
                 redirect('trainer/settings');
             }
+        }
+
+        public function notifications(){
+            // Assuming the user ID is stored in session
+            $userId = $_SESSION['user_id'];
+
+            // Fetch notifications from the Notification model
+            $notificationModel = new M_Notification();
+            $notifications = $notificationModel->getNotifications($userId);
+
+            // Pass notifications to the view
+            $data['notifications'] = $notifications;
+
+            // Load the notifications view
+            $this->view('trainer/trainer-notifications', $data);
         }
 
     }

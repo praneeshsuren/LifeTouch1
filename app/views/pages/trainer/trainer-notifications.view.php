@@ -64,7 +64,12 @@
     <script>
         function markAsRead(notificationId) {
             // Make a request to mark the notification as read
-            window.location.href = `index.php?action=markAsRead&notificationId=${notificationId}`;
+            window.location.href = `<?php echo URLROOT; ?>/notification/markAsRead?notificationId=${notificationId}`;
+        }
+
+        function markAllAsRead() {
+            // Make a request to mark all notifications as read
+            window.location.href = `<?php echo URLROOT; ?>/notification/markAllAsRead?userId=<?php echo $_SESSION['user_id']; ?>`;
         }
     </script>
 

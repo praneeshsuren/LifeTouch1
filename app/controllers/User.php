@@ -248,7 +248,7 @@
                     }
                 
                     // Begin the deletion process
-                    if (!$userModel->delete($userId, 'user_id')) {
+                    if ($userModel->delete($userId, 'user_id')) {
                         // Set success message if the deletion is successful
                         $_SESSION['success'] = "Member has been deleted successfully.";
                 
@@ -430,11 +430,9 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Initialize the Trainer model
                         $trainerModel = new M_Trainer;
-                        $trainer_id = $_POST['member_id'];
+                        $trainer_id = $_POST['trainer_id'];
                         $userRole = $_SESSION['role'];
                 
-                        // Validate the incoming data
-                        if ($trainerModel->validate($_POST)) {
                             // Prepare the data to update the trainer
                             $trainer = $trainerModel->findByTrainerId($trainer_id);
 
@@ -449,6 +447,9 @@
                                 'email_address' => $_POST['email_address'] ?? $trainer->email_address,
                                 'image'         => $trainer->image // Preserve current image by default
                             ];
+
+                            // Validate the incoming data
+                            if($trainerModel->validate($data)){
 
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
@@ -474,7 +475,7 @@
                             }
                 
                             // Call the update function if no errors
-                            if (empty($errors) && $trainer->update($trainer_id, $data, 'trainer_id')) {
+                            if (empty($errors) && $trainerModel->update($trainer_id, $data, 'trainer_id')) {
                                 $_SESSION['success'] = "Trainer has been successfully updated!";
                                 redirect("{$userRole}/trainers/viewTrainer?id={$trainer_id}");
                             } else {
@@ -798,7 +799,7 @@
                         }
 
                         // Begin the deletion process
-                        if (!$userModel->delete($userId, 'user_id')) {
+                        if ($userModel->delete($userId, 'user_id')) {
                             // Set success message if the deletion is successful
                             $_SESSION['success'] = "Trainer has been deleted successfully.";
                     

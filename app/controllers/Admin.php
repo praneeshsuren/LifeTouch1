@@ -481,7 +481,7 @@
                     }
         
                     // Check if the updates were successful
-                    if (!$updatedAdmin && (isset($updatedUser) ? !$updatedUser : true)) {
+                    if ($updatedAdmin && (isset($updatedUser) ? !$updatedUser : true)) {
                         $_SESSION['success'] = "Settings have been successfully updated!";
                     } else {
                         $_SESSION['error'] = "No changes detected or update failed.";

@@ -33,6 +33,16 @@
         </div>
 
         <div class="newMember">
+            <div class="retrieve-users" style="margin-left: 20px;">
+                <div class="searchBar" style="width: 300px;">
+                    <input
+                        type="text"
+                        id="supplementSearch"
+                        placeholder="Search by Supplement name..."
+                        onkeyup="filterTable()" />
+                </div>
+            </div>
+
             <div class="heading">
                 <a href="createSupplement" class="newMember-btn"><i class=" ph ph-plus"></i> Add Supplement</a>
             </div>
@@ -60,5 +70,17 @@
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time();?>"></script>
+    <script>
+    function filterTable() {
+        const input = document.getElementById("supplementSearch");
+        const filter = input.value.toLowerCase();
+        const trainers = document.querySelectorAll(".member-view-trainer .trainer");
+
+        trainers.forEach(trainer => {
+            const name = trainer.querySelector("h3").textContent.toLowerCase();
+            trainer.style.display = name.includes(filter) ? "" : "none";
+        });
+    }
+</script>
 
 </body>

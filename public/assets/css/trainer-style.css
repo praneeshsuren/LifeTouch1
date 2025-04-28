@@ -878,9 +878,8 @@ main .workouts-container {
     padding: 2rem;
     margin-top: 1rem;
     border-radius: 0.5rem;
-    height: 100vh;
     width: 100%;
-    overflow-y: scroll;
+    height: max-content;
 }
 
 main .workouts-container .workouts-header {
@@ -1021,6 +1020,7 @@ main .workouts-container .workouts-header .add-workout-btn:hover{
     overflow: hidden;
     width: 300px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
   }
   
   .workout-card:hover {
@@ -1253,18 +1253,30 @@ button {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 5rem;
+  border-radius: 10px;
 }
 
 button:hover {
   background-color: #0056b3;
 }
 
-#add-row {
-  background-color: #28a745;
+.schedule-btn{
+  width: 100%;
+  display: flex;
+  gap:3px
 }
 
-#add-row:hover {
+.add-row-btn {
+  background-color: #28a745;
+  margin: 0;
+  color: white;
+  border: none;
+  padding: 5px 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.add-row-btn:hover {
   background-color: #218838;
 }
 
@@ -1292,8 +1304,10 @@ button:disabled {
   background-color: red;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 5px 5px;
   cursor: pointer;
+  font-size: 0.9rem;
+
 }
 
 .delete-row-btn:hover {
@@ -1582,4 +1596,76 @@ main .settings-container .action-buttons button.cancel-btn:hover {
 .error {
   color: red;
   font-size: 0.8em;
+}
+
+main .view-workout-container{
+  width: 70%;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+main .view-workout-container .workout-detail-card {
+  padding: 20px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+main .view-workout-container .workout-detail-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+main .view-workout-container .workout-detail-card p {
+  font-size: 1rem;
+  margin: 10px 0;
+}
+main .view-workout-container .workout-detail-card .equipment-image{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+main .view-workout-container .workout-detail-card .equipment-image img{
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 3px solid #ddd;
+}
+main .view-workout-container .action-buttons {
+  margin-top: 20px;
+}
+main .view-workout-container .action-buttons a {
+  font-size: 1rem;
+  padding: 10px 20px;
+  margin-right: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+main .view-workout-container .btn {
+  background-color: #007bff;
+}
+main .view-workout-container .btn:hover {
+  background-color: #0056b3;
+}
+main .view-workout-container .delete-btn {
+  background-color: #dc3545;
+}
+main .view-workout-container .delete-btn:hover {
+  background-color: #c82333;
+}
+main .view-workout-container .hidden {
+  display: none;
+}
+main .view-workout-container .cancel-btn {
+  background-color: #6c757d;
+}
+main .view-workout-container .cancel-btn:hover {
+  background-color: #5a6268;
 }

@@ -50,7 +50,23 @@
         </div>
 
         <div class="workouts" id="workouts-container">
-            <!-- Workout cards will be dynamically inserted here -->
+        <?php if (!empty($data['workouts'])): ?>
+            <?php foreach ($data['workouts'] as $workout): ?>
+                <div class="workout-card" onclick="window.location.href='<?php echo URLROOT; ?>/trainer/viewWorkout?id=<?php echo $workout->workout_id; ?>'">
+                    <div class="workout-image">
+                        <img src="<?php echo URLROOT; ?>/assets/images/Equipment/<?php echo $workout->image; ?>" alt="Equipment Image" />
+                    </div>
+                    <div class="workout-details">
+                        <h3><?php echo htmlspecialchars($workout->workout_name); ?></h3>
+                        <p><strong>Description:</strong> <?php echo htmlspecialchars($workout->workout_description); ?></p>
+                        <p><strong>Equipment:</strong> <?php echo htmlspecialchars($workout->equipment_name); ?></p>
+                        <p><strong>Workout ID:</strong> <?php echo $workout->workout_id; ?></p>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No workouts found.</p>
+        <?php endif; ?>
         </div>
       </div>
     </main>
@@ -239,44 +255,6 @@
 
                 })
                 .catch(error => console.error('Error fetching equipment suggestions:', error));
-        }
-
-        // Fetch all workouts on page load
-        fetchWorkouts();
-
-        // Function to fetch workout data
-        function fetchWorkouts() {
-            fetch('<?php echo URLROOT; ?>/workout/api')
-                .then(response => response.json())
-                .then(data => {
-                    workoutData = data;
-                    displayWorkouts(data);
-                })
-                .catch(error => console.error('Error fetching workouts:', error));
-        }
-
-        function displayWorkouts(workouts) {
-            const container = document.getElementById('workouts-container');
-            container.innerHTML = '';  // Clear existing workouts
-
-            workouts.forEach(workout => {
-                const workoutCard = document.createElement('div');
-                workoutCard.classList.add('workout-card');
-                const { workout_id, workout_name, workout_description, equipment_name, image } = workout;
-
-                workoutCard.innerHTML = `
-                    <div class="workout-image">
-                        <img src="<?php echo URLROOT;?>/assets/images/Equipment/${image}" alt="Equipment Image" />
-                    </div>
-                    <div class="workout-details">
-                        <h3>${workout_name}</h3>
-                        <p><strong>Description:</strong> ${workout_description}</p>
-                        <p><strong>Equipment:</strong> ${equipment_name || 'N/A'}</p>
-                        <p><strong>Workout ID:</strong> ${workout_id}</p>
-                    </div>
-                `;
-                container.appendChild(workoutCard);
-            });
         }
 
         function resetModal() {
