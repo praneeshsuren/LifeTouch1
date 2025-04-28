@@ -84,12 +84,16 @@
                     <td class="description-cell"><input type="text" name="workout_details[0][description]"></td>
                     <td><input type="number" name="workout_details[0][sets]" min="1"></td>
                     <td><input type="number" name="workout_details[0][reps]" min="1"></td>
-                    <td><button type="button" class="delete-row-btn">Delete</button></td>
+                    <td>
+                      <div class="schedule-btn">
+                        <button type="button" class="delete-row-btn">Delete</button>
+                        <button type="button" class="add-row-btn">Add</button>
+                      </div>
+                    </td>
+
                   </tr>
               </tbody>
             </table>
-
-            <button type="button" id="add-row">Add Row</button>
 
             <div>
                 <label for="weight_beginning">Weight (kg):</label>
@@ -161,35 +165,39 @@
         populateWorkoutSelect(firstRow.querySelector('.workout-name-select'));
         addSelectChangeListener(firstRow.querySelector('.workout-name-select'));
 
-        document.getElementById('add-row').addEventListener('click', function () {
-          const newRow = tbody.rows[0].cloneNode(true);
-          const index = rowIndex++;
+        document.querySelector('#workout-schedule tbody').addEventListener('click', function (e) {
+  if (e.target && e.target.classList.contains('add-row-btn')) {
+    const tbody = document.querySelector('#workout-schedule tbody');
+    const newRow = tbody.rows[0].cloneNode(true);
+    const index = rowIndex++;
 
-          newRow.querySelectorAll('input, select').forEach(input => {
-            if (!input.classList.contains('row-number-input')) input.value = '';
-            const name = input.getAttribute('name');
-            if (name) {
-              const updatedName = name.replace(/\[\d+\]/, `[${index}]`);
-              input.setAttribute('name', updatedName);
-            }
-          });
+    newRow.querySelectorAll('input, select').forEach(input => {
+      if (!input.classList.contains('row-number-input')) input.value = '';
+      const name = input.getAttribute('name');
+      if (name) {
+        const updatedName = name.replace(/\[\d+\]/, `[${index}]`);
+        input.setAttribute('name', updatedName);
+      }
+    });
 
-          populateWorkoutSelect(newRow.querySelector('.workout-name-select'));
-          addSelectChangeListener(newRow.querySelector('.workout-name-select'));
+    populateWorkoutSelect(newRow.querySelector('.workout-name-select'));
+    addSelectChangeListener(newRow.querySelector('.workout-name-select'));
 
-          newRow.querySelector('.delete-row-btn').addEventListener('click', function () {
-            const rows = tbody.querySelectorAll('tr');
-            if (rows.length > 1) {
-              newRow.remove();
-              updateRowNumbers();
-            } else {
-              alert('At least one row is required.');
-            }
-          });
+    newRow.querySelector('.delete-row-btn').addEventListener('click', function () {
+      const rows = tbody.querySelectorAll('tr');
+      if (rows.length > 1) {
+        newRow.remove();
+        updateRowNumbers();
+      } else {
+        alert('At least one row is required.');
+      }
+    });
 
-          tbody.appendChild(newRow);
-          updateRowNumbers();
-        });
+    tbody.appendChild(newRow);
+    updateRowNumbers();
+  }
+});
+
 
         firstRow.querySelector('.delete-row-btn').addEventListener('click', function () {
           const rows = document.querySelectorAll('#workout-schedule tbody tr');

@@ -38,16 +38,6 @@
         </div>
 
         <div class="workout-schedule-container">
-            <div class="download-button" id="downloadPDF" data-schedule-id="<?php echo $data['schedule']->schedule_id; ?>">
-                <div class="download-wrapper">
-                    <div class="download-text">Download</div>
-                    <span class="download-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"></path>
-                        </svg>
-                    </span>
-                </div>
-            </div>
 
             <!-- Display Workout Rows (Row No, Description) -->
             <table id="workout-schedule">
@@ -131,7 +121,7 @@
 
                 <div class="action-buttons-update-schedule">
                     <button type="button" id="mark-completed">Mark as Completed</button>
-                    <button type="button" id="save-pdf">Save as PDF</button>
+                    <button type="button" id="downloadPDF" data-schedule-id="<?php echo $data['schedule']->schedule_id; ?>">Save as PDF</button>
                     <button type="button" id="delete-schedule">Delete Schedule</button>
                     <button type="submit" id="update-schedule">Update Schedule</button>
                 </div>
@@ -199,16 +189,14 @@
                     });
             }
         });
-    </script>
-    <script src="<?php echo URLROOT; ?>/assets/js/manager-script.js?v=<?php echo time(); ?>"></script>
-    <script>
+
         document.getElementById("downloadPDF").addEventListener("click", function(e) {
             e.preventDefault();
             const scheduleId = this.getAttribute("data-schedule-id");
             window.open(`<?php echo URLROOT; ?>/workout_pdf/generate/${scheduleId}`, '_blank');
         });
-
     </script>
+
     
 </body>
 

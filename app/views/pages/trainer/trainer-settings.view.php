@@ -45,100 +45,127 @@
       </div>
 
       <div class="settings-container">
-      <form id="settings-form" method="POST" action="<?php echo URLROOT; ?>/trainer/updateSettings" enctype="multipart/form-data">
-    <input type="hidden" name="user_id" value="<?php echo $data['trainer']->trainer_id; ?>">
 
-    <div class="details">
-        <!-- Profile Picture -->
-        <div class="profile-picture">
-            <img src="<?php echo URLROOT; ?>/assets/images/Member/<?php echo !empty($data['trainer']->image) ? $data['trainer']->image : 'default-placeholder.jpg'; ?>" alt="Profile Picture" id="userImage">
-            <input type="file" name="profile_picture" id="profilePictureInput" accept="image/*" style="display: none;" disabled>
-            <button type="button" id="changePictureBtn" class="change-picture-btn">Change Picture</button>
-        </div>
+        <form id="settings-form" method="POST" action="<?php echo URLROOT; ?>/trainer/updateSettings" enctype="multipart/form-data">
+          <input type="hidden" name="user_id" value="<?php echo $data['trainer']->trainer_id; ?>">
 
-        <!-- User Details -->
-        <div class="user-details">
-            <p>
-                <strong>Trainer ID:</strong>
-                <input type="text" id="trainer-id" name="trainer_id" value="<?php echo $data['trainer']->trainer_id; ?>" disabled>
-            </p>
-            <p>
-                <strong>Username:</strong>
-                <input type="text" id="username" name="username" value="<?php echo $data['user']->username; ?>" disabled>
-            </p>
-            <p>
-                <strong>Change Password:</strong>
-                <a href="#" id="changePasswordLink" class="change-password-link">Click here to change password</a>
-            </p>
-            <p>
-                <strong>First Name:</strong>
-                <input type="text" id="first-name" name="first_name" value="<?php echo $data['trainer']->first_name; ?>" disabled>
-                <?php if (isset($data['errors']['first_name'])): ?>
-                    <small class="error"><?php echo $data['errors']['first_name']; ?></small>
-                <?php endif; ?>
-            </p>
-            <p>
-                <strong>Last Name:</strong>
-                <input type="text" id="last-name" name="last_name" value="<?php echo $data['trainer']->last_name; ?>" disabled>
-                <?php if (isset($data['errors']['last_name'])): ?>
-                    <small class="error"><?php echo $data['errors']['last_name']; ?></small>
-                <?php endif; ?>
-            </p>
-            <p>
-                <strong>Email Address:</strong>
-                <input type="email" id="email" name="email_address" value="<?php echo $data['trainer']->email_address; ?>" disabled>
-                <?php if (isset($data['errors']['email_address'])): ?>
-                    <small class="error"><?php echo $data['errors']['email_address']; ?></small>
-                <?php endif; ?>
-            </p>
-            <div class="row">
-                <p>
-                    <strong>Date of Birth:</strong>
-                    <input type="date" id="dob" name="date_of_birth" value="<?php echo $data['trainer']->date_of_birth; ?>" disabled>
-                    <?php if (isset($data['errors']['date_of_birth'])): ?>
-                        <small class="error"><?php echo $data['errors']['date_of_birth']; ?></small>
-                    <?php endif; ?>
-                </p>
-                <p>
-                    <strong>Contact Number:</strong>
-                    <input type="number" id="contact" name="contact_number" value="<?php echo $data['trainer']->contact_number; ?>" disabled>
-                    <?php if (isset($data['errors']['contact_number'])): ?>
-                        <small class="error"><?php echo $data['errors']['contact_number']; ?></small>
-                    <?php endif; ?>
-                </p>
-            </div>
-            <p>
-                <strong>Home Address:</strong>
-                <input type="text" id="address" name="home_address" value="<?php echo $data['trainer']->home_address; ?>" disabled>
-                <?php if (isset($data['errors']['home_address'])): ?>
-                    <small class="error"><?php echo $data['errors']['home_address']; ?></small>
-                <?php endif; ?>
-            </p>
-            <p>
-                <strong>NIC Number:</strong>
-                <input type="number" id="NIC" name="NIC_no" value="<?php echo $data['trainer']->NIC_no; ?>" disabled>
-                <?php if (isset($data['errors']['NIC_no'])): ?>
-                    <small class="error"><?php echo $data['errors']['NIC_no']; ?></small>
-                <?php endif; ?>
-            </p>
-        </div>
-    </div>
+          <div class="details">
+              <!-- Profile Picture -->
+              <div class="profile-picture">
+                  <img src="<?php echo URLROOT; ?>/assets/images/Trainer/<?php echo !empty($data['trainer']->image) ? $data['trainer']->image : 'default-placeholder.jpg'; ?>" alt="Profile Picture" id="profilePicture">
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <button type="button" id="editBtn" class="edit-btn">Edit</button>
-        <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
-        <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;">Cancel</button>
-    </div>
-</form>
+                  <input 
+                    type="file" 
+                    name="image" 
+                    id="profilePictureInput" 
+                    accept="image/*" 
+                    style="display: none;"
+                  >
 
-      </div>    
+                  <button type="button" id="changePictureBtn" class="change-picture-btn" style="display: none;">Change Picture</button>
+              </div>
+
+              <!-- User Details -->
+              <div class="user-details">
+                  <p>
+                      <strong>Trainer ID:</strong>
+                      <input type="text" id="trainer-id" name="trainer_id" value="<?php echo $data['trainer']->trainer_id; ?>" disabled>
+                  </p>
+                  <p>
+                      <strong>Username:</strong>
+                      <input type="text" id="username" name="username" value="<?php echo $data['user']->username; ?>" disabled>
+                  </p>
+                  <p>
+                      <strong>Change Password:</strong>
+                      <a href="#" id="changePasswordLink" class="change-password-link">Click here to change password</a>
+                  </p>
+                  <p>
+                      <strong>First Name:</strong>
+                      <input type="text" id="first-name" name="first_name" value="<?php echo $data['trainer']->first_name; ?>" disabled>
+                      <?php if (isset($data['errors']['first_name'])): ?>
+                          <small class="error"><?php echo $data['errors']['first_name']; ?></small>
+                      <?php endif; ?>
+                  </p>
+                  <p>
+                      <strong>Last Name:</strong>
+                      <input type="text" id="last-name" name="last_name" value="<?php echo $data['trainer']->last_name; ?>" disabled>
+                      <?php if (isset($data['errors']['last_name'])): ?>
+                          <small class="error"><?php echo $data['errors']['last_name']; ?></small>
+                      <?php endif; ?>
+                  </p>
+                  <p>
+                      <strong>Email Address:</strong>
+                      <input type="email" id="email" name="email_address" value="<?php echo $data['trainer']->email_address; ?>" disabled>
+                      <?php if (isset($data['errors']['email_address'])): ?>
+                          <small class="error"><?php echo $data['errors']['email_address']; ?></small>
+                      <?php endif; ?>
+                  </p>
+                  <div class="row">
+                      <p>
+                          <strong>Date of Birth:</strong>
+                          <input type="date" id="dob" name="date_of_birth" value="<?php echo $data['trainer']->date_of_birth; ?>" disabled>
+                          <?php if (isset($data['errors']['date_of_birth'])): ?>
+                              <small class="error"><?php echo $data['errors']['date_of_birth']; ?></small>
+                          <?php endif; ?>
+                      </p>
+                      <p>
+                          <strong>Contact Number:</strong>
+                          <input type="number" id="contact" name="contact_number" value="<?php echo $data['trainer']->contact_number; ?>" disabled>
+                          <?php if (isset($data['errors']['contact_number'])): ?>
+                              <small class="error"><?php echo $data['errors']['contact_number']; ?></small>
+                          <?php endif; ?>
+                      </p>
+                  </div>
+                  <p>
+                      <strong>Home Address:</strong>
+                      <input type="text" id="address" name="home_address" value="<?php echo $data['trainer']->home_address; ?>" disabled>
+                      <?php if (isset($data['errors']['home_address'])): ?>
+                          <small class="error"><?php echo $data['errors']['home_address']; ?></small>
+                      <?php endif; ?>
+                  </p>
+                  <p>
+                      <strong>NIC Number:</strong>
+                      <input type="number" id="NIC" name="NIC_no" value="<?php echo $data['trainer']->NIC_no; ?>" disabled>
+                      <?php if (isset($data['errors']['NIC_no'])): ?>
+                          <small class="error"><?php echo $data['errors']['NIC_no']; ?></small>
+                      <?php endif; ?>
+                  </p>
+              </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+              <button type="button" id="editBtn" class="edit-btn">Edit</button>
+              <button type="submit" id="saveBtn" class="save-btn" style="display: none;">Save</button>
+              <button type="button" id="cancelBtn" class="cancel-btn" style="display: none;">Cancel</button>
+          </div>
+        </form>
+
+      </div>
     </main>
 
     <!-- SCRIPT -->
     <script src="<?php echo URLROOT; ?>/assets/js/trainer-script.js?v=<?php echo time();?>"></script>
 
     <script>
+
+      // Image change functionality
+      document.getElementById('changePictureBtn').addEventListener('click', () => {
+          document.getElementById('profilePictureInput').click();
+        });
+
+        document.getElementById('profilePictureInput').addEventListener('change', function() {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              document.getElementById('profilePicture').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+
       const editBtn = document.getElementById('editBtn');
       const saveBtn = document.getElementById('saveBtn');
       const cancelBtn = document.getElementById('cancelBtn');

@@ -47,6 +47,12 @@
                 </a>
             </li>
             <li>
+                <a href="<?php echo URLROOT; ?>/trainer/timeslot">
+                    <i class="ph ph-clock-counter-clockwise"></i>
+                    <span class="text">Availability</span>
+                </a>
+            </li>
+            <li>
                 <a href="<?php echo URLROOT; ?>/trainer/calendar">
                     <i class='icon ph-bold ph-calendar-dots'></i>
                     <span class="text">Calendar</span>

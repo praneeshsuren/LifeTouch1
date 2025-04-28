@@ -31,11 +31,9 @@
             if (empty($data['slot'])) {
                 $this->errors['slot'] = 'slot is required';
             } 
-            // If there are no errors, return true; otherwise, return false.
             return empty($this->errors);
         }
 
-        // Method to get errors after validation
         public function getErrors()
         {
             return $this->errors;

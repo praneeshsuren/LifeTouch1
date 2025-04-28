@@ -8,215 +8,287 @@
 
                 case 'registerMember':
 
-                    if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+                    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $member = new M_Member;
                         $user = new M_User;
                         $userRole = $_SESSION['role'];
-                    
-                        if (!isset($_POST['membership_plan'])) {
-                            $_POST['membership_plan'] = 'Monthly'; // Default value
-                        }
-                    
+                
+                        // Set default membership plan if not provided
+                        $_POST['membership_plan'] = $_POST['membership_plan'] ?? 'Monthly';
+                
+                        // Validate user and member data
                         if ($member->validate($_POST) && $user->validate($_POST)) {
                             $temp = $_POST;
-                    
-                            // Set trainer_id based on gender
-                            if ($temp['gender'] == 'Male') {
-                                $temp['member_id'] = 'MB/M/';
-                            } elseif ($temp['gender'] == 'Female') {
-                                $temp['member_id'] = 'MB/F/';
-                            } else {
-                                $temp['member_id'] = 'MB/O/';
-                            }
-                    
+                
+                            // Set member_id based on gender
+                            $temp['member_id'] = match($temp['gender']) {
+                                'Male' => 'MB/M/',
+                                'Female' => 'MB/F/',
+                                default => 'MB/O/',
+                            };
+                
                             // Get the last member_id from the database
                             $lastId = $member->getLastMemberId();
-                            $lastMemberId = $lastId ? $lastId->id : 0;  // Default if no members exist
-
+                            $lastMemberId = $lastId ? $lastId->id : 0; // Default to 0 if no members exist
+                
                             // Get the last 4 digits of the member_id and increment by 1
-                            $lastMemberOffset = substr($lastMemberId, -4);  // Get the last 4 digits (offset part)
-                            $newOffset = str_pad((int)$lastMemberOffset + 1, 4, '0', STR_PAD_LEFT); // Increment by 1 and pad to 4 digits
-                            $temp['member_id'] .= $newOffset;  // Append the new offset to member_id
-                    
+                            $lastMemberOffset = substr($lastMemberId, -4);  // Extract last 4 digits
+                            $newOffset = str_pad((int)$lastMemberOffset + 1, 4, '0', STR_PAD_LEFT); // Increment and pad to 4 digits
+                            $temp['member_id'] .= $newOffset; // Append to member_id
+                
+                            // Set user_id and hash password
                             $temp['user_id'] = $temp['member_id'];
-                    
                             $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
-                    
                             $temp['status'] = 'Active';
                             $temp['id'] = $lastMemberId + 1;
-                            
+                
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                                 $targetDir = "assets/images/Member/";
-                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $fileName = time() . "_" . basename($_FILES['image']['name']);
                                 $targetFile = $targetDir . $fileName;
-                    
-                                // Validate the file (e.g., check file type and size) and move it to the target directory
-                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                                    $temp['image'] = $fileName; // Save the filename for the database
+                
+                                // Validate file type and size
+                                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // Example file types
+                                if (in_array($_FILES['image']['type'], $allowedTypes)) {
+                                    if ($_FILES['image']['size'] <= 5 * 1024 * 1024) { // Max file size: 5MB
+                                        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                            $temp['image'] = $fileName; // Save filename for database
+                                        } else {
+                                            $errors['file'] = "Failed to upload the image. Please try again.";
+                                        }
+                                    } else {
+                                        $errors['file'] = "The file is too large. Max size is 5MB.";
+                                    }
                                 } else {
-                                    $errors['file'] = "Failed to upload the file. Please try again.";
+                                    $errors['file'] = "Invalid file type. Only JPEG, PNG, and GIF files are allowed.";
                                 }
                             }
-                    
-                            // If no image uploaded, leave the 'image' key as null (if not set)
-                            if (!isset($temp['image'])) {
-                                $temp['image'] = null;
-                            }
-                    
+                
                             // Insert the new member and user into the database
-                            $user->insert($temp);
-                            $member->insert($temp);
-                    
-                            // Set a session message or flag for success
-                            $_SESSION['success'] = "Member has been successfully registered!";
-                    
-                            // Check the user role and redirect accordingly
-                            if ($userRole == 'Admin') {
-                                redirect('admin/members');  // Redirect to admin's members page
-                            } elseif ($userRole == 'Receptionist') {
-                                redirect('receptionist/members');  // Redirect to receptionist's members page
-                            } elseif ($userRole == 'Manager') {
-                                redirect('manager/members');  // Redirect to manager's members page
+                            if (empty($errors)) {
+                                $user->insert($temp);
+                                $member->insert($temp);
+                
+                                // Set success message in session
+                                $_SESSION['success'] = "Member has been successfully registered!";
+                
+                                // Redirect based on the user role
+                                $roleRedirectMap = [
+                                    'Admin' => 'admin/members',
+                                    'Receptionist' => 'receptionist/members',
+                                    'Manager' => 'manager/members'
+                                ];
+                
+                                if (isset($roleRedirectMap[$userRole])) {
+                                    redirect($roleRedirectMap[$userRole]);
+                                } else {
+                                    // Handle case where user role is unrecognized
+                                    redirect('error/roleNotFound');
+                                }
                             } else {
-                                // Handle case where the user role is unrecognized
-                                redirect('error/roleNotFound');  // Redirect to an error page if the role is unrecognized
+                                // Merge validation errors and pass them to the view
+                                $data['errors'] = array_merge($user->errors, $member->errors, $errors);
+                
+                                // Display the relevant view based on the user role
+                                $roleViewMap = [
+                                    'Admin' => 'admin/admin-createMember',
+                                    'Receptionist' => 'receptionist/receptionist-createMember',
+                                    'Manager' => 'manager/manager-createMember'
+                                ];
+                
+                                $view = $roleViewMap[$userRole] ?? 'error/roleNotFound';
+                                $this->view($view, $data);
                             }
-                            $this->view('admin/admin-createMember', $data);
                         } else {
                             // Merge validation errors and pass to the view
                             $data['errors'] = array_merge($user->errors, $member->errors);
-                            if ($userRole == 'Admin') {
-                                $this->view('admin/admin-createMember', $data);
-                            } elseif ($userRole == 'Receptionist') {
-                                $this->view('receptionist/receptionist-createMember', $data);
-                            } elseif ($userRole == 'Manager') {
-                                $this->view('manager/manager-createMember', $data);
-                            } else {
-                                // Handle case where the user role is unrecognized
-                                redirect('error/roleNotFound');  // Redirect to an error page if the role is unrecognized
-                            }
+                
+                            // Display the relevant view based on the user role
+                            $roleViewMap = [
+                                'Admin' => 'admin/admin-createMember',
+                                'Receptionist' => 'receptionist/receptionist-createMember',
+                                'Manager' => 'manager/manager-createMember'
+                            ];
+                
+                            $view = $roleViewMap[$userRole] ?? '404';
+                            $this->view($view, $data);
                         }
                     }
+                    else{
+                        $userRole = $_SESSION['role'];
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/trainers');
+                                break;
+                            case 'Receptionist':
+                                redirect('receptionist/trainers');
+                                break;
+                            case 'Manager':
+                                redirect('manager/trainers');
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
+                    }
+                
+                    break;
+                
+
+                    case 'updateMember':
+
+                        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                            $memberModel = new M_Member;
+                            $userRole = $_SESSION['role'];
+                            $member_id = $_POST['member_id'];
+                    
+                            // Validate the incoming data
+                            if ($memberModel->validate($_POST)) {
+                                // Fetch existing member data
+                                $member = $memberModel->findByMemberId($member_id);
+                    
+                                // Prepare data to update (preserving existing values)
+                                $data = [
+                                    'first_name'    => $_POST['first_name'] ?? $member->first_name,
+                                    'last_name'     => $_POST['last_name'] ?? $member->last_name,
+                                    'NIC_no'        => $_POST['NIC_no'] ?? $member->NIC_no,
+                                    'date_of_birth' => $_POST['date_of_birth'] ?? $member->date_of_birth,
+                                    'home_address'  => $_POST['home_address'] ?? $member->home_address,
+                                    'height'        => $_POST['height'] ?? $member->height,
+                                    'weight'        => $_POST['weight'] ?? $member->weight,
+                                    'contact_number'=> $_POST['contact_number'] ?? $member->contact_number,
+                                    'gender'        => $_POST['gender'] ?? $member->gender,
+                                    'email_address' => $_POST['email_address'] ?? $member->email_address,
+                                    'membership_plan'=> $_POST['membership_plan'] ?? $member->membership_plan,
+                                    'image'         => $member->image // Preserve current image by default
+                                ];
+                    
+                                // Handle file upload if exists
+                                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                                    $targetDir = "assets/images/Member/";
+                                    $fileName = time() . "_" . basename($_FILES['image']['name']);
+                                    $targetFile = $targetDir . $fileName;
+                    
+                                    // Validate file type and size
+                                    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                                    if (in_array($_FILES['image']['type'], $allowedTypes)) {
+                                        if ($_FILES['image']['size'] <= 5 * 1024 * 1024) { // Max size 5MB
+                                            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                                $data['image'] = $fileName;
+                                            } else {
+                                                $errors['file'] = "Failed to upload the file. Please try again.";
+                                            }
+                                        } else {
+                                            $errors['file'] = "The file is too large. Max size is 5MB.";
+                                        }
+                                    } else {
+                                        $errors['file'] = "Invalid file type. Only JPEG, PNG, and GIF are allowed.";
+                                    }
+                                }
+                    
+                                // Call the update function if no errors
+                                if (empty($errors) && !$memberModel->update($member_id, $data, 'member_id')) {
+                                    $_SESSION['success'] = "Member has been successfully updated!";
+                                    redirect("{$userRole}/members/viewMember?id={$member_id}");
+                                } else {
+                                    $_SESSION['error'] = "There was an issue updating the member. Please try again.";
+                                    redirect("{$userRole}/members/viewMember?id={$member_id}");
+                                }
+                            } else {
+                                // Validation failed, pass errors and form data
+                                $data = [
+                                    'errors' => $memberModel->errors,
+                                    'member' => $_POST
+                                ];
+
+                                // Load the appropriate view based on the user role
+                                $viewPath = $userRole . '-viewMember?id='. $member_id; // Create the view path dynamically
+                                $this->view("{$userRole}/{$viewPath}", $data); // Dynamic view loading
+                            }
+
+                        } else {
+                            // Redirect based on the user role
+                            $userRole = $_SESSION['role'];
+                            switch ($userRole) {
+                                case 'Admin':
+                                    redirect('admin/members');
+                                    break;
+                                case 'Receptionist':
+                                    redirect('receptionist/members');
+                                    break;
+                                case 'Manager':
+                                    redirect('manager/members');
+                                    break;
+                                case 'Trainer':
+                                    redirect('trainer/members');
+                                    break;
+                                default:
+                                    // Handle case where the role is unrecognized
+                                    redirect('404');
+                                    break;
+                            }
+                        }
+                        
+                        break;
                     
 
-                    break;
-
-                case 'updateMember':
-
-                    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                        // Initialize the Trainer model
-                        $memberModel = new M_Member;
-                        $userRole = $_SESSION['role'];
-                        // Validate the incoming data
-                        if ($memberModel->validate($_POST)) {
-                            // Prepare the data to update the trainer
-
-                            $data = [
-                                'first_name'    => $_POST['first_name'],
-                                'last_name'     => $_POST['last_name'],
-                                'NIC_no'        => $_POST['NIC_no'],
-                                'date_of_birth' => $_POST['date_of_birth'],
-                                'home_address'  => $_POST['home_address'],
-                                'height'        => $_POST['height'],
-                                'weight'        => $_POST['weight'],
-                                'contact_number'=> $_POST['contact_number'],
-                                'gender'        => $_POST['gender'],
-                                'email_address' => $_POST['email_address'],
-                                'membership_plan' => $_POST['membership_plan'],
-                                'image'         => $_POST['image']
-                            ];
-
-                            $member_id = $_POST['member_id'];
-                            $member = $memberModel->findByMemberId($member_id); // Fetch the existing member data
-
-                            // Handle file upload if exists
-                            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                                $targetDir = "assets/images/Member/";
-                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
-                                $targetFile = $targetDir . $fileName;
-
-                                // Validate the file (e.g., check file type and size) and move it to the target directory
-                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                                    $data['image'] = $fileName; // Save the filename for the database
-                                } else {
-                                    $errors['file'] = "Failed to upload the file. Please try again.";
-                                }
-                            }
-
-                            // If no image uploaded, leave the 'image' key as null (if not set)
-                            if (!isset($data['image'])) {
-                                $data['image'] = $member->image; // Preserve the existing image if no new one is uploaded
-                            }
-                
-                            // Call the update function
-                            if (!$memberModel->update($member_id, $data, 'member_id')) {
-                                // Set a success session message
-                                $_SESSION['success'] = "Member has been successfully updated!";
-
-                                // Check the user role and redirect accordingly
-                                if ($userRole == 'Admin') {
-                                    redirect('admin/members/viewMember?id=' . $member_id);
-                                } elseif ($userRole == 'Receptionist') {
-                                    redirect('receptionist/members/viewMember?id=' . $member_id);
-                                } elseif ($userRole == 'Trainer') {
-                                    redirect('trainer/members/viewMember?id=' . $member_id);
-                                } elseif ($userRole == 'Manager') {
-                                    redirect('manager/members/viewMember?id=' . $member_id);
-                                }
-                            } else {
-                                // Handle update failure (optional)
-                                $_SESSION['error'] = "There was an issue updating the member. Please try again.";
-                                redirect('admin/members/viewMember?id=' . $member_id);
-                            }
-                        } else {
-                            // If validation fails, pass errors to the view
-                            $data = [
-                                'errors' => $memberModel->errors,
-                                'member' => $_POST // Preserve form data for user correction
-                            ];
-                            // Render the view with errors and form data
-                            $this->view('admin/admin-viewMember', $data);
-                        }
-                    } else {
-                        // Redirect if the request is not a POST request
-                        redirect('admin/members');
-                    }
-
-                    break;
-
                 case 'deleteMember':
-
                     $userModel = new M_User;
                 
                     // Get the user ID from the GET parameters
                     $userId = $_GET['id'];
-            
-                    // Begin the deletion process
-                    if (!$userModel->delete($userId, 'user_id')) {
-            
-                        $_SESSION['success'] = "Member has been deleted successfully";
-        
-                        redirect('admin/members');
-                    } 
-                    else {
-                        // Handle deletion failure
-                        $_SESSION['error'] = "There was an issue deleting the member. Please try again.";
-                        redirect('admin/members/viewMember?id=' . $userId);
+                    $userRole = $_SESSION['role'];
+                
+                    // Check if the user has the required permission to delete members
+                    if (!isset($userId) || empty($userId)) {
+                        $_SESSION['error'] = "Invalid member ID.";
+                        redirect("{$userRole}/members");
                     }
-
-                    break;
-
-                default:
-                    // Fetch all members and pass to the view
-                    $memberModel = new M_Member;
-                    $members = $memberModel->findAll('created_at');
-
-                    $data = [
-                        'members' => $members
-                    ];
-
-                    $this->view('admin/admin-members', $data);
+                
+                    // Begin the deletion process
+                    if ($userModel->delete($userId, 'user_id')) {
+                        // Set success message if the deletion is successful
+                        $_SESSION['success'] = "Member has been deleted successfully.";
+                
+                        // Redirect based on the user's role
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/members');
+                                break;
+                            case 'Receptionist':
+                                redirect('receptionist/members');
+                                break;
+                            case 'Manager':
+                                redirect('manager/members');
+                                break;
+                            case 'Trainer':
+                                redirect('trainer/members');
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
+                    } else {
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/members/viewMember?id=' . $userId);
+                                break;
+                            case 'Receptionist':
+                                redirect('receptionist/members/viewMember?id=' . $userId);
+                                break;
+                            case 'Manager':
+                                redirect('manager/members/viewMember?id=' . $userId);
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
+                    }
+                
                     break;
                 
             }
@@ -235,64 +307,121 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $trainer = new M_Trainer;
                         $user = new M_User;
+                        $userRole = $_SESSION['role'];
             
                         if ($trainer->validate($_POST) && $user->validate($_POST)) {
                             $temp = $_POST;
             
-                            // Set trainer_id based on gender
-                            if ($temp['gender'] == 'Male') {
-                                $temp['trainer_id'] = 'TN/M/';
-                            } elseif ($temp['gender'] == 'Female') {
-                                $temp['trainer_id'] = 'TN/F/';
-                            } else {
-                                $temp['trainer_id'] = 'TN/O/';
-                            }
+                            $temp['trainer_id'] = match($temp['gender']) {
+                                'Male' => 'TN/M/',
+                                'Female' => 'TN/F/',
+                                default => 'TN/O/',
+                            };
             
-                            // Generate a 4-digit trainer ID offset
-                            $offset = str_pad($trainer->countAll() + 1, 4, '0', STR_PAD_LEFT);
-                            $temp['trainer_id'] .= $offset;
+                            // Get the last member_id from the database
+                            $lastId = $trainer->getLastTrainerId();
+                            $lastTrainerId = $lastId ? $lastId->id : 0; // Default to 0 if no members exist
+                
+                            // Get the last 4 digits of the member_id and increment by 1
+                            $lastMemberOffset = substr($lastTrainerId, -4);  // Extract last 4 digits
+                            $newOffset = str_pad((int)$lastMemberOffset + 1, 4, '0', STR_PAD_LEFT); // Increment and pad to 4 digits
+                            $temp['trainer_id'] .= $newOffset; // Append to member_id
+                
+                            // Set user_id and hash password
                             $temp['user_id'] = $temp['trainer_id'];
-            
                             $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
-
                             $temp['status'] = 'Active';
-
+                            $temp['id'] = $lastTrainerId + 1;
+                
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                                 $targetDir = "assets/images/Trainer/";
-                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $fileName = time() . "_" . basename($_FILES['image']['name']);
                                 $targetFile = $targetDir . $fileName;
-
-                                // Validate the file (e.g., check file type and size) and move it to the target directory
-                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                                    $temp['image'] = $fileName; // Save the filename for the database
+                
+                                // Validate file type and size
+                                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // Example file types
+                                if (in_array($_FILES['image']['type'], $allowedTypes)) {
+                                    if ($_FILES['image']['size'] <= 5 * 1024 * 1024) { // Max file size: 5MB
+                                        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                            $temp['image'] = $fileName; // Save filename for database
+                                        } else {
+                                            $errors['file'] = "Failed to upload the image. Please try again.";
+                                        }
+                                    } else {
+                                        $errors['file'] = "The file is too large. Max size is 5MB.";
+                                    }
                                 } else {
-                                    $errors['file'] = "Failed to upload the file. Please try again.";
+                                    $errors['file'] = "Invalid file type. Only JPEG, PNG, and GIF files are allowed.";
                                 }
                             }
-
-                            // If no image uploaded, leave the 'image' key as null (if not set)
-                            if (!isset($temp['image'])) {
-                                $temp['image'] = null;
+                
+                            if (empty($errors)) {
+                                $user->insert($temp);
+                                $trainer->insert($temp);
+                
+                                // Set success message in session
+                                $_SESSION['success'] = "Trainer has been successfully registered!";
+                
+                                // Redirect based on the user role
+                                $roleRedirectMap = [
+                                    'Admin' => 'admin/trainers',
+                                    'Receptionist' => 'receptionist/trainers',
+                                    'Manager' => 'manager/trainers'
+                                ];
+                
+                                if (isset($roleRedirectMap[$userRole])) {
+                                    redirect($roleRedirectMap[$userRole]);
+                                } else {
+                                    // Handle case where user role is unrecognized
+                                    redirect('404');
+                                }
+                            } else {
+                                // Merge validation errors and pass them to the view
+                                $data['errors'] = array_merge($user->errors, $trainer->errors, $errors);
+                
+                                // Display the relevant view based on the user role
+                                $roleViewMap = [
+                                    'Admin' => 'admin/admin-createTrainer',
+                                    'Receptionist' => 'receptionist/receptionist-createTrainer',
+                                    'Manager' => 'manager/manager-createTrainer'
+                                ];
+                
+                                $view = $roleViewMap[$userRole] ?? 'error/roleNotFound';
+                                $this->view($view, $data);
                             }
-
-                            // Insert into User and Member models
-                            $user->insert($temp);
-                            $trainer->insert($temp);
-            
-                            // Set a session message or flag for success
-                            $_SESSION['success'] = "Trainer has been successfully registered!";
-            
-                            // Redirect to trainers list with success message
-                            redirect('admin/trainers');
                         } else {
                             // Merge validation errors and pass to the view
                             $data['errors'] = array_merge($user->errors, $trainer->errors);
-                            $this->view('admin/admin-createTrainer', $data);
+                
+                            // Display the relevant view based on the user role
+                            $roleViewMap = [
+                                'Admin' => 'admin/admin-createTrainer',
+                                'Receptionist' => 'receptionist/receptionist-createTrainer',
+                                'Manager' => 'manager/manager-createTrainer'
+                            ];
+                
+                            $view = $roleViewMap[$userRole] ?? '404';
+                            $this->view($view, $data);
                         }
                     }
                     else{
-                        redirect('admin/trainers');
+                        $userRole = $_SESSION['role'];
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/trainers');
+                                break;
+                            case 'Receptionist':
+                                redirect('receptionist/trainers');
+                                break;
+                            case 'Manager':
+                                redirect('manager/trainers');
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
                     }
                     break;
 
@@ -301,79 +430,87 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Initialize the Trainer model
                         $trainerModel = new M_Trainer;
+                        $trainer_id = $_POST['trainer_id'];
                         $userRole = $_SESSION['role'];
                 
-                        // Validate the incoming data
-                        if ($trainerModel->validate($_POST)) {
                             // Prepare the data to update the trainer
+                            $trainer = $trainerModel->findByTrainerId($trainer_id);
 
                             $data = [
-                                'first_name'    => $_POST['first_name'],
-                                'last_name'     => $_POST['last_name'],
-                                'NIC_no'        => $_POST['NIC_no'],
-                                'date_of_birth' => $_POST['date_of_birth'],
-                                'home_address'  => $_POST['home_address'],
-                                'contact_number'=> $_POST['contact_number'],
-                                'gender'        => $_POST['gender'],
-                                'email_address' => $_POST['email_address'],
-                                'image'         => $_POST['image']
+                                'first_name'    => $_POST['first_name'] ?? $trainer->first_name,
+                                'last_name'     => $_POST['last_name'] ?? $trainer->last_name,
+                                'NIC_no'        => $_POST['NIC_no'] ?? $trainer->NIC_no,
+                                'date_of_birth' => $_POST['date_of_birth'] ?? $trainer->date_of_birth,
+                                'home_address'  => $_POST['home_address'] ?? $trainer->home_address,
+                                'contact_number'=> $_POST['contact_number'] ?? $trainer->contact_number,
+                                'gender'        => $_POST['gender'] ?? $trainer->gender,
+                                'email_address' => $_POST['email_address'] ?? $trainer->email_address,
+                                'image'         => $trainer->image // Preserve current image by default
                             ];
 
-                            $trainer_id = $_POST['trainer_id'];
-                            $trainer = $trainerModel->findByTrainerId($trainer_id);
+                            // Validate the incoming data
+                            if($trainerModel->validate($data)){
 
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                                 $targetDir = "assets/images/Trainer/";
-                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $fileName = time() . "_" . basename($_FILES['image']['name']);
                                 $targetFile = $targetDir . $fileName;
-
-                                // Validate the file (e.g., check file type and size) and move it to the target directory
-                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                                    $data['image'] = $fileName; // Save the filename for the database
+                
+                                // Validate file type and size
+                                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                                if (in_array($_FILES['image']['type'], $allowedTypes)) {
+                                    if ($_FILES['image']['size'] <= 5 * 1024 * 1024) { // Max size 5MB
+                                        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                            $data['image'] = $fileName;
+                                        } else {
+                                            $errors['file'] = "Failed to upload the file. Please try again.";
+                                        }
+                                    } else {
+                                        $errors['file'] = "The file is too large. Max size is 5MB.";
+                                    }
                                 } else {
-                                    $errors['file'] = "Failed to upload the file. Please try again.";
+                                    $errors['file'] = "Invalid file type. Only JPEG, PNG, and GIF are allowed.";
                                 }
-                            }
-
-                            // If no image uploaded, leave the 'image' key as null (if not set)
-                            if (!isset($data['image'])) {
-                                $data['image'] = $trainer->image; // Preserve the existing image if no new one is uploaded
                             }
                 
-                            // Call the update function
-                            if (!$trainerModel->update($trainer_id, $data, 'trainer_id')) {
-                                // Set a success session message
+                            // Call the update function if no errors
+                            if (empty($errors) && $trainerModel->update($trainer_id, $data, 'trainer_id')) {
                                 $_SESSION['success'] = "Trainer has been successfully updated!";
-
-                                // Check the user role and redirect accordingly
-                                if ($userRole == 'Admin') {
-                                    redirect('admin/trainers/viewTrainer?id=' . $trainer_id);
-                                } elseif ($userRole == 'Receptionist') {
-                                    redirect('receptionist/trainers/viewTrainer?id=' . $trainer_id);
-                                } elseif ($userRole == 'Trainer') {
-                                    redirect('trainer/trainers/viewTrainer?id=' . $trainer_id);
-                                } elseif ($userRole == 'Manager') {
-                                    redirect('manager/trainers/viewTrainer?id=' . $trainer_id);
-                                }
-                                
+                                redirect("{$userRole}/trainers/viewTrainer?id={$trainer_id}");
                             } else {
-                                // Handle update failure (optional)
-                                $_SESSION['error'] = "There was an issue updating the trainer. Please try again.";
-                                redirect('admin/trainers/viewTrainer?id=' . $trainer_id);
+                                $_SESSION['error'] = "There was an issue updating the Trainer. Please try again.";
+                                redirect("{$userRole}/trainers/viewTrainer?id={$trainer_id}");
                             }
                         } else {
-                            // If validation fails, pass errors to the view
+                            // Validation failed, pass errors and form data
                             $data = [
                                 'errors' => $trainerModel->errors,
-                                'trainer' => $_POST // Preserve form data for user correction
+                                'member' => $_POST
                             ];
-                            // Render the view with errors and form data
-                            $this->view('admin/admin-viewTrainer', $data);
+
+                            // Load the appropriate view based on the user role
+                            $viewPath = $userRole . '-viewTrainer?id='. $trainer_id; // Create the view path dynamically
+                            $this->view("{$userRole}/{$viewPath}", $data); // Dynamic view loading
                         }
                     } else {
-                        // Redirect if the request is not a POST request
-                        redirect('admin/trainers');
+                        // Redirect based on the user role
+                        $userRole = $_SESSION['role'];
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/trainers');
+                                break;
+                            case 'Receptionist':
+                                redirect('receptionist/trainers');
+                                break;
+                            case 'Manager':
+                                redirect('manager/trainers');
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
                     }
                     break;
 
@@ -383,34 +520,57 @@
                 
                         // Get the user ID from the GET parameters
                         $userId = $_GET['id'];
+                        $userRole = $_SESSION['role'];
                 
                         // Begin the deletion process
-                        if (!$userModel->delete($userId, 'user_id')) {
-                
-                            $_SESSION['success'] = "Trainer has been deleted successfully";
-            
-                            redirect('admin/trainers');
-                        } 
-                        else {
+                        if (!isset($userId) || empty($userId)) {
+                            $_SESSION['error'] = "Invalid Trainer ID.";
+                            redirect("{$userRole}/trainers");
+                        }
+
+                        // Begin the deletion process
+                        if ($userModel->delete($userId, 'user_id')) {
+                            // Set success message if the deletion is successful
+                            $_SESSION['success'] = "Trainer has been deleted successfully.";
+                    
+                            // Redirect based on the user's role
+                            switch ($userRole) {
+                                case 'Admin':
+                                    redirect('admin/trainers');
+                                    break;
+                                case 'Receptionist':
+                                    redirect('receptionist/trainers');
+                                    break;
+                                case 'Manager':
+                                    redirect('manager/trainers');
+                                    break;
+                                default:
+                                    // Handle case where the role is unrecognized
+                                    redirect('404');
+                                    break;
+                        }
+                        } else {
                             // Handle deletion failure
-                            $_SESSION['error'] = "There was an issue deleting the trainer. Please try again.";
-                            redirect('admin/trainers/viewTrainer?id=' . $userId);
+                            $_SESSION['error'] = "There was an issue deleting the Trainer. Please try again.";
+                    
+                            switch ($userRole) {
+                                case 'Admin':
+                                    redirect('admin/trainers/viewTrainer?id=' . $userId);
+                                    break;
+                                case 'Receptionist':
+                                    redirect('receptionist/trainers/viewTrainer?id=' . $userId);
+                                    break;
+                                case 'Manager':
+                                    redirect('manager/trainers/viewTrainer?id=' . $userId);
+                                    break;
+                                default:
+                                    // Handle case where the role is unrecognized
+                                    redirect('404');
+                                    break;
+                            }
                         }
 
                     break;                    
-                                       
-        
-                default:
-                    // Fetch all trainers and pass to the view
-                    $trainerModel = new M_Trainer;
-                    $trainers = $trainerModel->findAll('created_at');
-        
-                    $data = [
-                        'trainers' => $trainers
-                    ];
-        
-                    $this->view('admin/admin-trainers', $data);
-                    break;
             }
         }
 
@@ -421,64 +581,115 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $receptionist = new M_Receptionist;
                         $user = new M_User;
+                        $userRole = $_SESSION['role'];
             
                         if ($receptionist->validate($_POST) && $user->validate($_POST)) {
                             $temp = $_POST;
             
-                            // Set receptionist_id based on gender
-                            if ($temp['gender'] == 'Male') {
-                                $temp['receptionist_id'] = 'RT/M/';
-                            } elseif ($temp['gender'] == 'Female') {
-                                $temp['receptionist_id'] = 'RT/F/';
-                            } else {
-                                $temp['receptionist_id'] = 'RT/O/';
-                            }
+                            $temp['receptionist_id'] = match($temp['gender']) {
+                                'Male' => 'RT/M/',
+                                'Female' => 'RT/F/',
+                                default => 'RT/O/',
+                            };
             
-                            // Generate a 4-digit receptionist ID offset
-                            $offset = str_pad($receptionist->countAll() + 1, 4, '0', STR_PAD_LEFT);
-                            $temp['receptionist_id'] .= $offset;
+                            // Get the last member_id from the database
+                            $lastId = $receptionist->getLastReceptionistId();
+                            $lastReceptionistId = $lastId ? $lastId->id : 0; // Default to 0 if no members exist
+                
+                            // Get the last 4 digits of the member_id and increment by 1
+                            $lastReceptionistOffset = substr($lastReceptionistId, -4);  // Extract last 4 digits
+                            $newOffset = str_pad((int)$lastReceptionistOffset + 1, 4, '0', STR_PAD_LEFT); // Increment and pad to 4 digits
+                            $temp['receptionist_id'] .= $newOffset; // Append to member_id
+                
+                            // Set user_id and hash password
                             $temp['user_id'] = $temp['receptionist_id'];
-            
                             $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
-
                             $temp['status'] = 'Active';
+                            $temp['id'] = $lastReceptionistId + 1;
 
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                                 $targetDir = "assets/images/Receptionist/";
-                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $fileName = time() . "_" . basename($_FILES['image']['name']);
                                 $targetFile = $targetDir . $fileName;
-
-                                // Validate the file (e.g., check file type and size) and move it to the target directory
-                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                                    $temp['image'] = $fileName; // Save the filename for the database
+                
+                                // Validate file type and size
+                                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // Example file types
+                                if (in_array($_FILES['image']['type'], $allowedTypes)) {
+                                    if ($_FILES['image']['size'] <= 5 * 1024 * 1024) { // Max file size: 5MB
+                                        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                            $temp['image'] = $fileName; // Save filename for database
+                                        } else {
+                                            $errors['file'] = "Failed to upload the image. Please try again.";
+                                        }
+                                    } else {
+                                        $errors['file'] = "The file is too large. Max size is 5MB.";
+                                    }
                                 } else {
-                                    $errors['file'] = "Failed to upload the file. Please try again.";
+                                    $errors['file'] = "Invalid file type. Only JPEG, PNG, and GIF files are allowed.";
                                 }
                             }
 
-                            // If no image uploaded, leave the 'image' key as null (if not set)
-                            if (!isset($temp['image'])) {
-                                $temp['image'] = null;
+                            if (empty($errors)) {
+                                $user->insert($temp);
+                                $receptionist->insert($temp);
+                
+                                // Set success message in session
+                                $_SESSION['success'] = "Receptionist has been successfully registered!";
+                
+                                // Redirect based on the user role
+                                $roleRedirectMap = [
+                                    'Admin' => 'admin/receptionists',
+                                    'Manager' => 'manager/receptionists'
+                                ];
+                
+                                if (isset($roleRedirectMap[$userRole])) {
+                                    redirect($roleRedirectMap[$userRole]);
+                                } else {
+                                    // Handle case where user role is unrecognized
+                                    redirect('404');
+                                }
+                            } else {
+                                // Merge validation errors and pass them to the view
+                                $data['errors'] = array_merge($user->errors, $receptionist->errors, $errors);
+                
+                                // Display the relevant view based on the user role
+                                $roleViewMap = [
+                                    'Admin' => 'admin/admin-createReceptionist',
+                                    'Manager' => 'manager/manager-createReceptionist'
+                                ];
+                
+                                $view = $roleViewMap[$userRole] ?? '404';
+                                $this->view($view, $data);
                             }
-
-                            // Insert into User and Member models
-                            $user->insert($temp);
-                            $receptionist->insert($temp);
-            
-                            // Set a session message or flag for success
-                            $_SESSION['success'] = "Receptionist has been successfully registered!";
-            
-                            // Redirect to receptionists list with success message
-                            redirect('admin/receptionists');
                         } else {
                             // Merge validation errors and pass to the view
                             $data['errors'] = array_merge($user->errors, $receptionist->errors);
-                            $this->view('admin/admin-createReceptionist', $data);
+                
+                            // Display the relevant view based on the user role
+                            $roleViewMap = [
+                                'Admin' => 'admin/admin-createReceptionist',
+                                'Manager' => 'manager/manager-createReceptionist'
+                            ];
+                
+                            $view = $roleViewMap[$userRole] ?? '404';
+                            $this->view($view, $data);
                         }
                     }
                     else{
-                        redirect('admin/receptionists');
+                        $userRole = $_SESSION['role'];
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/receptionists');
+                                break;
+                            case 'Manager':
+                                redirect('manager/receptionists');
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
                     }
                     break;
 
@@ -486,37 +697,46 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Initialize the receptionist model
                         $receptionistModel = new M_Receptionist;
+                        $receptionist_id = $_POST['receptionist_id'];
+                        $userRole = $_SESSION['role'];
+
                         // Validate the incoming data
                         if ($receptionistModel->validate($_POST)) {
                             // Prepare the data to update the receptionist
-
+                            $receptionist = $receptionistModel->findByReceptionistId($receptionist_id);
 
                             $data = [
-                                'first_name'    => $_POST['first_name'],
-                                'last_name'     => $_POST['last_name'],
-                                'NIC_no'        => $_POST['NIC_no'],
-                                'date_of_birth' => $_POST['date_of_birth'],
-                                'home_address'  => $_POST['home_address'],
-                                'contact_number'=> $_POST['contact_number'],
-                                'gender'        => $_POST['gender'],
-                                'email_address' => $_POST['email_address'],
-                                'image'         => $_POST['image']
+                                'first_name'    => $_POST['first_name'] ?? $receptionist->first_name,
+                                'last_name'     => $_POST['last_name'] ?? $receptionist->last_name,
+                                'NIC_no'        => $_POST['NIC_no'] ?? $receptionist->NIC_no,
+                                'date_of_birth' => $_POST['date_of_birth'] ?? $receptionist->date_of_birth,
+                                'home_address'  => $_POST['home_address'] ?? $receptionist->home_address,
+                                'contact_number'=> $_POST['contact_number'] ?? $receptionist->contact_number,
+                                'gender'        => $_POST['gender'] ?? $receptionist->gender,
+                                'email_address' => $_POST['email_address'] ?? $receptionist->email_address,
+                                'image'         => $receptionist->image // Preserve current image by default
                             ];
-
-                            $receptionist_id = $_POST['receptionist_id'];
-                            $receptionist = $receptionistModel->findByReceptionistId($receptionist_id); // Fetch the existing receptionist data
 
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                                 $targetDir = "assets/images/Receptionist/";
-                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $fileName = time() . "_" . basename($_FILES['image']['name']);
                                 $targetFile = $targetDir . $fileName;
-
-                                // Validate the file (e.g., check file type and size) and move it to the target directory
-                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                                    $data['image'] = $fileName; // Save the filename for the database
+                
+                                // Validate file type and size
+                                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                                if (in_array($_FILES['image']['type'], $allowedTypes)) {
+                                    if ($_FILES['image']['size'] <= 5 * 1024 * 1024) { // Max size 5MB
+                                        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                            $data['image'] = $fileName;
+                                        } else {
+                                            $errors['file'] = "Failed to upload the file. Please try again.";
+                                        }
+                                    } else {
+                                        $errors['file'] = "The file is too large. Max size is 5MB.";
+                                    }
                                 } else {
-                                    $errors['file'] = "Failed to upload the file. Please try again.";
+                                    $errors['file'] = "Invalid file type. Only JPEG, PNG, and GIF are allowed.";
                                 }
                             }
 
@@ -526,16 +746,13 @@
                             }
                 
                 
-                            // Call the update function
-                            if (!$receptionistModel->update($receptionist_id, $data, 'receptionist_id')) {
-                                // Set a success session message
+                            // Call the update function if no errors
+                            if (empty($errors) && $receptionist->update($receptionist_id, $data, 'receptionist_id')) {
                                 $_SESSION['success'] = "Receptionist has been successfully updated!";
-                                // Redirect to the receptionist view page
-                                redirect('admin/receptionists/viewReceptionist?id=' . $receptionist_id);
+                                redirect("{$userRole}/receptionists/viewReceptionist?id={$receptionist_id}");
                             } else {
-                                // Handle update failure (optional)
-                                $_SESSION['error'] = "There was an issue updating the receptionist. Please try again.";
-                                redirect('admin/receptionists/viewReceptionist?id=' . $receptionist_id);
+                                $_SESSION['error'] = "There was an issue updating the Receptionist. Please try again.";
+                                redirect("{$userRole}/receptionists/viewReceptionist?id={$receptionist_id}");
                             }
                         } else {
 
@@ -544,12 +761,25 @@
                                 'errors' => $receptionistModel->errors,
                                 'receptionist' => $_POST // Preserve form data for user correction
                             ];
-                            // Render the view with errors and form data
-                            $this->view('admin/admin-viewReceptionist', $data);
+                            // Load the appropriate view based on the user role
+                            $viewPath = $userRole . '-viewReceptionist?id='. $receptionist_id; // Create the view path dynamically
+                            $this->view("{$userRole}/{$viewPath}", $data); // Dynamic view loading
                         }
                     } else {
-                        // Redirect if the request is not a POST request
-                        redirect('admin/receptionists');
+                        // Redirect based on the user role
+                        $userRole = $_SESSION['role'];
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/receptionists');
+                                break;
+                            case 'Manager':
+                                redirect('manager/receptionists');
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
                     }
                     break;
 
@@ -559,34 +789,56 @@
                 
                         // Get the user ID from the GET parameters
                         $userId = $_GET['id'];
+                        $userRole = $_SESSION['role'];
+
                 
                         // Begin the deletion process
-                        if (!$userModel->delete($userId, 'user_id')) {
-                
-                            $_SESSION['success'] = "Receptionist has been deleted successfully";
-            
-                            redirect('admin/receptionists');
-                        } 
-                        else {
-                            // Handle deletion failure
-                            $_SESSION['error'] = "There was an issue deleting the receptionist. Please try again.";
-                            redirect('admin/receptionists/viewReceptionist?id=' . $userId);
+                        if (!isset($userId) || empty($userId)) {
+                            $_SESSION['error'] = "Invalid Receptionist ID.";
+                            redirect("{$userRole}/receptionists");
                         }
 
-                    break;                    
-                                       
-        
+                        // Begin the deletion process
+                        if ($userModel->delete($userId, 'user_id')) {
+                            // Set success message if the deletion is successful
+                            $_SESSION['success'] = "Trainer has been deleted successfully.";
+                    
+                            // Redirect based on the user's role
+                            switch ($userRole) {
+                                case 'Admin':
+                                    redirect('admin/receptionists');
+                                    break;
+                                case 'Manager':
+                                    redirect('manager/receptionists');
+                                    break;
+                                default:
+                                    // Handle case where the role is unrecognized
+                                    redirect('404');
+                                    break;
+                            }
+                        } else {
+                            // Handle deletion failure
+                            $_SESSION['error'] = "There was an issue deleting the Trainer. Please try again.";
+                    
+                            switch ($userRole) {
+                                case 'Admin':
+                                    redirect('admin/receptionists/viewReceptionist?id=' . $userId);
+                                    break;
+                                case 'Manager':
+                                    redirect('manager/receptionists/viewReceptionist?id=' . $userId);
+                                    break;
+                                default:
+                                    // Handle case where the role is unrecognized
+                                    redirect('404');
+                                    break;
+                            }
+                        }
+
+                    break; 
+
                 default:
-                    // Fetch all receptionists and pass to the view
-                    $receptionistModel = new M_Receptionist;
-                    $receptionists = $receptionistModel->findAll('created_at');
-        
-                    $data = [
-                        'receptionists' => $receptionists
-                    ];
-        
-                    $this->view('admin/admin-receptionists', $data);
-                    break;
+                    redirect('404');
+                    break;                   
             }
         }
 
@@ -598,64 +850,115 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $manager = new M_Manager;
                         $user = new M_User;
+                        $userRole = $_SESSION['role'];
             
                         if ($manager->validate($_POST) && $user->validate($_POST)) {
                             $temp = $_POST;
             
-                            // Set manager_id based on gender
-                            if ($temp['gender'] == 'Male') {
-                                $temp['manager_id'] = 'MR/M/';
-                            } elseif ($temp['gender'] == 'Female') {
-                                $temp['manager_id'] = 'MR/F/';
-                            } else {
-                                $temp['manager_id'] = 'MR/O/';
-                            }
+                            $temp['manager_id'] = match($temp['gender']) {
+                                'Male' => 'MR/M/',
+                                'Female' => 'MR/F/',
+                                default => 'MR/O/',
+                            };
             
-                            // Generate a 4-digit manager ID offset
-                            $offset = str_pad($manager->countAll() + 1, 4, '0', STR_PAD_LEFT);
-                            $temp['manager_id'] .= $offset;
+                            // Get the last member_id from the database
+                            $lastId = $manager->getLastManagerId();
+                            $lastManagerId = $lastId ? $lastId->id : 0; // Default to 0 if no members exist
+                
+                            // Get the last 4 digits of the member_id and increment by 1
+                            $lastManagerOffset = substr($lastManagerId, -4);  // Extract last 4 digits
+                            $newOffset = str_pad((int)$lastManagerOffset + 1, 4, '0', STR_PAD_LEFT); // Increment and pad to 4 digits
+                            $temp['manager_id'] .= $newOffset; // Append to member_id
+                
+                            // Set user_id and hash password
                             $temp['user_id'] = $temp['manager_id'];
-            
                             $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
-
                             $temp['status'] = 'Active';
+                            $temp['id'] = $lastManagerId + 1;
 
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                                 $targetDir = "assets/images/Manager/";
-                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $fileName = time() . "_" . basename($_FILES['image']['name']);
                                 $targetFile = $targetDir . $fileName;
-
-                                // Validate the file (e.g., check file type and size) and move it to the target directory
-                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                                    $temp['image'] = $fileName; // Save the filename for the database
+                
+                                // Validate file type and size
+                                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // Example file types
+                                if (in_array($_FILES['image']['type'], $allowedTypes)) {
+                                    if ($_FILES['image']['size'] <= 5 * 1024 * 1024) { // Max file size: 5MB
+                                        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                            $temp['image'] = $fileName; // Save filename for database
+                                        } else {
+                                            $errors['file'] = "Failed to upload the image. Please try again.";
+                                        }
+                                    } else {
+                                        $errors['file'] = "The file is too large. Max size is 5MB.";
+                                    }
                                 } else {
-                                    $errors['file'] = "Failed to upload the file. Please try again.";
+                                    $errors['file'] = "Invalid file type. Only JPEG, PNG, and GIF files are allowed.";
                                 }
                             }
 
-                            // If no image uploaded, leave the 'image' key as null (if not set)
-                            if (!isset($temp['image'])) {
-                                $temp['image'] = null;
+                            if (empty($errors)) {
+                                $user->insert($temp);
+                                $manager->insert($temp);
+                
+                                // Set success message in session
+                                $_SESSION['success'] = "Manager has been successfully registered!";
+                
+                                // Redirect based on the user role
+                                $roleRedirectMap = [
+                                    'Admin' => 'admin/managers',
+                                    'Manager' => 'manager/managers'
+                                ];
+                
+                                if (isset($roleRedirectMap[$userRole])) {
+                                    redirect($roleRedirectMap[$userRole]);
+                                } else {
+                                    // Handle case where user role is unrecognized
+                                    redirect('404');
+                                }
+                            } else {
+                                // Merge validation errors and pass them to the view
+                                $data['errors'] = array_merge($user->errors, $manager->errors, $errors);
+                
+                                // Display the relevant view based on the user role
+                                $roleViewMap = [
+                                    'Admin' => 'admin/admin-createManager',
+                                    'Manager' => 'manager/manager-createManager'
+                                ];
+                
+                                $view = $roleViewMap[$userRole] ?? '404';
+                                $this->view($view, $data);
                             }
-
-                            // Insert into User and Member models
-                            $user->insert($temp);
-                            $manager->insert($temp);
-            
-                            // Set a session message or flag for success
-                            $_SESSION['success'] = "Manager has been successfully registered!";
-            
-                            // Redirect to managers list with success message
-                            redirect('admin/managers');
                         } else {
                             // Merge validation errors and pass to the view
                             $data['errors'] = array_merge($user->errors, $manager->errors);
-                            $this->view('admin/admin-createManager', $data);
+                
+                            // Display the relevant view based on the user role
+                            $roleViewMap = [
+                                'Admin' => 'admin/admin-createManager',
+                                'Manager' => 'manager/manager-createManager'
+                            ];
+                
+                            $view = $roleViewMap[$userRole] ?? '404';
+                            $this->view($view, $data);
                         }
                     }
                     else{
-                        redirect('admin/managers');
+                        $userRole = $_SESSION['role'];
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/managers');
+                                break;
+                            case 'Manager':
+                                redirect('manager/managers');
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
                     }
                     break;
 
@@ -663,6 +966,8 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Initialize the manager model
                         $managerModel = new M_Manager;
+                        $userRole = $_SESSION['role'];
+
                 
                         // Fetch the existing manager data
                         $manager_id = $_POST['manager_id'];
@@ -726,16 +1031,27 @@
                             // Set a success session message
                             $_SESSION['success'] = "Manager has been successfully updated!";
                             // Redirect to the manager view page
-                            redirect('admin/managers/viewManager?id=' . $manager_id);
+                            redirect("{$userRole}/managers/viewManager?id={$manager_id}");
                         } else {
                             // Handle update failure (optional)
                             $_SESSION['error'] = "There was an issue updating the manager. Please try again.";
-                            redirect('admin/managers/viewManager?id=' . $manager_id);
+                            redirect("{$userRole}/managers/viewManager?id={$manager_id}");
                         }
                 
                     } else {
-                        // If the request is not a POST request
-                        redirect('admin/managers');
+                        $userRole = $_SESSION['role'];
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/receptionists');
+                                break;
+                            case 'Manager':
+                                redirect('manager/receptionists');
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
                     }
                     break;
                     
@@ -746,33 +1062,54 @@
                 
                         // Get the user ID from the GET parameters
                         $userId = $_GET['id'];
+                        $userRole = $_SESSION['role'];
                 
                         // Begin the deletion process
-                        if (!$userModel->delete($userId, 'user_id')) {
-                
-                            $_SESSION['success'] = "Manager has been deleted successfully";
-            
-                            redirect('admin/managers');
-                        } 
-                        else {
-                            // Handle deletion failure
-                            $_SESSION['error'] = "There was an issue deleting the manager. Please try again.";
-                            redirect('admin/managers/viewManager?id=' . $userId);
+                        if (!isset($userId) || empty($userId)) {
+                            $_SESSION['error'] = "Invalid Manager ID.";
+                            redirect("{$userRole}/managers");
                         }
 
-                    break;                    
-                                       
-        
+                        // Begin the deletion process
+                        if (!$userModel->delete($userId, 'user_id')) {
+                            // Set success message if the deletion is successful
+                            $_SESSION['success'] = "Manager has been deleted successfully.";
+                    
+                            // Redirect based on the user's role
+                            switch ($userRole) {
+                                case 'Admin':
+                                    redirect('admin/managers');
+                                    break;
+                                case 'Manager':
+                                    redirect('manager/managers');
+                                    break;
+                                default:
+                                    // Handle case where the role is unrecognized
+                                    redirect('404');
+                                    break;
+                            }
+                        } else {
+                            // Handle deletion failure
+                            $_SESSION['error'] = "There was an issue deleting the Manager. Please try again.";
+                    
+                            switch ($userRole) {
+                                case 'Admin':
+                                    redirect('admin/managers/viewManager?id=' . $userId);
+                                    break;
+                                case 'Manager':
+                                    redirect('manager/managers/viewManager?id=' . $userId);
+                                    break;
+                                default:
+                                    // Handle case where the role is unrecognized
+                                    redirect('404');
+                                    break;
+                            }
+                        }
+
+                    break;         
+                
                 default:
-                    // Fetch all managers and pass to the view
-                    $managerModel = new M_Manager;
-                    $managers = $managerModel->findAll('created_at');
-        
-                    $data = [
-                        'managers' => $managers
-                    ];
-        
-                    $this->view('admin/admin-managers', $data);
+                    redirect('404');
                     break;
             }
         }
@@ -785,64 +1122,115 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                         $admin = new M_Admin;
                         $user = new M_User;
+                        $userRole = $_SESSION['role'];
             
                         if ($admin->validate($_POST) && $user->validate($_POST)) {
                             $temp = $_POST;
             
-                            // Set admin_id based on gender
-                            if ($temp['gender'] == 'Male') {
-                                $temp['admin_id'] = 'AD/M/';
-                            } elseif ($temp['gender'] == 'Female') {
-                                $temp['admin_id'] = 'AD/F/';
-                            } else {
-                                $temp['admin_id'] = 'AD/O/';
-                            }
+                            $temp['admin'] = match($temp['gender']) {
+                                'Male' => 'AD/M/',
+                                'Female' => 'AD/F/',
+                                default => 'AD/O/',
+                            };
             
-                            // Generate a 4-digit admin ID offset
-                            $offset = str_pad($admin->countAll() + 1, 4, '0', STR_PAD_LEFT);
-                            $temp['admin_id'] .= $offset;
+                            // Get the last member_id from the database
+                            $lastId = $admin->getLastAdminId();
+                            $lastAdminId = $lastId ? $lastId->id : 0; // Default to 0 if no members exist
+                
+                            // Get the last 4 digits of the member_id and increment by 1
+                            $lastAdminOffset = substr($lastAdminId, -4);  // Extract last 4 digits
+                            $newOffset = str_pad((int)$lastAdminOffset + 1, 4, '0', STR_PAD_LEFT); // Increment and pad to 4 digits
+                            $temp['admin_id'] .= $newOffset; // Append to member_id
+                
+                            // Set user_id and hash password
                             $temp['user_id'] = $temp['admin_id'];
-            
                             $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
-
                             $temp['status'] = 'Active';
+                            $temp['id'] = $lastAdminId + 1;
 
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                                 $targetDir = "assets/images/Admin/";
-                                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                                $fileName = time() . "_" . basename($_FILES['image']['name']);
                                 $targetFile = $targetDir . $fileName;
-
-                                // Validate the file (e.g., check file type and size) and move it to the target directory
-                                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                                    $temp['image'] = $fileName; // Save the filename for the database
+                
+                                // Validate file type and size
+                                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // Example file types
+                                if (in_array($_FILES['image']['type'], $allowedTypes)) {
+                                    if ($_FILES['image']['size'] <= 5 * 1024 * 1024) { // Max file size: 5MB
+                                        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
+                                            $temp['image'] = $fileName; // Save filename for database
+                                        } else {
+                                            $errors['file'] = "Failed to upload the image. Please try again.";
+                                        }
+                                    } else {
+                                        $errors['file'] = "The file is too large. Max size is 5MB.";
+                                    }
                                 } else {
-                                    $errors['file'] = "Failed to upload the file. Please try again.";
+                                    $errors['file'] = "Invalid file type. Only JPEG, PNG, and GIF files are allowed.";
                                 }
                             }
 
-                            // If no image uploaded, leave the 'image' key as null (if not set)
-                            if (!isset($temp['image'])) {
-                                $temp['image'] = null;
+                            if (empty($errors)) {
+                                $user->insert($temp);
+                                $admin->insert($temp);
+                
+                                // Set success message in session
+                                $_SESSION['success'] = "Admin has been successfully registered!";
+                
+                                // Redirect based on the user role
+                                $roleRedirectMap = [
+                                    'Admin' => 'admin/admins',
+                                    'Manager' => 'manager/admins'
+                                ];
+                
+                                if (isset($roleRedirectMap[$userRole])) {
+                                    redirect($roleRedirectMap[$userRole]);
+                                } else {
+                                    // Handle case where user role is unrecognized
+                                    redirect('404');
+                                }
+                            } else {
+                                // Merge validation errors and pass them to the view
+                                $data['errors'] = array_merge($user->errors, $admin->errors, $errors);
+                
+                                // Display the relevant view based on the user role
+                                $roleViewMap = [
+                                    'Admin' => 'admin/admin-createAdmin',
+                                    'Manager' => 'manager/manager-createAdmin'
+                                ];
+                
+                                $view = $roleViewMap[$userRole] ?? '404';
+                                $this->view($view, $data);
                             }
-
-                            // Insert into User and Member models
-                            $user->insert($temp);
-                            $admin->insert($temp);
-            
-                            // Set a session message or flag for success
-                            $_SESSION['success'] = "Admin has been successfully registered!";
-            
-                            // Redirect to admins list with success message
-                            redirect('admin/admins');
                         } else {
                             // Merge validation errors and pass to the view
                             $data['errors'] = array_merge($user->errors, $admin->errors);
-                            $this->view('admin/admin-createAdmin', $data);
+                
+                            // Display the relevant view based on the user role
+                            $roleViewMap = [
+                                'Admin' => 'admin/admin-createAdmin',
+                                'Manager' => 'manager/manager-createAdmin'
+                            ];
+                
+                            $view = $roleViewMap[$userRole] ?? '404';
+                            $this->view($view, $data);
                         }
                     }
                     else{
-                        redirect('admin/admins');
+                        $userRole = $_SESSION['role'];
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/admins');
+                                break;
+                            case 'Manager':
+                                redirect('manager/admins');
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
                     }
                     break;
 
@@ -851,6 +1239,7 @@
                     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Initialize the admin model
                         $adminModel = new M_Admin;
+                        $userRole = $_SESSION['role'];
                 
                         // Fetch the existing admin data
                         $admin_id = $_POST['admin_id'];
@@ -919,16 +1308,27 @@
                             // Set a success session message
                             $_SESSION['success'] = "Admin has been successfully updated!";
                             // Redirect to the admin view page
-                            redirect('admin/admins/viewAdmin?id=' . $admin_id);
+                            redirect("{$userRole}/admins/viewAdmin?id={$admin_id}");
                         } else {
                             // Handle update failure (optional)
                             $_SESSION['error'] = "There was an issue updating the admin. Please try again.";
-                            redirect('admin/admins/viewAdmin?id=' . $admin_id);
+                            redirect("{$userRole}/admins/viewAdmin?id={$admin_id}");
                         }
                 
                     } else {
-                        // If the request is not a POST request
-                        redirect('admin/admins');
+                        $userRole = $_SESSION['role'];
+                        switch ($userRole) {
+                            case 'Admin':
+                                redirect('admin/admins');
+                                break;
+                            case 'Manager':
+                                redirect('manager/admins');
+                                break;
+                            default:
+                                // Handle case where the role is unrecognized
+                                redirect('404');
+                                break;
+                        }
                     }
                     break;
                     
@@ -939,33 +1339,56 @@
                 
                         // Get the user ID from the GET parameters
                         $userId = $_GET['id'];
+                        $userRole = $_SESSION['role'];
                 
                         // Begin the deletion process
-                        if (!$userModel->delete($userId, 'user_id')) {
-                
-                            $_SESSION['success'] = "Admin has been deleted successfully";
-            
-                            redirect('admin/admins');
-                        } 
-                        else {
-                            // Handle deletion failure
-                            $_SESSION['error'] = "There was an issue deleting the admin. Please try again.";
-                            redirect('admin/admins/viewAdmin?id=' . $userId);
+                        if (!isset($userId) || empty($userId)) {
+                            $_SESSION['error'] = "Invalid Admin ID.";
+                            redirect("{$userRole}/admins");
                         }
+
+                        // Begin the deletion process
+                        if (!$userModel->delete($userId, 'user_id')) {
+                            // Set success message if the deletion is successful
+                            $_SESSION['success'] = "Admin has been deleted successfully.";
+                    
+                            // Redirect based on the user's role
+                            switch ($userRole) {
+                                case 'Admin':
+                                    redirect('admin/admins');
+                                    break;
+                                case 'Manager':
+                                    redirect('manager/admins');
+                                    break;
+                                default:
+                                    // Handle case where the role is unrecognized
+                                    redirect('404');
+                                    break;
+                            }
+                        } else {
+                            // Handle deletion failure
+                            $_SESSION['error'] = "There was an issue deleting the Admin. Please try again.";
+                    
+                            switch ($userRole) {
+                                case 'Admin':
+                                    redirect('admin/admins/viewAdmin?id=' . $userId);
+                                    break;
+                                case 'Manager':
+                                    redirect('manager/admins/viewAdmin?id=' . $userId);
+                                    break;
+                                default:
+                                    // Handle case where the role is unrecognized
+                                    redirect('404');
+                                    break;
+                            }
+                        }
+
 
                     break;                    
                                        
         
                 default:
-                    // Fetch all admins and pass to the view
-                    $adminModel = new M_Admin;
-                    $admins = $adminModel->findAll('created_at');
-        
-                    $data = [
-                        'admins' => $admins
-                    ];
-        
-                    $this->view('admin/admin-admins', $data);
+                    redirect('404');
                     break;
             }
         }

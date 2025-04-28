@@ -106,12 +106,7 @@
                     <div class="notititle">Supplement Purchase</div>
                     <div class="notibody">RS. <?= number_format($supplementPurchaseSum, 2) ?> </div>
                 </div>
-                <div class="notificatio">
-                    <div class="notiglow"></div>
-                    <div class="notiborderglow"></div>
-                    <div class="notititle">Salary Payment</div>
-                    <div class="notibody">RS. 20000</div>
-                </div>
+                
                 <div class="notificatio">
                     <div class="notiglow"></div>
                     <div class="notiborderglow"></div>
@@ -123,6 +118,24 @@
                     <div class="notiborderglow"></div>
                     <div class="notititle">Equipment Service</div>
                     <div class="notibody">RS. <?= number_format($servicePurchaseSum, 2) ?></div>
+                </div>
+                <div class="notificatio">
+                    <div class="notiglow"></div>
+                    <div class="notiborderglow"></div>
+                    <div class="notititle">Admin Salary Payment</div>
+                    <div class="notibody">RS. <?= number_format($adminSalarySum, 2) ?></div>
+                </div>
+                <div class="notificatio">
+                    <div class="notiglow"></div>
+                    <div class="notiborderglow"></div>
+                    <div class="notititle">Trainer Salary Payment</div>
+                    <div class="notibody">RS. <?= number_format($trainerSalarySum, 2) ?></div>
+                </div>
+                <div class="notificatio">
+                    <div class="notiglow"></div>
+                    <div class="notiborderglow"></div>
+                    <div class="notititle">Receptionist Salary Payment</div>
+                    <div class="notibody">RS. <?= number_format($receptionistSalarySum, 2) ?></div>
                 </div>
             </div>
         </div>

@@ -51,8 +51,6 @@ class M_Payment
         return $onlineTotal + $physicalTotal;
     }
 
-
-
     public function paymentMember($member_id)
     {
         $query = "Select p.* from $this->table AS p
@@ -96,11 +94,9 @@ class M_Payment
             $this->errors['status'] = 'status is required';
         }
 
-        // If there are no errors, return true; otherwise, return false.
         return empty($this->errors);
     }
 
-    // Method to get errors after validation
     public function getErrors()
     {
         return $this->errors;

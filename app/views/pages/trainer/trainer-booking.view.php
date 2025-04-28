@@ -324,8 +324,8 @@
                     .then(response => response.json())
                     .then(result =>{
                         console.log(result);
-                        if (!result.success) {
-                            alert("booking updated successfully!");
+                        if (result.success) {
+                            alert("Booking updated successfully!");
                             modal.style.display = "none";
                             location.reload();
                         } else {

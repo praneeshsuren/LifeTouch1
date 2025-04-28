@@ -58,11 +58,6 @@ class Supplement extends Controller
             $errors['quantity'] = "Quantity must be a positive whole number.";
         }
 
-        // Validate 'purchase_shop'
-        if (empty($data['purchase_shop']) || strlen($data['purchase_shop']) < 2) {
-            $errors['purchase_shop'] = "Purchase shop is required and must be at least 2 characters.";
-        }
-
         // If no errors, save
         if (empty($errors)) {
             $data['quantity_available'] = $data['quantity'];
@@ -355,8 +350,8 @@ class Supplement extends Controller
         }
         $delete_result = $supplementSaleModel->delete($sale_id, 'sale_id');
         // Delete the supplement sale record
-        if (!$delete_result) {
-            redirect('receptionist/members/supplementRecords?id=' . $member_id);  // Redirect to a success page
+        if ($delete_result) {
+            redirect('receptionist/members/memberSupplements?id=' . $member_id);  // Redirect to a success page
             exit;
         } else {
             // Handle error if deletion fails

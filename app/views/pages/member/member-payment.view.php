@@ -26,15 +26,39 @@
     
     <main>
       <div class="title">
-        <h1>Payment History</h1>
+        <h1>Payment</h1>
         <div class="greeting">
           <?php require APPROOT.'/views/components/user-greeting.view.php' ?>
         </div>
       </div>
 
+      <!-- Current Membership Section -->
+      <div class="current-membership">
+        <h2 class="section-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+          Your Current Membership
+        </h2>
+        <div class="membership-details" id="membershipDetails">
+          <!-- Dynamically populated -->
+        </div>
+        <div class="membership-progress">
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <div class="progress-text" id="progressText">
+            <span id="progressPercentage"></span>
+            <span id="daysRemaining"></span>
+          </div>
+        </div>
+      </div>
+
+
       <div class="payment-history">
         <div>
             <button class="trainerviewbtn-Bookreservationbtn" style="float: right; margin-top: -10px;margin-bottom:3px;" onclick="window.location.href='<?php echo URLROOT; ?>/member/membershipPlan'">Purchase Membership Plan</button>
+            <h3><i class="ph ph-credit-card"></i> Payment History</h3>
         </div>
         <table class="payment-table">
             <thead>
@@ -63,10 +87,28 @@
               return response.json();
             })
             .then(data =>{
-              // console.log('Plans:',data.plan);
-              // console.log("Subscription:", data.subscription);
+              console.log('Plans:',data.plan);
+              console.log("Subscription:", data.subscription);
               const plan = Array.isArray(data.plan) ? data.plan : [];
               const subscription = Array.isArray(data.subscription) ? data.subscription[0] : null;
+
+              if (!subscription) {
+                console.log("No subscription found");
+                subscriptionTable(null, null);
+              } else {
+                const selectedPlan = plan.find(p => p.id === subscription.plan_id);
+
+                if(selectedPlan) {
+                  const mergedSubscription = {
+                    ...subscription, ...selectedPlan,id: subscription.id
+                  };
+                //  console.log("mergedsubscription",mergedSubscription);
+                  window.mergedSubscriptions = mergedSubscription;
+                  subscriptionTable(window.mergedSubscriptions);
+                } else {
+                  console.log("No plan found matching the subscription plan id.");
+                }
+              }
 
               // console.log('payments:',data.payment);
               const payment = Array.isArray(data.payment) ? data.payment : [];
@@ -108,6 +150,81 @@
           tbody.appendChild(tr);
         });
       }
+
+      function subscriptionTable(currentMembership){
+        const membershipDetails = document.getElementById('membershipDetails');
+        const progressBarContainer = document.querySelector('.progress-bar-container');
+        const progressText = document.getElementById('progressText');
+        const progressBar = document.getElementById('progressBar');
+        // Case 1: No membership
+        if (!currentMembership) {
+          membershipDetails.innerHTML = `
+            <div class="no-membership-message">
+              <div class="no-membership-text">You have no active membership.</div>
+            </div>
+          `;
+          progressBarContainer.style.display = 'none';
+          progressText.style.display = 'none';
+          return;
+        }
+
+        // Case 3: Active membership (original behavior)
+        const statusClass = currentMembership.status.toLowerCase() === 'inactive' ? 'status-inactive' : 'status-active';
+        const billingLabel = currentMembership.status.toLowerCase() === 'inactive' ? 'End Date' : 'Next Billing';
+
+        membershipDetails.innerHTML = `
+          <div class="detail-item">
+            <div class="detail-label">Plan</div>
+            <div class="detail-value">${currentMembership.plan}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Status</div>
+            <div class="detail-value">
+              <span class="status-badge ${statusClass}">${currentMembership.status}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Start Date</div>
+            <div class="detail-value">${currentMembership.start_date}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">${billingLabel}</div>
+            <div class="detail-value">${currentMembership.end_date}</div>
+          </div>
+        `;
+
+        // Case 2: Inactive membership
+        if (currentMembership.status.toLowerCase() === 'inactive') {
+          progressBarContainer.style.display = 'block';
+          progressText.style.display = 'flex';
+          progressText.style.display = 'none';
+          progressBar.classList.add('progress-inactive'); 
+          progressBar.style.width = '100%';
+
+          return;
+        }
+
+        // active
+        progressBarContainer.style.display = 'block';
+        progressText.style.display = 'flex';
+
+        // Calculate and display progress
+        const startDate = new Date(currentMembership.start_date);
+        const endDate = new Date(currentMembership.end_date);
+        const now = new Date();
+        now.setHours(0,0,0,0);
+        startDate.setHours(0,0,0,0);
+        endDate.setHours(0,0,0,0);
+        
+        const todalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 *24));
+        const pastDays = Math.ceil((now - startDate)/ (1000 * 60 * 60 *24));
+        const progress = Math.min(100, Math.max(0, (pastDays / todalDays) * 100));
+        const daysRemain = Math.max(0, todalDays - pastDays);
+        document.getElementById('progressBar').style.width = `${progress}%`;
+        document.getElementById('progressPercentage').textContent = `${Math.round(progress)}% of membership period completed`;
+        document.getElementById('daysRemaining').textContent = `${daysRemain} days remaining`;
+      }
+    
 
     </script>
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
