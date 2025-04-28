@@ -63,18 +63,6 @@
                 </a>
             </li>
             <li>
-                <a href="<?php echo URLROOT; ?>/admin/bookings">
-                    <i class="ph ph-notebook"></i>
-                    <span class="text">Bookings</span>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo URLROOT; ?>/admin/payment">
-                    <i class='icon ph-bold ph-credit-card'></i>
-                    <span class="text">Payment</span>
-                </a>
-            </li>
-            <li>
                 <a href="<?php echo URLROOT; ?>/admin/events">
                     <i class='icon ph-bold ph-ticket'></i>
                     <span class="text">Events</span>

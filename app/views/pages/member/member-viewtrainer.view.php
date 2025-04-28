@@ -66,13 +66,12 @@
             const bookingbutton = bookigbuttonDiv.querySelector('.trainerviewbtn-Bookreservationbtn');
             bookingbutton.onclick = () =>{
                 const today = new Date();
-                const month = today.getMonth(); // Zero-based index
+                const month = today.getMonth(); 
                 const year = today.getFullYear();
                 window.location.href =`<?php echo URLROOT; ?>/member/Booking?id=${trainerId}&month=${month+1}&year=${year}`;
             };
             container.appendChild(bookigbuttonDiv);
 
-            // Create profile section
             const profileDiv = document.createElement('div');
             profileDiv.classList.add('trainerviewbtn-profile');
             const profileImgDiv = document.createElement('div');
@@ -92,7 +91,6 @@
             profileDiv.appendChild(profileDetailsDiv);
             container.appendChild(profileDiv);
 
-            // Create profile table
             const tableContainer = document.createElement('div');
             tableContainer.classList.add('trainerviewbtn-profileTable-container');
             const table = document.createElement('table');

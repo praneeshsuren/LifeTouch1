@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <!-- View-trainer-section-->
+ 
       <div class="trainers-grid"></div>
     </main>
     <script src="<?php echo URLROOT; ?>/assets/js/member/member-script.js?v=<?php echo time();?>"></script>
@@ -55,11 +55,11 @@
       function fetchTrainers() {
         fetch('<?php echo URLROOT; ?>/member/Trainer/api')
           .then(response => {
-            console.log('Response Status:', response.status); // Log response status
+            console.log('Response Status:', response.status); 
             return response.json();
           })
           .then(data => {
-            // console.log('Fetched Data:', data); 
+            console.log('Fetched Data:', data); 
             if (Array.isArray(data) && data.length > 0) {
               const container = document.querySelector('.trainers-grid');
               container.innerHTML = ''; 

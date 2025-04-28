@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <!-- Current Membership Section -->
+
       <div class="current-membership">
         <h2 class="section-title">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -41,7 +41,7 @@
           Your Current Membership
         </h2>
         <div class="membership-details" id="membershipDetails">
-          <!-- Dynamically populated -->
+
         </div>
         <div class="membership-progress">
           <div class="progress-bar-container">
@@ -71,7 +71,7 @@
             <tbody id="paymentHistoryBody">
             </tbody>
         </table>
-    </div>
+      </div>
     </main>
       
     <!-- SCRIPT -->
@@ -102,7 +102,7 @@
                   const mergedSubscription = {
                     ...subscription, ...selectedPlan,id: subscription.id
                   };
-                //  console.log("mergedsubscription",mergedSubscription);
+                 console.log("mergedsubscription",mergedSubscription);
                   window.mergedSubscriptions = mergedSubscription;
                   subscriptionTable(window.mergedSubscriptions);
                 } else {
@@ -110,7 +110,7 @@
                 }
               }
 
-              // console.log('payments:',data.payment);
+              console.log('payments:',data.payment);
               const payment = Array.isArray(data.payment) ? data.payment : [];
               if(payment.length == 0){
                 console.log("no pyaments found");
@@ -156,7 +156,7 @@
         const progressBarContainer = document.querySelector('.progress-bar-container');
         const progressText = document.getElementById('progressText');
         const progressBar = document.getElementById('progressBar');
-        // Case 1: No membership
+
         if (!currentMembership) {
           membershipDetails.innerHTML = `
             <div class="no-membership-message">
@@ -168,7 +168,7 @@
           return;
         }
 
-        // Case 3: Active membership (original behavior)
+
         const statusClass = currentMembership.status.toLowerCase() === 'inactive' ? 'status-inactive' : 'status-active';
         const billingLabel = currentMembership.status.toLowerCase() === 'inactive' ? 'End Date' : 'Next Billing';
 
@@ -193,7 +193,7 @@
           </div>
         `;
 
-        // Case 2: Inactive membership
+
         if (currentMembership.status.toLowerCase() === 'inactive') {
           progressBarContainer.style.display = 'block';
           progressText.style.display = 'flex';
@@ -204,11 +204,11 @@
           return;
         }
 
-        // active
+
         progressBarContainer.style.display = 'block';
         progressText.style.display = 'flex';
 
-        // Calculate and display progress
+
         const startDate = new Date(currentMembership.start_date);
         const endDate = new Date(currentMembership.end_date);
         const now = new Date();

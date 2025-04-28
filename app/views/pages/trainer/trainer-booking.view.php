@@ -118,12 +118,12 @@
 
             fetch('<?php echo URLROOT; ?>/trainer/bookings/api')
                 .then(response => {
-                    console.log('Response Status:', response.status); // Log response status
+                    console.log('Response Status:', response.status); 
                     return response.json();
                 })
                 .then(data => {
-                    // console.log("Fetched booking data:", data.bookings);
-                    // console.log("Fetched holiday data:", data.holidays);
+                    console.log("Fetched booking data:", data.bookings);
+                    console.log("Fetched holiday data:", data.holidays);
 
                     holidays = data.holidays;
 
@@ -133,7 +133,7 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error fetching booking:', error); // Log the error
+                    console.error('Error fetching booking:', error); 
                     tableBody.innerHTML = `
                         <tr>
                             <td colspan="11" style="text-align: center;">Error loading data</td>
@@ -194,20 +194,20 @@
                         bookingDate.setHours(0, 0, 0, 0);
 
                         if (bookingDate < dateToday) {
-                            pastBookings.push(booking); // clearly past
+                            pastBookings.push(booking); 
                         } else if (bookingDate.getTime() === dateToday.getTime()) {
-                            // Booking is for today, now check the end time of the slot
-                            const endTimeStr = booking.timeslot.split(" - ")[1].trim(); // e.g., "11:00 AM"
+                
+                            const endTimeStr = booking.timeslot.split(" - ")[1].trim();
                             const endTime = convertTo24hrs(endTimeStr);
 
                             const bookingEnd = new Date(booking.booking_date + ' ' + endTimeStr);
                             if (bookingEnd.getTime() < now.getTime()) {
-                                pastBookings.push(booking); // today's timeslot has already passed
+                                pastBookings.push(booking); 
                             } else {
-                                futureBookings.push(booking); // today, but not yet passed
+                                futureBookings.push(booking);
                             }
                         } else {
-                            futureBookings.push(booking); // future date
+                            futureBookings.push(booking);
                         }
                     });
 
@@ -280,7 +280,7 @@
                     const statusSelect = document.getElementById('modalStatusSelect');
                     if (statusSelect) {
                         console.log("statusSelect exists", statusSelect);
-                        // Set status value if it's a valid option
+  
                         const statusValue = booking.status.toLowerCase();
                         if (["pending", "booked", "rejected"].includes(statusValue)) {
                             statusSelect.value = statusValue;
@@ -346,7 +346,7 @@
                 });
 
                 function convertTo24hrs(time){
-                    const [hrMin, period] = time.trim().split(' '); //AM,PM
+                    const [hrMin, period] = time.trim().split(' '); 
                     let [hr, min] =hrMin.split(':');
                     hr = parseInt(hr, 10);
                     min = parseInt(min, 10);

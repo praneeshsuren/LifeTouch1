@@ -311,29 +311,6 @@
                     echo json_encode(["success" => false, "message" => "Invalid request."]);
                     exit;
                 }
-            // }  elseif ($action === 'conflict') {
-            //     header('Content-type: application/json');
-
-            //     $id = $_POST['id'] ?? null;
-            //     $status = $_POST['status'] ?? null;
-
-            //     if (!$id && !$status) {
-            //         echo json_encode(["success" => false, "message" => "Missing required fields"]);
-            //         exit;
-            //     }
-
-            //     $data = ['status' => $status];
-
-            //     $result = $bookingModel->update($id, $data);
-
-            //     echo json_encode(
-            //         [
-            //             "success" => $result ? true : false,
-            //             "message" => $result ? "Booking  updated successfully!" : "Failed to update "
-            //         ]
-            //     );
-            //     exit;
-            // }
         }
 
         public function workouts(){

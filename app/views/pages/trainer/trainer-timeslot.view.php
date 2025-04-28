@@ -112,7 +112,7 @@
             console.log('Trainer ID:', trainerId);
             fetch('<?php echo URLROOT; ?>/trainer/timeslot/api')
                 .then(response => {
-                    console.log('Response Status:', response.status); // Log response status
+                    console.log('Response Status:', response.status); 
                     return response.json();
                 })
                 .then(data => {
@@ -124,11 +124,11 @@
                         renderDefaultTable(sortedTimeslots);
 
                         const blockTimeSelect = document.getElementById('blocktime');
-                        blockTimeSelect.innerHTML = '<option value="fullday">Fullday</option>';
+                        blockTimeSelect.innerHTML = '';
                         sortedTimeslots.forEach(timeslot => {
                             const option = document.createElement('option');
-                            option.value = timeslot.id; // Use timeslot ID as the value
-                            option.textContent = timeslot.slot; // Display the time slot
+                            option.value = timeslot.id; 
+                            option.textContent = timeslot.slot; 
                             blockTimeSelect.appendChild(option);
                         });
                     }
@@ -137,19 +137,18 @@
                         const sortedHolidays = sortHolidays(allHolidays);
                         renderHolidayTable(sortedHolidays);;
                     }
-                    if (Array.isArray(data.bookings) && data.bookingslength > 0){
+                    if (Array.isArray(data.bookings) && data.bookings.length > 0){
                         allBookings = data.bookings;
                         console.log("bookings:",allBookings);
                     }
 
                 })
                 .catch(error => {
-                    console.error('Error fetching timeslot:', error); // Log the error
+                    console.error('Error fetching timeslot:', error); 
                     const availabilityList = document.getElementById('availability-list');
                     availabilityList.innerHTML = '<p class="no-data-message">Error loading data</p>';
                 });
 
-            // Helper function to convert 12-hour AM/PM time to minutes
             function parseTimeToMinutes(timeStr) {
                 if (!timeStr) return 0;
                 const [timePart, period] = timeStr.trim().split(' ');
@@ -161,54 +160,38 @@
 
             function sortTimeslots(timeslots) {
                 return [...timeslots].sort((a, b) => {
-                    // Extract start time from slot (e.g., "10:00 AM" from "10:00 AM - 12:00 PM")
+
                     const startTimeA = a.slot.split(' - ')[0];
                     const startTimeB = b.slot.split(' -they - ')[0];
-                    // Convert to minutes and compare
                     return parseTimeToMinutes(startTimeA) - parseTimeToMinutes(startTimeB);
                 });
             }
 
             function sortHolidays(holidays) {
                 return [...holidays].sort((a, b) => {
-                    // Compare dates first
+
                     const dateA = new Date(a.date);
                     const dateB = new Date(b.date);
                     if (dateA < dateB) return -1;
                     if (dateA > dateB) return 1;
 
-                    // If dates are equal, compare slot start times
-                    const isFullDayA = a.slot === 'Fullday';
-                    const isFullDayB = b.slot === 'Fullday';
-
-                    // Place Fullday last for the same date
-                    if (isFullDayA && !isFullDayB) return 1;
-                    if (!isFullDayA && isFullDayB) return -1;
-
-                    // If neither is Fullday, compare start times
-                    if (!isFullDayA && !isFullDayB) {
-                        const startTimeA = a.slot.split(' - ')[0];
-                        const startTimeB = b.slot.split(' - ')[0];
-                        return parseTimeToMinutes(startTimeA) - parseTimeToMinutes(startTimeB);
-                    }
-
-                    // If both are Fullday, no further sorting needed
-                    return 0;
+                    const startTimeA = a.slot.split(' - ')[0];
+                    const startTimeB = b.slot.split(' - ')[0];
+                    return parseTimeToMinutes(startTimeA) - parseTimeToMinutes(startTimeB);
                 });
             }
 
-            // Helper function to normalize timeslot to standardized AM/PM format
             function normalizeTimeslot(timeslot) {
                 if (!timeslot || typeof timeslot !== 'string') return '';
                 const [start, end] = timeslot.split(' - ').map(time => {
                     if (!time.includes('AM') && !time.includes('PM')) {
-                        // Assume input is 24-hour format and convert to AM/PM
+  
                         const [hours, minutes] = time.split(':').map(Number);
                         const period = hours >= 12 ? 'PM' : 'AM';
                         const adjustedHours = hours % 12 || 12;
                         return `${adjustedHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
                     }
-                    // Standardize existing AM/PM format
+ 
                     const [timePart, period] = time.trim().split(' ');
                     const [hours, minutes] = timePart.split(':').map(Number);
                     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
@@ -263,7 +246,6 @@
                 });
             }
 
-            // Render specific availability table
             function renderHolidayTable(timeSlots) {
                 const specificAvailabilityList = document.getElementById('specific-availability-list');
                 specificAvailabilityList.innerHTML = '';
@@ -326,7 +308,7 @@
                 }
 
                 const timeslot = `${startTime} ${startPeriod} - ${endTime} ${endPeriod}`;
-                // Validate start and end times
+
                 const startMinutes = parseTimeToMinutes(`${startTime} ${startPeriod}`);
                 const endMinutes = parseTimeToMinutes(`${endTime} ${endPeriod}`);
                 if (startMinutes >= endMinutes) {
@@ -342,7 +324,7 @@
                     return;
                 }
 
-                // Check for overlaps
+
                 const hasOverlap = allTimeslots.some(existingSlot => 
                     doTimeslotsOverlap(timeslot, existingSlot.slot)
                 );
@@ -376,7 +358,6 @@
                 .catch(error => console.error("Error inserting holiday:", error));
             });
 
-            // Delete timeslot function
             function deleteTimeslot(timeslotId) {
                 if (!confirm("Are you sure you want to delete this timeslot?")) return;
 
@@ -403,6 +384,62 @@
                     console.error("Error deleting timeslot:", error);
                     alert("Error deleting timeslot. Please try again.");
                 });
+            }
+
+            function isBookingConflicting(allBookings, holidayDate, holidaySlot) {
+                console.log('isBookingConflicting inputs:', { allBookings, holidayDate, holidaySlot });
+                const conflictingIds = [];
+                for (const booking of allBookings) {
+                    if (booking.booking_date === holidayDate && booking.timeslot === holidaySlot) {
+                        conflictingIds.push(booking.id);
+                    }
+                }
+
+                console.log("ifds",conflictingIds);
+                
+                return conflictingIds;
+            }
+
+            function rejectConflictingBookings(allBookings, holidayDate, holidaySlot) {
+                console.log('rejectConflictingBookings inputs:', { holidayDate, holidaySlot });
+
+                if (!Array.isArray(allBookings)) {
+                    console.error('allBookings is not an array:', allBookings);
+                    return Promise.resolve(); // Resolve with no action if no valid bookings
+                }
+
+                const conflictingIds = isBookingConflicting(allBookings, holidayDate, holidaySlot);
+                const conflictingBookings = allBookings.filter(booking =>
+                    conflictingIds.includes(booking.id)
+                );
+
+                console.log("len",conflictingBookings);
+
+                if (conflictingBookings.length === 0) return Promise.resolve();
+
+                const promises = conflictingBookings.map(booking => {
+                    const formData = new FormData();
+                    formData.append('id', booking.id);
+                    formData.append('status', 'rejected');
+
+                    for (let pair of formData.entries()) {
+                        console.log(pair[0]+ ': ' + pair[1]);
+                    }
+
+
+                    return fetch('<?php echo URLROOT; ?>/trainer/bookings/edit', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (!result.success) {
+                            throw new Error(`Failed to reject booking ID ${booking.id}: ${result.message}`);
+                        }
+                    });
+                });
+
+                return Promise.all(promises);
             }
 
             setSpecificTimeBtn.addEventListener("click", function(e) {
@@ -437,17 +474,21 @@
                     return;
                 }
 
-                const formData = new FormData();
-                formData.append("date", date);
-                formData.append("slot", timeslotText);
-                formData.append("trainer_id", trainerId);
-    
-
                 if (!confirm("Are you sure you want to block this timeslot? This will reject any existing bookings for the selected timeslot or day.")) return;
-                fetch('<?php echo URLROOT; ?>/trainer/holiday/add', {
-                    method: "POST",
-                    body: formData
-                })
+
+                rejectConflictingBookings(allBookings, date, timeslotText)
+                    .then(()=> {
+                        const formData = new FormData();
+                        formData.append("date", date);
+                        formData.append("slot", timeslotText);
+                        formData.append("trainer_id", trainerId);
+
+                        return fetch('<?php echo URLROOT; ?>/trainer/holiday/add', {
+                            method: "POST",
+                            body: formData
+                        });
+    
+                    })
                     .then(response => response.json())
                     .then(result => {
                         if (result.success) {
@@ -458,7 +499,7 @@
                         }
                     })
                     .catch(error => {
-                        console.error("Error blocking timeslot:", error);
+                        console.error("Error blocking timeslot or reject bookings:", error);
                         alert("Error blocking timeslot. Please try again.");
                     });
             });
@@ -491,9 +532,6 @@
                     alert("Error deleting timeslot. Please try again.");
                 });
             }
-
-
-
 
         });
          
