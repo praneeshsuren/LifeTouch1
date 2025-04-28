@@ -14,6 +14,16 @@
             'equipment_id',
         ];
 
+        public function findByWorkoutId($workoutId){
+            $data = [
+                'workout_id' => $workoutId
+            ];
+
+            $result = $this->first($data);
+
+            return $result;
+        }
+
     }
 
 ?>

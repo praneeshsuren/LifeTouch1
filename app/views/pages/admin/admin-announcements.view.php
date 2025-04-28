@@ -116,14 +116,14 @@
                     <div class="modal-body">
                         <div class="details">
                             <div class="profile-img">
-                                <img src="<?php echo URLROOT; ?>/assets/images/image.png" alt="">
+                                <img src="<?php echo URLROOT; ?>/assets/images/Admin/<?php echo !empty($announcement->image) ? $announcement->image : 'default-placeholder.jpg'; ?>" alt="">
                             </div>
                             <div class="name-and-title">
                                 <h3 id="modalCreatedBy"></h3>
                                 <input id="modalSubject" name="subject" type="text" class="modal-input" placeholder="Announcement Subject" disabled />
                             </div>
                         </div>
-                        <input id="modalId" name="announcement_id" style="display: none;"/>
+                        <input id="modalId" name="id" style="display: none;"/>
                         <textarea id="modalDescription" name="description" class="modal-input" rows="5" placeholder="Announcement Description" disabled></textarea>
                         <div class="date-time">
                             <div class="announcement-date">

@@ -263,3 +263,42 @@ main .user-form .form-container .input-container .invalid-feedback {
     }
 }
 
+.input-box1 textarea {
+    width: 100%;
+    padding: 1.2rem 0.5rem 0.5rem 0.5rem;
+    font-size: 1rem;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 0.5rem;
+    background: transparent;
+    resize: vertical;
+    min-height: 120px;
+}
+
+.input-box1 textarea:focus {
+    outline: none;
+}
+
+.input-box1 .floating-label-textarea {
+    position: absolute;
+    pointer-events: none;
+    top: 1rem;
+    left: 0.5rem;
+    font-size: 1rem;
+    transition: 0.2s ease all;
+    background: var(--background-color, #fff);
+    padding: 0 0.2rem;
+}
+
+/* Float label when textarea is focused OR has text */
+.input-box1 textarea:focus + .floating-label-textarea,
+.input-box1 textarea:not(:placeholder-shown) + .floating-label-textarea {
+    top: -0.6rem;
+    left: 0.4rem;
+    font-size: 0.8rem;
+    color: #007bff;
+}
+
+/* Hide browser autofill background */
+.input-box1 textarea:-webkit-autofill {
+    background-color: transparent !important;
+}
