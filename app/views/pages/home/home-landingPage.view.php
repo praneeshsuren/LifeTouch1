@@ -371,9 +371,32 @@
         const fullName = document.getElementById('fullname').value.trim();
         const nic = document.getElementById('nic').value;
         const contact = document.getElementById('contact').value;
+        const email = document.getElementById('email').value.trim();
         const eventId = document.getElementById('eventIdInput').value;
         const memberIdField = document.getElementById('membershipNumber').value;
         const memberId = memberIdField ? memberIdField : null;
+
+        if (fullName === "" || nic === "" || contact === "" || eventId === "" || email === "") {
+            alert("Please fill all required fields!");
+            return;
+        }
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+
+        if (isMember && memberId === "") {
+            alert("Please enter your Membership Number.");
+            return;
+        }
+
+        if (isMember && !/^MB\/[MF]\/\d+$/.test(memberId)) {
+            alert("Membership Number format is invalid. Example: MB/M/0001");
+            return;
+        }
+
 
         const form = document.createElement("form");
         form.method ="POST";

@@ -1977,8 +1977,9 @@ main .event-detail-container .form-container{
 
   .inquiries-container .table .msg {
     max-width: 400px;
-    white-space: normal;
-    word-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .inquiries-container .table tbody tr:hover {
@@ -2103,17 +2104,6 @@ main .calendarContainer {
 .calendar td.active{
     background-color: var(--primary-color);
     color: var(--sidebar-color);
-}
-
-.booked-count {
-    background-color: #007bff;
-    width: 40px;
-    height: 20px;
-    font-size: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 4px auto;
 }
 
 .gotoToday {
