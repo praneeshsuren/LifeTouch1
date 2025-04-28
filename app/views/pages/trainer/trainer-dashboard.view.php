@@ -44,9 +44,6 @@
             <div class="insight-card card-1">
               <div class="upper">
                 <i class="ph ph-users"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
               </div>
               <div class="lower">
                   <p>Total Members</p>
@@ -59,9 +56,6 @@
             <div class="insight-card card-2">
               <div class="upper">
                 <i class="ph ph-user-plus"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
               </div>
               <div class="lower">
                   <p>New Members</p>
@@ -77,9 +71,6 @@
             <div class="insight-card card-3">
               <div class="upper">
                 <i class="ph ph-barbell"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
               </div>
               <div class="lower">
                   <p>Total Workout Schedules Created</p>
@@ -95,9 +86,6 @@
             <div class="insight-card card-4">
               <div class="upper">
                 <i class="ph ph-calendar-check"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
               </div>
               <div class="lower">
                   <p>Total Bookings</p>

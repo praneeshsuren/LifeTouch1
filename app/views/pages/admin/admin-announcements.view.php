@@ -45,20 +45,19 @@
         </div>
 
         <div class="announcements-container">
-            <div class="searchBar">
-                <input 
-                    type="text" 
-                    id="announcementSearch" 
-                    placeholder="Search here.." 
-                    onkeyup="filterTable()" 
-                />
-            </div>
 
             <div class="table-container">
-                <div class="heading">
-                    <h2>Announcements</h2>
-                    <a href="<?php echo URLROOT; ?>/admin/announcements/createAnnouncement" class="btn">+ New Announcement</a>
-                </div>
+                    <div class="heading">
+                        <div class="searchBar">
+                        <input 
+                            type="text" 
+                            id="announcementSearch" 
+                            placeholder="Search here.." 
+                            onkeyup="filterTable()" 
+                        />
+                        </div>
+                        <a href="<?php echo URLROOT; ?>/admin/announcements/createAnnouncement" class="btn">+ New Announcement</a>
+                    </div>
 
                 <!-- Table with scrolling -->
                 <div class="table-scroll">

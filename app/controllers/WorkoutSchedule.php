@@ -119,7 +119,7 @@ class WorkoutSchedule extends Controller
             // Assuming you have a model method to update
             $result = $workoutScheduleDetailsModel->update($schedule_id, $updateData, 'schedule_id');
 
-            if (!$result) {
+            if ($result) {
                 $_SESSION['success'] = 'Workout schedule updated successfully.';
             } else {
                 $_SESSION['error'] = 'Failed to update workout schedule.';
@@ -151,7 +151,7 @@ class WorkoutSchedule extends Controller
             $result = $workoutScheduleDetailsModel->update($schedule_id, ['completed_date' => $completed_date], 'schedule_id');
     
             // Return the appropriate JSON response based on the result of the update
-            if (!$result) {
+            if ($result) {
                 echo json_encode(['success' => true]);
             } else {
                 echo json_encode(['success' => false]);
@@ -182,7 +182,7 @@ class WorkoutSchedule extends Controller
             $result = $workoutScheduleDetailsModel->delete($schedule_id, 'schedule_id');
     
             // Return the appropriate JSON response based on the result of the deletion
-            if (!$result) {
+            if ($result) {
                 echo json_encode(['success' => true]);
             } else {
                 echo json_encode(['success' => false]);

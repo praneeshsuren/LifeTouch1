@@ -91,6 +91,68 @@
             return $this->query($query, $data);
         }
 
+        public function membershipExpiryNotifications() {
+            // Instantiate the membership model
+            $membershipModel = new M_MembershipSubscriptions();
+            $memberModel = new M_Member();
+            
+            // Fetch all expired memberships
+            $expiredMemberships = $membershipModel->getExpiredMemberships();
+            
+            // Check if any expired memberships are found
+            if ($expiredMemberships && is_array($expiredMemberships)) {
+                // Loop through expired memberships and send notifications
+                foreach ($expiredMemberships as $membership) {
+                    // Prepare the notification message
+                    $message = "Dear member, your {$membership->plan} membership plan has expired on {$membership->end_date}. Please renew your subscription to continue enjoying our services.";
+                    
+                    // Update the membership status to 'inactive'
+                    $membershipUpdated = $membershipModel->updateMembershipStatus($membership->id, 'inactive');
+                    
+                    // Update the member status to 'inactive'
+                    $memberUpdated = $memberModel->updateMembershipStatus($membership->member_id, 'Inactive');
+                    
+                    // Check if the updates were successful before sending the notification
+                    if ($membershipUpdated && $memberUpdated) {
+                        // Send notification to the specific member
+                        $this->sendNotificationToMember($membership->member_id, $message);
+                    } else {
+                        // Log an error or handle it appropriately if the update failed
+                        error_log("Failed to update membership status for member ID {$membership->member_id}");
+                    }
+                }
+            }
+        }
+        
+        public function membershipExpiryNotificationsBeforeExpire() {
+            // Instantiate the membership model
+            $membershipModel = new M_MembershipSubscriptions();
+            
+            // Fetch all memberships that will expire in the next 1 or 2 days
+            $expiringMemberships = $membershipModel->getExpiringMemberships();
+            
+            // Check if any expiring memberships are found
+            if ($expiringMemberships && is_array($expiringMemberships)) {
+                // Loop through the memberships and send notifications
+                foreach ($expiringMemberships as $membership) {
+                    // Prepare the notification message
+                    $message = "Dear member, your {$membership->plan} membership plan will expire on {$membership->end_date}. Please renew your subscription to continue enjoying our services.";
+                    
+                    // Send notification to the specific member
+                    $this->sendNotificationToMember($membership->member_id, $message);
+                }
+            }
+        }
+        
+    
+        public function sendNotificationToMember($memberId, $message) {
+            // Assuming you have a Notification Model like M_Notification
+            $notificationModel = new M_Notification();
+    
+            // Send notification to the specific member
+            $notificationModel->createNotification($memberId, $message, 'Member');
+        }
+
         
     }
 ?>

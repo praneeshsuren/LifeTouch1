@@ -5,6 +5,11 @@
         public function __construct() {
             // Check if the user is logged in as a member
             $this->checkAuth('Member');
+
+            $notificationModel = new M_Notification;
+            $notificationModel->membershipExpiryNotifications();
+            $notificationModel->membershipExpiryNotificationsBeforeExpire();
+
         }
 
         public function index($action = null) {
@@ -105,7 +110,10 @@
 
                     $result = $bookingModel->insert($data);
 
-                    $message = $result ? "Booking added successfully!" : "Failed to add booking";
+                    $message = "Dear Trainer, Member $member_id has created a booking request!";
+                    $notificationModel = new M_Notification;
+                    $notificationModel->createNotification($trainer_id, $message, 'Trainer');
+                    $notificationModel->createNotification($member_id, "Your booking request has been sent to the trainer!", 'Member'); 
                     
                     echo json_encode([
                         "success" => $result ? true : false, 

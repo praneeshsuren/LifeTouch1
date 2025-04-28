@@ -78,7 +78,7 @@
             const profileImgDiv = document.createElement('div');
             profileImgDiv.classList.add('trainerviewbtn-profile-img');
             profileImgDiv.innerHTML = `
-                <img src="<?php echo URLROOT; ?>/assets/images/${trainer.image || 'image.png'}" alt="${trainer.first_name}'s image" class="trainer-image"/>
+                <img src="<?php echo URLROOT; ?>/assets/images/Trainer/${trainer.image || 'default-placeholder.jpg'}" alt="${trainer.first_name}'s image" class="trainer-image"/>
             `;
 
             const profileDetailsDiv = document.createElement('div');

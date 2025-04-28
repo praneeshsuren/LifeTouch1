@@ -179,7 +179,7 @@
                     .then(data => {
                         if (data.success) {
                             alert('Workout schedule deleted!');
-                            window.location.href = '<?php echo URLROOT; ?>trainer/members/workoutSchedules?id=' + memberID; // Redirect to schedule list page
+                            window.location.href = '<?php echo URLROOT; ?>/trainer/members/workoutSchedules?id=' + memberID; // Redirect to schedule list page
                         } else {
                             alert('Failed to delete schedule!');
                         }

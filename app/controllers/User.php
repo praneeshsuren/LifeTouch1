@@ -189,7 +189,7 @@
                                 }
                     
                                 // Call the update function if no errors
-                                if (empty($errors) && !$memberModel->update($member_id, $data, 'member_id')) {
+                                if (empty($errors) && $memberModel->update($member_id, $data, 'member_id')) {
                                     $_SESSION['success'] = "Member has been successfully updated!";
                                     redirect("{$userRole}/members/viewMember?id={$member_id}");
                                 } else {
@@ -700,8 +700,6 @@
                         $receptionist_id = $_POST['receptionist_id'];
                         $userRole = $_SESSION['role'];
 
-                        // Validate the incoming data
-                        if ($receptionistModel->validate($_POST)) {
                             // Prepare the data to update the receptionist
                             $receptionist = $receptionistModel->findByReceptionistId($receptionist_id);
 
@@ -716,6 +714,10 @@
                                 'email_address' => $_POST['email_address'] ?? $receptionist->email_address,
                                 'image'         => $receptionist->image // Preserve current image by default
                             ];
+
+
+                        // Validate the incoming data
+                        if ($receptionistModel->validate($data)) {
 
                             // Handle file upload if exists
                             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
@@ -747,7 +749,7 @@
                 
                 
                             // Call the update function if no errors
-                            if (empty($errors) && $receptionist->update($receptionist_id, $data, 'receptionist_id')) {
+                            if (empty($errors) && $receptionistModel->update($receptionist_id, $data, 'receptionist_id')) {
                                 $_SESSION['success'] = "Receptionist has been successfully updated!";
                                 redirect("{$userRole}/receptionists/viewReceptionist?id={$receptionist_id}");
                             } else {
@@ -801,7 +803,7 @@
                         // Begin the deletion process
                         if ($userModel->delete($userId, 'user_id')) {
                             // Set success message if the deletion is successful
-                            $_SESSION['success'] = "Trainer has been deleted successfully.";
+                            $_SESSION['success'] = "Receptionist has been deleted successfully.";
                     
                             // Redirect based on the user's role
                             switch ($userRole) {
@@ -818,7 +820,7 @@
                             }
                         } else {
                             // Handle deletion failure
-                            $_SESSION['error'] = "There was an issue deleting the Trainer. Please try again.";
+                            $_SESSION['error'] = "There was an issue deleting the Receptionist. Please try again.";
                     
                             switch ($userRole) {
                                 case 'Admin':
@@ -1027,7 +1029,7 @@
                         }
                 
                         // Call the update function
-                        if (!$managerModel->update($manager_id, $data, 'manager_id')) {
+                        if ($managerModel->update($manager_id, $data, 'manager_id')) {
                             // Set a success session message
                             $_SESSION['success'] = "Manager has been successfully updated!";
                             // Redirect to the manager view page
@@ -1071,7 +1073,7 @@
                         }
 
                         // Begin the deletion process
-                        if (!$userModel->delete($userId, 'user_id')) {
+                        if ($userModel->delete($userId, 'user_id')) {
                             // Set success message if the deletion is successful
                             $_SESSION['success'] = "Manager has been deleted successfully.";
                     
@@ -1304,7 +1306,7 @@
                         }
                 
                         // Call the update function
-                        if (!$adminModel->update($admin_id, $data, 'admin_id')) {
+                        if ($adminModel->update($admin_id, $data, 'admin_id')) {
                             // Set a success session message
                             $_SESSION['success'] = "Admin has been successfully updated!";
                             // Redirect to the admin view page
@@ -1348,7 +1350,7 @@
                         }
 
                         // Begin the deletion process
-                        if (!$userModel->delete($userId, 'user_id')) {
+                        if ($userModel->delete($userId, 'user_id')) {
                             // Set success message if the deletion is successful
                             $_SESSION['success'] = "Admin has been deleted successfully.";
                     

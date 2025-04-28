@@ -15,7 +15,7 @@
             $workoutScheduleDetailsModel = new M_WorkoutScheduleDetails;
             $bookingModel = new M_Booking;
         
-            // Fetch the latest 4 announcements with admin names
+            // Fetch the latest 4 announcements with admin namesoo
             $announcements = $announcementModel->findAllWithAdminNames(4);
         
             // Fetch the All Count of members in the GYM
@@ -193,6 +193,12 @@
                 $data = ['status' => $status];
 
                 $result = $bookingModel->update($id, $data);
+
+                $message = "Dear Member your booking has been $status by the Trainer!";
+                $member_id = $_POST['member_id'] ?? null;
+
+                $notificationModel = new M_Notification();
+                $notificationModel->createNotification($member_id, $message, 'Member');
 
                 echo json_encode(
                     [

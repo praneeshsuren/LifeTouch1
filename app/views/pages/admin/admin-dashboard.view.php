@@ -70,9 +70,6 @@
             <div class="insight-card card-3">
               <div class="upper">
                 <i class="ph ph-chat-circle-text"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
               </div>
               <div class="lower">
                   <p>Total Inquiries</p>
@@ -88,9 +85,6 @@
             <div class="insight-card card-4">
               <div class="upper">
                 <i class="ph ph-calendar-check"></i>
-                <div class="status-badge">
-                  <span>+9.4%</span>
-                </div>
               </div>
               <div class="lower">
                   <p>Total Event Attendees</p>
