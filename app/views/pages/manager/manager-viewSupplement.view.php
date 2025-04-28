@@ -43,9 +43,6 @@
                     <div class="profile-img-container">
                         <img class="profile-img" src="<?php echo URLROOT; ?>/assets/images/Supplement/<?php echo htmlspecialchars($supplement->file); ?>" alt="Supplement Image">
                     </div>
-                    <a href="<?php echo URLROOT; ?>/manager/supplement_edit/<?php echo $supplement->supplement_id; ?>">
-                        <button class="edit-button">Edit</button>
-                    </a>
                     <a href="<?php echo URLROOT; ?>/supplement/deleteSupplement/<?php echo $supplement->supplement_id; ?>" onclick="return confirm('Are you sure you want to delete this supplement?');">
                         <button class="delete-button">Delete</button>
                     </a>

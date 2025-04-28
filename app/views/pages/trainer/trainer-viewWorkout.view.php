@@ -53,9 +53,6 @@
             
             <!-- Edit, Save, Cancel, and Delete buttons -->
             <div class="action-buttons">
-                <button id="editBtn" class="btn">Edit</button>
-                <button id="saveBtn" class="btn hidden">Save</button>
-                <button id="cancelBtn" class="btn hidden">Cancel</button>
                 <a href="#" id="deleteBtn" data-id="<?php echo $workout->workout_id; ?>" class="btn delete-btn">Delete</a>
             </div>
         </div>
@@ -68,90 +65,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    const editBtn = document.getElementById('editBtn');
-    const saveBtn = document.getElementById('saveBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
     const deleteBtn = document.getElementById('deleteBtn');
-    const workoutName = document.getElementById('workoutName');
-    const workoutDescription = document.getElementById('workoutDescription');
-    const workoutEquipment = document.getElementById('workoutEquipment');
-    const workoutStatus = document.getElementById('workoutStatus');
-    const workoutId = new URLSearchParams(window.location.search).get('id');  // Get workout ID from URL
 
-    // Store original values in data-original attributes to revert if needed
-    workoutName.setAttribute('data-original', workoutName.value);
-    workoutDescription.setAttribute('data-original', workoutDescription.value);
-    workoutEquipment.setAttribute('data-original', workoutEquipment.value);
-    workoutStatus.setAttribute('data-original', workoutStatus.value);
-
-    // Show edit mode and hide edit button
-    editBtn.addEventListener('click', function () {
-        // Show Save/Cancel buttons, hide Edit/Delete buttons
-        saveBtn.classList.remove('hidden');
-        cancelBtn.classList.remove('hidden');
-        deleteBtn.classList.add('hidden');
-        editBtn.classList.add('hidden');
-
-        // Make fields editable
-        workoutName.removeAttribute('readonly');
-        workoutDescription.removeAttribute('readonly');
-        workoutEquipment.removeAttribute('readonly');
-        workoutStatus.removeAttribute('readonly');
-    });
-
-    // Cancel edit
-    cancelBtn.addEventListener('click', function () {
-        // Hide Save/Cancel buttons, show Edit/Delete buttons
-        saveBtn.classList.add('hidden');
-        cancelBtn.classList.add('hidden');
-        deleteBtn.classList.remove('hidden');
-        editBtn.classList.remove('hidden');
-
-        // Revert to original values
-        workoutName.value = workoutName.getAttribute('data-original');
-        workoutDescription.value = workoutDescription.getAttribute('data-original');
-        workoutEquipment.value = workoutEquipment.getAttribute('data-original');
-        workoutStatus.value = workoutStatus.getAttribute('data-original');
-
-        // Make fields readonly again
-        workoutName.setAttribute('readonly', true);
-        workoutDescription.setAttribute('readonly', true);
-        workoutEquipment.setAttribute('readonly', true);
-        workoutStatus.setAttribute('readonly', true);
-    });
-
-    // Save updated workout
-    saveBtn.addEventListener('click', function () {
-        const updatedWorkout = {
-            id: workoutId,
-            name: workoutName.value.trim(),
-            description: workoutDescription.value.trim(),
-            equipment: workoutEquipment.value.trim(),
-            status: workoutStatus.value.trim()
-        };
-
-        // Send updated data to backend via fetch
-        fetch(`<?php echo URLROOT; ?>/workout/updateWorkout`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedWorkout)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("Workout updated successfully.");
-                // Optionally, reload or update UI
-            } else {
-                alert("Failed to update workout.");
-            }
-        })
-        .catch(error => alert("Error updating workout: " + error));
-    });
-
-    // Delete workout
-    deleteBtn.addEventListener('click', function () {
+    deleteBtn.addEventListener('click', function (e) {
+        e.preventDefault(); // important to prevent default <a> behavior
         const workoutId = deleteBtn.getAttribute('data-id');
         if (confirm("Are you sure you want to delete this workout?")) {
             fetch(`<?php echo URLROOT; ?>/workout/deleteWorkout?id=${workoutId}`, {
@@ -166,10 +83,14 @@
                     alert("Failed to delete workout.");
                 }
             })
-            .catch(error => alert("Error deleting workout: " + error));
+            .catch(error => {
+                console.error(error);
+                alert("Error deleting workout: " + error);
+            });
         }
     });
 });
+
 
     </script>
 </body>
