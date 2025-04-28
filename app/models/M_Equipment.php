@@ -19,22 +19,29 @@ class M_Equipment
     ];
 
     public function getEquipmentPurchaseSum($startDate = null, $endDate = null)
-    {
-        if ($startDate && $endDate) {
-            $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE purchase_date BETWEEN :startDate AND :endDate";
-            $params = ['startDate' => $startDate, 'endDate' => $endDate];
-        } else {
-            $currentMonth = date('Y-m');
-            $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE DATE_FORMAT(purchase_date, '%Y-%m') = :currentMonth";
-            $params = ['currentMonth' => $currentMonth];
-        }
-    
-        $result = $this->query($query, $params);
-        if (!empty($result)) {
-            return $result[0]->total ?? 0;
-        }
-        return 0;
+{
+    if ($startDate && $endDate) {
+        $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE purchase_date BETWEEN :startDate AND :endDate";
+        $params = ['startDate' => $startDate, 'endDate' => $endDate];
+    } elseif ($startDate) {
+        $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE purchase_date >= :startDate AND purchase_date <= CURDATE()";
+        $params = ['startDate' => $startDate];
+    } elseif ($endDate) {
+        $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE purchase_date <= :endDate";
+        $params = ['endDate' => $endDate];
+    } else {
+        $currentMonth = date('Y-m');
+        $query = "SELECT SUM(purchase_price) as total FROM {$this->table} WHERE DATE_FORMAT(purchase_date, '%Y-%m') = :currentMonth";
+        $params = ['currentMonth' => $currentMonth];
     }
+
+    $result = $this->query($query, $params);
+    if (!empty($result)) {
+        return $result[0]->total ?? 0;
+    }
+    return 0;
+}
+
     
 
 

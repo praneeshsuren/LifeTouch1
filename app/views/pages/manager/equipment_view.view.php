@@ -12,9 +12,12 @@
     <!-- STYLESHEET -->
     <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/manager-style.css?v=<?php echo time(); ?>" />
 
+    
+
     <!-- ICONS -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <title><?php echo APP_NAME; ?></title>
+    
 
 </head>
 
@@ -36,7 +39,8 @@
         </div>
 
         <div class="box" style="margin-top: 40px;">
-            <a href="<?php echo URLROOT; ?>/manager/equipment" class="btn" style="float: right; margin-top: -10px;margin-bottom:3px;">Back</a>
+    <a href="<?php echo URLROOT; ?>/manager/equipment" class="btn back-btn">Back</a>
+
 
             <div class="member-card">
                 <div>
@@ -84,7 +88,7 @@
                                     <tr style="cursor: pointer;" onclick="window.location='<?php echo URLROOT; ?>/service/updateService/<?php echo $service->service_id; ?>'">
                                         <td><?php echo htmlspecialchars($service->service_date); ?></td>
                                         <td><?php echo htmlspecialchars($service->next_service_date); ?></td>
-                                        <td><?php echo htmlspecialchars($service->service_cost); ?></td>
+                                        <td>Rs. <?php echo htmlspecialchars($service->service_cost); ?></td>
                                         <td>
 
                                             </a> <a href="<?php echo URLROOT; ?>/service/deleteService/<?php echo $service->service_id; ?>" onclick="return confirm('Are you sure you want to delete this equipment?');">
@@ -113,7 +117,6 @@
                             <?php endforeach; ?>
                         </ul>
                     </div>
-                    <!-- Clear session errors after displaying -->
                     <?php unset($_SESSION['form_errors']); ?>
                 <?php endif; ?>
 

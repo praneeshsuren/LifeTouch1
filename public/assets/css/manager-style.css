@@ -1267,6 +1267,26 @@ body.dark .bars .bar::before {
     color: var(--text-color);
     background: var(--primary-color-light);
 }
+.back-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background-color: #007BFF; /* blue fill */
+    color: #ffffff; /* white text */
+    border: 2px solid #007BFF; /* blue border */
+    border-radius: 14px; /* rounded corners */
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    float: right;
+    margin-top: -10px;
+}
+
+.back-btn:hover {
+    background-color: #0056b3; /* darker blue on hover */
+    border-color: #0056b3;
+}
 
 .newMember {
     display: flex;

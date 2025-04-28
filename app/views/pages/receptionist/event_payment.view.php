@@ -120,7 +120,7 @@
                         <input type="text" name="membership_number">
                     </div>
 
-                    <button type="submit" class="btn">Submit</button>
+                    <button type="submit" class="btn back-btn">Submit</button>
                 </form>
             </div>
         </div>

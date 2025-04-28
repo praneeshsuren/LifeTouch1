@@ -42,7 +42,7 @@
                 <a href="equipment_upcoming_services"> <button class="filter" style="background-color:#007bff;color:white;">Upcoming Services</button></a>
                 <a href="equipment_overdue_services"> <button class="filter">Overdue Services</button></a>
             </div>
-            <a href="<?php echo URLROOT; ?>/manager/report" class="btn" style="float: right; margin-top: -50px;margin-bottom:3px;">Back</a>
+            <a href="<?php echo URLROOT; ?>/manager/report" class="btn back-btn" style="float: right; margin-top: -50px;margin-bottom:3px;">Back</a>
 
             <div class="date-filter-container">
                 <div class="left">
@@ -106,25 +106,23 @@
             const startDateValue = startDateInput.value;
             const endDateValue = endDateInput.value;
 
-            // Validation: Start date after End date
             if (startDateValue && endDateValue) {
                 const startDate = new Date(startDateValue);
                 const endDate = new Date(endDateValue);
                 if (startDate > endDate) {
                     alert("Start Date cannot be after End Date!");
-                    return; // Stop, don't filter
+                    return; 
                 }
             }
 
-            // Validation: Future dates
             const today = new Date();
-            today.setHours(0, 0, 0, 0); // reset time for accuracy
+            today.setHours(0, 0, 0, 0); 
 
             if (startDateValue) {
                 const startDate = new Date(startDateValue);
                 if (startDate > today) {
                     alert("Dates cannot be in the future!");
-                    return; // Stop, don't filter
+                    return; 
                 }
             }
 
@@ -132,13 +130,12 @@
                 const endDate = new Date(endDateValue);
                 if (endDate > today) {
                     alert("Dates cannot be in the future!");
-                    return; // Stop, don't filter
+                    return;
                 }
             }
 
-            // If validation passed, filter table
             tableRows.forEach(row => {
-                const serviceDateText = row.children[1].textContent.trim(); // Service Date is 2nd column
+                const serviceDateText = row.children[1].textContent.trim(); 
                 const serviceDate = new Date(serviceDateText);
 
                 let showRow = true;

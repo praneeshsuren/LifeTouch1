@@ -35,7 +35,6 @@ class Home extends Controller
 
             if ($joinModel->validate($data)) {
                 if ($joinModel->insert($data)) {
-                    // Fetch event details
                     $eventDetails = $eventModel->getEventById($data['event_id']);
 
                     if ($eventDetails) {
@@ -45,22 +44,19 @@ class Home extends Controller
                         $eventLocation = $eventDetails->location;
 
 
-                        $mail = new PHPMailer(true);//throw an new exception if something goes wrong
+                        $mail = new PHPMailer(true);
                         try {
-                            //Server settings
                             $mail->isSMTP();
-                            $mail->Host = 'smtp.gmail.com'; //specify smtp server
-                            $mail->SMTPAuth = true; //ensure that the sender has permission to send emails
-                            $mail->Username = 'amandanethmini100@gmail.com'; // Your Gmail
-                            $mail->Password = 'niib zlpx xskb bmag'; // App password
+                            $mail->Host = 'smtp.gmail.com'; 
+                            $mail->SMTPAuth = true; 
+                            $mail->Username = 'amandanethmini100@gmail.com'; 
+                            $mail->Password = 'niib zlpx xskb bmag'; 
                             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                             $mail->Port = 587;
 
-                            //Recipients
                             $mail->setFrom('amandanethmini100@gmail.com', 'Life Touch Fitness');
                             $mail->addAddress($data['email'], $data['full_name']);
 
-                            //Content
                             $mail->isHTML(true);
                             $mail->Subject = 'Confirmation: Event Registration';
                             $mail->Body    = "
@@ -134,7 +130,6 @@ public function cardPayment($action = null){
 public function createPayment(){
     \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
-     // Read the incoming JSON from the frontend
     $jsonStr = file_get_contents('php://input');
     $jsonObj = json_decode($jsonStr);
 
@@ -142,14 +137,12 @@ public function createPayment(){
     $currency = 'lkr';
 
     try {
-        // Create a Payment Intent using Stripe's API
         $paymentIntent = \Stripe\PaymentIntent::create([
             'amount' => $amount,
             'currency' => $currency,
             'payment_method_types' => ['card'],
         ]);
 
-        // Respond with the client secret for the frontend to handle
         echo json_encode([
             'clientSecret' => $paymentIntent->client_secret,
         ]);
@@ -211,7 +204,6 @@ public function Payment($action = null) {
             
         }
         else {
-            // This line will prevent HTML response
             header('Content-Type: application/json');
             echo json_encode(["success" => false, "message" => "Invalid request method"]);
             exit;
@@ -239,7 +231,6 @@ public function contact($action = null) {
             $email = $_POST['email'] ?? null;
             $msg = $_POST['message'] ?? null;
 
-            // Check if all fields are filled out
             if (!$name || !$email || !$msg) {
                 echo json_encode([
                     "success" => false,
@@ -248,7 +239,6 @@ public function contact($action = null) {
                 exit;
             }
 
-            // Save the contact message to the database
             $data = [
                 'name' => $name,
                 'email' => $email,
@@ -257,25 +247,20 @@ public function contact($action = null) {
 
             $result = $contact_Model->insert($data);
 
-            // If the message was saved successfully, send the email
             if ($result) {
-                // Send thank you email to the user
                 $mail = new PHPMailer(true);
                 try {
-                    // Server settings
                     $mail->isSMTP();
-                    $mail->Host = 'smtp.gmail.com'; // Gmail SMTP server
+                    $mail->Host = 'smtp.gmail.com'; 
                     $mail->SMTPAuth = true;
-                    $mail->Username = 'amandanethmini100@gmail.com'; // Your Gmail address
-                    $mail->Password = 'niib zlpx xskb bmag'; // Your Gmail app password
+                    $mail->Username = 'amandanethmini100@gmail.com'; 
+                    $mail->Password = 'niib zlpx xskb bmag'; 
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                     $mail->Port = 587;
 
-                    // Recipients
                     $mail->setFrom('amandanethmini100@gmail.com', 'Life Touch Fitness');
                     $mail->addAddress($email, $name);
 
-                    // Content
                     $mail->isHTML(true);
                     $mail->Subject = 'Thank you for contacting us!';
                     $mail->Body    = "
@@ -287,7 +272,6 @@ public function contact($action = null) {
                     <strong>Life Touch Fitness Team</strong>
                 ";
 
-                    // Send the email
                     $mail->send();
 
                     echo json_encode([

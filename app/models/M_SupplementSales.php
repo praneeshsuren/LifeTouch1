@@ -19,9 +19,16 @@ class M_SupplementSales
 
     public function getSupplementSales($startDate = null, $endDate = null)
 {
-    // If no dates are provided, default to the current month
+    if ($startDate && !$endDate) {
+        $endDate = date('Y-m-d');
+    }
+
+    if (!$startDate && $endDate) {
+        $startDate = date('Y-m-01'); 
+    }
+
     $startDate = $startDate ? $startDate : date('Y-m-01');
-    $endDate = $endDate ? $endDate : date('Y-m-t');
+    $endDate = $endDate ? $endDate : date('Y-m-t'); 
 
     $query = "SELECT SUM(price_of_a_supplement) as total 
               FROM {$this->table} 
@@ -39,6 +46,7 @@ class M_SupplementSales
     }
     return 0;
 }
+
 
     public function findByMemberId($member_id)
     {

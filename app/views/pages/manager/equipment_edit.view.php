@@ -95,7 +95,6 @@
                     <div class="underline"></div>
                 </div>
 
-                <!-- Submit Button -->
                 <div class="member-buttons">
                     <button type="submit" class="edit-button">Save</button>
                 </div>

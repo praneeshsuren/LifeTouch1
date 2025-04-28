@@ -5,7 +5,6 @@ class Manager extends Controller
 
     public function __construct()
     {
-        // Check if the user is logged in as a manager
         $this->checkAuth('Manager');
     }
 
@@ -16,7 +15,6 @@ class Manager extends Controller
         $announcementModel = new M_Announcement;
         $supplementModel = new M_Supplements();
 
-        // Query to group equipment by name and count them
         $inventoryCounts = $equipmentModel->query("
         SELECT 
             REGEXP_REPLACE(name, '[0-9]+$', '') as base_name, 
@@ -25,7 +23,6 @@ class Manager extends Controller
             GROUP BY base_name
         ");
 
-        // Fetch the latest 4 announcements with admin names
         $announcements = $announcementModel->findAllWithAdminNames(4);
         $members = $memberModel->countAll();
         $recentMembers = $memberModel->countRecentMembers();
@@ -92,15 +89,11 @@ class Manager extends Controller
     }
     public function delete_announcement($id)
     {
-        // Load the Announcement model
         $announcement = new M_Announcement();
 
-        // Call the model's delete method with the correct column name
         if ($announcement->delete($id, 'announcement_id')) {
-            // Redirect to the announcements page with a success message
             redirect('manager/announcement_main');
         } else {
-            // Redirect to the announcements page with an error message
             redirect('manager/announcement_main?error=delete_failed');
         }
     }
@@ -121,7 +114,6 @@ class Manager extends Controller
     {
         switch ($action) {
             case 'createMember':
-                // Load the form view to create a member
                 $this->view('manager/manager-createMember');
                 break;
 
@@ -133,7 +125,6 @@ class Manager extends Controller
                     if ($member->validate($_POST) && $user->validate($_POST)) {
                         $temp = $_POST;
 
-                        // Set trainer_id based on gender
                         if ($temp['gender'] == 'Male') {
                             $temp['member_id'] = 'MB/M/';
                         } elseif ($temp['gender'] == 'Female') {
@@ -142,7 +133,6 @@ class Manager extends Controller
                             $temp['member_id'] = 'MB/O/';
                         }
 
-                        // Generate a 4-digit trainer ID offset
                         $offset = str_pad($member->countAll() + 1, 4, '0', STR_PAD_LEFT);
                         $temp['member_id'] .= $offset;
                         $temp['user_id'] = $temp['member_id'];
@@ -150,17 +140,13 @@ class Manager extends Controller
                         $temp['password'] = password_hash($temp['password'], PASSWORD_DEFAULT);
 
                         $temp['status'] = 'Active';
-                        // Insert into User and Member models
                         $user->insert($temp);
                         $member->insert($temp);
 
-                        // Set a session message or flag for success
                         $_SESSION['success'] = "Member has been successfully registered!";
 
-                        // Redirect to trainers list with success message
                         redirect('manager/member');
                     } else {
-                        // Merge validation errors and pass to the view
                         $data['errors'] = array_merge($user->errors, $member->errors);
                         $this->view('manager/member_create', $data);
                     }
@@ -171,7 +157,6 @@ class Manager extends Controller
                 break;
 
             case 'viewMember':
-                // Load the view to view a trainer
                 $member_id = $_GET['id'];
 
                 $memberModel = new M_Member;
@@ -398,28 +383,25 @@ class Manager extends Controller
     public function equipment()
     {
         $equipmentModel = new M_Equipment();
-        $data['equipment'] = $equipmentModel->findAll(); // Fetch all equipment data
+        $data['equipment'] = $equipmentModel->findAll();
         $this->view('manager/equipment', $data);
     }
     public function equipment_create()
     {
-        $errors = []; // Initialize errors array
+        $errors = []; 
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $equipment = new M_Equipment;
 
-            // Combine POST data with uploaded file details
             $data = $_POST;
 
-            // Handle file upload
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $targetDir = "assets/images/Equipment/";
-                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                $fileName = time() . "_" . basename($_FILES['image']['name']); 
                 $targetFile = $targetDir . $fileName;
 
-                // Validate the file and move it to the target directory
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $data['file'] = $fileName; // Save the filename for the database
+                    $data['file'] = $fileName; 
                 } else {
                     $errors['file'] = "Failed to upload the file. Please try again.";
                 }
@@ -427,43 +409,32 @@ class Manager extends Controller
                 $errors['file'] = "Image file is required.";
             }
 
-            // Validate the rest of the data
             if ($equipment->validate($data) && empty($errors)) {
-                // Save the data to the database
                 $equipment->insert($data);
 
-                // Redirect to the equipment list page
                 redirect('manager/equipment');
             } else {
-                // Merge validation errors with file upload errors
                 $errors = array_merge($errors, $equipment->getErrors());
             }
         }
 
-        // Load the form view with errors (if any)
         $this->view('manager/equipment_create', ['errors' => $errors]);
     }
 
     public function equipment_view($id)
     {
-        // Create an instance of the M_Equipment model
         $equipmentModel = new M_Equipment();
 
-        // Fetch the equipment record by ID, limit the result to 1
         $equipment = $equipmentModel->where(['equipment_id' => $id], [], 1);
 
-        // Check if the equipment exists
         if (!$equipment) {
-            // Redirect to the equipment list if no record found
             redirect('manager/equipment');
             return;
         }
 
-        // Fetch the service history for the given equipment ID
         $serviceModel = new M_Service();
         $services = $serviceModel->where(['equipment_id' => $id], [], 1);
 
-        // Pass both the equipment data and service history to the view
         $this->view('manager/equipment_view', [
             'equipment' => $equipment[0],  
             'services' => $services
@@ -473,10 +444,9 @@ class Manager extends Controller
 
     public function equipment_delete($id)
     {
-        $equipmentModel = new M_Equipment();  // Create an instance of the M_Equipment model
+        $equipmentModel = new M_Equipment();  
 
-        // Call the delete method from the model
-        $result = $equipmentModel->delete($id, 'equipment_id');  // 'equipment_id' is the column to identify the equipment
+        $result = $equipmentModel->delete($id, 'equipment_id'); 
 
         if ($result === false) {
             $_SESSION['message'] = 'Failed to delete equipment.';
@@ -484,32 +454,26 @@ class Manager extends Controller
             $_SESSION['message'] = 'Equipment deleted successfully.';
         }
 
-        // Redirect back to the equipment list
         redirect('manager/equipment');
     }
     public function equipment_edit($id)
     {
         $equipmentModel = new M_Equipment();
 
-        // Validate the equipment ID
         if (empty($id) || !is_numeric($id)) {
             $_SESSION['message'] = "Invalid equipment ID.";
             redirect('manager/equipment');
         }
 
-        // Fetch the existing equipment details by ID
         $equipment = $equipmentModel->where(['equipment_id' => $id], [], 1);
 
         if (!$equipment) {
-            // If no equipment found, redirect to the equipment list
             redirect('manager/equipment');
         }
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Collect form data
             $updatedData = $_POST;
 
-            // Handle file upload if a new file is provided
             if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
                 $targetDir = "assets/images/Equipment/";
                 $fileName = time() . "_" . basename($_FILES["file"]["name"]);
@@ -524,9 +488,7 @@ class Manager extends Controller
                 }
             }
 
-            // Validate the data using the model's validate function
             if ($equipmentModel->validate($updatedData)) {
-                // Update the equipment in the database
                 $updateResult = $equipmentModel->update($id, $updatedData, 'equipment_id');
 
                 if ($updateResult === false) {
@@ -535,10 +497,8 @@ class Manager extends Controller
                     $_SESSION['message'] = "Equipment updated successfully.";
                 }
 
-                // Redirect to the equipment list page after updating
                 redirect('manager/equipment');
             } else {
-                // Pass validation errors to the view
                 $this->view('manager/equipment_edit', [
                     'equipment' => $equipment[0],
                     'errors' => $equipmentModel->getErrors()
@@ -547,7 +507,6 @@ class Manager extends Controller
             }
         }
 
-        // Pass the equipment data to the view for editing
         $this->view('manager/equipment_edit', ['equipment' => $equipment[0]]);
     }
 
@@ -634,8 +593,8 @@ class Manager extends Controller
 
     public function supplements()
     {
-        $supplementsModel = new M_Supplements; // Assume this is your equipment model
-        $data['supplement'] = $supplementsModel->findAll(); // Fetch all equipment data
+        $supplementsModel = new M_Supplements; 
+        $data['supplement'] = $supplementsModel->findAll(); 
         $this->view('manager/manager-supplement', $data);
     }
 
@@ -646,15 +605,11 @@ class Manager extends Controller
 
     public function supplement_view($id)
     {
-        // Create an instance of the M_Supplements model
         $supplementModel = new M_Supplements();
 
-        // Fetch the supplement record by ID, limit the result to 1
         $supplement = $supplementModel->where(['supplement_id' => $id], [], 1);
 
-        // Check if the supplement exists
         if (!$supplement) {
-            // Redirect to the supplement list if no record found
             redirect('manager/supplements');
             return;
         }
@@ -663,7 +618,6 @@ class Manager extends Controller
 
         $purchases = $purchasesModel->where(['supplement_id' => $id], [], 1);
 
-        // Pass the supplement data to the view
         $this->view('manager/manager-viewSupplement', [
             'supplement' => $supplement[0],
             'purchases' => $purchases
@@ -671,17 +625,13 @@ class Manager extends Controller
     }
 
     public function notifications(){
-        // Assuming the user ID is stored in session
         $userId = $_SESSION['user_id'];
 
-        // Fetch notifications from the Notification model
         $notificationModel = new M_Notification();
         $notifications = $notificationModel->getNotifications($userId);
 
-        // Pass notifications to the view
         $data['notifications'] = $notifications;
 
-        // Load the notifications view
         $this->view('manager/manager-notifications', $data);
     }
 
@@ -705,30 +655,23 @@ class Manager extends Controller
             $managerModel = new M_Manager;
             $userModel = new M_User;
     
-            // Sanitize inputs
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
-            // Retrieve existing admin data to compare
             $manager_id = $_POST['user_id'];
             $existingManager = $managerModel->findByManagerId($manager_id);
     
-            // Retrieve existing user data to compare (for username check)
-            $existingUser = $userModel->findByUserId($manager_id); // Assuming findByUserId exists for users table
+            $existingUser = $userModel->findByUserId($manager_id); 
     
-            // Initialize data array to track changes
             $data = [];
     
-            // Only include fields that have been updated
             $fields = ['first_name', 'last_name', 'NIC_no', 'date_of_birth', 'home_address', 'contact_number', 'email_address', 'image'];
     
-            // Check for changes and add them to the data array
             foreach ($fields as $field) {
                 if (isset($_POST[$field]) && $_POST[$field] !== $existingManager->$field) {
                     $data[$field] = $_POST[$field];
                 }
             }
     
-            // Handle email uniqueness check manually if it's updated
             if (isset($_POST['email_address']) && $_POST['email_address'] !== $existingManager->email_address) {
                 if ($managerModel->emailExists($_POST['email_address'], $manager_id)) {
                     $_SESSION['error'] = "Email is already in use.";
@@ -737,11 +680,10 @@ class Manager extends Controller
                         'manager' => $_POST
                     ];
                     $this->view('manager/manager-settings', $data);
-                    return; // Prevent further execution if email is already in use
+                    return; 
                 }
             }
     
-            // Check if the username has changed
             if (isset($_POST['username']) && $_POST['username'] !== $existingUser->username) {
                 if ($userModel->usernameExists($_POST['username'])) {
                     $_SESSION['error'] = "Username is already taken.";
@@ -750,39 +692,33 @@ class Manager extends Controller
                         'admin' => $_POST
                     ];
                     $this->view('manager/manager-settings', $data);
-                    return; // Prevent further execution if username is already in use
+                    return; 
                 } else {
                     $data['username'] = $_POST['username'];
                 }
             }
     
-            // Handle file upload if exists and if changed
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $targetDir = "assets/images/Manager/";
-                $fileName = time() . "_" . basename($_FILES['image']['name']); // Unique filename
+                $fileName = time() . "_" . basename($_FILES['image']['name']); 
                 $targetFile = $targetDir . $fileName;
     
-                // Validate the file (e.g., check file type and size) and move it to the target directory
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-                    $data['image'] = $fileName; // Save the new filename for the database
+                    $data['image'] = $fileName; 
                 } else {
                     $errors['file'] = "Failed to upload the file. Please try again.";
                 }
             }
     
-            // Only proceed with the update if data exists
             if (!empty($data)) {
 
 
-                // Update admin data with the updated values
                 $updatedManager = $managerModel->update($manager_id, $data, 'manager_id');
     
-                // Update user data (if username was changed)
                 if (isset($data['username'])) {
                     $updatedUser = $userModel->update($manager_id, ['username' => $data['username']], 'user_id');
                 }
     
-                // Check if the updates were successful
                 if ($updatedManager && (isset($updatedUser) ? !$updatedUser : true)) {
                     $_SESSION['success'] = "Settings have been successfully updated!";
                 } else {
@@ -791,7 +727,6 @@ class Manager extends Controller
     
                 redirect('manager/settings');
             } else {
-                // If no changes, redirect back
                 $_SESSION['error'] = "No changes were made.";
                 redirect('manager/settings');
             }

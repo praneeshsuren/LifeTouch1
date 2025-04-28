@@ -49,7 +49,7 @@
                     </span>
                 </div>
             </div>
-            <a href="<?php echo URLROOT; ?>/report/event_report" class="btn" style="position: absolute; top: 90px; right: 60px;">Back</a>
+            <a href="<?php echo URLROOT; ?>/report/event_report" class="btn back-btn" style="position: absolute; top: 90px; right: 60px;">Back</a>
 
             <div class="user-table-wrapper">
 
@@ -92,7 +92,6 @@
 
 
     <script>
-        // Ensure this is set *before* the click handler
         const eventId = <?php echo json_encode($data['event_id'] ?? null); ?>;
     </script>
 
@@ -101,10 +100,9 @@
             event.preventDefault();
             const eventId = <?php echo json_encode($data['event_id']); ?>;
 
-            // Open in new tab/window
             window.open(
                 `<?php echo URLROOT; ?>/EventParticipant_pdf/index/${eventId}`,
-                '_blank' // This makes it open in a new tab
+                '_blank' 
             );
         });
     </script>

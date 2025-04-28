@@ -88,7 +88,7 @@
                     <input type="date" class="date-input" id="endDate" placeholder="End Date">
                 </div>
                 <button id="clearDateFilter" class="filter">Clear Date Filter</button>
-                <a href="<?php echo URLROOT; ?>/manager/report" class="btn" style="position: absolute; top: 90px; right: 60px;">Back</a>
+                <a href="<?php echo URLROOT; ?>/manager/report" class="btn back-btn" style="position: static; margin-top: 100px; right: 60px;">Back</a>
 
             </div>
 
@@ -156,7 +156,6 @@
             const endDateInput = document.getElementById("endDate");
             const tableRows = document.querySelectorAll(".user-table tbody tr");
 
-            // Function to validate dates
             function validateDates() {
                 const startDate = new Date(startDateInput.value);
                 const endDate = new Date(endDateInput.value);
@@ -164,44 +163,39 @@
 
                 let isValid = true;
 
-                // Check if start date is in the future
                 if (startDate > today) {
                     alert("Start date cannot be in the future.");
-                    startDateInput.value = ''; // Clear the start date field
+                    startDateInput.value = ''; 
                     isValid = false;
                 }
 
-                // Check if end date is in the future
                 if (endDate > today) {
                     alert("End date cannot be in the future.");
-                    endDateInput.value = ''; // Clear the end date field
+                    endDateInput.value = ''; 
                     isValid = false;
                 }
 
-                // Ensure that start date is earlier than end date
                 if (startDate && endDate && startDate >= endDate) {
                     alert("Start date must be before the end date.");
-                    endDateInput.value = ''; // Clear the end date field
+                    endDateInput.value = ''; 
                     isValid = false;
                 }
 
                 return isValid;
             }
 
-            // Function to filter the rows based on the selected dates
             function filterByDate() {
-                // Ensure the dates are valid before filtering
                 if (!validateDates()) {
-                    return; // Stop filtering if dates are invalid
+                    return; 
                 }
 
                 const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
                 const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
 
                 tableRows.forEach(row => {
-                    if (row.cells.length < 9) return; // Skip header and empty rows
+                    if (row.cells.length < 9) return; 
 
-                    const validDateText = row.cells[7].textContent.trim(); // Valid Until is 8th column (0-indexed 7)
+                    const validDateText = row.cells[7].textContent.trim(); 
                     const validDate = new Date(validDateText);
 
                     let showRow = true;
@@ -218,7 +212,6 @@
                 });
             }
 
-            // Attach event listeners
             startDateInput.addEventListener("change", filterByDate);
             endDateInput.addEventListener("change", filterByDate);
 
@@ -243,25 +236,21 @@
         document.addEventListener("DOMContentLoaded", function() {
             const tableRows = document.querySelectorAll(".user-table tbody tr");
 
-            // Function to filter rows by inactive status
             function filterInactiveRows() {
                 tableRows.forEach(row => {
-                    // Check the status column (the last column, index 8)
-                    const statusCell = row.cells[8]; // Status is the 9th column (0-indexed 8)
+                    const statusCell = row.cells[8]; 
                     if (statusCell) {
                         const statusText = statusCell.textContent.trim().toLowerCase();
 
-                        // Hide the row if the status is not 'inactive'
                         if (statusText !== 'inactive') {
                             row.style.display = 'none';
                         } else {
-                            row.style.display = ''; // Show the row if status is inactive
+                            row.style.display = ''; 
                         }
                     }
                 });
             }
 
-            // Call the function to filter rows when the page loads
             filterInactiveRows();
         });
     </script>

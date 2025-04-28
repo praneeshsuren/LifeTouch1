@@ -55,15 +55,12 @@ class Report extends Controller
     }
     public function event_payment($event_id = null)
     {
-        // Initialize models
         $eventModel = new M_Event();
         $participantModel = new M_JoinEvent();
 
-        // Handle form submission
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $event_id = $_POST['event_id'] ?? $event_id;
 
-            // Prepare data
             $postData = [
                 'event_id' => $event_id,
                 'full_name' => $_POST['full_name'] ?? '',
@@ -73,12 +70,10 @@ class Report extends Controller
                 'email' => $_POST['email'] ?? ''
             ];
 
-            // Validate and save
             if ($participantModel->validate($postData)) {
                 if ($participantModel->insert($postData)) {
                     $_SESSION['success'] = "Participant added successfully!";
 
-                    // Ensure event_id is valid before redirecting
                     if (!empty($event_id)) {
                         redirect('report/participant_details/' . $event_id);
                     } else {
@@ -94,7 +89,6 @@ class Report extends Controller
                 $_SESSION['form_data'] = $postData;
             }
 
-            // Redirect back to the form
             if (!empty($event_id)) {
                 redirect('report/event_payment/' . $event_id);
             } else {
@@ -104,7 +98,6 @@ class Report extends Controller
             return;
         }
 
-        // For GET requests
         $event = $eventModel->first(['event_id' => $event_id]);
 
         $this->view('manager/event_payment', [
@@ -114,7 +107,6 @@ class Report extends Controller
             'old' => $_SESSION['form_data'] ?? []
         ]);
 
-        // Clear session messages
         unset($_SESSION['form_errors']);
         unset($_SESSION['form_data']);
     }
@@ -151,14 +143,12 @@ class Report extends Controller
     }
     public function payment_report()
     {
-        // In your controller
         $membershipReport = new M_MembershipSubscriptions();
         $data['reportData'] = $membershipReport->getMembershipReport();
         $this->view('manager/payment_report', $data);
     }
     public function physicalPayment_report()
     {
-        // In your controller
         $membershipReport = new M_MembershipLatest();
         $data['reportData'] = $membershipReport->getMembershipReport();
         $this->view('manager/physicalPayment_report', $data);
@@ -190,10 +180,8 @@ class Report extends Controller
         $trainerSalarySum = $trainerSalaryModel->getTrainerSalarySum($startDate, $endDate);
         $receptionistSalarySum = $receptionistSalaryModel->getReceptionistSalarySum($startDate, $endDate);
 
-        // Total Income
         $totalIncome = $membershipPaymentSum + $eventPaymentSum + $supplementSaleseSum;
 
-        // Total Expense
         $totalExpense = $supplementPurchaseSum  + $equipmentPurchaseSum + $servicePurchaseSum + $adminSalarySum + $trainerSalarySum + $receptionistSalarySum;
 
 

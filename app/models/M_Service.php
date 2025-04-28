@@ -17,27 +17,34 @@ class M_Service
     ];
 
     public function getMonthlyServicePaymentSum($startDate = null, $endDate = null)
-    {
-        // If no dates provided, default to the current month
-        $startDate = $startDate ? $startDate : date('Y-m-01');
-        $endDate = $endDate ? $endDate : date('Y-m-t');
+{
+    if ($startDate && !$endDate) {
+        $endDate = date('Y-m-d'); 
+    }
 
-        $query = "SELECT SUM(service_cost) as total 
+    if (!$startDate && $endDate) {
+        $startDate = date('Y-m-01'); 
+    }
+
+    $startDate = $startDate ? $startDate : date('Y-m-01');
+    $endDate = $endDate ? $endDate : date('Y-m-t'); 
+
+    $query = "SELECT SUM(service_cost) as total 
               FROM {$this->table} 
               WHERE service_date BETWEEN :startDate AND :endDate";
 
-        $params = [
-            'startDate' => $startDate,
-            'endDate' => $endDate
-        ];
+    $params = [
+        'startDate' => $startDate,
+        'endDate' => $endDate
+    ];
 
-        $result = $this->query($query, $params);
+    $result = $this->query($query, $params);
 
-        if (!empty($result)) {
-            return $result[0]->total ?? 0;
-        }
-        return 0;
+    if (!empty($result)) {
+        return $result[0]->total ?? 0;
     }
+    return 0;
+}
 
 
     public function getOverdueServices()

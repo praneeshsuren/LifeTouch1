@@ -10,31 +10,24 @@ class Make_pdf extends Controller
 {
     public function index()
     {
-        // Load Dompdf library
         require __DIR__ . '/../models/vendor/autoload.php';
 
-        // Create an instance of the M_Equipment class
         $equipmentModel = new M_Equipment();
         $serviceModel = new M_Service();
 
-        // Get overdue equipment service data
         $overdueServices = $serviceModel->getOverdueServices();
 
-        // Debugging: Check if data is being fetched correctly
         if (empty($overdueServices)) {
             $html = "<h1 style='color:red; text-align:center;'>No Overdue Equipment Found</h1>";
             $this->generatePdf($html);
             return;
         }
 
-        // Generate the HTML content for the PDF
         $html = $this->generateHtmlReport($overdueServices);
 
-        // Increase memory and execution time limits
         ini_set('memory_limit', '512M');
         set_time_limit(120);
 
-        // Generate and stream the PDF
         $this->generatePdf($html);
     }
 
@@ -137,10 +130,8 @@ class Make_pdf extends Controller
         $dompdf->loadHtml($html);
         $dompdf->render();
 
-        // Debugging: Save the PDF to check if it generates properly
         file_put_contents("debug.pdf", $dompdf->output());
 
-        // Stream the PDF to the browser
         $dompdf->stream('overdue_equipment_report.pdf', ['Attachment' => 0]);
     }
 }

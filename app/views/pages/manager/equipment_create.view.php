@@ -92,7 +92,7 @@
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-            <a href="equipment" class="btn" style="float: right; margin-top: -10px; margin-bottom: 3px;">Back</a>
+            <a href="equipment" class="btn back-btn" style="float: right; margin-top: -10px; margin-bottom: 3px;">Back</a>
             <form method="post" enctype="multipart/form-data">
 
 

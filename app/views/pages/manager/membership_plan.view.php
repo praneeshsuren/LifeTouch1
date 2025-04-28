@@ -84,7 +84,7 @@
                 <div class="heading" style="margin-right: 2000;">
                     <a href="#" class="newMember-btn" onclick="openForm()"><i class="ph ph-plus"></i> Add Plan</a>
                 </div>
-                <div class="user-table-wrapper">
+                <div class="user-table-wrapper"style="margin-top: 30px;">
                     <table class='user-table'>
                         <thead>
                             <tr>
@@ -108,7 +108,7 @@
 )">
                                         <td><?php echo htmlspecialchars($plan->plan); ?></td>
                                         <td><?php echo htmlspecialchars($plan->duration); ?></td>
-                                        <td><?php echo htmlspecialchars($plan->amount); ?></td>
+                                        <td>Rs. <?php echo htmlspecialchars($plan->amount); ?></td>
                                         <td>
                                             <form action="<?php echo URLROOT; ?>/manager/delete_plan" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this plan?'); event.stopPropagation();">
@@ -202,7 +202,6 @@
             document.getElementById("joinForm").style.display = "none";
         }
 
-        // Optional: Close when clicking outside modal
         window.onclick = function(event) {
             const modal = document.getElementById("joinForm");
             if (event.target == modal) {
@@ -215,7 +214,6 @@
             <?php if (isset($_SESSION['edit_errors'])): ?>
                 document.getElementById("editForm").style.display = "flex";
 
-                // Optional: if you want to repopulate the form with previous values
                 <?php if (isset($_SESSION['edit_data'])): ?>
                     document.getElementById("edit_membershipPlan_id").value = "<?php echo $_SESSION['edit_data']['membershipPlan_id'] ?? ''; ?>";
                     document.getElementById("edit_plan_name").value = "<?php echo $_SESSION['edit_data']['plan'] ?? ''; ?>";
@@ -226,7 +224,6 @@
                 document.getElementById("editForm").style.display = "none";
             <?php endif; ?>
         };
-        // Open the Edit Form
         function openEditForm(id, planName, duration, amount) {
             document.getElementById("edit_membershipPlan_id").value = id;
             document.getElementById("edit_plan_name").value = planName;
@@ -235,12 +232,10 @@
             document.getElementById("editForm").style.display = "flex";
         }
 
-        // Close the Edit Form
         function closeEditForm() {
             document.getElementById("editForm").style.display = "none";
         }
 
-        // Close when clicking outside the modal
         window.onclick = function(event) {
             const modal = document.getElementById("editForm");
             if (event.target == modal) {
@@ -248,7 +243,6 @@
             }
         };
 
-        // Prevent row click when clicking on the delete button
         document.querySelectorAll('.plain-x').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.stopPropagation();

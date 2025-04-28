@@ -7,17 +7,14 @@ class EventParticipant_pdf extends Controller
 {
     public function index($event_id)
     {
-        // Clear all buffers and ensure no previous output
         while (ob_get_level()) {
             ob_end_clean();
         }
 
-        // Enable error reporting
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
 
         try {
-            // Verify and correct the autoload path
             $autoloadPath = __DIR__ . '/../models/vendor/autoload.php';
             if (!file_exists($autoloadPath)) {
                 throw new Exception("Dompdf not installed. Run: composer require dompdf/dompdf");
@@ -27,14 +24,12 @@ class EventParticipant_pdf extends Controller
             require_once __DIR__ . '/../models/M_Event.php';
             require_once __DIR__ . '/../models/M_JoinEvent.php';
 
-            // Get event data
             $eventModel = new M_Event();
             $eventArr = $eventModel->getEventByIdd($event_id);
             $event = $eventArr[0] ?? null;
 
 
 
-            // Ensure all required properties exist and have default values
             $event->name = $event->name ?? 'Unknown Event';
             $event->event_date = $event->event_date ?? '1970-01-01';
             $event->start_time = $event->start_time ?? '00:00:00';
@@ -44,7 +39,6 @@ class EventParticipant_pdf extends Controller
                 die("Event with ID $event_id not found");
             }
 
-            // Get participants
             $participantModel = new M_JoinEvent();
             $participants = $participantModel->where(['event_id' => $event_id], [], 'id');
 
@@ -53,39 +47,33 @@ class EventParticipant_pdf extends Controller
                 die("Failed to fetch participants");
             }
 
-            // Generate HTML
             $html = $this->generateHtml($event, $participants);
 
-            // Configure Dompdf
             $options = new Options();
             $options->set('isRemoteEnabled', true);
             $options->set('isHtml5ParserEnabled', true);
-            $options->set('defaultFont', 'Helvetica'); // Use basic font
-            $options->set('tempDir', sys_get_temp_dir()); // Set temp directory
+            $options->set('defaultFont', 'Helvetica'); 
+            $options->set('tempDir', sys_get_temp_dir()); 
 
             $dompdf = new Dompdf($options);
             $filename = "Event_Participants_" . preg_replace('/[^a-zA-Z0-9]/', '_', $event->name ?? 'Unknown') . ".pdf";
             $dompdf->loadHtml($html);
             $dompdf->render();
 
-            // Generate filename
             $filename = "Event_Participants_" . preg_replace('/[^a-zA-Z0-9]/', '_', $event->name) . ".pdf";
 
-            // Output PDF
             $dompdf->stream($filename, [
-                'Attachment' => 0, // Open in browser
-                'Accept-Ranges' => 0 // Disable range requests
+                'Attachment' => 0, 
+                'Accept-Ranges' => 0 
             ]);
 
-            exit; // Prevent any further output
+            exit; 
 
         } catch (Exception $e) {
-            // Clean any output
             while (ob_get_level()) {
                 ob_end_clean();
             }
 
-            // Return plain text error
             header('Content-Type: text/plain');
             die("PDF Generation Failed: " . $e->getMessage());
         }

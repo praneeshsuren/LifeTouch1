@@ -31,7 +31,7 @@
             </div>
 
         </div>
-        <div class="card-container" style="margin-top: 250px;">
+        <div class="card-container" style="margin-top: 250px;margin-left: 50px;">
             <div class="card">
                 <div class="card-details">
                     <i class="ph ph-barbell" style="font-size: 50px;"></i>
@@ -65,13 +65,7 @@
                     <button class="card-button">More info</button>
                 </a>
             </div>
-
-            
-                </div>
-
-
-
-            <div class="card">
+            <div class="card" style="margin-top: 20px;">
                 <div class="card-details">
                     <i class="ph ph-money" style="font-size: 50px;"></i>
                     <p class="text-title">Financial Overview</p>
@@ -81,6 +75,12 @@
                     <button class="card-button">More info</button>
                 </a>
             </div>
+
+        </div>
+
+
+
+
 
         </div>
 

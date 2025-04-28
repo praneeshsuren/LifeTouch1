@@ -132,7 +132,23 @@ class Receptionist extends Controller
                 break;
 
             case 'memberPaymentHistory':
-                $this->view('receptionist/receptionist-memberPaymentHistory');
+                $memberId = $_GET['id'];
+                if ($memberId) {
+
+                    $paymentModel = new M_PhysicalPayment(); 
+
+                    $payment_history = $paymentModel->getPaymentHistory($memberId);
+
+                    $data = [
+                        'payment_history' => $payment_history,
+                        'member_id' => $memberId
+                    ];
+
+                    $this->view('receptionist/receptionist-memberPaymentHistory', $data);
+                } else {
+                    $_SESSION['error'] = 'Member not found.';
+                    redirect('receptionist/members');
+                }
                 break;
 
             case 'memberSupplements':
@@ -156,29 +172,8 @@ class Receptionist extends Controller
                 }
                 break;
 
-            case 'memberPaymentHistory':
-                $memberId = $_GET['id'];
-                if ($memberId) {
-
-                    // Create payment model instance
-                    $paymentModel = new M_PhysicalPayment(); // Changed to M_Payment since it handles both types
-
-                    // Get payment history
-                    $payment_history = $paymentModel->getPaymentHistory($memberId);
-
-                    // Prepare data for view
-                    $data = [
-                        'payment_history' => $payment_history,
-                        'member_id' => $memberId
-                    ];
-
-                    // Load view with data
-                    $this->view('receptionist/receptionist-memberPaymentHistory', $data);
-                } else {
-                    $_SESSION['error'] = 'Member not found.';
-                    redirect('receptionist/members');
-                }
-                break;
+        
+                
             default:
                 // Fetch all members and pass to the view
                 $memberModel = new M_Member;
@@ -352,14 +347,12 @@ class Receptionist extends Controller
 
                 $physicalPaymentModel = new M_PhysicalPayment();
                 if ($physicalPaymentModel->validate($paymentData)) {
-                    // Only insert if validation passes
                     if ($physicalPaymentModel->insert($paymentData)) {
                         $data['success'] = 'Payment record added successfully!';
                     } else {
                         $data['error'] = 'Error: Could not add payment record.';
                     }
                 } else {
-                    // If validation fails, display errors
                     $data['error'] = implode('<br>', $physicalPaymentModel->getErrors());
                 }
             } else {

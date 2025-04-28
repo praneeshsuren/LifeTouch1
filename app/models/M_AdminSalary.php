@@ -16,22 +16,33 @@ class M_AdminSalary
 
 
     public function getAdminSalarySum($startDate = null, $endDate = null)
-    {
-        if ($startDate && $endDate) {
-            $query = "SELECT SUM(salary + bonus) as total FROM {$this->table} WHERE payment_date BETWEEN :startDate AND :endDate";
-            $params = ['startDate' => $startDate, 'endDate' => $endDate];
-        } else {
-            $currentMonth = date('Y-m');
-            $query = "SELECT SUM(salary + bonus) as total FROM {$this->table} WHERE DATE_FORMAT(payment_date, '%Y-%m') = :currentMonth";
-            $params = ['currentMonth' => $currentMonth];
-        }
+{
+    if ($startDate && $endDate) {
+        $query = "SELECT SUM(salary + bonus) as total FROM {$this->table} WHERE payment_date BETWEEN :startDate AND :endDate";
+        $params = ['startDate' => $startDate, 'endDate' => $endDate];
 
-        $result = $this->query($query, $params);
-        if (!empty($result)) {
-            return $result[0]->total ?? 0;
-        }
-        return 0;
+    } elseif ($startDate && !$endDate) {
+        $today = date('Y-m-d');
+        $query = "SELECT SUM(salary + bonus) as total FROM {$this->table} WHERE payment_date BETWEEN :startDate AND :today";
+        $params = ['startDate' => $startDate, 'today' => $today];
+
+    } elseif (!$startDate && $endDate) {
+        $query = "SELECT SUM(salary + bonus) as total FROM {$this->table} WHERE payment_date <= :endDate";
+        $params = ['endDate' => $endDate];
+
+    } else {
+        $currentMonth = date('Y-m');
+        $query = "SELECT SUM(salary + bonus) as total FROM {$this->table} WHERE DATE_FORMAT(payment_date, '%Y-%m') = :currentMonth";
+        $params = ['currentMonth' => $currentMonth];
     }
+
+    $result = $this->query($query, $params);
+    if (!empty($result)) {
+        return $result[0]->total ?? 0;
+    }
+    return 0;
+}
+
 
     public function getSalaryHistoryByAdminId($adminId)
     {

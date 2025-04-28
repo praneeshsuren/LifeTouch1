@@ -19,37 +19,40 @@ class M_Payment
     ];
 
     public function getTotalPayment($startDate = null, $endDate = null)
-    {
-        // Use provided dates or default to current month if not provided
-        $startDate = $startDate ? $startDate : date('Y-m-01'); // Default to the first day of the current month
-        $endDate = $endDate ? $endDate : date('Y-m-t'); // Default to the last day of the current month
+{
+    if ($startDate && !$endDate) {
+        $endDate = date('Y-m-d'); 
+    }
 
-        // Sum online payments
-        $query1 = "SELECT SUM(mp.amount) as total
+    if (!$startDate && $endDate) {
+        $startDate = date('Y-m-01'); 
+    }
+
+    $startDate = $startDate ? $startDate : date('Y-m-01');
+    $endDate = $endDate ? $endDate : date('Y-m-t'); 
+
+    $query1 = "SELECT SUM(mp.amount) as total
                FROM payment p
                JOIN membership_plan mp ON p.plan_id = mp.membershipPlan_id
                WHERE p.status = 'succeeded' 
                  AND p.start_date BETWEEN :startDate AND :endDate";
 
-        // Sum physical payments
-        $query2 = "SELECT SUM(mp.amount) as total
+    $query2 = "SELECT SUM(mp.amount) as total
                FROM physical_payment pp
                JOIN membership_plan mp ON pp.plan_id = mp.membershipPlan_id
                WHERE pp.start_date BETWEEN :startDate AND :endDate";
 
-        $params = ['startDate' => $startDate, 'endDate' => $endDate];
+    $params = ['startDate' => $startDate, 'endDate' => $endDate];
 
-        // Execute the queries
-        $online = $this->query($query1, $params);
-        $physical = $this->query($query2, $params);
+    $online = $this->query($query1, $params);
+    $physical = $this->query($query2, $params);
 
-        // If no results are returned, set totals to 0
-        $onlineTotal = !empty($online) ? ($online[0]->total ?? 0) : 0;
-        $physicalTotal = !empty($physical) ? ($physical[0]->total ?? 0) : 0;
+    $onlineTotal = !empty($online) ? ($online[0]->total ?? 0) : 0;
+    $physicalTotal = !empty($physical) ? ($physical[0]->total ?? 0) : 0;
 
-        // Return the sum of both online and physical payments
-        return $onlineTotal + $physicalTotal;
-    }
+    return $onlineTotal + $physicalTotal;
+}
+
 
     public function paymentMember($member_id)
     {

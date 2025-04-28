@@ -27,7 +27,6 @@ class M_Membership_plan
         if (empty($data['amount'])) {
             $this->errors['amount'] = 'Amount is required';
         }
-        // Add validation for numeric values if needed
         if (!empty($data['amount']) && !is_numeric($data['amount'])) {
             $this->errors['amount'] = 'Amount must be a number';
         }
@@ -40,7 +39,6 @@ class M_Membership_plan
 
 
 
-    // Method to get errors after validation
     public function getErrors()
     {
         return $this->errors;

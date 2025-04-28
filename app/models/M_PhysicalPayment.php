@@ -15,7 +15,6 @@ class M_PhysicalPayment
 
     public function getPaymentHistory($member_id)
     {
-        // Correct online payment query
         $onlinePayments = $this->query(
             "SELECT p.*, mp.plan as plan_name, mp.amount, 'online' as payment_type
          FROM payment p
@@ -25,7 +24,6 @@ class M_PhysicalPayment
             [':member_id' => $member_id]
         );
 
-        // Physical payments
         $physicalPayments = $this->query(
             "SELECT pp.*, mp.plan as plan_name, mp.amount, 'physical' as payment_type
          FROM physical_payment pp
@@ -35,7 +33,6 @@ class M_PhysicalPayment
             [':member_id' => $member_id]
         );
 
-        // Combine and sort
         $allPayments = array_merge($onlinePayments, $physicalPayments);
         usort($allPayments, function ($a, $b) {
             return strtotime($b->start_date) - strtotime($a->start_date);
@@ -65,7 +62,6 @@ class M_PhysicalPayment
             $this->errors['member_id'] = 'member_id is required';
         }
 
-        // Now check if dates overlap with existing physical payments
         if (!empty($data['member_id']) && !empty($data['start_date']) && !empty($data['end_date'])) {
             $query = "SELECT * FROM $this->table 
               WHERE member_id = :member_id 

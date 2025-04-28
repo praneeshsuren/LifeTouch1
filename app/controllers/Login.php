@@ -31,7 +31,6 @@ class Login extends Controller
             return $this->view('home/home-login', ['error' => 'Invalid username or password.']);
         }
 
-        // Securely reset session before login
         session_unset();
         session_destroy();
         session_start();
@@ -97,7 +96,6 @@ class Login extends Controller
                 return;
             }
 
-            // Get user's email from appropriate table
             $email = $this->getUserEmail($user->user_id);
 
             if (!$email) {
@@ -105,7 +103,6 @@ class Login extends Controller
                 return;
             }
 
-            // Generate and save reset token
             $resetToken = bin2hex(random_bytes(32));
             $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
@@ -114,7 +111,6 @@ class Login extends Controller
                 return;
             }
 
-            // Send reset email
             if ($this->sendResetEmail($email, $resetToken)) {
                 $this->view('home/forgot_password', ['success' => 'Password reset link has been sent to your email']);
             } else {
@@ -163,11 +159,8 @@ class Login extends Controller
 
     private function saveResetToken($userId, $token, $expires)
     {
-        // No need to instantiate Database - just use the methods directly
-        // Delete any existing tokens for this user
         $this->query("DELETE FROM password_reset_tokens WHERE user_id = :user_id", [':user_id' => $userId]);
 
-        // Insert new token
         return $this->query(
             "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (:user_id, :token, :expires_at)",
             [
@@ -185,7 +178,6 @@ class Login extends Controller
         $password = $_POST['password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
 
-        // Validate inputs
         if (empty($token) || empty($password) || empty($confirm_password)) {
             $this->view('home/reset_password', [
                 'error' => 'All fields are required',
@@ -210,7 +202,6 @@ class Login extends Controller
             return;
         }
 
-        // Verify token and get user ID
         $tokenData = $this->get_row(
             "SELECT * FROM password_reset_tokens 
              WHERE token = :token AND used = 0 AND expires_at > NOW()",
@@ -224,21 +215,18 @@ class Login extends Controller
             return;
         }
 
-        // Update user password
         $userModel = new M_User();
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $updateResult = $userModel->updatePassword($tokenData->user_id, $hashedPassword);
 
         if ($updateResult) {
-            // Mark token as used
             $this->query(
                 "UPDATE password_reset_tokens SET used = 1 WHERE token = :token",
                 [':token' => $token]
             );
 
-            // Redirect to login page or a success page
             header("Location: /LifeTouch1/public/login?success=Password reset successfully. Please log in.");
-            exit; // Make sure the redirect happens and no further code executes
+            exit; 
         } else {
             $this->view('home/reset_password', [
                 'error' => 'Failed to update password',
@@ -246,7 +234,6 @@ class Login extends Controller
             ]);
         }
     } else {
-        // Show form for password reset
         $token = $_GET['token'] ?? '';
 
         if (empty($token)) {
@@ -277,20 +264,17 @@ class Login extends Controller
         $mail = new PHPMailer(true);
 
         try {
-            // Server settings
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
             $mail->Username   = 'amandanethmini100@gmail.com';
-            $mail->Password   = 'niib zlpx xskb bmag'; // Use App Password if 2FA enabled
+            $mail->Password   = 'niib zlpx xskb bmag'; 
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
 
-            // Recipients
             $mail->setFrom('amandanethmini100@gmail.com', APP_NAME);
             $mail->addAddress($toEmail);
 
-            // Content
             $mail->isHTML(true);
             $mail->Subject = 'Password Reset Request - ' . APP_NAME;
             $mail->Body    = "Click here to reset your password: <a href='" . URLROOT . "/login/resetPassword?token=$token'>Reset Password</a>";
