@@ -144,9 +144,7 @@
                             $userRole = $_SESSION['role'];
                             $member_id = $_POST['member_id'];
                     
-                            // Validate the incoming data
-                            if ($memberModel->validate($_POST)) {
-                                // Fetch existing member data
+
                                 $member = $memberModel->findByMemberId($member_id);
                     
                                 // Prepare data to update (preserving existing values)
@@ -189,26 +187,16 @@
                                 }
                     
                                 // Call the update function if no errors
-                                if (empty($errors) && !$memberModel->update($member_id, $data, 'member_id')) {
+                                if (empty($errors) && $memberModel->update($member_id, $data, 'member_id')) {
                                     $_SESSION['success'] = "Member has been successfully updated!";
                                     redirect("{$userRole}/members/viewMember?id={$member_id}");
                                 } else {
                                     $_SESSION['error'] = "There was an issue updating the member. Please try again.";
                                     redirect("{$userRole}/members/viewMember?id={$member_id}");
                                 }
-                            } else {
-                                // Validation failed, pass errors and form data
-                                $data = [
-                                    'errors' => $memberModel->errors,
-                                    'member' => $_POST
-                                ];
-
-                                // Load the appropriate view based on the user role
-                                $viewPath = $userRole . '-viewMember?id='. $member_id; // Create the view path dynamically
-                                $this->view("{$userRole}/{$viewPath}", $data); // Dynamic view loading
                             }
 
-                        } else {
+                         else {
                             // Redirect based on the user role
                             $userRole = $_SESSION['role'];
                             switch ($userRole) {

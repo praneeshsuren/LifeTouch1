@@ -143,7 +143,7 @@ class Supplement extends Controller
         $supplementModel = new M_Supplements;
         $delete = $supplementModel->delete($supplement_id, 'supplement_id');
         // Delete the supplement record
-        if (!$delete) {
+        if ($delete) {
             redirect('manager/supplements'); // Redirect to a success page
             exit;
         } else {
@@ -188,7 +188,7 @@ class Supplement extends Controller
                 // Update the supplement's available quantity
                 $update_result = $supplementModel->update($supplement_id, ['quantity_available' => $quantity_updated], 'supplement_id');
 
-                if (!$update_result) {
+                if ($update_result) {
                     // Insert the purchase record
                     $purchase_result = $supplementPurchaseModel->insert($data);
 

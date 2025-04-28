@@ -204,7 +204,6 @@
             })
             .catch(error => {
                 console.error('Error creating workout:', error);
-                alert('There was an error creating the workout.');
             });
         });
 

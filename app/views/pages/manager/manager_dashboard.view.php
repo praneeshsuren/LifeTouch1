@@ -161,40 +161,6 @@
 
         </div>
 
-        <div class="chart-row">
-
-          <div class="bar-chart">
-            
-            <div class="upper">
-              <div class="upper-text">
-                <h2>Inventory</h2>
-                <p>Inventory distribution</p>
-              </div>
-            </div>
-
-            <div class="lower">
-              <canvas id="InventoryChart"></canvas>
-            </div>
-
-          </div>
-
-          <div class="line-chart">
-            
-            <div class="upper">
-              <div class="upper-text">
-                <h2>Income</h2>
-                <p>Income distribution</p>
-              </div>
-            </div>
-
-            <div class="lower">
-              <canvas id="IncomeChart"></canvas>
-            </div>
-
-          </div>
-
-        </div>
-
       </div>
 
     </main>
