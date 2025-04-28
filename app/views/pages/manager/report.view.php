@@ -65,19 +65,25 @@
                     <button class="card-button">More info</button>
                 </a>
             </div>
+
             
                 </div>
 
-                <div class="card" style="margin-top: 35px;">
-                    <div class="card-details">
-                        <i class="ph ph-money" style="font-size: 50px;"></i>
-                        <p class="text-title">Financial Overview</p>
-                        <p class="text-body">Income | Expense</p>
-                    </div>
-                    <a href="<?php echo URLROOT; ?>/report/income_report">
-                        <button class="card-button">More info</button>
-                    </a>
+
+
+            <div class="card">
+                <div class="card-details">
+                    <i class="ph ph-money" style="font-size: 50px;"></i>
+                    <p class="text-title">Financial Overview</p>
+                    <p class="text-body">Income | Expense</p>
                 </div>
+                <a href="<?php echo URLROOT; ?>/report/income_report">
+                    <button class="card-button">More info</button>
+                </a>
+            </div>
+
+        </div>
+
 
 
     </main>

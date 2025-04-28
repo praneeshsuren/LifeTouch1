@@ -221,9 +221,10 @@ public function Payment($action = null) {
     redirect('home?scroll=plans');
 }
 
-public function  contact($action = null) {
+public function contact($action = null) {
     $contact_Model = new M_Contact();
     $contact = $contact_Model->findAll();
+
     if ($action === 'api') {
         header('Content-Type: application/json');
         echo json_encode([
@@ -231,13 +232,14 @@ public function  contact($action = null) {
         ]);
         exit;
     } elseif ($action === 'add') {
-        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Content-Type: application/json');
 
             $name = $_POST['name'] ?? null;
             $email = $_POST['email'] ?? null;
             $msg = $_POST['message'] ?? null;
 
+            // Check if all fields are filled out
             if (!$name || !$email || !$msg) {
                 echo json_encode([
                     "success" => false,
@@ -245,8 +247,8 @@ public function  contact($action = null) {
                 ]);
                 exit;
             }
-            
 
+            // Save the contact message to the database
             $data = [
                 'name' => $name,
                 'email' => $email,
@@ -254,12 +256,62 @@ public function  contact($action = null) {
             ];  
 
             $result = $contact_Model->insert($data);
-            echo json_encode([
-                "success" => $result ? true : false, 
-                "message" => $result ? "Inquiry saved successfully!" : "Fail to save inquiry"
-            ]);
-            exit;
+
+            // If the message was saved successfully, send the email
+            if ($result) {
+                // Send thank you email to the user
+                $mail = new PHPMailer(true);
+                try {
+                    // Server settings
+                    $mail->isSMTP();
+                    $mail->Host = 'smtp.gmail.com'; // Gmail SMTP server
+                    $mail->SMTPAuth = true;
+                    $mail->Username = 'amandanethmini100@gmail.com'; // Your Gmail address
+                    $mail->Password = 'niib zlpx xskb bmag'; // Your Gmail app password
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port = 587;
+
+                    // Recipients
+                    $mail->setFrom('amandanethmini100@gmail.com', 'Life Touch Fitness');
+                    $mail->addAddress($email, $name);
+
+                    // Content
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Thank you for contacting us!';
+                    $mail->Body    = "
+                    Dear {$name},<br><br>
+                    Thank you for reaching out to Life Touch Fitness! We have received your message and will get back to you as soon as possible.<br><br>
+                    <strong>Your Message:</strong><br>
+                    {$msg}<br><br>
+                    Best regards,<br>
+                    <strong>Life Touch Fitness Team</strong>
+                ";
+
+                    // Send the email
+                    $mail->send();
+
+                    echo json_encode([
+                        "success" => true,
+                        "message" => "Inquiry saved and thank you email sent!"
+                    ]);
+                    exit;
+
+                } catch (Exception $e) {
+                    echo json_encode([
+                        "success" => false,
+                        "message" => "Failed to send thank you email: " . $mail->ErrorInfo
+                    ]);
+                    exit;
+                }
+            } else {
+                echo json_encode([
+                    "success" => false,
+                    "message" => "Failed to save inquiry"
+                ]);
+                exit;
+            }
         }
     }
 }
+
 }
